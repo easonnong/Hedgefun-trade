@@ -1,0 +1,15 @@
+No files changed, compilation skipped
+2026-10-04T14:28:13.575751Z  WARN foundry_fork_db::cache: Failed to read cache file err=Os { code: 2, kind: NotFound, message: "No such file or directory" } path="/Users/leo/.foundry/cache/rpc/46630/128756217"
+
+Ran 2 tests for test/V2IncomeKindCompatibility.t.sol:TestnetV2IncomeCompatibilityForkTest
+[PASS] test_fork_legacyFactoryRejectsBeforeRegistrationAndDuringReadback() (gas: 27148628)
+Logs:
+  compatibility fork block: 128756217
+
+[PASS] test_fork_reviewedFactoryAcceptsRegistrationAndReadback() (gas: 55020955)
+Logs:
+  compatibility fork block: 128756217
+
+Suite result: ok. 2 passed; 0 failed; 0 skipped; finished in 4.73s (4.24s CPU time)
+
+Ran 1 test suite in 4.74s (4.73s CPU time): 2 tests passed, 0 failed, 0 skipped (2 total tests)

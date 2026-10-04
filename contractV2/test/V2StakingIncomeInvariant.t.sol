@@ -243,7 +243,8 @@ contract StakingIncomeHandler is Test {
                 pool.rewardRateScaled(),
                 pool.periodFinish(),
                 pool.lastUpdate(),
-                pool.rewardPerTokenStored()
+                pool.rewardPerTokenStored(),
+                pool.rewardPerTokenRemainder()
             )
         );
         digest = keccak256(
@@ -267,6 +268,7 @@ contract StakingIncomeHandler is Test {
                     pool.unlockAt(actor),
                     pool.userRewardPerTokenPaid(actor),
                     pool.accruedRewards(actor),
+                    pool.rewardRemainder(actor),
                     stakeToken.balanceOf(actor),
                     stock.balanceOf(actor)
                 )

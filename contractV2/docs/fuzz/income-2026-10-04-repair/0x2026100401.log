@@ -1,0 +1,164 @@
+No files changed, compilation skipped
+
+Ran 7 tests for test/V2StakingRemainderBoundary.t.sol:V2StakingRemainderBoundaryTest
+[PASS] test_completedEpochCannotBeReplayedByEmptyPoolReentries() (gas: 3774942)
+[PASS] test_exactLifetimeLimitPaysAndPrincipalExitsAtOneWeiStake() (gas: 2470677)
+[PASS] test_fundingAboveLifetimeLimitCannotPoisonAnExistingStream() (gas: 2478420)
+[PASS] test_oldPersonalFractionsSurviveEmptyPoolWithoutPayingANewAccount() (gas: 2926016)
+[PASS] test_oneWeiStakeChangesCannotResetGlobalRemainder() (gas: 78869931)
+[PASS] test_oneWeiStakeSettlesTwoStreamsNearTheIndexRepresentableLimit() (gas: 2482212)
+[PASS] test_uint128SupplyDroppingToOneWeiPreservesPastAndFutureAllocation() (gas: 3234351)
+Suite result: ok. 7 passed; 0 failed; 0 skipped; finished in 78.21ms (87.33ms CPU time)
+
+Ran 13 tests for test/V2IncomeGasRegression.t.sol:V2IncomeGasRegressionTest
+[PASS] testFuzz_everyUnitStaysInALedger(uint96[5]) (runs: 1024, μ: 758237, ~: 764293)
+[PASS] test_aRefusedStakingTransferNeverBlocksATakeProfit() (gas: 898644)
+[PASS] test_dipBuysStillOpenLots_andWaitForUnclassifiedIncome() (gas: 1341274)
+[PASS] test_executeCannotTurnUnclassifiedIncomeIntoPrincipal() (gas: 683233)
+[PASS] test_gasLimitedBookPreservesDividendShare() (gas: 62091184)
+[PASS] test_gasLimitedBookPreservesDividendShareWithActiveStaker() (gas: 63109021)
+[PASS] test_graduationPrincipalOpensTheStrategyLotAndIsNotIncome() (gas: 491524)
+[PASS] test_lpFeesAllFundTheBuyback() (gas: 549440)
+[PASS] test_principalBookedAfterAClosure_isStillExactlyThePrincipal() (gas: 7465987)
+[PASS] test_realisedProfitIsSplitBetweenStakersAndBuyback() (gas: 1023184)
+[PASS] test_stakersClaimTheirShareOfProfit() (gas: 1286596)
+[PASS] test_taxArrivalIsIncomeNeverALot_whoeverBooksIt() (gas: 624492)
+[PASS] test_wiringAndRatios() (gas: 6282813)
+Suite result: ok. 13 passed; 0 failed; 0 skipped; finished in 450.97ms (528.51ms CPU time)
+
+Ran 12 tests for test/V2IncomeGraduation.t.sol:V2IncomeGraduationSixDecimalsTest
+[PASS] testFuzz_claimTimingCannotRelabelPrincipal((uint8,uint16,uint96,uint96,uint96,bool,bool)) (runs: 1024, μ: 13233973, ~: 12470106)
+[PASS] testFuzz_failedInitializationCannotFallBackToLegacyWire(uint8) (runs: 1024, μ: 12737365, ~: 12024316)
+[PASS] testFuzz_failedPrincipalTransferRollsBackInitialization(uint8) (runs: 1024, μ: 16650262, ~: 15879044)
+[PASS] testFuzz_principalInitializationRequiresFactoryAndCannotRepeat(uint8) (runs: 1024, μ: 12914720, ~: 12124426)
+[PASS] test_optionalBookFailureDividend() (gas: 12120414)
+[PASS] test_optionalBookFailureSplit() (gas: 12120957)
+[PASS] test_optionalBookFailureStrategy25() (gas: 14002513)
+[PASS] test_optionalBookFailureStrategy50() (gas: 14002788)
+[PASS] test_preclaimedFeesDividend() (gas: 12309295)
+[PASS] test_preclaimedFeesSplit() (gas: 12329452)
+[PASS] test_preclaimedFeesStrategy25() (gas: 14157545)
+[PASS] test_preclaimedFeesStrategy50() (gas: 14157490)
+Suite result: ok. 12 passed; 0 failed; 0 skipped; finished in 2.46s (8.01s CPU time)
+
+Ran 12 tests for test/V2IncomeGraduation.t.sol:V2IncomeGraduationTest
+[PASS] testFuzz_claimTimingCannotRelabelPrincipal((uint8,uint16,uint96,uint96,uint96,bool,bool)) (runs: 1024, μ: 13211298, ~: 12470852)
+[PASS] testFuzz_failedInitializationCannotFallBackToLegacyWire(uint8) (runs: 1024, μ: 12721846, ~: 12025346)
+[PASS] testFuzz_failedPrincipalTransferRollsBackInitialization(uint8) (runs: 1024, μ: 16633403, ~: 15880056)
+[PASS] testFuzz_principalInitializationRequiresFactoryAndCannotRepeat(uint8) (runs: 1024, μ: 12897436, ~: 12125456)
+[PASS] test_optionalBookFailureDividend() (gas: 12121444)
+[PASS] test_optionalBookFailureSplit() (gas: 12121987)
+[PASS] test_optionalBookFailureStrategy25() (gas: 14003610)
+[PASS] test_optionalBookFailureStrategy50() (gas: 14003885)
+[PASS] test_preclaimedFeesDividend() (gas: 12310325)
+[PASS] test_preclaimedFeesSplit() (gas: 12330482)
+[PASS] test_preclaimedFeesStrategy25() (gas: 14158642)
+[PASS] test_preclaimedFeesStrategy50() (gas: 14158587)
+Suite result: ok. 12 passed; 0 failed; 0 skipped; finished in 2.50s (8.04s CPU time)
+
+Ran 8 tests for test/V2StakingAllocationRegression.t.sol:V2StakingAllocationRegressionTest
+[PASS] testFuzz_checkpointFrequencyPreservesAllocation(uint32,uint16,uint96,bool) (runs: 1024, μ: 5457019, ~: 5333811)
+[PASS] test_eighteenDecimalEquivalentHasOnlyWeiScaleCheckpointError() (gas: 102393575)
+Logs:
+  reward decimals: 18
+  checkpoint interval seconds: 60
+  empty claim count: 10080
+  funded raw units: 10000000000000000
+  quiet paid raw units: 9999999999999999
+  frequent checkpoint paid raw units: 9999999999999999
+  additional unpaid raw units: 0
+  reward decimals: 18
+  checkpoint interval seconds: 300
+  empty claim count: 2016
+  funded raw units: 10000000000000000
+  quiet paid raw units: 9999999999999999
+  frequent checkpoint paid raw units: 9999999999999999
+  additional unpaid raw units: 0
+
+[PASS] test_joinAndExitOrderingMatchesHandCalculatedAllocation() (gas: 42439149)
+Logs:
+  join/exit reward decimals: 6
+  join/exit A additional unpaid raw units: 0
+  join/exit B additional unpaid raw units: 0
+  join/exit reward decimals: 18
+  join/exit A additional unpaid raw units: 0
+  join/exit B additional unpaid raw units: 0
+
+[PASS] test_nonStakerClaimsPreserveSixDecimalAllocationEvery300Seconds() (gas: 20246795)
+Logs:
+  reward decimals: 6
+  checkpoint interval seconds: 300
+  empty claim count: 2016
+  funded raw units: 10000
+  quiet paid raw units: 9999
+  frequent checkpoint paid raw units: 9999
+  additional unpaid raw units: 0
+
+[PASS] test_nonStakerClaimsPreserveSixDecimalAllocationEvery60Seconds() (gas: 81275452)
+Logs:
+  reward decimals: 6
+  checkpoint interval seconds: 60
+  empty claim count: 10080
+  funded raw units: 10000
+  quiet paid raw units: 9999
+  frequent checkpoint paid raw units: 9999
+  additional unpaid raw units: 0
+
+[PASS] test_oneWeiStakeClaimsCannotDiscardOtherParticipantsAllocation() (gas: 20532847)
+Logs:
+  reward decimals: 6
+  checkpoint interval seconds: 300
+  empty claim count: 2016
+  funded raw units: 10000
+  quiet paid raw units: 9999
+  frequent checkpoint paid raw units: 9999
+  additional unpaid raw units: 0
+
+[PASS] test_repeatedFundingHasBoundedRawUnitErrorAtBothPrecisions() (gas: 55265624)
+Logs:
+  refill reward decimals: 6
+  refill additional unpaid raw units: 0
+  refill reward decimals: 18
+  refill additional unpaid raw units: 0
+
+[PASS] test_smallStakerFrequentClaimsPreservePersonalFractions() (gas: 226683526)
+Logs:
+  minority once-only payment raw units: 1260
+  minority minute-by-minute payment raw units: 1260
+  minority unpaid raw units: 0
+
+Suite result: ok. 8 passed; 0 failed; 0 skipped; finished in 2.50s (2.95s CPU time)
+
+Ran 4 tests for test/V2StakingIncomeInvariant.t.sol:V2StakingIncomeInvariantTest
+[PASS] invariant_principalAndRewardsAreBackedByIndependentTransfers() (runs: 512, calls: 65536, reverts: 0)
+
+╭----------------------+----------------------------+-------+---------+----------╮
+| Contract             | Selector                   | Calls | Reverts | Discards |
++================================================================================+
+| StakingIncomeHandler | advanceTime                | 6608  | 0       | 0        |
+|----------------------+----------------------------+-------+---------+----------|
+| StakingIncomeHandler | advanceToLockBoundary      | 6509  | 0       | 0        |
+|----------------------+----------------------------+-------+---------+----------|
+| StakingIncomeHandler | claim                      | 6639  | 0       | 0        |
+|----------------------+----------------------------+-------+---------+----------|
+| StakingIncomeHandler | donate                     | 6608  | 0       | 0        |
+|----------------------+----------------------------+-------+---------+----------|
+| StakingIncomeHandler | fund                       | 6428  | 0       | 0        |
+|----------------------+----------------------------+-------+---------+----------|
+| StakingIncomeHandler | principalTransferFailure   | 6605  | 0       | 0        |
+|----------------------+----------------------------+-------+---------+----------|
+| StakingIncomeHandler | rewardTransferFailure      | 6574  | 0       | 0        |
+|----------------------+----------------------------+-------+---------+----------|
+| StakingIncomeHandler | stake                      | 6537  | 0       | 0        |
+|----------------------+----------------------------+-------+---------+----------|
+| StakingIncomeHandler | withdraw                   | 6415  | 0       | 0        |
+|----------------------+----------------------------+-------+---------+----------|
+| StakingIncomeHandler | withdrawWithBlockedRewards | 6613  | 0       | 0        |
+╰----------------------+----------------------------+-------+---------+----------╯
+
+[PASS] testFuzz_idleQueueAndRefillPreserveAccruedIncome(uint96,uint96,uint32) (runs: 1024, μ: 1185060, ~: 1185283)
+[PASS] testFuzz_rewardFailureNeverLocksPrincipal(uint96,uint96,uint8) (runs: 1024, μ: 1092126, ~: 1080833)
+[PASS] test_handlerExercisesEveryFailureAndLockBoundary() (gas: 3105767)
+Suite result: ok. 4 passed; 0 failed; 0 skipped; finished in 21.51s (23.46s CPU time)
+
+Ran 6 test suites in 21.51s (29.50s CPU time): 56 tests passed, 0 failed, 0 skipped (56 total tests)

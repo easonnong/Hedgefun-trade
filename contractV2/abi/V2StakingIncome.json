@@ -32,6 +32,19 @@
  },
  {
   "type": "function",
+  "name": "MAX_TOTAL_FUNDED",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "type": "function",
   "name": "RATE_SCALE",
   "inputs": [],
   "outputs": [
@@ -225,6 +238,19 @@
  },
  {
   "type": "function",
+  "name": "rewardPerTokenRemainder",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "type": "function",
   "name": "rewardPerTokenStored",
   "inputs": [],
   "outputs": [
@@ -240,6 +266,25 @@
   "type": "function",
   "name": "rewardRateScaled",
   "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "type": "function",
+  "name": "rewardRemainder",
+  "inputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
   "outputs": [
    {
     "name": "",
@@ -488,6 +533,11 @@
    }
   ],
   "anonymous": false
+ },
+ {
+  "type": "error",
+  "name": "FundingLimitExceeded",
+  "inputs": []
  },
  {
   "type": "error",

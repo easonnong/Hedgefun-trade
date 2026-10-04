@@ -4,6 +4,7 @@ pragma solidity ^0.8.24;
 import {Script, console2} from "forge-std/Script.sol";
 import {HedgeFunV2Factory} from "../src/v2/HedgeFunV2Factory.sol";
 import {V2TreasuryDeployer} from "../src/v2/V2TreasuryDeployer.sol";
+import {IncomeKindCompatibility} from "./helpers/IncomeKindCompatibility.sol";
 import {HedgeFunV2DividendTreasury, HedgeFunV2BuybackDividendTreasury} from "../src/v2/HedgeFunV2IncomeTreasury.sol";
 import {
     HedgeFunV2StrategyDividend25Treasury, HedgeFunV2StrategyDividend50Treasury
@@ -14,7 +15,7 @@ import {
 ///      creation code is stored as two chunks, then registered. Existing kinds and launched treasuries are untouched;
 ///      a creator opts in per launch with `V2TreasuryDeployer.setStrategyKind(symbol, nonce, kind)`.
 ///      Run a fork simulation before broadcasting, then `VerifyV2IncomeKinds` against the confirmed chain.
-contract RegisterV2IncomeKinds is Script {
+contract RegisterV2IncomeKinds is IncomeKindCompatibility {
     error BadBinding(string what);
     error ReadbackFailed(string what);
 
@@ -39,11 +40,12 @@ contract RegisterV2IncomeKinds is Script {
 
     /// @notice every transaction, broadcast from `operator`; `run` adds the environment and the log
     function register(address operator, HedgeFunV2Factory factory) public returns (Kinds memory k) {
-        // Every binding check runs before the first broadcast transaction.
+        // Every binding and graduation-compatibility check runs before the first broadcast transaction.
         if (address(factory).code.length == 0 || factory.owner() != operator) revert BadBinding("factory owner");
         V2TreasuryDeployer registry = V2TreasuryDeployer(address(factory.treasuryDeployer()));
         if (address(registry).code.length == 0 || registry.factory() != address(factory)) revert BadBinding("registry");
         if (registry.kindCount() + 4 > type(uint8).max) revert BadBinding("registry full");
+        _checkIncomeCompatibility(factory);
 
         vm.startBroadcast(operator);
         k.strategy25 = _add(registry, type(HedgeFunV2StrategyDividend25Treasury).creationCode);
@@ -63,6 +65,9 @@ contract RegisterV2IncomeKinds is Script {
 
     /// @notice The registered chunks hold exactly this source's creation code, and no kind is an engine kind.
     function check(V2TreasuryDeployer registry, Kinds memory k) public view {
+        HedgeFunV2Factory factory = HedgeFunV2Factory(registry.factory());
+        if (address(factory.treasuryDeployer()) != address(registry)) revert BadBinding("registry");
+        _checkIncomeCompatibility(factory);
         _same(registry, k.strategy25, type(HedgeFunV2StrategyDividend25Treasury).creationCode, "strategy 25 kind");
         _same(registry, k.strategy50, type(HedgeFunV2StrategyDividend50Treasury).creationCode, "strategy 50 kind");
         _same(registry, k.dividend, type(HedgeFunV2DividendTreasury).creationCode, "dividend kind");

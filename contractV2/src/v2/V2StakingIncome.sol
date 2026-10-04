@@ -11,13 +11,17 @@ import {ReentrancyGuard} from "@openzeppelin/contracts/utils/ReentrancyGuard.sol
 ///      Only that source may fund rewards, with a real transfer of a different asset than the staked one.
 ///      This contract enforces funding and time-weighted allocation; what counts as income is the source's rule.
 ///      Rewards stream over `duration`; stakes cannot enter and exit in a single funding transaction.
-///      No administrator can withdraw principal, rewards or donations. Rounding dust stays reserved.
+///      No administrator can withdraw principal, rewards or donations. Fractions carry across checkpoints.
 ///      Rewards funded while nothing is staked are queued and start streaming with the first stake.
 contract V2StakingIncome is ReentrancyGuard {
     using SafeERC20 for IERC20;
 
-    uint256 private constant SCALE = 1e27;
+    // A launch's supply is bounded by uint128 in the factory. At this precision, an unallocated
+    // global fraction is below 3.5e-7 raw reward units even at that maximum supply.
+    uint256 private constant SCALE = 1e45;
     uint256 public constant RATE_SCALE = 1e18;
+    /// @notice Lifetime funding ceiling in raw reward units, keeping the index safe even with one wei staked.
+    uint256 public constant MAX_TOTAL_FUNDED = type(uint256).max / SCALE;
     IERC20 public immutable stakeToken;
     IERC20 public immutable rewardToken;
     address public immutable incomeSource;
@@ -38,6 +42,11 @@ contract V2StakingIncome is ReentrancyGuard {
     mapping(address => uint256) public unlockAt;
     mapping(address => uint256) public userRewardPerTokenPaid;
     mapping(address => uint256) public accruedRewards;
+    /// @notice Undivided global numerator, in raw reward units times SCALE. It is not anyone's accrued reward.
+    /// @dev Carry it across changes in totalStaked; the next active stake set receives this unallocated dust once.
+    uint256 public rewardPerTokenRemainder;
+    /// @notice This account's accrued fraction of one raw reward unit, scaled by SCALE; retained after exit/claim.
+    mapping(address => uint256) public rewardRemainder;
 
     error InvalidConfig();
     error InvalidAmount();
@@ -45,6 +54,7 @@ contract V2StakingIncome is ReentrancyGuard {
     error NotIncomeSource();
     error StakeLocked();
     error InexactTransfer();
+    error FundingLimitExceeded();
 
     event Staked(address indexed account, uint256 amount, uint256 unlockAt);
     event Withdrawn(address indexed account, address indexed recipient, uint256 amount);
@@ -67,14 +77,41 @@ contract V2StakingIncome is ReentrancyGuard {
     }
 
     function rewardPerToken() public view returns (uint256) {
+        (uint256 index,) = _rewardIndex();
+        return index;
+    }
+
+    function _rewardIndex() private view returns (uint256 index, uint256 remainder) {
+        index = rewardPerTokenStored;
+        remainder = rewardPerTokenRemainder;
         uint256 through = Math.min(block.timestamp, periodFinish);
-        if (totalStaked == 0 || through <= lastUpdate) return rewardPerTokenStored;
-        return rewardPerTokenStored + Math.mulDiv((through - lastUpdate) * rewardRateScaled, SCALE / RATE_SCALE, totalStaked);
+        uint256 supply = totalStaked;
+        if (supply == 0 || through <= lastUpdate) return (index, remainder);
+        uint256 emitted = (through - lastUpdate) * rewardRateScaled;
+        index += Math.mulDiv(emitted, SCALE / RATE_SCALE, supply) + remainder / supply;
+        uint256 carry = remainder % supply;
+        remainder = mulmod(emitted, SCALE / RATE_SCALE, supply);
+        // Add the two remainders without overflowing when totalStaked is large.
+        if (remainder >= supply - carry) {
+            ++index;
+            remainder -= supply - carry;
+        } else {
+            remainder += carry;
+        }
     }
 
     function earned(address account) public view returns (uint256) {
-        return accruedRewards[account]
-            + Math.mulDiv(balanceOf[account], rewardPerToken() - userRewardPerTokenPaid[account], SCALE);
+        (uint256 amount,) = _accountAccrual(account, rewardPerToken());
+        return accruedRewards[account] + amount;
+    }
+
+    function _accountAccrual(address account, uint256 index) private view returns (uint256 amount, uint256 remainder) {
+        uint256 delta = index - userRewardPerTokenPaid[account];
+        uint256 stake_ = balanceOf[account];
+        amount = Math.mulDiv(stake_, delta, SCALE);
+        remainder = mulmod(stake_, delta, SCALE) + rewardRemainder[account];
+        amount += remainder / SCALE;
+        remainder %= SCALE;
     }
 
     function stake(uint256 amount) external nonReentrant {
@@ -112,6 +149,7 @@ contract V2StakingIncome is ReentrancyGuard {
     function fund(uint256 amount) external nonReentrant {
         if (msg.sender != incomeSource) revert NotIncomeSource();
         if (amount == 0) revert InvalidAmount();
+        if (amount > MAX_TOTAL_FUNDED - totalFunded) revert FundingLimitExceeded();
         _update(address(0));
         _pullExact(rewardToken, msg.sender, amount);
         totalFunded += amount;
@@ -149,13 +187,13 @@ contract V2StakingIncome is ReentrancyGuard {
     }
 
     function _update(address account) private {
-        rewardPerTokenStored = rewardPerToken();
+        (rewardPerTokenStored, rewardPerTokenRemainder) = _rewardIndex();
         uint256 through = Math.min(block.timestamp, periodFinish);
         if (through > lastUpdate) lastUpdate = through;
         if (account != address(0)) {
-            accruedRewards[account] += Math.mulDiv(
-                balanceOf[account], rewardPerTokenStored - userRewardPerTokenPaid[account], SCALE
-            );
+            (uint256 amount, uint256 remainder) = _accountAccrual(account, rewardPerTokenStored);
+            accruedRewards[account] += amount;
+            rewardRemainder[account] = remainder;
             userRewardPerTokenPaid[account] = rewardPerTokenStored;
         }
     }

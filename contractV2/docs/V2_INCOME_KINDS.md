@@ -112,10 +112,17 @@ source. `treasury.staking()` returns it.
 - `withdraw` returns principal and never attempts a reward transfer, so a blocked reward token cannot trap staked
   tokens. `claim` pays accrued rewards separately.
 - Income funded while nothing is staked is queued and starts streaming with the first stake.
+- Global allocation and each account's fractional reward carry across checkpoints. Empty claims and frequent
+  claims cannot repeatedly discard those fractions; personal fractions remain with the account after exit.
+  The effective index precision is `1e45`. Only unassigned global dust can follow a change in the stake set:
+  less than `3.5e-7` raw reward units at the factory's maximum `uint128` launch-token supply.
+- `MAX_TOTAL_FUNDED = floor(uint256.max / 1e45)` caps lifetime funding, including amounts already claimed.
+  It is about `1.1579e32` raw units (about `115.8 trillion` tokens at 18 decimals). Funding above that limit
+  reverts before transferring funds, so even a one-wei stake cannot overflow the cumulative reward index.
 - No administrator can withdraw staked tokens, rewards or donations.
 
-The pool is a port of `FunStakingIncome` from the realised-income experiments, with one change: its income source
-is the treasury, on chain, instead of a separately funded sponsor.
+The pool originated from `FunStakingIncome`. Its income source is the treasury on chain; the accounting above
+also preserves division remainders and bounds lifetime funding.
 
 ## What this does not do
 
@@ -151,8 +158,14 @@ simulate without `--broadcast` first.
 
 These revised kinds require a factory whose graduation path calls `wireWithGraduation`, as introduced in #25.
 They intentionally reject legacy `wire()`. Registering them on an older factory that lacks this path would make
-their launches unable to graduate; do not register them there. The fork suite targets the compatible testnet
-factory `0xc9610d4A749b2A62a7327a0f40B59013D8fC415a`.
+their launches unable to graduate. Registration and readback now reject incompatible factories. The script
+reconstructs the complete reviewed #25 factory and graduation-module runtimes from pinned build templates,
+checks every immutable binding, and verifies curve/vault creation-code identities before any broadcast.
+Different addresses running that reviewed build are supported. A new implementation or compiler build needs
+a fresh compatibility review and updated template identities; a selector match or operator-supplied hash is
+not sufficient. The fork suite targets compatible testnet factory
+`0xc9610d4A749b2A62a7327a0f40B59013D8fC415a` and rejects legacy factory
+`0xACEB03aAeE5494Aa54929Ec840630ae32A9ade0A`.
 
 1. **Dividend kinds.** `OPERATOR` must be the factory owner. Eight transactions.
 
@@ -207,9 +220,18 @@ factory's measured `GraduationCapitalSplit` event, not the treasury's own princi
 donations and transfer failures against a separate transfer ledger. It checks asset backing and exits after
 each sequence. CI runs three recorded seeds and a distinct fork job, and rejects skipped fork results.
 
+The follow-up repair on 2026-10-04 passed 1,008 offline tests (42 opt-in skips), 56 tests for each of the same
+three seeds (1,024 runs per fuzz property and 65,536 stateful calls per seed), and 18 fork tests at block
+128756765 with no skips. `V2StakingAllocationRegression.t.sol` compares identical funding and stakes with
+different claim frequencies; `V2StakingRemainderBoundary.t.sol` checks stake-set changes, retained personal
+fractions, empty-pool re-entry and the exact funding ceiling. `V2IncomeKindCompatibility.t.sol` checks valid
+deployments at different addresses, forged getters, every immutable reference, and the old/new testnet factories.
+Recorded commands, hashes and logs are in [the repair results](./fuzz/income-2026-10-04-repair/results.json).
+
 ```sh
-INCOME_KINDS_FORK=true INCOME_KINDS_FORK_BLOCK=$(cast block-number --rpc-url https://rpc.testnet.chain.robinhood.com) \
-  forge test --threads 1 --match-contract TestnetV2IncomeKindsForkTest -vv
+block=$(cast block-number --rpc-url https://rpc.testnet.chain.robinhood.com)
+INCOME_KINDS_FORK=true INCOME_COMPAT_FORK=true INCOME_KINDS_FORK_BLOCK="$block" INCOME_COMPAT_FORK_BLOCK="$block" \
+  forge test --threads 1 --match-contract 'TestnetV2IncomeKindsForkTest|TestnetV2IncomeCompatibilityForkTest' -vv
 ```
 
 On 2026-10-03, `TestnetV2EthBridgeForkTest` passed at block 128456854: bridge seeding from the operator's actual
@@ -221,8 +243,13 @@ Relative to the merged #25 base, the existing kinds' creation code is unaffected
 
 ## Front end
 
-- Launch form: offer the kind, show the ratio, and state that the choice is permanent and that an income kind runs
-  no stock strategy.
+The baseline V2 launch uses kind 0 from #25 and does not require these optional income kinds. A first release
+that exposes dividends does require this PR, a separately reviewed upgradeable income-treasury design, frontend
+integration and a complete launch/stake/claim/withdraw rehearsal. The current direct-deployment kinds cannot
+inherit kind 0's upgradeability through registration alone. The following frontend work is still outstanding.
+
+- Launch form: offer the kind, show the ratio, and state that the choice is permanent. Explain which kinds run
+  the stock strategy and which only distribute income or buy back tokens.
 - Token page for an income kind: `staking()`, then on the pool `balanceOf`, `unlockAt`, `earned`, `totalStaked`,
   `periodFinish`; actions `approve` + `stake`, `claim`, `withdraw`. Show that adding to a stake restarts the lock.
 - Kinds without a strategy: `totalIncomeStock`, `totalDividendStock`, `pendingDividendStock`, `buybackStock`,

@@ -1,0 +1,15 @@
+Compiling 4 files with Solc 0.8.26
+Solc 0.8.26 finished in 3.10s
+Compiler run successful!
+
+Ran 7 tests for test/V2StakingRemainderBoundary.t.sol:V2StakingRemainderBoundaryTest
+[PASS] test_completedEpochCannotBeReplayedByEmptyPoolReentries() (gas: 3774942)
+[PASS] test_exactLifetimeLimitPaysAndPrincipalExitsAtOneWeiStake() (gas: 2470677)
+[PASS] test_fundingAboveLifetimeLimitCannotPoisonAnExistingStream() (gas: 2478420)
+[PASS] test_oldPersonalFractionsSurviveEmptyPoolWithoutPayingANewAccount() (gas: 2926016)
+[PASS] test_oneWeiStakeChangesCannotResetGlobalRemainder() (gas: 78869931)
+[PASS] test_oneWeiStakeSettlesTwoStreamsNearTheIndexRepresentableLimit() (gas: 2482212)
+[PASS] test_uint128SupplyDroppingToOneWeiPreservesPastAndFutureAllocation() (gas: 3234351)
+Suite result: ok. 7 passed; 0 failed; 0 skipped; finished in 71.14ms (84.80ms CPU time)
+
+Ran 1 test suite in 75.63ms (71.14ms CPU time): 7 tests passed, 0 failed, 0 skipped (7 total tests)

@@ -157,6 +157,7 @@ jobs:
       - name: Four income kinds, graduation fault cases, staking exits and strategy execution
         env:
           INCOME_KINDS_FORK: "true"
+          INCOME_COMPAT_FORK: "true"
           INCOME_KINDS_FORK_RPC: https://rpc.testnet.chain.robinhood.com
           V2_FACTORY: "0xc9610d4A749b2A62a7327a0f40B59013D8fC415a"
           TESTNET_MARKET: "0xc1AF2f52980F8A7AA4E90A8E30D5c3FaF0375f21"
@@ -165,10 +166,11 @@ jobs:
           # Public state is pruned: pin one fresh block for this entire run, after compilation.
           # No keys, script --broadcast, RPC writes or public-chain transactions are used.
           export INCOME_KINDS_FORK_BLOCK=$(cast block-number --rpc-url "$INCOME_KINDS_FORK_RPC")
+          export INCOME_COMPAT_FORK_BLOCK="$INCOME_KINDS_FORK_BLOCK"
           [[ "$INCOME_KINDS_FORK_BLOCK" =~ ^[0-9]+$ ]] || { echo "::error::RPC returned no valid block"; exit 1; }
           printf 'chain=46630\nblock=%s\nfactory=%s\nmarket=%s\n' "$INCOME_KINDS_FORK_BLOCK" "$V2_FACTORY" "$TESTNET_MARKET" | tee income-kinds-fork-state.txt
           # RPC failures fail the job. Do not turn an unavailable fork into a green skipped run.
-          forge test --threads 1 --mc '^TestnetV2IncomeKindsForkTest$' -vv 2>&1 | tee income-kinds-fork.log
+          forge test --threads 1 --mc '^TestnetV2IncomeKindsForkTest$|^TestnetV2IncomeCompatibilityForkTest$' -vv 2>&1 | tee income-kinds-fork.log
           if grep -q '\[SKIP' income-kinds-fork.log; then
             echo "::error::income kind fork scenarios were skipped"
             exit 1
@@ -189,7 +191,9 @@ jobs:
             test_strategy25TakesProfitAndBuysTheDipOnDeployedVenue \
             test_strategy25StopLossOnDeployedVenue \
             test_strategy50TakesProfitAndBuysTheDipOnDeployedVenue \
-            test_strategy50StopLossOnDeployedVenue; do
+            test_strategy50StopLossOnDeployedVenue \
+            test_fork_legacyFactoryRejectsBeforeRegistrationAndDuringReadback \
+            test_fork_reviewedFactoryAcceptsRegistrationAndReadback; do
             grep -Fq "[PASS] $scenario()" income-kinds-fork.log || { echo "::error::missing fork pass: $scenario"; exit 1; }
           done
       - name: Preserve fork block and results, including failures
@@ -228,14 +232,14 @@ jobs:
           set -euo pipefail
           log="income-fuzz-$INCOME_TEST_SEED.log"
           printf 'seed=%s fuzz_runs=%s invariant_runs=%s invariant_depth=%s fail_on_revert=%s\n' "$INCOME_TEST_SEED" "$FOUNDRY_FUZZ_RUNS" "$FOUNDRY_INVARIANT_RUNS" "$FOUNDRY_INVARIANT_DEPTH" "$FOUNDRY_INVARIANT_FAIL_ON_REVERT" | tee "$log"
-          forge test --fuzz-seed "$INCOME_TEST_SEED" --mc '^V2IncomeGraduation.*Test$|^V2StakingIncomeInvariantTest$|^V2IncomeGasRegressionTest$' -vv 2>&1 | tee -a "$log"
+          forge test --fuzz-seed "$INCOME_TEST_SEED" --mc '^V2IncomeGraduation.*Test$|^V2StakingIncomeInvariantTest$|^V2StakingAllocationRegressionTest$|^V2StakingRemainderBoundaryTest$|^V2IncomeGasRegressionTest$' -vv 2>&1 | tee -a "$log"
           if grep -q '\[SKIP' "$log"; then
             echo "::error::income fuzz or invariant scenarios were skipped"
             exit 1
           fi
           grep -q '^\[PASS\]' "$log" || { echo "::error::no income fuzz test passed"; exit 1; }
           # An accidental selector/class rename cannot silently remove an entire regression family.
-          for suite in V2IncomeGraduationTest V2IncomeGraduationSixDecimalsTest V2StakingIncomeInvariantTest V2IncomeGasRegressionTest; do
+          for suite in V2IncomeGraduationTest V2IncomeGraduationSixDecimalsTest V2StakingIncomeInvariantTest V2StakingAllocationRegressionTest V2StakingRemainderBoundaryTest V2IncomeGasRegressionTest; do
             grep -Fq ":$suite" "$log" || { echo "::error::missing income suite: $suite"; exit 1; }
           done
           grep -Fq '[PASS] invariant_principalAndRewardsAreBackedByIndependentTransfers()' "$log"
