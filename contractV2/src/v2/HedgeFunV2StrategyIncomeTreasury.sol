@@ -26,6 +26,9 @@ abstract contract HedgeFunV2StrategyIncomeTreasury is HedgeFunV2AllInTreasury {
     using SafeERC20 for IERC20;
 
     error GraduationPrincipalRequired();
+    error FundingStarved();
+    /// @notice the gas a booking or take-profit must still hold when it funds the staking pool
+    uint256 public constant FUND_GAS_FLOOR = 500_000;
 
     /// @notice This launch's staking pool: stake the launch token, earn the listed stock.
     V2StakingIncome public immutable staking;
@@ -84,9 +87,17 @@ abstract contract HedgeFunV2StrategyIncomeTreasury is HedgeFunV2AllInTreasury {
 
     /// @dev `amount` is already in `buybackStock`. Move the stakers' share out of it. The pool's own
     ///      `IncomeFunded` event and `totalFunded` are the record of what was paid.
+    ///
+    ///      A funding the stock token refuses leaves the share in the buy-back budget. One that fails only
+    ///      because this call arrived with too little gas must not: the caller picks the gas, and would
+    ///      otherwise pick where the stakers' share goes. So the funding is not attempted with less than
+    ///      `FUND_GAS_FLOOR`, several times what it costs; a caller can then starve it only if the stock
+    ///      token's transfer comes to cost more than the floor. What is left after a starved call cannot be
+    ///      the test instead: each nested call keeps its own 1/64, so that remainder has no fixed bound.
     function _split(uint256 amount) private {
         uint256 share = amount * stakingBps() / 10000;
         if (share == 0) return;
+        if (gasleft() < FUND_GAS_FLOOR) revert FundingStarved();
         try staking.fund(share) { buybackStock -= share; } catch {}
     }
 }

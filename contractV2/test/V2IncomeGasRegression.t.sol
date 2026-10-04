@@ -26,7 +26,7 @@ contract V2IncomeGasRegressionTest is V2StrategyIncomeBase {
         stock.mint(address(t), 4 ether);
         uint256 initial = vm.snapshotState();
         bool succeeded;
-        for (uint256 stipend = 25_000; stipend <= 300_000; stipend += 500) {
+        for (uint256 stipend = 25_000; stipend <= 900_000; stipend += 500) {
             assertTrue(vm.revertToState(initial));
             // A caller may query the public getter before booking in the same transaction.
             // This warms the lot-count slot used after the caught funding call.
