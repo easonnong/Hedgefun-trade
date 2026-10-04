@@ -301,6 +301,15 @@ contract DeployV2FeeUpgradeTestnetTest is Test {
         FeeUpgradeOperatorInvoker(OPERATOR).deploy(upgrade);
     }
 
+    function test_refusesBaseDefaultsThatExcludeOnePercentTax() public {
+        HedgeFunFactory.Defaults memory defaults = base.factory.getDefaults();
+        defaults.minTaxBps = 300;
+        vm.prank(OPERATOR);
+        base.factory.setDefaults(defaults);
+        vm.expectRevert(abi.encodeWithSelector(DeployV2FeeUpgradeTestnet.BadBinding.selector, "base fee defaults"));
+        FeeUpgradeOperatorInvoker(OPERATOR).deploy(upgrade);
+    }
+
     function test_appendedNinthMarketDoesNotBlockOrExpandReviewedDeployment() public {
         DeployV2Testnet.Line memory extra = new EightStockFeeFixture().appendNinth(base, OPERATOR);
         assertEq(base.market.poolCount(), 9);
@@ -350,7 +359,7 @@ contract DeployV2FeeUpgradeTestnetTest is Test {
         assertFalse(vm.parseJsonBool(json, ".broadcastRequested"));
         assertEq(vm.parseJsonString(json, ".featureVersion"), "v2-two-sided-stock-fees-v1");
         assertEq(vm.parseJsonUint(json, ".plannedTransactionCount"), 38);
-        assertEq(vm.parseJsonUint(json, ".recommendedTaxBps"), 300);
+        assertEq(vm.parseJsonUint(json, ".recommendedTaxBps"), 100);
         assertEq(vm.parseJsonUint(json, ".recommendedCreatorBps"), 1000);
         assertEq(vm.parseJsonAddress(json, ".stocks.MSFT.token"), address(base.lines[4].stock));
         assertEq(vm.parseJsonAddress(json, ".baseFactory"), address(base.factory));
@@ -367,7 +376,7 @@ contract DeployV2FeeUpgradeTestnetTest is Test {
         q.symbol = "HFFEE";
         q.stock = address(l.stock);
         q.creator = alice;
-        q.taxBps = 300;
+        q.taxBps = 100;
         q.creatorBps = 1000;
         q.tp1Bps = 360; // This fixture deploys a fresh registry with the new ordinary V2 all-in floor.
         q.tp2Bps = 600;
@@ -381,7 +390,7 @@ contract DeployV2FeeUpgradeTestnetTest is Test {
         uint256 id = x.factory.launch(q, terms);
         (address token, address treasury,,,) = x.factory.strategies(id);
         HedgeFunBondingCurve curve = HedgeFunBondingCurve(x.factory.curves(id));
-        assertEq(curve.taxBps(), 300);
+        assertEq(curve.taxBps(), 100);
         assertEq(curve.protocolBps(), 2000);
         assertEq(curve.creatorBps(), 1000);
         base.usdg.approve(address(x.router), type(uint256).max);
@@ -450,7 +459,7 @@ contract DeployV2FeeUpgradeTestnetTest is Test {
         (PoolKey memory key,) = x.factory.graduationConfig(id);
         PoolId pid = key.toId();
         HedgeFunHook.Rates memory rates = x.hook.rates(pid);
-        assertEq(rates.taxBps, 300);
+        assertEq(rates.taxBps, 100);
         assertEq(rates.protocolBps, 2000);
         assertEq(rates.creatorBps, 1000);
         assertEq(rates.sweepTipBps, 0);

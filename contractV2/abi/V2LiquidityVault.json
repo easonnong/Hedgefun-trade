@@ -108,6 +108,19 @@
  },
  {
   "type": "function",
+  "name": "lockedSeedTokens",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "type": "function",
   "name": "poolKey",
   "inputs": [],
   "outputs": [
@@ -226,6 +239,45 @@
  },
  {
   "type": "function",
+  "name": "surplusLiquidity",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint128",
+    "internalType": "uint128"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "type": "function",
+  "name": "surplusTickLower",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "int24",
+    "internalType": "int24"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "type": "function",
+  "name": "surplusTickUpper",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "int24",
+    "internalType": "int24"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "type": "function",
   "name": "token",
   "inputs": [],
   "outputs": [
@@ -290,6 +342,19 @@
  },
  {
   "type": "event",
+  "name": "SeedTokensLocked",
+  "inputs": [
+   {
+    "name": "amount",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "type": "event",
   "name": "Seeded",
   "inputs": [
    {
@@ -306,6 +371,37 @@
    },
    {
     "name": "amount1",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "type": "event",
+  "name": "SurplusSeeded",
+  "inputs": [
+   {
+    "name": "lower",
+    "type": "int24",
+    "indexed": false,
+    "internalType": "int24"
+   },
+   {
+    "name": "upper",
+    "type": "int24",
+    "indexed": false,
+    "internalType": "int24"
+   },
+   {
+    "name": "liquidity",
+    "type": "uint128",
+    "indexed": false,
+    "internalType": "uint128"
+   },
+   {
+    "name": "tokens",
     "type": "uint256",
     "indexed": false,
     "internalType": "uint256"
@@ -367,6 +463,11 @@
  {
   "type": "error",
   "name": "UnexpectedDelta",
+  "inputs": []
+ },
+ {
+  "type": "error",
+  "name": "UnseedableSurplus",
   "inputs": []
  }
 ]

@@ -10,7 +10,6 @@ import {TickMath} from "v4-core/src/libraries/TickMath.sol";
 import {HedgeFunFactory} from "../HedgeFunFactory.sol";
 import {HedgeFunHook} from "../hooks/HedgeFunHook.sol";
 import {HedgeFunV2Hook} from "../hooks/HedgeFunV2Hook.sol";
-import {HedgeFunToken} from "../HedgeFunToken.sol";
 import {HedgeFunTreasuryBase} from "../HedgeFunTreasuryBase.sol";
 import {CurveDeployer} from "./CurveDeployer.sol";
 import {V2TreasuryDeployer} from "./V2TreasuryDeployer.sol";
@@ -24,6 +23,8 @@ contract HedgeFunV2Factory is HedgeFunFactory {
     CurveDeployer public immutable curveDeployer;
     mapping(uint256 => address) public curves;
     mapping(address => uint256) private _curveIds;
+    /// @notice Monotonic generation of accepted ownership handovers; binds treasury upgrade proposals.
+    uint256 public ownershipEpoch;
     struct Frozen { PoolKey key; HedgeFunHook.Rates rates; }
     mapping(uint256 => Frozen) private _frozen;
 
@@ -47,6 +48,11 @@ contract HedgeFunV2Factory is HedgeFunFactory {
     /// @dev V1 keeps a zero LP fee; V2 has a fee-only vault and caps its static V4 fee at 0.30%.
     function _minLpFee() internal pure override returns (uint24) { return 1; }
     function _maxLpFee() internal pure override returns (uint24) { return 3000; }
+
+    function _transferOwnership(address newOwner) internal override {
+        super._transferOwnership(newOwner);
+        ++ownershipEpoch;
+    }
 
     function graduationConfig(uint256 id) external view returns (PoolKey memory, HedgeFunHook.Rates memory) {
         return (_frozen[id].key, _frozen[id].rates);
@@ -129,7 +135,7 @@ contract HedgeFunV2Factory is HedgeFunFactory {
         uint160 terminal = curveDeployer.sqrtPrice(effective, remaining, tokenIs0);
         uint256 lpStock = (effective - p.virtualStock) * lpBps / 10000;
         (uint256 a0, uint256 a1) = tokenIs0 ? (remaining, lpStock) : (lpStock, remaining);
-        curveDeployer.liquidity(spacing, terminal, a0, a1);
+        curveDeployer.graduationLiquidity(spacing, terminal, a0, a1, tokenIs0);
     }
 
     /// @notice Called by the final curve buy. Failure rolls back that buy and leaves the curve active.
@@ -153,14 +159,14 @@ contract HedgeFunV2Factory is HedgeFunFactory {
             abi.encodeCall(CurveDeployer.executeGraduation, (id, price, stockAmount, tokenAmount)));
         if (!seeded) assembly ("memory-safe") { revert(add(result, 0x20), mload(result)) }
         (uint128 liquidity, uint256 stockUsed, uint256 tokenUsed) = abi.decode(result, (uint128, uint256, uint256));
-        uint256 burned = tokenAmount - tokenUsed;
-        if (burned != 0) HedgeFunToken(s.token).burn(burned);
+        // All unsold project tokens belong to the locked liquidity vault, including rounding residue.
+        // Graduation does not buy back or burn project tokens. Keep the event ABI; tokenBurned is zero.
         bool booked;
         if (stockAmount != stockUsed) {
             _sendExact(s.stock, s.treasury, stockAmount - stockUsed);
             try HedgeFunTreasuryBase(s.treasury).book() returns (bool ok) { booked = ok; } catch {}
         }
-        emit Graduated(id, price, liquidity, stockUsed, tokenUsed, burned);
+        emit Graduated(id, price, liquidity, stockUsed, tokenUsed, 0);
         emit GraduationCapitalSplit(id, stockUsed, stockAmount - stockUsed, booked);
     }
 

@@ -689,6 +689,19 @@
  },
  {
   "type": "function",
+  "name": "upgradeController",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "contract V2TreasuryUpgradeController"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "type": "function",
   "name": "version",
   "inputs": [],
   "outputs": [

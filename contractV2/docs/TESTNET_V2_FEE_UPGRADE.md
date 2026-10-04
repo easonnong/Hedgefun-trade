@@ -78,7 +78,9 @@ snapshots. Large quantities are decimal strings; fees, decimals, gates and count
 The candidate has schema `v2-testnet-two-sided-fee-upgrade-v1`, feature version
 `v2-two-sided-stock-fees-v1`, source commit, start block, operator/owner/protocol, full flat new core addresses,
 hook salt, policy address/key, engine kind, all reused venue addresses and eight stocks. Extra stock fields record
-old gates and LP allocation. `plannedTransactionCount=38`, recommended tax is 300 bps and creator share 1000 bps.
+old gates and LP allocation. `plannedTransactionCount=38`, recommended tax is 100 bps (1%) and creator share 1000 bps.
+The preflight requires the inherited creator tax range to include 100 bps. This is the recommendation for new
+launches, not a change to existing strategies or historical published books; static LP fees remain separate.
 `baseFactory`, `baseTreasuryDeployer` and `baseBookSha256` link the previous published venue inventory; the pinned
 base book SHA-256 is `1b0d19f7e5e36ec19df5c3d8b879d95510dbe70527724602686d95411d04b67e`.
 
@@ -103,7 +105,7 @@ must not be copied into the new book as proof of the new listings. Keep old book
 - To finish the curve, read remaining net principal at one block and gross up exactly:
   `net == 0 ? 0 : (net - 1) * 10000 / (10000 - taxBps) + 1`. Confirm with recipient-specific quotes at the same
   block. The refunded excess is untaxed. Existing net-cap-as-payment logic is incompatible.
-- Create a new TSLA strategy with 3% base tax / 10% creator share and a fixed whitelist. Verify actual launch
+- Create a new TSLA strategy with 1% base tax / 10% creator share and a fixed whitelist. Verify actual launch
   fee, creator identity and frozen terms. Exercise ordinary/whitelisted buys inside the opening window, then
   curve buy/sell; read `TradeFeesAccrued`, `totalFees` and all three claims. Only the opening surcharge burns.
 - Cross the cap and verify atomic graduation, locked V4 liquidity, actual net-principal capital split and unpaid

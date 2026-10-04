@@ -40,23 +40,120 @@ contract V2BuybackKindTest is V2FactoryFixture {
         vm.warp(curve.launchedAt() + curve.snipeSeconds());
     }
 
-    function test_graduationShareIsBuybackBudgetNotALot() public {
+    function test_graduationPrincipalIsProtectedAndCannotFundBuybacks() public {
         assertFalse(treasury.book(), "nothing to book before graduation");
         _graduateV2(curve);
         uint256 share = stock.balanceOf(address(treasury));
         assertGt(share, 0);
-        assertEq(treasury.buybackStock(), share, "graduation's own book() swept the share into the budget");
-        assertEq(treasury.bookedStock(), 0);
+        assertEq(treasury.buybackStock(), 0, "graduation principal is not income");
+        assertEq(treasury.bookedStock(), share);
+        assertEq(treasury.protectedGraduationStock(), share);
         assertEq(treasury.lotCount(), 0);
         assertEq(treasury.unbookedStock(), 0);
+        vm.expectRevert(HedgeFunTreasuryBase.NotDue.selector);
+        treasury.buyback();
         vm.expectRevert(HedgeFunV2BuybackTreasury.UseBuyback.selector);
         treasury.execute();
         vm.expectRevert(HedgeFunV2Treasury.UseExecute.selector);
         treasury.buyDip();
     }
 
+    function test_feesClaimedBeforeGraduationRemainBuybackIncome() public {
+        curve.buy(1e18, 1, address(this), block.timestamp);
+        uint256 fees = curve.claimable(address(treasury));
+        assertGt(fees, 0);
+        curve.claimFees(address(treasury));
+        assertEq(stock.balanceOf(address(treasury)), fees);
+        assertFalse(treasury.book(), "income waits until the pool is wired");
+
+        _graduateV2(curve);
+        uint256 principal = stock.balanceOf(address(treasury)) - fees;
+        assertEq(treasury.protectedGraduationStock(), principal);
+        assertEq(treasury.bookedStock(), principal);
+        assertEq(treasury.buybackStock(), fees, "earned fees are not graduation capital");
+        assertEq(treasury.totalStockReceived(), principal + fees);
+        assertEq(treasury.unbookedStock(), 0);
+        assertFalse(treasury.book(), "income cannot be counted twice");
+    }
+
+    function test_failedOptionalBookCannotExposePrincipalToLaterIncomeBooking() public {
+        curve.buy(1e18, 1, address(this), block.timestamp);
+        uint256 fees = curve.claimable(address(treasury));
+        curve.claimFees(address(treasury));
+        // Fault injection checks the factory's documented catch path, not an assumed live exploit.
+        vm.mockCallRevert(address(treasury), abi.encodeWithSelector(treasury.book.selector), bytes("book failed"));
+        _graduateV2(curve);
+        vm.clearMockedCalls();
+
+        uint256 principal = stock.balanceOf(address(treasury)) - fees;
+        assertEq(treasury.protectedGraduationStock(), principal);
+        assertEq(treasury.buybackStock(), 0);
+        stock.transfer(address(treasury), 3e18);
+        assertTrue(treasury.book());
+        assertEq(treasury.buybackStock(), fees + 3e18);
+        assertEq(treasury.bookedStock(), principal);
+        assertEq(treasury.totalStockReceived(), principal + fees + 3e18);
+        assertFalse(treasury.book());
+    }
+
+    function test_principalInitializerRequiresFactoryAndCannotRepeat() public {
+        vm.expectRevert(HedgeFunTreasuryBase.NotFactory.selector);
+        treasury.wireWithGraduation(key, 1);
+        _graduateV2(curve);
+        uint256 principal = treasury.protectedGraduationStock();
+        vm.prank(address(factory));
+        vm.expectRevert(HedgeFunTreasuryBase.AlreadyWired.selector);
+        treasury.wireWithGraduation(key, 0);
+        assertEq(treasury.protectedGraduationStock(), principal);
+    }
+
+    function testFuzz_preclaimedIncomeNeverBecomesGraduationPrincipal(
+        uint96 grossInput, uint96 donationInput, bool failOptionalBook
+    ) public {
+        uint256 gross = bound(uint256(grossInput), 1e16, 5e18);
+        uint256 donation = bound(uint256(donationInput), 0, 3e18);
+        curve.buy(gross, 1, address(this), block.timestamp);
+        uint256 fees = curve.claimable(address(treasury));
+        assertGt(fees, 0);
+        curve.claimFees(address(treasury));
+        if (donation != 0) stock.transfer(address(treasury), donation);
+        assertFalse(treasury.book());
+        uint256 supplyBefore = IERC20(curve.token()).totalSupply();
+        if (failOptionalBook) {
+            vm.mockCallRevert(address(treasury), abi.encodeWithSelector(treasury.book.selector), bytes("book failed"));
+        }
+        _graduateV2(curve);
+        vm.clearMockedCalls();
+        assertEq(IERC20(curve.token()).totalSupply(), supplyBefore, "graduation must not burn FUN");
+        uint256 income = fees + donation;
+        uint256 principal = stock.balanceOf(address(treasury)) - income;
+        assertGt(principal, 0);
+        assertEq(treasury.protectedGraduationStock(), principal);
+        assertEq(treasury.bookedStock(), principal);
+        if (failOptionalBook) {
+            assertEq(treasury.buybackStock(), 0);
+            assertTrue(treasury.book());
+        }
+        assertEq(treasury.buybackStock(), income);
+        assertEq(treasury.totalStockReceived(), principal + income);
+        assertEq(treasury.unbookedStock(), 0);
+        assertFalse(treasury.book(), "no duplicate income");
+    }
+
+    function test_failedPrincipalInitializationCannotFallBackToLegacyWire() public {
+        vm.mockCallRevert(address(treasury),
+            abi.encodeWithSelector(treasury.wireWithGraduation.selector), bytes("wire failed"));
+        vm.expectRevert(HedgeFunV2BuybackTreasury.GraduationPrincipalRequired.selector);
+        curve.buy(type(uint256).max, 1, address(this), block.timestamp);
+        assertEq(uint256(curve.status()), uint256(HedgeFunBondingCurve.Status.Active));
+        assertEq(treasury.hook(), address(0));
+        assertEq(treasury.liquidityVault(), address(0));
+        assertEq(treasury.protectedGraduationStock(), 0);
+    }
+
     function test_buybackPacesSpendsBurnsWithoutRearmingSellSpike() public {
         _graduateV2(curve);
+        _creditFeeIncome();
         uint256 budget = treasury.buybackStock();
         IERC20 token = IERC20(curve.token());
         uint256 supplyBefore = token.totalSupply();
@@ -80,6 +177,7 @@ contract V2BuybackKindTest is V2FactoryFixture {
 
     function test_liveBuybackSeedsFallbackForAStaleOracle() public {
         _graduateV2(curve);
+        _creditFeeIncome();
         (uint256 spent,) = treasury.buyback();
         uint256 left = treasury.buybackStock();
         assertGt(spent, 0);
@@ -95,6 +193,7 @@ contract V2BuybackKindTest is V2FactoryFixture {
 
     function test_staleOracleWithoutACacheStillFailsClosed() public {
         _graduateV2(curve);
+        _creditFeeIncome();
         assertEq(treasury.lastGoodPrice(), 0);
         assertEq(treasury.lastGoodPriceAt(), 0);
         vm.warp(block.timestamp + 27 hours);
@@ -104,6 +203,7 @@ contract V2BuybackKindTest is V2FactoryFixture {
 
     function test_cachedSizingPriceExpiresAfterFiveDays() public {
         _graduateV2(curve);
+        _creditFeeIncome();
         treasury.buyback();
         uint256 left = treasury.buybackStock();
         vm.warp(block.timestamp + 5 days);
@@ -121,9 +221,10 @@ contract V2BuybackKindTest is V2FactoryFixture {
     /// books straight into the budget, never through `_book`, so it must write the denominator itself.
     function test_kindOneBookRecordsReceivedStockSoTheScorecardHasADenominator() public {
         _graduateV2(curve);
-        uint256 share = treasury.buybackStock();
+        uint256 share = treasury.protectedGraduationStock();
         assertGt(share, 0);
         assertEq(treasury.totalStockReceived(), share, "the graduation share is stock received");
+        _creditFeeIncome();
         treasury.buyback();
         assertGt(treasury.totalStockSpentOnBuybacks(), 0);
         assertEq(treasury.totalStockReceived(), share, "spending is not receiving");
@@ -155,5 +256,14 @@ contract V2BuybackKindTest is V2FactoryFixture {
         assertEq(deployer.strategyKindOf(keccak256(abi.encode(q.symbol, address(this), q.nonce))), 0);
         vm.expectRevert(); // a kind-0 treasury has no UseBuyback selector: execute reverts for its own reasons
         HedgeFunV2BuybackTreasury(t).execute();
+    }
+
+    function _creditFeeIncome() private {
+        address vault = treasury.liquidityVault();
+        stock.mint(vault, 100e18);
+        vm.startPrank(vault);
+        stock.approve(address(treasury), 100e18);
+        treasury.creditLiquidityFee(100e18);
+        vm.stopPrank();
     }
 }

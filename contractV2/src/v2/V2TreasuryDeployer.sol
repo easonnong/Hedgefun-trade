@@ -4,7 +4,8 @@ pragma solidity ^0.8.24;
 import {BoundDeployer} from "../HedgeFunDeployers.sol";
 import {HedgeFunTreasuryBase} from "../HedgeFunTreasuryBase.sol";
 import {IUniswapV3Pool} from "../interfaces/IUniswapV3.sol";
-import {HedgeFunV2AllInTreasury} from "./HedgeFunV2AllInTreasury.sol";
+import {HedgeFunV2UpgradeableTreasury} from "./HedgeFunV2UpgradeableTreasury.sol";
+import {V2TreasuryUpgradeController} from "./V2TreasuryUpgradeController.sol";
 import {EngineConfig, IStrategyPolicy, PolicyManifest, StrategyCapabilities} from "./strategy/IStrategyPolicy.sol";
 import {SpotEngineConfig} from "./strategy/SpotEngineConfig.sol";
 import {V2CreatorParams} from "./strategy/V2CreatorParams.sol";
@@ -25,7 +26,7 @@ contract V2InitCodeChunk {
     }
 }
 
-/// @notice Deploys one V2 treasury per launch, choosing its code by STRATEGY KIND. New kind 0 is `HedgeFunV2AllInTreasury`.
+/// @notice Deploys one V2 treasury per launch. New kind 0 is a delayed-upgrade proxy over the ordinary all-in strategy.
 ///
 /// The factory has no bytes to spare under EIP-170 and its `Request` is the deployed V1 ABI, so the per-launch strategy choice
 /// lives here instead: a creator names the kind for their own (symbol, nonce) salt before `predict`/`launch`, and the
@@ -34,7 +35,8 @@ contract V2InitCodeChunk {
 ///
 /// Every kind must accept the same constructor arguments as `HedgeFunV2Treasury` and honour the treasury surface the
 /// factory, hook, vault and routers call (`wire`, `setLiquidityVault`, `creditLiquidityFee`, `book`, `poolKey`,
-/// `health`). Kinds are write-once: a launched treasury's code is part of its CREATE2 address and cannot be swapped.
+/// `health`). Kind registration is write-once. The new default proxy can change implementations through its public
+/// upgrade controller; other registered kinds remain immutable unless their registered code explicitly supports upgrades.
 contract V2TreasuryDeployer is BoundDeployer {
     error TreasuryDeployFailed();
     error StopInsideExecutionFriction(uint256 stopBps, uint256 minimumExclusiveBps);
@@ -55,9 +57,10 @@ contract V2TreasuryDeployer is BoundDeployer {
     }
     /// registered strategy code, by kind. Index 0 is the ordinary lot strategy with creator-selected rungs.
     Kind[] private _kinds;
-    /// @notice Exact ordinary V2 code allowed creator-selected TP/dip/stop rungs. Also applies if re-registered.
+    /// @notice Exact default proxy creation code allowed creator-selected TP/dip/stop rungs, also if re-registered.
     /// @dev Getter name is retained for clients of earlier registries; this code imposes no economic trigger floor.
     bytes32 public immutable allInTriggerCodeHash;
+    V2TreasuryUpgradeController public immutable upgradeController;
     /// @notice the kind a creator chose for a salt; unset = kind 0
     mapping(bytes32 => uint8) public strategyKindOf;
     mapping(bytes32 => EngineConfig) private _engineConfigOf;
@@ -133,12 +136,12 @@ contract V2TreasuryDeployer is BoundDeployer {
     }
 
     constructor() {
-        bytes memory code = type(HedgeFunV2AllInTreasury).creationCode;
+        upgradeController = new V2TreasuryUpgradeController();
+        bytes memory code = type(HedgeFunV2UpgradeableTreasury).creationCode;
         bytes32 codeHash = keccak256(code);
         allInTriggerCodeHash = codeHash;
         (address a, address b) = makeChunks(code);
-        _kinds.push(Kind(a, b, 0, 0, codeHash, 0));
-        emit KindRegistered(0, a, b);
+        _appendKind(Kind(a, b, 0, 0, codeHash, 0));
     }
 
     /// @notice Split creation code into two immutable code blobs: a treasury's initcode alone exceeds what one
@@ -192,9 +195,7 @@ contract V2TreasuryDeployer is BoundDeployer {
     function registerKind(address a, address b) external returns (uint8 kind) {
         _onlyOwner();
         if (a.code.length == 0 || b.code.length == 0 || _kinds.length == type(uint8).max) revert BadKind();
-        kind = uint8(_kinds.length);
-        _kinds.push(Kind(a, b, 0, 0, _creationCodeHash(a, b), 0));
-        emit KindRegistered(kind, a, b);
+        kind = _appendKind(Kind(a, b, 0, 0, _creationCodeHash(a, b), 0));
     }
 
     /// @notice Register an execution core separately from its policies. All future configurations for this kind
@@ -209,10 +210,15 @@ contract V2TreasuryDeployer is BoundDeployer {
                 || _kinds.length == type(uint8).max
         ) revert BadKind();
         bytes32 codeHash = _creationCodeHash(a, b);
-        kind = uint8(_kinds.length);
-        _kinds.push(Kind(a, b, engineVersion, configSchema, codeHash, capabilities));
-        emit KindRegistered(kind, a, b);
+        kind = _appendKind(Kind(a, b, engineVersion, configSchema, codeHash, capabilities));
         emit EngineKindRegistered(kind, engineVersion, configSchema, codeHash, capabilities);
+    }
+
+    /// @dev Callers enforce capacity and kind-specific validation; share the immutable registration write.
+    function _appendKind(Kind memory k) private returns (uint8 kind) {
+        kind = uint8(_kinds.length);
+        _kinds.push(k);
+        emit KindRegistered(kind, k.chunkA, k.chunkB);
     }
 
     /// @notice Register one audited policy identity. A policy is advisory: the selected engine remains the sole
@@ -316,14 +322,7 @@ contract V2TreasuryDeployer is BoundDeployer {
     function setEngineConfig(string calldata symbol, uint96 nonce, uint8 kind, EngineConfig calldata config) external {
         if (kind >= _kinds.length) revert BadKind();
         Kind storage k = _kinds[kind];
-        PolicyManifest storage manifest = _policies[config.policyKey];
-        if (
-            k.engineConfigSchema == 0 || config.engineVersion != k.engineVersion
-                || config.schema != k.engineConfigSchema || manifest.implementation == address(0)
-                || !manifest.enabledForNewLaunches || manifest.implementation.codehash != manifest.runtimeCodeHash
-                || manifest.engineVersion != config.engineVersion || manifest.configSchema != config.schema
-                || manifest.capabilities & ~k.capabilities != 0
-        ) revert BadPolicy();
+        _checkPolicy(k, config);
         if (
             _isSpotV1(config.engineVersion, config.schema)
                 && !SpotEngineConfig.valid(config.words, 1, type(uint256).max, 1)
@@ -355,23 +354,23 @@ contract V2TreasuryDeployer is BoundDeployer {
         }
         if (configLen != 0) {
             EngineConfig memory config = _engineConfigOf[salt];
-            if (
-                config.engineVersion != k.engineVersion || config.schema != k.engineConfigSchema
-                    || config.policyKey == bytes32(0)
-            ) revert BadPolicy();
-            PolicyManifest storage manifest = _policies[config.policyKey];
-            if (
-                manifest.implementation == address(0) || !manifest.enabledForNewLaunches
-                    || manifest.implementation.codehash != manifest.runtimeCodeHash
-                    || manifest.engineVersion != config.engineVersion || manifest.configSchema != config.schema
-                    || manifest.capabilities & ~k.capabilities != 0
-            ) revert BadPolicy();
+            _checkPolicy(k, config);
             bytes memory encoded = abi.encode(config);
             assembly ("memory-safe") {
                 mcopy(add(add(add(add(code, 0x20), alen), blen), args.length), add(encoded, 0x20), 192)
             }
         }
         if (code.length > MAX_INITCODE_SIZE) revert InitCodeTooLarge();
+    }
+
+    function _checkPolicy(Kind storage k, EngineConfig memory config) private view {
+        PolicyManifest storage manifest = _policies[config.policyKey];
+        if (k.engineConfigSchema == 0 || config.engineVersion != k.engineVersion
+            || config.schema != k.engineConfigSchema || config.policyKey == bytes32(0)
+            || manifest.implementation == address(0) || !manifest.enabledForNewLaunches
+            || manifest.implementation.codehash != manifest.runtimeCodeHash
+            || manifest.engineVersion != config.engineVersion || manifest.configSchema != config.schema
+            || manifest.capabilities & ~k.capabilities != 0) revert BadPolicy();
     }
 
     /// @dev Everything a treasury constructor would refuse, refused here by name: `predict` and `deploy` both run
