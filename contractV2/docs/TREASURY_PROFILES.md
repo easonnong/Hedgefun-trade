@@ -28,6 +28,36 @@ not implemented by schema 3. Its inherited buyback retains the existing fixed ch
 guards. This version has no pending-dividend liability ledger; a future dividend successor must add and audit
 that accounting before any cash balance is considered available for trading.
 
+### Weekend buyback sizing
+
+The V2 buyback uses the live stock/USDG oracle when available. During a scheduled market closure it instead
+converts its fixed USDG chunk and minimum fill through the stock/USDG pool's **600-second TWAP**, even when
+the treasury has never cached a live price and `bandBpsPerHour` is zero. That parameter still controls the
+separate stock strategy; enabling this income-funded FUN buyback does not enable weekend rebalance trades.
+
+The fallback requires an unpaused stock, a valid last stock-feed reference, a fresh USDG feed, a complete TWAP
+window, spot within `maxDeviationBps` of TWAP, and TWAP within the existing 30% outer band of the reference.
+It returns the TWAP itself for sizing, without recording it as `lastGoodPrice`. V2 no longer falls through to
+the legacy five-day cache: an open-session oracle outage, forced closure, or invalid weekend quote fails closed.
+
+Execution still buys the launched FUN token with `buybackStock`, under the separate **FUN/stock** pool's
+TWAP/anchor and price-impact limits. Keeper rewards, burn accounting, cooldown and principal isolation remain
+unchanged. No storage fields or public selectors are added. Existing proxy deployments need a compatible
+implementation upgrade through the 48-hour controller; a source change does not activate the fallback on chain.
+
+Regression coverage is in `test/V2BuybackKind.t.sol`. `TestnetV2WeekendBuybackFork.t.sol` optionally reproduces
+the deployed schema-3 pool's old rejection and the repaired FUN purchase on the same weekend state with a local
+implementation-code overlay, then separately verifies the real delayed upgrade path. It sends no public-chain
+transactions. Run it with `WEEKEND_BUYBACK_FORK=true` and `WEEKEND_BUYBACK_FORK_BLOCK=<fresh testnet block>`.
+The comparison requires a block during a scheduled closure and an unupgraded sample with accrued LP fees;
+its precondition assertions fail rather than silently skip when that state changes.
+
+Validated at Robinhood testnet block 128935822: the repaired local implementation spent
+0.073093088609826987 TSLA and burned 12,996,897.044329732493693297 FUN, with principal unchanged. Both fork
+tests passed; the offline suite passed 1,083 tests with 45 opt-in skips, and 163 Python tests passed.
+[Evidence and source hashes](fuzz/weekend-buyback-2026-10-04/results.json) record the candidate. No public
+testnet implementation was upgraded by this validation.
+
 ## Implemented schema-3 execution
 
 The new proxy, `HedgeFunV2TradablePercentEngineTreasury`, uses the existing 48-hour controller. Its per-launch

@@ -96,19 +96,26 @@ contract HedgeFunTreasury is PoolTrader, HedgeFunTreasuryBase {
         (bool fresh, uint256 feed, uint256 age) = _feed();
         if (!fresh) return (false, p0, false);                                   // no band applies: report what `_health` judged against
 
-        uint256 mean = twapPrice();
-        if (mean == 0) return (false, feed, false);                              // ring cannot serve the window
-        uint256 s = spotPrice();
-        if (HedgeFunMath.exceeds(s > mean ? s - mean : mean - s, mean, _params.maxDeviationBps)) return (false, feed, false);
-
         uint256 band = Math.min(uint256(_params.maxDeviationBps) + uint256(_params.bandBpsPerHour) * age / 1 hours, MAX_BAND_BPS);
-        uint256 dev = mean > feed ? mean - feed : feed - mean;
-        if (HedgeFunMath.exceeds(dev, feed, band)) return (false, feed, false);
+        uint256 mean = _guardedPoolPrice(feed, band);
+        if (mean == 0) return (false, feed, false);
+        uint256 dev = _priceGap(mean, feed);
 
         uint256 agree = HedgeFunMath.bps(feed, _params.maxDeviationBps);
         if (dev <= agree) return (true, feed, false);
-        return (true, mean > feed ? feed + (dev - agree) : feed - (dev - agree), true);
+        return (true, mean > feed ? mean - agree : mean + agree, true);
     }
+
+    /// @dev A complete TWAP window, spot/mean agreement and a bounded departure from the last stock feed.
+    function _guardedPoolPrice(uint256 feed, uint256 band) internal view returns (uint256 mean) {
+        mean = twapPrice();
+        if (mean == 0) return 0;
+        uint256 s = spotPrice();
+        if (HedgeFunMath.exceeds(_priceGap(s, mean), mean, _params.maxDeviationBps)
+            || HedgeFunMath.exceeds(_priceGap(mean, feed), feed, band)) return 0;
+    }
+
+    function _priceGap(uint256 a, uint256 b) private pure returns (uint256) { return a > b ? a - b : b - a; }
 
     /// @dev the feed's last value and the stock leg's age, or nothing.
     function _feed() internal view returns (bool, uint256, uint256) {

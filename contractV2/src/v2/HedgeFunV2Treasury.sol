@@ -45,6 +45,15 @@ contract HedgeFunV2Treasury is HedgeFunTreasury {
     function stopLoss(uint256) public pure override { revert UseExecute(); }
     function buyDip() public pure override { revert UseExecute(); }
 
+    /// @dev Closed-market buybacks need a stock/USDG conversion, even for a new treasury with no price cache.
+    ///      This is independent of the strategy's optional band: it sizes income-only FUN purchases, never stock
+    ///      trades. Keep the existing 30% outer band, fresh dollar leg, pause and spot/TWAP gates. Pool prices do
+    ///      not refresh lastGoodPrice. V2 never bypasses a rejected quote with the legacy sizing cache.
+    function _buybackFallbackPrice() internal view override returns (uint256 p) {
+        (bool valid, uint256 feed,) = _feed();
+        if (valid) p = _guardedPoolPrice(feed, MAX_BAND_BPS);
+    }
+
     function _canAddLot() internal view virtual override returns (bool) { return lots.length < MAX_STRATEGY_LOTS; }
 
     function book() public virtual override nonReentrant returns (bool) { return _bookV2(); }
