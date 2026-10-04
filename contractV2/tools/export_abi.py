@@ -11,9 +11,11 @@ on the commit that is actually deployed and ship that output with the front end.
 import json, os, subprocess, sys
 
 CONTRACTS = ['HedgeFunFactory', 'HedgeFunHook', 'HedgeFunV2Hook', 'HedgeFunTreasury', 'HedgeFunToken', 'HedgeFunTradeRouter', 'HedgeFunLaunchRouter', 'PriceOracle', 'TradingCalendar',
-             'HedgeFunV2Factory', 'CurveDeployer', 'HedgeFunBondingCurve', 'HedgeFunV2Treasury', 'HedgeFunV2AllInTreasury', 'HedgeFunV2EngineTreasury', 'V2RebalancePolicy', 'V2TreasuryDeployer',
+             'HedgeFunV2Factory', 'CurveDeployer', 'HedgeFunBondingCurve', 'HedgeFunV2Treasury', 'HedgeFunV2CycleTreasury', 'HedgeFunV2AllInTreasury', 'HedgeFunV2EngineTreasury', 'V2RebalancePolicy', 'V2TreasuryDeployer',
              'V2LiquidityVault', 'HedgeFunV2TradeRouter', 'HedgeFunV2NativeRouter', 'HedgeFunV2LaunchNativeRouter',
              'HedgeFunV2AssetPercentEngineTreasury', 'V2FundAssetReader', 'V2AssetPercentRebalancePolicy',
+             'HedgeFunV2BuybackTreasury', 'HedgeFunV2UpgradeableTreasury',
+             'HedgeFunV2UpgradeableTreasuryLogic', 'V2TreasuryUpgradeController',
              'HedgeFunV2DividendTreasury', 'HedgeFunV2StrategyDividend25Treasury', 'V2StakingIncome']
 PLUMBING = {'unlockCallback', 'uniswapV3SwapCallback', 'afterSwap', 'beforeSwap', 'beforeInitialize', 'afterInitialize', 'beforeAddLiquidity', 'afterAddLiquidity',
             'beforeRemoveLiquidity', 'afterRemoveLiquidity', 'beforeDonate', 'afterDonate', 'payStock', 'settleStock', 'settleToken', 'bind', 'register', 'registerGraduated', 'graduateCurve', 'release', 'wire'}

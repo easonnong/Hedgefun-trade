@@ -11,6 +11,9 @@ natively.
 |---|---|
 | understand what this is and how the pieces fit | [ARCHITECTURE.md](https://github.com/keyuyuan/hedgefund/blob/64c0adc602bbcbb70c0b4511ac67ee2aa40fceca/docs/ARCHITECTURE.md) |
 | integrate V2 curve launches, graduation and multi-asset trading | [V2_BONDING_CURVE.md](./V2_BONDING_CURVE.md) |
+| trace user, keeper and admin entries for V2 state-sequence testing | [V2_ACTOR_FLOW_FUZZ_MAP.md](./V2_ACTOR_FLOW_FUZZ_MAP.md) |
+| select the optional Cycle kind and follow its bounded recovery entry | [V2_SIMPLE_CYCLE.md](./V2_SIMPLE_CYCLE.md) |
+| review Cycle integration with current dust handling and its test evidence | [V2_CYCLE_INTEGRATION_REVIEW.md](./V2_CYCLE_INTEGRATION_REVIEW.md) |
 | integrate V2 buy/sell fee income and token-fee conversion | [V2_TWO_SIDED_FEES.md](./V2_TWO_SIDED_FEES.md) |
 | review V2 multi-user trading, callback defenses and economic boundaries | [V2_ADVERSARIAL_REVIEW.md](./V2_ADVERSARIAL_REVIEW.md) |
 | review V2 configurable graduation funding and fee-vault risks | [V2_DUAL_ENGINE_REVIEW.md](./V2_DUAL_ENGINE_REVIEW.md) |
@@ -43,7 +46,13 @@ and is enough to review a pull request.
 
 ## The one thing to internalise
 
-**Everything launched is immutable.** A token, its treasury and the one `HedgeFunHook` every
+**Identify the deployment version before describing its permissions.** New default V2 kind-0 treasuries
+use a proxy with owner-scheduled upgrades after a 48-hour delay. The controller binds implementation,
+configuration, migration data and factory ownership epoch; new implementations remain a governance trust
+boundary. The LP vault is separately immutable and has no liquidity-removal path. See
+[V2_BONDING_CURVE.md](./V2_BONDING_CURVE.md) for the current graduation and upgrade design.
+
+For legacy immutable deployments, a token, its treasury and the one `HedgeFunHook` every
 strategy's pool runs on have no upgrade path and no parameter that can change; the token has
 no owner, the treasury's owner can only point its votes (`setVoteDelegate` — reserved, not
 live), and the hook's owner — the same one, the factory's — can repoint each pool's two
@@ -61,6 +70,9 @@ they were written, and carry their dates.
 
 | Document | What it is |
 |---|---|
+| [EQUITY_PARAMETER_FEES_2025_2026-10-03.md](EQUITY_PARAMETER_FEES_2025_2026-10-03.md) | One year of daily TSLA/NVDA/META prices, five strategy profiles, matched fee controls, 39 actual-contract fork cases and independently checked accounting |
+| [COMPETITOR_MECHANICS_2026-10-03.md](COMPETITOR_MECHANICS_2026-10-03.md) | Official-source comparison of Long/StonkFun mechanics and the limits of HedgeFun's claimed differences |
+| [V2_SIMPLE_CYCLE_AUDIT.md](./V2_SIMPLE_CYCLE_AUDIT.md), [V2_SIMPLE_CYCLE_BACKTEST.md](./V2_SIMPLE_CYCLE_BACKTEST.md) | Historical source #110 audit and frozen-price replay; their sizes and test counts describe the pinned source snapshot, with current target validation in the integration review |
 | [`../AUDIT.md`](https://github.com/keyuyuan/hedgefund/blob/64c0adc602bbcbb70c0b4511ac67ee2aa40fceca/AUDIT.md) | Security review, 2026-09-20: three adversarial passes, 43 Foundry reproductions, a go/no-go, and the measured chain facts each finding was sized against. Status banners record which rounds fixed what |
 | [STOCK_TOKEN_ASSESSMENT.md](https://github.com/keyuyuan/hedgefund/blob/64c0adc602bbcbb70c0b4511ac67ee2aa40fceca/docs/STOCK_TOKEN_ASSESSMENT.md) | What the real Robinhood stock token can do to a holder: beacon proxy, upgrader, deny-list, pause, `adminBurn`. Every row VERIFIED or INFERRED |
 | [`../LISTING_CANDIDATES.md`](https://github.com/keyuyuan/hedgefund/blob/64c0adc602bbcbb70c0b4511ac67ee2aa40fceca/LISTING_CANDIDATES.md) | Which stocks can be listed (194 → 35 → 25), the first-wave decision, and what the feeds actually do across a weekend |
