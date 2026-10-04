@@ -244,4 +244,47 @@ contract V2TreasuryUpgradeTest is V2FactoryFixture {
         vm.expectRevert(V2TreasuryUpgradeController.InvalidUpgrade.selector);
         controller.execute(address(proxy), "");
     }
+
+    function test_ownerRoundTripPermanentlyInvalidatesProposalAndRequiresFreshDelay() public {
+        NextTreasuryLogic next = _next(curve.token());
+        _schedule(next, "");
+        uint256 epoch = factory.ownershipEpoch();
+        address successor = address(0x123);
+        vm.prank(owner);
+        factory.transferOwnership(successor);
+        vm.prank(successor);
+        factory.acceptOwnership();
+        vm.warp(block.timestamp + 2 days);
+        vm.prank(successor);
+        factory.transferOwnership(owner);
+        vm.prank(owner);
+        factory.acceptOwnership();
+        assertEq(factory.ownershipEpoch(), epoch + 2);
+        vm.expectRevert(V2TreasuryUpgradeController.InvalidUpgrade.selector);
+        controller.execute(address(proxy), "");
+        assertEq(proxy.implementation(), proxy.initialImplementation());
+
+        _schedule(next, "");
+        vm.warp(block.timestamp + 2 days - 1);
+        vm.expectRevert(V2TreasuryUpgradeController.NotReady.selector);
+        controller.execute(address(proxy), "");
+        vm.warp(block.timestamp + 1);
+        controller.execute(address(proxy), "");
+        assertEq(proxy.implementation(), address(next));
+    }
+
+    function test_unacceptedOrCancelledHandoverDoesNotInvalidateProposal() public {
+        NextTreasuryLogic next = _next(curve.token());
+        _schedule(next, "");
+        uint256 epoch = factory.ownershipEpoch();
+        vm.prank(owner);
+        factory.transferOwnership(address(0x123));
+        assertEq(factory.ownershipEpoch(), epoch);
+        vm.prank(owner);
+        factory.transferOwnership(address(0));
+        assertEq(factory.ownershipEpoch(), epoch);
+        vm.warp(block.timestamp + 2 days);
+        controller.execute(address(proxy), "");
+        assertEq(proxy.implementation(), address(next));
+    }
 }

@@ -248,7 +248,10 @@ initialize proxy parameters during proxy construction; post-deployment reinitial
 `V2TreasuryUpgradeController` reads the current factory owner. That owner may schedule or cancel an upgrade
 for a specific treasury. Execution is permissionless only after a fixed **48-hour delay** and must match the
 announced implementation runtime hash and migration-calldata hash. The candidate must report the same config
-hash and storage-schema identifier. An ownership handover invalidates proposals from the former owner. Failed
+hash and storage-schema identifier. Each accepted factory ownership handover increments `ownershipEpoch`.
+Proposals commit to that epoch and are permanently invalidated by a completed handover, including A→B→A;
+the returning owner must schedule again and wait a fresh 48 hours. Starting or cancelling an unaccepted
+handover does not change the epoch. Failed
 migration reverts the implementation change and proposal consumption together. Implementation pointers live in
 the separate controller, so writing a proxy storage slot cannot bypass its upgrade path.
 
@@ -436,21 +439,21 @@ Solidity 0.8.26, optimizer runs 1, Cancun, no metadata hash:
 | HedgeFunBondingCurve | 7,887 | 10,634 |
 | CurveDeployer | 13,161 | 37,113 |
 | HedgeFunV2Hook | 22,605 | 22,942 |
-| HedgeFunV2Factory | 24,398 | 28,660 |
+| HedgeFunV2Factory | 24,484 | 28,808 |
 | HedgeFunV2Treasury | 23,293 | 27,971 |
 | HedgeFunV2BuybackTreasury | 15,095 | 19,639 |
 | HedgeFunV2EngineTreasury | 22,676 | 29,434 |
 | V2RebalancePolicy | 1,799 | 1,827 |
-| V2TreasuryDeployer | 11,666 | 49,102 |
+| V2TreasuryDeployer | 11,488 | 49,132 |
 | HedgeFunV2UpgradeableTreasury | 1,061 | 33,446 |
 | HedgeFunV2UpgradeableTreasuryLogic | 24,460 | 30,749 |
-| V2TreasuryUpgradeController | 2,717 | 2,760 |
+| V2TreasuryUpgradeController | 2,867 | 2,910 |
 | V2LiquidityVault | 11,559 | 12,715 |
 | HedgeFunV2TradeRouter | 11,966 | 12,494 |
 | HedgeFunV2NativeRouter | 5,812 | 6,210 |
 
-All fit the 24,576-byte runtime and 49,152-byte initcode limits. The factory has 178 runtime bytes free,
-the default treasury logic has 116, and the treasury deployer has only 50 initcode bytes free. Future changes
+All fit the 24,576-byte runtime and 49,152-byte initcode limits. The factory has 92 runtime bytes free,
+the default treasury logic has 116, and the treasury deployer has only 20 initcode bytes free. Future changes
 must retain the deployment-size gates, including constructor arguments for the proxy and logic. CurveDeployer
 stores the curve and vault creation code in inert chunks created in its constructor, keeping that code out of
 its runtime. `deploy` and `predict` hash the curve chunk's bytes, identical to

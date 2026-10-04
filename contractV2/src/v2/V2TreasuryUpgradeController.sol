@@ -2,7 +2,10 @@
 pragma solidity ^0.8.24;
 
 interface IV2UpgradeSource { function factory() external view returns (address); }
-interface IV2UpgradeOwner { function owner() external view returns (address); }
+interface IV2UpgradeOwner {
+    function owner() external view returns (address);
+    function ownershipEpoch() external view returns (uint256);
+}
 interface IV2UpgradeableIdentity {
     function upgradeConfigHash() external view returns (bytes32);
 }
@@ -19,7 +22,7 @@ contract V2TreasuryUpgradeController {
     uint256 public constant UPGRADE_DELAY = 2 days;
     address private immutable deployer;
     mapping(address => address) public implementationOf;
-    struct Proposal { address implementation; address proposer; bytes32 codeHash; bytes32 dataHash; uint256 readyAt; }
+    struct Proposal { address implementation; uint256 ownershipEpoch; bytes32 codeHash; bytes32 dataHash; uint256 readyAt; }
     mapping(address => Proposal) public proposals;
     event UpgradeScheduled(address indexed treasury, address indexed implementation, bytes32 codeHash, bytes32 dataHash, uint256 readyAt);
     event UpgradeCancelled(address indexed treasury);
@@ -31,15 +34,19 @@ contract V2TreasuryUpgradeController {
     constructor() { deployer = msg.sender; }
 
     function owner() public view returns (address) {
-        address f = IV2UpgradeSource(deployer).factory();
-        return f == address(0) ? address(0) : IV2UpgradeOwner(f).owner();
+        IV2UpgradeOwner f = _factory();
+        return address(f) == address(0) ? address(0) : f.owner();
+    }
+
+    function _factory() private view returns (IV2UpgradeOwner) {
+        return IV2UpgradeOwner(IV2UpgradeSource(deployer).factory());
     }
 
     function schedule(address treasury, address next, bytes calldata migration) external {
         if (msg.sender != owner()) revert NotOwner();
         _check(treasury, next);
         uint256 readyAt = block.timestamp + UPGRADE_DELAY;
-        proposals[treasury] = Proposal(next, msg.sender, next.codehash, keccak256(migration), readyAt);
+        proposals[treasury] = Proposal(next, _factory().ownershipEpoch(), next.codehash, keccak256(migration), readyAt);
         emit UpgradeScheduled(treasury, next, next.codehash, keccak256(migration), readyAt);
     }
 
@@ -52,7 +59,8 @@ contract V2TreasuryUpgradeController {
     function execute(address treasury, bytes calldata migration) external {
         Proposal memory p = proposals[treasury];
         if (p.readyAt == 0 || block.timestamp < p.readyAt) revert NotReady();
-        if (p.proposer != owner() || p.codeHash != p.implementation.codehash || p.dataHash != keccak256(migration))
+        if (p.ownershipEpoch != _factory().ownershipEpoch()
+            || p.codeHash != p.implementation.codehash || p.dataHash != keccak256(migration))
             revert InvalidUpgrade();
         _check(treasury, p.implementation);
         address previous = IV2TreasuryProxy(treasury).implementation();

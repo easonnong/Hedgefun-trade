@@ -107,6 +107,39 @@ contract V2BuybackKindTest is V2FactoryFixture {
         assertEq(treasury.protectedGraduationStock(), principal);
     }
 
+    function testFuzz_preclaimedIncomeNeverBecomesGraduationPrincipal(
+        uint96 grossInput, uint96 donationInput, bool failOptionalBook
+    ) public {
+        uint256 gross = bound(uint256(grossInput), 1e16, 5e18);
+        uint256 donation = bound(uint256(donationInput), 0, 3e18);
+        curve.buy(gross, 1, address(this), block.timestamp);
+        uint256 fees = curve.claimable(address(treasury));
+        assertGt(fees, 0);
+        curve.claimFees(address(treasury));
+        if (donation != 0) stock.transfer(address(treasury), donation);
+        assertFalse(treasury.book());
+        uint256 supplyBefore = IERC20(curve.token()).totalSupply();
+        if (failOptionalBook) {
+            vm.mockCallRevert(address(treasury), abi.encodeWithSelector(treasury.book.selector), bytes("book failed"));
+        }
+        _graduateV2(curve);
+        vm.clearMockedCalls();
+        assertEq(IERC20(curve.token()).totalSupply(), supplyBefore, "graduation must not burn FUN");
+        uint256 income = fees + donation;
+        uint256 principal = stock.balanceOf(address(treasury)) - income;
+        assertGt(principal, 0);
+        assertEq(treasury.protectedGraduationStock(), principal);
+        assertEq(treasury.bookedStock(), principal);
+        if (failOptionalBook) {
+            assertEq(treasury.buybackStock(), 0);
+            assertTrue(treasury.book());
+        }
+        assertEq(treasury.buybackStock(), income);
+        assertEq(treasury.totalStockReceived(), principal + income);
+        assertEq(treasury.unbookedStock(), 0);
+        assertFalse(treasury.book(), "no duplicate income");
+    }
+
     function test_failedPrincipalInitializationCannotFallBackToLegacyWire() public {
         vm.mockCallRevert(address(treasury),
             abi.encodeWithSelector(treasury.wireWithGraduation.selector), bytes("wire failed"));

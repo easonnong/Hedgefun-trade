@@ -141,8 +141,7 @@ contract V2TreasuryDeployer is BoundDeployer {
         bytes32 codeHash = keccak256(code);
         allInTriggerCodeHash = codeHash;
         (address a, address b) = makeChunks(code);
-        _kinds.push(Kind(a, b, 0, 0, codeHash, 0));
-        emit KindRegistered(0, a, b);
+        _appendKind(Kind(a, b, 0, 0, codeHash, 0));
     }
 
     /// @notice Split creation code into two immutable code blobs: a treasury's initcode alone exceeds what one
@@ -196,9 +195,7 @@ contract V2TreasuryDeployer is BoundDeployer {
     function registerKind(address a, address b) external returns (uint8 kind) {
         _onlyOwner();
         if (a.code.length == 0 || b.code.length == 0 || _kinds.length == type(uint8).max) revert BadKind();
-        kind = uint8(_kinds.length);
-        _kinds.push(Kind(a, b, 0, 0, _creationCodeHash(a, b), 0));
-        emit KindRegistered(kind, a, b);
+        kind = _appendKind(Kind(a, b, 0, 0, _creationCodeHash(a, b), 0));
     }
 
     /// @notice Register an execution core separately from its policies. All future configurations for this kind
@@ -213,10 +210,15 @@ contract V2TreasuryDeployer is BoundDeployer {
                 || _kinds.length == type(uint8).max
         ) revert BadKind();
         bytes32 codeHash = _creationCodeHash(a, b);
-        kind = uint8(_kinds.length);
-        _kinds.push(Kind(a, b, engineVersion, configSchema, codeHash, capabilities));
-        emit KindRegistered(kind, a, b);
+        kind = _appendKind(Kind(a, b, engineVersion, configSchema, codeHash, capabilities));
         emit EngineKindRegistered(kind, engineVersion, configSchema, codeHash, capabilities);
+    }
+
+    /// @dev Callers enforce capacity and kind-specific validation; share the immutable registration write.
+    function _appendKind(Kind memory k) private returns (uint8 kind) {
+        kind = uint8(_kinds.length);
+        _kinds.push(k);
+        emit KindRegistered(kind, k.chunkA, k.chunkB);
     }
 
     /// @notice Register one audited policy identity. A policy is advisory: the selected engine remains the sole

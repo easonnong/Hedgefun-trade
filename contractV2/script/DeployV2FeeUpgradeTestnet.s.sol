@@ -193,8 +193,8 @@ contract DeployV2FeeUpgradeTestnet is Script {
         _checkVenue(x.venue);
         x.defaults = x.venue.factory.getDefaults();
         if (
-            x.defaults.supply != 1_000_000_000e18 || x.defaults.protocolBps != 2000 || x.defaults.minTaxBps > 300
-                || x.defaults.maxTaxBps < 300 || x.defaults.maxCreatorBps < 1000
+            x.defaults.supply != 1_000_000_000e18 || x.defaults.protocolBps != 2000 || x.defaults.minTaxBps > 100
+                || x.defaults.maxTaxBps < 100 || x.defaults.maxCreatorBps < 1000
         ) {
             revert BadBinding("base fee defaults");
         }
@@ -425,7 +425,7 @@ contract DeployV2FeeUpgradeTestnet is Script {
         vm.serializeAddress(k, "rebalancePolicy", address(x.policy));
         vm.serializeBytes32(k, "rebalancePolicyKey", x.policyKey);
         vm.serializeUint(k, "engineKind", x.engineKind);
-        vm.serializeUint(k, "recommendedTaxBps", 300);
+        vm.serializeUint(k, "recommendedTaxBps", 100);
         vm.serializeUint(k, "recommendedCreatorBps", 1000);
         vm.serializeUint(k, "plannedTransactionCount", plannedTransactionCount());
         string memory stocks;

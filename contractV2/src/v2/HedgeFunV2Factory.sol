@@ -23,6 +23,8 @@ contract HedgeFunV2Factory is HedgeFunFactory {
     CurveDeployer public immutable curveDeployer;
     mapping(uint256 => address) public curves;
     mapping(address => uint256) private _curveIds;
+    /// @notice Monotonic generation of accepted ownership handovers; binds treasury upgrade proposals.
+    uint256 public ownershipEpoch;
     struct Frozen { PoolKey key; HedgeFunHook.Rates rates; }
     mapping(uint256 => Frozen) private _frozen;
 
@@ -46,6 +48,11 @@ contract HedgeFunV2Factory is HedgeFunFactory {
     /// @dev V1 keeps a zero LP fee; V2 has a fee-only vault and caps its static V4 fee at 0.30%.
     function _minLpFee() internal pure override returns (uint24) { return 1; }
     function _maxLpFee() internal pure override returns (uint24) { return 3000; }
+
+    function _transferOwnership(address newOwner) internal override {
+        super._transferOwnership(newOwner);
+        ++ownershipEpoch;
+    }
 
     function graduationConfig(uint256 id) external view returns (PoolKey memory, HedgeFunHook.Rates memory) {
         return (_frozen[id].key, _frozen[id].rates);
