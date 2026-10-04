@@ -21,7 +21,7 @@ permanently locked V4 full-range position and the strategy treasury, and the tre
 | `src/v2/HedgeFunV2Factory.sol` | V2 listings, `predict`/`launch` with V1's terms commitment, and the authenticated `graduateCurve()` path |
 | `src/v2/CurveDeployer.sol` | Holds the curve creation code and the one-time graduation execution |
 | `src/v2/HedgeFunBondingCurve.sol` | Per-launch fixed-product curve: buys, sells, launch-window buy tax, fee liabilities, the graduation trigger |
-| `src/v2/V2LiquidityVault.sol` | Owns the locked full-range V4 position; fee-only collection, no liquidity removal or upgrade path |
+| `src/v2/V2LiquidityVault.sol` | Owns the locked full-range and surplus V4 positions; fee-only collection, no liquidity removal or upgrade path |
 | `src/v2/HedgeFunV2Treasury.sol`, `src/v2/HedgeFunV2AllInTreasury.sol`, `src/v2/V2TreasuryDeployer.sol` | Ordered `execute()` (stop first, then take-profit, then dip), dust handling, creator-selected ordinary rungs in new registries, and pluggable strategy kinds |
 | `src/v2/HedgeFunV2CycleTreasury.sol` | Optional registered lot strategy: after a qualifying actual sale, wait for cooldown and a newer stock report, then permit one bounded recovery buy (`BuyRecovery = 5`); preserves stop/TP priority and current dust handling |
 | `src/v2/HedgeFunV2BuybackTreasury.sol` | Kind 1: a pure buy-back treasury, opt-in (production must register its exact code chunks) |

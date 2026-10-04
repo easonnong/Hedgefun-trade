@@ -45,7 +45,13 @@ and is enough to review a pull request.
 
 ## The one thing to internalise
 
-**Everything launched is immutable.** A token, its treasury and the one `HedgeFunHook` every
+**Identify the deployment version before describing its permissions.** New default V2 kind-0 treasuries
+use a proxy with owner-scheduled upgrades after a 48-hour delay. The controller binds implementation,
+configuration, migration data and factory ownership epoch; new implementations remain a governance trust
+boundary. The LP vault is separately immutable and has no liquidity-removal path. See
+[V2_BONDING_CURVE.md](./V2_BONDING_CURVE.md) for the current graduation and upgrade design.
+
+For legacy immutable deployments, a token, its treasury and the one `HedgeFunHook` every
 strategy's pool runs on have no upgrade path and no parameter that can change; the token has
 no owner, the treasury's owner can only point its votes (`setVoteDelegate` — reserved, not
 live), and the hook's owner — the same one, the factory's — can repoint each pool's two
