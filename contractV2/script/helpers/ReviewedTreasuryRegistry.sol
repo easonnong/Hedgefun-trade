@@ -1,0 +1,47 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.24;
+
+import {IncomeKindCompatibility} from "./IncomeKindCompatibility.sol";
+import {HedgeFunV2Factory} from "../../src/v2/HedgeFunV2Factory.sol";
+import {V2TreasuryDeployer} from "../../src/v2/V2TreasuryDeployer.sol";
+import {V2TreasuryUpgradeController} from "../../src/v2/V2TreasuryUpgradeController.sol";
+import {HedgeFunV2UpgradeableTreasury} from "../../src/v2/HedgeFunV2UpgradeableTreasury.sol";
+
+/// @dev Exact reviewed #25 registry/controller runtimes, with every immutable bound.
+/// Getter values alone do not prove that a controller enforces a delay. Different
+/// compiler/runtime builds need a separately reviewed template update.
+abstract contract ReviewedTreasuryRegistry is IncomeKindCompatibility {
+    error IncompatibleTreasuryRegistry();
+
+    function _reviewedRegistry(HedgeFunV2Factory factory) internal view returns (V2TreasuryDeployer registry) {
+        _checkIncomeCompatibility(factory);
+        registry = V2TreasuryDeployer(address(factory.treasuryDeployer()));
+        if (registry.factory() != address(factory)) revert IncompatibleTreasuryRegistry();
+        V2TreasuryUpgradeController controller = registry.upgradeController();
+        bytes memory code = vm.getDeployedCode("V2TreasuryDeployer.sol:V2TreasuryDeployer");
+        if (keccak256(code) != 0xb1b1adc4d2960d06e0eaa957fba812db587e4c8a701b342a027854b6425cacb7) {
+            revert IncompatibleTreasuryRegistry();
+        }
+        bytes32 trigger = keccak256(type(HedgeFunV2UpgradeableTreasury).creationCode);
+        _bindWord(code, 1335, trigger);
+        _bindWord(code, 7163, trigger);
+        _bindWord(code, 975, bytes32(uint256(uint160(address(controller)))));
+        if (keccak256(code) != address(registry).codehash) revert IncompatibleTreasuryRegistry();
+        code = vm.getDeployedCode("V2TreasuryUpgradeController.sol:V2TreasuryUpgradeController");
+        if (keccak256(code) != 0x6506bf8c847967c042988fa140a0673ffc0e8338e300850707a0d06f670bc930) {
+            revert IncompatibleTreasuryRegistry();
+        }
+        _bindWord(code, 1856, bytes32(uint256(uint160(address(registry)))));
+        if (keccak256(code) != address(controller).codehash) revert IncompatibleTreasuryRegistry();
+    }
+
+    function _bindWord(bytes memory code, uint256 offset, bytes32 value) private pure {
+        if (offset == 0 || offset + 32 > code.length || code[offset - 1] != bytes1(0x7f)) {
+            revert IncompatibleTreasuryRegistry();
+        }
+        bytes32 before;
+        assembly ("memory-safe") { before := mload(add(add(code, 32), offset)) }
+        if (before != bytes32(0)) revert IncompatibleTreasuryRegistry();
+        assembly ("memory-safe") { mstore(add(add(code, 32), offset), value) }
+    }
+}

@@ -46,6 +46,9 @@ and is enough to review a pull request.
 
 ## The one thing to internalise
 
+Product consolidation is tracked in [TREASURY_PROFILES.md](./TREASURY_PROFILES.md): named product choices,
+the implemented schema-3 tradable-capital percentages, and explicit price/cycle/buyback/frontend follow-ups.
+
 **Identify the deployment version before describing its permissions.** New default V2 kind-0 treasuries and the
 new buyback/Engine proxy kinds use owner-scheduled upgrades after a 48-hour delay. Fresh scripts register these
 as kinds 0/1/2; older registries require appended IDs and existing immutable pools do not change. The controller binds implementation,

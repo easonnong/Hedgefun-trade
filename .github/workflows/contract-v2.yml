@@ -159,6 +159,7 @@ jobs:
           INCOME_KINDS_FORK: "true"
           INCOME_COMPAT_FORK: "true"
           UPGRADEABLE_KINDS_FORK: "true"
+          TRADABLE_PERCENT_FORK: "true"
           INCOME_KINDS_FORK_RPC: https://rpc.testnet.chain.robinhood.com
           V2_FACTORY: "0xc9610d4A749b2A62a7327a0f40B59013D8fC415a"
           TESTNET_MARKET: "0xc1AF2f52980F8A7AA4E90A8E30D5c3FaF0375f21"
@@ -169,10 +170,11 @@ jobs:
           export INCOME_KINDS_FORK_BLOCK=$(cast block-number --rpc-url "$INCOME_KINDS_FORK_RPC")
           export INCOME_COMPAT_FORK_BLOCK="$INCOME_KINDS_FORK_BLOCK"
           export UPGRADEABLE_KINDS_FORK_BLOCK="$INCOME_KINDS_FORK_BLOCK"
+          export TRADABLE_PERCENT_FORK_BLOCK="$INCOME_KINDS_FORK_BLOCK"
           [[ "$INCOME_KINDS_FORK_BLOCK" =~ ^[0-9]+$ ]] || { echo "::error::RPC returned no valid block"; exit 1; }
           printf 'chain=46630\nblock=%s\nfactory=%s\nmarket=%s\n' "$INCOME_KINDS_FORK_BLOCK" "$V2_FACTORY" "$TESTNET_MARKET" | tee income-kinds-fork-state.txt
           # RPC failures fail the job. Do not turn an unavailable fork into a green skipped run.
-          forge test --threads 1 --mc '^TestnetV2IncomeKindsForkTest$|^TestnetV2IncomeCompatibilityForkTest$|^TestnetV2TreasuryUpgradeForkTest$' -vv 2>&1 | tee income-kinds-fork.log
+          forge test --threads 1 --mc '^TestnetV2IncomeKindsForkTest$|^TestnetV2IncomeCompatibilityForkTest$|^TestnetV2TreasuryUpgradeForkTest$|^TestnetV2TradablePercentForkTest$' -vv 2>&1 | tee income-kinds-fork.log
           if grep -q '\[SKIP' income-kinds-fork.log; then
             echo "::error::income kind fork scenarios were skipped"
             exit 1
@@ -198,7 +200,9 @@ jobs:
             test_fork_reviewedFactoryAcceptsRegistrationAndReadback \
             test_registrationAppendsKindsAndPreservesLegacyManifestsAndChunks \
             test_buybackUpgradePreservesRealBalancesAndLpThenBooksAndBuys \
-            test_engineUpgradePreservesRealInventoryAndLpThenExecutesAgain; do
+            test_engineUpgradePreservesRealInventoryAndLpThenExecutesAgain \
+            test_registrationAppendsSchemaThreeAndPreservesLegacyManifestsAndChunks \
+            test_launchGraduationTradableRebalanceAndUpgradePreserveInventoryAndLpThenExecuteAgain; do
             grep -Fq "[PASS] $scenario()" income-kinds-fork.log || { echo "::error::missing fork pass: $scenario"; exit 1; }
           done
       - name: Preserve fork block and results, including failures
@@ -237,14 +241,14 @@ jobs:
           set -euo pipefail
           log="income-fuzz-$INCOME_TEST_SEED.log"
           printf 'seed=%s fuzz_runs=%s invariant_runs=%s invariant_depth=%s fail_on_revert=%s\n' "$INCOME_TEST_SEED" "$FOUNDRY_FUZZ_RUNS" "$FOUNDRY_INVARIANT_RUNS" "$FOUNDRY_INVARIANT_DEPTH" "$FOUNDRY_INVARIANT_FAIL_ON_REVERT" | tee "$log"
-          forge test --fuzz-seed "$INCOME_TEST_SEED" --mc '^V2IncomeGraduation.*Test$|^V2StakingIncomeInvariantTest$|^V2StakingAllocationRegressionTest$|^V2StakingRemainderBoundaryTest$|^V2IncomeGasRegressionTest$|^V2BuybackTreasuryUpgradeTest$|^V2EngineTreasuryUpgradeTest$|^V2EngineTreasuryUpgradeInvariantTest$|^V2UpgradeableKindRegistrationTest$' -vv 2>&1 | tee -a "$log"
+          forge test --fuzz-seed "$INCOME_TEST_SEED" --mc '^V2IncomeGraduation.*Test$|^V2StakingIncomeInvariantTest$|^V2StakingAllocationRegressionTest$|^V2StakingRemainderBoundaryTest$|^V2IncomeGasRegressionTest$|^V2BuybackTreasuryUpgradeTest$|^V2EngineTreasuryUpgradeTest$|^V2EngineTreasuryUpgradeInvariantTest$|^V2UpgradeableKindRegistrationTest$|^V2TradablePercent.*Test$' -vv 2>&1 | tee -a "$log"
           if grep -q '\[SKIP' "$log"; then
             echo "::error::income fuzz or invariant scenarios were skipped"
             exit 1
           fi
           grep -q '^\[PASS\]' "$log" || { echo "::error::no income fuzz test passed"; exit 1; }
           # An accidental selector/class rename cannot silently remove an entire regression family.
-          for suite in V2IncomeGraduationTest V2IncomeGraduationSixDecimalsTest V2StakingIncomeInvariantTest V2StakingAllocationRegressionTest V2StakingRemainderBoundaryTest V2IncomeGasRegressionTest V2BuybackTreasuryUpgradeTest V2EngineTreasuryUpgradeTest V2EngineTreasuryUpgradeInvariantTest V2UpgradeableKindRegistrationTest; do
+          for suite in V2IncomeGraduationTest V2IncomeGraduationSixDecimalsTest V2StakingIncomeInvariantTest V2StakingAllocationRegressionTest V2StakingRemainderBoundaryTest V2IncomeGasRegressionTest V2BuybackTreasuryUpgradeTest V2EngineTreasuryUpgradeTest V2EngineTreasuryUpgradeInvariantTest V2UpgradeableKindRegistrationTest V2TradablePercentEngineTest V2TradablePercentAuditTest V2TradablePercentInvariantTest V2TradablePercentRegistrationTest; do
             grep -Fq ":$suite" "$log" || { echo "::error::missing income suite: $suite"; exit 1; }
           done
           grep -Fq '[PASS] invariant_principalAndRewardsAreBackedByIndependentTransfers()' "$log"
@@ -253,6 +257,8 @@ jobs:
           grep -Fq '[PASS] test_gasLimitedBookPreservesDividendShareWithActiveStaker()' "$log"
           grep -Fq '[PASS] invariant_upgradeNeverResetsTradingStateOrCustody()' "$log"
           grep -Fq '[PASS] invariant_upgradedEngineKeepsTurnoverAndExecutionGuards()' "$log"
+          grep -Fq '[PASS] invariant_inventoryAndNonceMatchActualSuccessfulFillsAcrossUpgrades()' "$log"
+          grep -Fq '[PASS] invariant_dynamicCapsUseInputAssetsAndNeverRewriteHistoricalSpend()' "$log"
       - name: Preserve seed and results, including failures
         if: always()
         uses: actions/upload-artifact@v4
