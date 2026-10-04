@@ -63,6 +63,8 @@ they were written, and carry their dates.
 
 | Document | What it is |
 |---|---|
+| [EQUITY_PARAMETER_FEES_2025_2026-10-03.md](EQUITY_PARAMETER_FEES_2025_2026-10-03.md) | One year of daily TSLA/NVDA/META prices, five strategy profiles, matched fee controls, 39 actual-contract fork cases and independently checked accounting |
+| [COMPETITOR_MECHANICS_2026-10-03.md](COMPETITOR_MECHANICS_2026-10-03.md) | Official-source comparison of Long/StonkFun mechanics and the limits of HedgeFun's claimed differences |
 | [V2_SIMPLE_CYCLE_AUDIT.md](./V2_SIMPLE_CYCLE_AUDIT.md), [V2_SIMPLE_CYCLE_BACKTEST.md](./V2_SIMPLE_CYCLE_BACKTEST.md) | Historical source #110 audit and frozen-price replay; their sizes and test counts describe the pinned source snapshot, with current target validation in the integration review |
 | [`../AUDIT.md`](https://github.com/keyuyuan/hedgefund/blob/64c0adc602bbcbb70c0b4511ac67ee2aa40fceca/AUDIT.md) | Security review, 2026-09-20: three adversarial passes, 43 Foundry reproductions, a go/no-go, and the measured chain facts each finding was sized against. Status banners record which rounds fixed what |
 | [STOCK_TOKEN_ASSESSMENT.md](https://github.com/keyuyuan/hedgefund/blob/64c0adc602bbcbb70c0b4511ac67ee2aa40fceca/docs/STOCK_TOKEN_ASSESSMENT.md) | What the real Robinhood stock token can do to a holder: beacon proxy, upgrader, deny-list, pause, `adminBurn`. Every row VERIFIED or INFERRED |
