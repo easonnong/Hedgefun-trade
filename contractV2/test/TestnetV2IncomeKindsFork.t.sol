@@ -43,15 +43,20 @@ contract TestnetV2IncomeKindsForkTest is Test {
 
     function setUp() public {
         vm.skip(!vm.envOr("INCOME_KINDS_FORK", false), "set INCOME_KINDS_FORK=true");
+        uint256 forkBlock = vm.envUint("INCOME_KINDS_FORK_BLOCK");
+        emit log_named_uint("income kinds fork block", forkBlock);
         vm.createSelectFork(
             vm.envOr("INCOME_KINDS_FORK_RPC", string("https://rpc.testnet.chain.robinhood.com")),
-            vm.envUint("INCOME_KINDS_FORK_BLOCK")
+            forkBlock
         );
-        factory = HedgeFunV2Factory(vm.envOr("V2_FACTORY", address(0xACEB03aAeE5494Aa54929Ec840630ae32A9ade0A)));
+        assertEq(block.chainid, 46630, "Robinhood testnet only");
+        factory = HedgeFunV2Factory(vm.envOr("V2_FACTORY", address(0xc9610d4A749b2A62a7327a0f40B59013D8fC415a)));
+        assertGt(address(factory).code.length, 0, "the selected factory exists at the recorded block");
         registry = V2TreasuryDeployer(address(factory.treasuryDeployer()));
         usdg = IERC20(factory.usdg());
         (,,, address listed,) = factory.strategies(0); // a stock this factory has already launched on
         stock = IERC20(listed);
+        assertGt(listed.code.length, 0, "the factory has a deployed stock listing");
         uint256 before = registry.kindCount();
         kinds = new RegisterV2IncomeKinds().register(factory.owner(), factory);
         (dividendKind, splitKind) = (kinds.dividend, kinds.split);
@@ -64,16 +69,70 @@ contract TestnetV2IncomeKindsForkTest is Test {
     function test_strategy25KindOnDeployedFactory() public { _strategyLifecycle(kinds.strategy25, 2500); }
     function test_strategy50KindOnDeployedFactory() public { _strategyLifecycle(kinds.strategy50, 5000); }
 
+    // The same graduation assertions are run through the deployed factory for every opt-in kind. The failure
+    // cases inject the factory's documented optional-book failure; they are not a claim of a live exploit.
+    function test_dividendKindPreclaimedFeesRemainIncome() public { _graduationIncome(dividendKind, 10000, false); }
+    function test_splitKindPreclaimedFeesRemainIncome() public { _graduationIncome(splitKind, 5000, false); }
+    function test_strategy25PreclaimedFeesRemainIncome() public { _graduationIncome(kinds.strategy25, 2500, false); }
+    function test_strategy50PreclaimedFeesRemainIncome() public { _graduationIncome(kinds.strategy50, 5000, false); }
+    function test_dividendKindOptionalBookFailureProtectsPrincipal() public { _graduationIncome(dividendKind, 10000, true); }
+    function test_splitKindOptionalBookFailureProtectsPrincipal() public { _graduationIncome(splitKind, 5000, true); }
+    function test_strategy25OptionalBookFailureProtectsPrincipal() public { _graduationIncome(kinds.strategy25, 2500, true); }
+    function test_strategy50OptionalBookFailureProtectsPrincipal() public { _graduationIncome(kinds.strategy50, 5000, true); }
+
+    function _graduationIncome(uint8 kind, uint256 bps, bool failBook) private {
+        _launch(kind);
+        vm.startPrank(creator);
+        stock.approve(address(curve), type(uint256).max);
+        curve.buy(1e18, 1, creator, block.timestamp);
+        vm.stopPrank();
+        assertEq(uint256(curve.status()), uint256(HedgeFunBondingCurve.Status.Active));
+        uint256 fees = curve.claimable(address(treasury));
+        assertGt(fees, 0, "a partial curve buy earned a treasury fee");
+        curve.claimFees(address(treasury));
+        assertEq(stock.balanceOf(address(treasury)), fees);
+        assertFalse(treasury.book(), "income waits for graduation");
+        if (failBook) {
+            vm.mockCallRevert(address(treasury), abi.encodeWithSelector(treasury.book.selector), bytes("book failed"));
+        }
+        vm.prank(creator);
+        curve.buy(type(uint256).max, 1, creator, block.timestamp);
+        vm.clearMockedCalls();
+        assertEq(uint256(curve.status()), uint256(HedgeFunBondingCurve.Status.Graduated));
+        bool strategy = kind == kinds.strategy25 || kind == kinds.strategy50;
+        uint256 principal = strategy
+            ? HedgeFunV2StrategyIncomeTreasury(address(treasury)).principalStock()
+            : treasury.protectedGraduationStock();
+        assertGt(principal, 0, "principal initialized independently of book");
+        assertEq(stock.balanceOf(address(treasury)) + staking.totalFunded(), principal + fees,
+            "preclaimed fees cannot inflate graduation principal");
+        if (failBook) {
+            assertEq(staking.totalFunded(), 0);
+            assertEq(treasury.buybackStock(), 0);
+        }
+        vm.prank(staker); // the retry is permissionless, not the factory
+        treasury.book();
+        assertEq(staking.totalFunded(), fees * bps / 10000, "only the fee funds the dividend");
+        assertEq(treasury.buybackStock(), fees - staking.totalFunded());
+        assertEq(stock.balanceOf(address(treasury)), principal + treasury.buybackStock());
+        uint256 funded = staking.totalFunded();
+        treasury.book();
+        assertEq(staking.totalFunded(), funded, "retry cannot pay twice");
+    }
+
     /// The strategy's rungs on the deployed venue. The clock is moved to a Tuesday session so the stock oracle is
     /// live; the deployed test market's owner moves the stock's V3 pool and feed together, as it does on testnet.
-    function test_strategy25TakesProfitAndBuysTheDipOnDeployedVenue() public {
+    function test_strategy25TakesProfitAndBuysTheDipOnDeployedVenue() public { _profitAndDip(kinds.strategy25); }
+    function test_strategy50TakesProfitAndBuysTheDipOnDeployedVenue() public { _profitAndDip(kinds.strategy50); }
+
+    function _profitAndDip(uint8 kind) private {
         TestnetMarket market = TestnetMarket(vm.envOr("TESTNET_MARKET", address(0xc1AF2f52980F8A7AA4E90A8E30D5c3FaF0375f21)));
         (address oracle_, address pool,,) = factory.listings(address(stock));
         vm.warp(_nextTuesdaySession());
         (bool live, uint256 p0) = PriceOracle(oracle_).tryPrice();
         assertTrue(live, "the stock oracle is live in the session");
 
-        _launch(kinds.strategy25);
+        _launch(kind);
         HedgeFunV2StrategyIncomeTreasury s = HedgeFunV2StrategyIncomeTreasury(address(treasury));
         vm.startPrank(creator);
         stock.approve(address(curve), type(uint256).max);
@@ -92,9 +151,8 @@ contract TestnetV2IncomeKindsForkTest is Test {
         (HedgeFunV2Treasury.Action a,) = s.execute();
         assertEq(uint256(a), uint256(HedgeFunV2Treasury.Action.TakeProfit));
         uint256 toStakers = staking.totalFunded();
-        uint256 toBuyback = s.buybackStock();
         assertGt(toStakers, 0, "profit reached the staking pool");
-        assertEq(toStakers, (toStakers + toBuyback) * 2500 / 10000);
+        assertEq(toStakers, (toStakers + s.buybackStock()) * s.stakingBps() / 10000);
         assertGt(s.reserveUsdg(), usdgBefore, "the sold principal is USDG for the next dip");
         assertGt(stock.balanceOf(staker), 0, "the keeper was paid its bounty in stock");
         assertEq(stock.balanceOf(address(s)), s.bookedStock() + s.buybackStock());
@@ -108,7 +166,7 @@ contract TestnetV2IncomeKindsForkTest is Test {
         s.execute();
         assertEq(s.lotCount(), lots, "no dip while arrived stock is unclassified");
         assertTrue(s.book());
-        assertEq(staking.totalFunded(), toStakers + 0.25e18);
+        assertEq(staking.totalFunded(), toStakers + uint256(1e18) * s.stakingBps() / 10000);
         (a,) = s.execute();
         assertEq(uint256(a), uint256(HedgeFunV2Treasury.Action.BuyDip));
         assertEq(s.lotCount(), lots + 1);
@@ -116,14 +174,17 @@ contract TestnetV2IncomeKindsForkTest is Test {
     }
 
     /// A stop is a loss: it must still execute, and it pays no dividend.
-    function test_strategy25StopLossOnDeployedVenue() public {
+    function test_strategy25StopLossOnDeployedVenue() public { _stopLoss(kinds.strategy25); }
+    function test_strategy50StopLossOnDeployedVenue() public { _stopLoss(kinds.strategy50); }
+
+    function _stopLoss(uint8 kind) private {
         TestnetMarket market = TestnetMarket(vm.envOr("TESTNET_MARKET", address(0xc1AF2f52980F8A7AA4E90A8E30D5c3FaF0375f21)));
         (address oracle_, address pool,,) = factory.listings(address(stock));
         vm.warp(_nextTuesdaySession());
         (bool live, uint256 p0) = PriceOracle(oracle_).tryPrice();
         assertTrue(live);
         stopBps = 500;
-        _launch(kinds.strategy25);
+        _launch(kind);
         HedgeFunV2StrategyIncomeTreasury s = HedgeFunV2StrategyIncomeTreasury(address(treasury));
         vm.startPrank(creator);
         stock.approve(address(curve), type(uint256).max);
@@ -175,6 +236,7 @@ contract TestnetV2IncomeKindsForkTest is Test {
         router.sell(Router.TradeParams(id, address(stock), 5_000_000e18, 0, 1, block.timestamp, stage, false),
             new Router.Hop[](0));
         vm.stopPrank();
+        _stake();
         uint256 principal = s.principalStock();
         assertGt(principal, 0);
         assertEq(s.buybackStock(), 0);
@@ -195,6 +257,8 @@ contract TestnetV2IncomeKindsForkTest is Test {
         assertGt(lpStock, 0);
         assertEq(s.buybackStock(), budget + lpStock, "LP fees all fund the buy-back");
         assertEq(stock.balanceOf(address(s)), principal + s.buybackStock(), "principal untouched");
+        _exerciseBuyback(principal);
+        _claimAndWithdraw();
     }
 
     uint16 stopBps; // 0 unless a test sets it before _launch
@@ -254,7 +318,6 @@ contract TestnetV2IncomeKindsForkTest is Test {
         assertEq(treasury.totalIncomeStock(), 0);
 
         // stake, then trade both ways in the graduated pool
-        token.transfer(staker, 1_000_000e18);
         stock.approve(address(router), type(uint256).max);
         token.approve(address(router), type(uint256).max);
         uint8 stage = router.GRADUATED();
@@ -262,10 +325,7 @@ contract TestnetV2IncomeKindsForkTest is Test {
         router.sell(Router.TradeParams(id, address(stock), 5_000_000e18, 0, 1, block.timestamp, stage, false),
             new Router.Hop[](0));
         vm.stopPrank();
-        vm.startPrank(staker);
-        token.approve(address(staking), type(uint256).max);
-        staking.stake(1_000_000e18);
-        vm.stopPrank();
+        _stake();
     }
 
     /// tax share (curve claim + hook sweep) and LP fees all become income, split at `bps`
@@ -285,10 +345,49 @@ contract TestnetV2IncomeKindsForkTest is Test {
         assertEq(treasury.buybackStock(), income - treasury.totalDividendStock());
         assertEq(stock.balanceOf(address(treasury)), principal + treasury.buybackStock(), "principal untouched");
 
+        if (bps < 10000) _exerciseBuyback(principal);
+        _claimAndWithdraw();
+    }
+
+    function _stake() private {
+        vm.prank(creator);
+        token.transfer(staker, 1_000_000e18);
+        vm.startPrank(staker);
+        token.approve(address(staking), type(uint256).max);
+        staking.stake(1_000_000e18);
+        vm.expectRevert(V2StakingIncome.StakeLocked.selector);
+        staking.withdraw(1_000_000e18, staker);
+        vm.stopPrank();
+    }
+
+    function _exerciseBuyback(uint256 principal) private {
+        // Refresh the test venue in an open session; all price changes stay inside this memory-only fork.
+        vm.warp(_nextTuesdaySession());
+        (, address pool,,) = factory.listings(address(stock));
+        TestnetMarket market = TestnetMarket(vm.envOr("TESTNET_MARKET", address(0xc1AF2f52980F8A7AA4E90A8E30D5c3FaF0375f21)));
+        vm.prank(market.owner());
+        market.syncFeed(pool);
+        uint256 budget = treasury.buybackStock();
+        uint256 funded = staking.totalFunded();
+        uint256 supply = token.totalSupply();
+        (uint256 spent, uint256 burned) = treasury.buyback();
+        assertGt(spent, 0, "funded buyback actually trades");
+        assertGt(burned, 0, "buyback actually burns bought tokens");
+        assertEq(token.totalSupply(), supply - burned);
+        assertEq(treasury.buybackStock(), budget - spent);
+        assertEq(staking.totalFunded(), funded, "buyback cannot consume or relabel dividend funds");
+        assertEq(stock.balanceOf(address(treasury)), principal + treasury.buybackStock());
+    }
+
+    function _claimAndWithdraw() private {
         vm.warp(block.timestamp + 7 days);
-        vm.prank(staker);
+        vm.startPrank(staker);
         uint256 paid = staking.claim(staker);
-        assertApproxEqAbs(paid, treasury.totalDividendStock(), 1e6, "the only staker earns the whole stream");
+        staking.withdraw(1_000_000e18, staker);
+        vm.stopPrank();
+        assertApproxEqAbs(paid, staking.totalFunded(), 1e6, "the only staker earns the whole stream");
         assertEq(stock.balanceOf(staker), paid);
+        assertEq(token.balanceOf(staker), 1_000_000e18, "all stake principal is withdrawable");
+        assertEq(staking.totalStaked(), 0);
     }
 }

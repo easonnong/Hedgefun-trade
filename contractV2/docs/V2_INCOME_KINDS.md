@@ -11,7 +11,7 @@ CREATE2 address, and cannot be changed after launch.
 
 | Kind | Contract | Stock strategy | Tax share | Realised strategy profit | LP stock fees |
 |---|---|---|---|---|---|
-| 0 (default) | `HedgeFunV2AllInTreasury` | take-profit / dip / stop | booked as a new lot | buy-back | buy-back |
+| 0 (default) | `HedgeFunV2UpgradeableTreasury` | take-profit / dip / stop | booked as a new lot | buy-back | buy-back |
 | strategy + 25% dividend | `HedgeFunV2StrategyDividend25Treasury` | the same rungs | 25% stakers, 75% buy-back | 25% stakers, 75% buy-back | buy-back |
 | strategy + 50% dividend | `HedgeFunV2StrategyDividend50Treasury` | the same rungs | 50% / 50% | 50% / 50% | buy-back |
 | buy-back | `HedgeFunV2BuybackTreasury` | none | buy-back | none | buy-back |
@@ -22,12 +22,17 @@ Four are new: the two strategy kinds and the two without a strategy. Kind ids ar
 on each registry: read them from the registration output, do not hard-code them. The ratio is a constant of each
 kind's code. A different ratio is a new kind, registered the same way.
 
+The four dividend kinds are still directly deployed immutable treasuries. They do not inherit kind 0's upgrade
+controller. Their staking pool fixes its income source at deployment, so using them behind a proxy requires a
+separate initialization and storage design; registering these kinds does not make them upgradeable.
+
 ## The strategy kinds
 
 `HedgeFunV2StrategyIncomeTreasury` is `HedgeFunV2AllInTreasury` with three differences.
 
-- **The graduation principal is the only stock that becomes strategy capital.** The factory books in the
-  transaction that transfers it; the treasury records it as `principalStock` and opens its lot as kind 0 does. If
+- **The graduation principal is the only stock that becomes strategy capital.** The factory initializes the
+  exact transfer with `wireWithGraduation` before sending it; the treasury records it as `principalStock`.
+  Optional `book()` then opens its lot as kind 0 does. If that booking reverts, the principal stays protected. If
   graduation happens while the stock market is shut, the lot opens at the first live price, and it is exactly the
   principal: income that arrived in between is not in it.
 - **The tax share is income, not a new lot.** Kind 0 books every arrival as a lot, so trading fees accumulate as
@@ -47,30 +52,33 @@ If the stock token refuses the transfer to the staking pool, that share stays in
 take-profit is never blocked by the dividend.
 
 The staking pool's `totalFunded` and its `IncomeFunded` event are the record of what was paid; the treasury keeps
-no second counter. Its runtime is 24,531 bytes, 45 under the limit.
+no second counter. Run `forge build --sizes` on the candidate commit to check the limited runtime headroom.
 
 The registry applies its legacy stop check to every kind that is not kind 0: a stop at or inside
 `maxSlippageBps + pool fee + bountyBps` is refused at `predict`.
 
 ## The kinds without a strategy
 
-`HedgeFunV2DividendTreasury` and `HedgeFunV2BuybackDividendTreasury` hold the graduation principal and pay out
-everything that arrives afterwards. The sections below describe them.
+`HedgeFunV2DividendTreasury` and `HedgeFunV2BuybackDividendTreasury` hold the exact graduation principal and split
+other income, including fees claimed before graduation. The sections below describe them.
 
 ## Income, and what is not income (kinds without a strategy)
 
-Income is the stock that reaches the treasury **after** graduation:
+Income is stock other than the factory's exact graduation-capital transfer:
 
 - the treasury's share of the trade tax: claimed from the curve, and paid by the hook's sweep;
 - the stock side of the locked position's LP fees, credited by `V2LiquidityVault.collectFees()`;
 - any stock sent to it.
 
-The stock the treasury holds when the factory books it at graduation is the launch's principal. An income kind
-records it as `protectedGraduationStock` and never spends it: not on a dividend, not on a buy-back. It stays in the
+The factory measures the raise remaining after LP seeding and initializes that exact amount through
+`wireWithGraduation`. An income kind records it as `protectedGraduationStock` and never spends it: not on a dividend,
+not on a buy-back. It stays in the
 treasury. A dividend paid out of the raise would be a return of the buyers' own capital under another name.
 
-Stock claimed from the curve before graduation is in the treasury when the factory books it, so it is counted as
-principal, not income. Claiming after graduation makes it income.
+Claiming curve fees before or after graduation leaves them income. Pre-graduation fees and gifts wait until
+the pool is wired. If the factory's optional `book()` fails, a later permissionless call classifies only this
+income; it cannot reclassify graduation capital. The initializer is factory-only and once-only. A failed capital
+transfer rolls it back with the graduation; a failed initializer cannot fall back to legacy `wire()`.
 
 ## The split (kinds without a strategy)
 
@@ -125,7 +133,7 @@ is the treasury, on chain, instead of a separately funded sponsor.
 ## Keeper actions
 
 ```text
-curve.claimFees(treasury)          once after graduation, and whenever the curve still owes the treasury
+curve.claimFees(treasury)          whenever the curve owes the treasury; claim timing does not change income
 hook.sweep(poolId)                 pays the treasury its stock-side tax share
 treasury.book()                    classifies arrivals as income and pays the stakers' share; call before execute()
 treasury.execute()                 strategy kinds only: stop, take-profit (splits the profit), dip
@@ -140,6 +148,11 @@ All are permissionless.
 
 Three independent operator actions. Each is a script that checks its bindings before its first transaction;
 simulate without `--broadcast` first.
+
+These revised kinds require a factory whose graduation path calls `wireWithGraduation`, as introduced in #25.
+They intentionally reject legacy `wire()`. Registering them on an older factory that lacks this path would make
+their launches unable to graduate; do not register them there. The fork suite targets the compatible testnet
+factory `0xc9610d4A749b2A62a7327a0f40B59013D8fC415a`.
 
 1. **Dividend kinds.** `OPERATOR` must be the factory owner. Eight transactions.
 
@@ -175,15 +188,24 @@ Local, offline:
   script against the fixture factory, and a strategy kind launched and graduated through the real factory, curve,
   hook and vault.
 
-Fork, no key and no broadcast, against the deployed testnet factory
-`0xACEB03aAeE5494Aa54929Ec840630ae32A9ade0A` at block 128498681, six tests:
+The revised kinds passed 16 in-memory fork tests against testnet factory
+`0xc9610d4A749b2A62a7327a0f40B59013D8fC415a` at block 128583570 on 2026-10-04, with no key or broadcast:
 
 - the registration script run as the factory's owner, then a launch of each of the four kinds through the
   deployed factory, hook and vault, graduation, trades both ways, and the income split at the kind's ratio;
 - with the clock moved to a Tuesday session and the deployed test market's owner moving the stock's V3 pool and
   feed: a strategy kind opens its principal lot at graduation, takes profit on the deployed venue with the profit
   split 25/75, refuses a dip while arrived tax is unclassified, splits that tax on `book()` and then buys the dip;
-- a strategy kind with a stop sells at the stop and pays no dividend.
+- both strategy ratios execute take-profit, dip and stop; a stop pays no dividend;
+- all four kinds preserve principal after an injected optional-book failure and classify preclaimed fees as
+  income; the lifecycle checks also exercise a buy-back, locked-withdrawal rejection and complete staking exit.
+
+`V2IncomeGraduation.t.sol` fuzzes all four kinds, 6/18-decimal stock, LP shares from 10% through 100%, claim
+timing, early/late gifts, optional booking failure and initializer/transfer rollback. Its capital oracle is the
+factory's measured `GraduationCapitalSplit` event, not the treasury's own principal counter.
+`V2StakingIncomeInvariant.t.sol` sequences four users' funding, stakes, withdrawals, claims, time advances,
+donations and transfer failures against a separate transfer ledger. It checks asset backing and exits after
+each sequence. CI runs three recorded seeds and a distinct fork job, and rejects skipped fork results.
 
 ```sh
 INCOME_KINDS_FORK=true INCOME_KINDS_FORK_BLOCK=$(cast block-number --rpc-url https://rpc.testnet.chain.robinhood.com) \
@@ -194,7 +216,7 @@ On 2026-10-03, `TestnetV2EthBridgeForkTest` passed at block 128456854: bridge se
 balance, native-launch activation, and a launch-and-buy from a wallet holding only ETH. The public RPC prunes old
 state, so both commands need a fresh block.
 
-The existing kinds' creation code is byte-identical before and after this change. `creditLiquidityFee` and
+Relative to the merged #25 base, the existing kinds' creation code is unaffected by the new income kinds. `creditLiquidityFee` and
 `HedgeFunV2AllInTreasury._takeProfit` gained the `virtual` keyword, which emits no code.
 
 ## Front end

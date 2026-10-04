@@ -3,6 +3,7 @@ pragma solidity ^0.8.24;
 
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+import {PoolKey} from "v4-core/src/types/PoolKey.sol";
 import {HedgeFunV2Treasury} from "./HedgeFunV2Treasury.sol";
 import {V2StakingIncome} from "./V2StakingIncome.sol";
 
@@ -10,13 +11,13 @@ import {V2StakingIncome} from "./V2StakingIncome.sol";
 ///         dividend and the token buy-back. Opt-in per launch, like kind 1: the owner registers the exact code
 ///         chunks, a creator names the kind for their own salt before `predict`/`launch`.
 ///
-/// Income is the stock that arrives AFTER graduation: this treasury's share of the trade tax, the stock side of
+/// Income is stock other than the exact graduation capital: this treasury's share of the trade tax, the stock side of
 /// the locked position's LP fees, and gifts. `stakingBps()` of it is transferred to this launch's own
 /// `V2StakingIncome`, where it streams to whoever staked the launch token; the rest is the inherited buy-back
 /// budget, spent by the inherited `buyback()` under the same pacing, price limits and bounty.
 ///
-/// Graduation principal is NOT income. Whatever stock the treasury holds when the factory books it at graduation
-/// is recorded as `protectedGraduationStock` and never funds a dividend or a buy-back.
+/// Graduation principal is NOT income. The factory records its exact transfer in `protectedGraduationStock`
+/// before sending it, independently of optional income booking. It never funds a dividend or a buy-back.
 ///
 /// The stakers' share never enters the buy-back budget, so `buyback()` cannot spend it:
 ///
@@ -36,6 +37,7 @@ abstract contract HedgeFunV2IncomeTreasury is HedgeFunV2Treasury {
     using SafeERC20 for IERC20;
 
     error UseBuyback();
+    error GraduationPrincipalRequired();
     event GraduationPrincipalProtected(uint256 amount);
     event IncomeBooked(uint256 amount, uint256 stakersShare);
     event DividendFunded(uint256 amount, uint256 totalDividendStock);
@@ -45,7 +47,7 @@ abstract contract HedgeFunV2IncomeTreasury is HedgeFunV2Treasury {
 
     /// @notice This launch's staking pool: stake the launch token, earn the listed stock.
     V2StakingIncome public immutable staking;
-    /// @notice Stock held at graduation. Booked, never spent: no lot, no dividend, no buy-back.
+    /// @notice Exact graduation capital. Booked, never spent: no lot, no dividend, no buy-back.
     uint256 public protectedGraduationStock;
     /// @notice Income received after graduation: tax share, LP stock fees, gifts.
     uint256 public totalIncomeStock;
@@ -64,6 +66,19 @@ abstract contract HedgeFunV2IncomeTreasury is HedgeFunV2Treasury {
     /// @notice The share of income paid to stakers, in bps. The remainder is buy-back budget.
     function stakingBps() public pure virtual returns (uint16);
 
+    /// @dev A legacy initializer cannot separate graduation capital from previously claimed fees.
+    function wire(PoolKey calldata) public pure override { revert GraduationPrincipalRequired(); }
+
+    /// @notice Record exactly the capital the factory transfers after seeding the LP.
+    /// @dev Factory-only and once-only through super.wire. A failed transfer rolls back this initializer too.
+    function wireWithGraduation(PoolKey calldata key, uint256 principal) external {
+        super.wire(key);
+        protectedGraduationStock = principal;
+        bookedStock = principal;
+        totalStockReceived = principal;
+        emit GraduationPrincipalProtected(principal);
+    }
+
     /// @notice Stock that has arrived and is in no ledger yet. The base's `unbookedStock()` does not know about
     ///         `pendingDividendStock` and reports it as unbooked until it is transferred.
     function unbookedIncome() public view returns (uint256) {
@@ -74,20 +89,14 @@ abstract contract HedgeFunV2IncomeTreasury is HedgeFunV2Treasury {
 
     /// @notice Book arrived stock as income and pay the stakers' share. Needs no oracle. Parked until
     ///         graduation wires the pool.
-    /// @dev The factory books in the same transaction that transfers the graduation principal. That capital is
-    ///      not earnings. Also records `totalStockReceived`, which the inherited lot booking never reaches here.
+    /// @dev Principal is already segregated by wireWithGraduation; a failed optional book cannot expose it.
+    ///      Also records `totalStockReceived`, which the inherited lot booking never reaches here.
     function book() public override nonReentrant returns (bool booked) {
         if (hook == address(0)) return false;
         uint256 pending = unbookedIncome();
         if (pending != 0) {
             booked = true;
             totalStockReceived += pending;
-            if (msg.sender == factory && protectedGraduationStock == 0 && totalIncomeStock == 0) {
-                protectedGraduationStock = pending;
-                bookedStock += pending;
-                emit GraduationPrincipalProtected(pending);
-                return true;
-            }
             _credit(pending);
         }
         _distribute();

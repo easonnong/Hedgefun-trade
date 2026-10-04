@@ -137,3 +137,115 @@ jobs:
           grep -Fq '[PASS] test_fork_nativeLaunchActivatesAndBuysThroughCanonicalTwoHopV3()' native-launch-fork.log
           grep -Fq '[PASS] test_realWrappedNativeVenueSupportsStockPaymentAndEthUnderlyingGraduationWithoutChangingEightListings()' native-launch-fork.log
           grep -Fq '[PASS] test_nativeOnlyWalletLaunchesAndBuysStockThroughRecoverableBridge()' native-launch-fork.log
+
+  income-kinds-testnet-fork:
+    name: V2 income kinds on the upgraded testnet factory
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    concurrency:
+      group: income-kinds-testnet-fork-${{ github.repository }}-${{ github.head_ref || github.ref_name }}
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: v1.5.0
+      - name: Compile before selecting fresh fork state
+        run: forge build --sizes
+      - name: Four income kinds, graduation fault cases, staking exits and strategy execution
+        env:
+          INCOME_KINDS_FORK: "true"
+          INCOME_KINDS_FORK_RPC: https://rpc.testnet.chain.robinhood.com
+          V2_FACTORY: "0xc9610d4A749b2A62a7327a0f40B59013D8fC415a"
+          TESTNET_MARKET: "0xc1AF2f52980F8A7AA4E90A8E30D5c3FaF0375f21"
+        run: |
+          set -euo pipefail
+          # Public state is pruned: pin one fresh block for this entire run, after compilation.
+          # No keys, script --broadcast, RPC writes or public-chain transactions are used.
+          export INCOME_KINDS_FORK_BLOCK=$(cast block-number --rpc-url "$INCOME_KINDS_FORK_RPC")
+          [[ "$INCOME_KINDS_FORK_BLOCK" =~ ^[0-9]+$ ]] || { echo "::error::RPC returned no valid block"; exit 1; }
+          printf 'chain=46630\nblock=%s\nfactory=%s\nmarket=%s\n' "$INCOME_KINDS_FORK_BLOCK" "$V2_FACTORY" "$TESTNET_MARKET" | tee income-kinds-fork-state.txt
+          # RPC failures fail the job. Do not turn an unavailable fork into a green skipped run.
+          forge test --threads 1 --mc '^TestnetV2IncomeKindsForkTest$' -vv 2>&1 | tee income-kinds-fork.log
+          if grep -q '\[SKIP' income-kinds-fork.log; then
+            echo "::error::income kind fork scenarios were skipped"
+            exit 1
+          fi
+          for scenario in \
+            test_dividendKindOnDeployedFactory \
+            test_splitKindOnDeployedFactory \
+            test_strategy25KindOnDeployedFactory \
+            test_strategy50KindOnDeployedFactory \
+            test_dividendKindPreclaimedFeesRemainIncome \
+            test_splitKindPreclaimedFeesRemainIncome \
+            test_strategy25PreclaimedFeesRemainIncome \
+            test_strategy50PreclaimedFeesRemainIncome \
+            test_dividendKindOptionalBookFailureProtectsPrincipal \
+            test_splitKindOptionalBookFailureProtectsPrincipal \
+            test_strategy25OptionalBookFailureProtectsPrincipal \
+            test_strategy50OptionalBookFailureProtectsPrincipal \
+            test_strategy25TakesProfitAndBuysTheDipOnDeployedVenue \
+            test_strategy25StopLossOnDeployedVenue \
+            test_strategy50TakesProfitAndBuysTheDipOnDeployedVenue \
+            test_strategy50StopLossOnDeployedVenue; do
+            grep -Fq "[PASS] $scenario()" income-kinds-fork.log || { echo "::error::missing fork pass: $scenario"; exit 1; }
+          done
+      - name: Preserve fork block and results, including failures
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: income-kinds-testnet-fork
+          path: |
+            contractV2/income-kinds-fork-state.txt
+            contractV2/income-kinds-fork.log
+          if-no-files-found: warn
+
+  income-fuzz:
+    name: V2 income fuzz and invariant seed ${{ matrix.seed }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        seed: ["0x2026100401", "0x2026100402", "0x2026100403"]
+    env:
+      FOUNDRY_FUZZ_RUNS: "1024"
+      FOUNDRY_INVARIANT_RUNS: "512"
+      FOUNDRY_INVARIANT_DEPTH: "128"
+      FOUNDRY_INVARIANT_FAIL_ON_REVERT: "true"
+      INCOME_TEST_SEED: ${{ matrix.seed }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: v1.5.0
+      - name: Graduation bookkeeping, staking conservation and constrained-gas regression
+        run: |
+          set -euo pipefail
+          log="income-fuzz-$INCOME_TEST_SEED.log"
+          printf 'seed=%s fuzz_runs=%s invariant_runs=%s invariant_depth=%s fail_on_revert=%s\n' "$INCOME_TEST_SEED" "$FOUNDRY_FUZZ_RUNS" "$FOUNDRY_INVARIANT_RUNS" "$FOUNDRY_INVARIANT_DEPTH" "$FOUNDRY_INVARIANT_FAIL_ON_REVERT" | tee "$log"
+          forge test --fuzz-seed "$INCOME_TEST_SEED" --mc '^V2IncomeGraduation.*Test$|^V2StakingIncomeInvariantTest$|^V2IncomeGasRegressionTest$' -vv 2>&1 | tee -a "$log"
+          if grep -q '\[SKIP' "$log"; then
+            echo "::error::income fuzz or invariant scenarios were skipped"
+            exit 1
+          fi
+          grep -q '^\[PASS\]' "$log" || { echo "::error::no income fuzz test passed"; exit 1; }
+          # An accidental selector/class rename cannot silently remove an entire regression family.
+          for suite in V2IncomeGraduationTest V2IncomeGraduationSixDecimalsTest V2StakingIncomeInvariantTest V2IncomeGasRegressionTest; do
+            grep -Fq ":$suite" "$log" || { echo "::error::missing income suite: $suite"; exit 1; }
+          done
+          grep -Fq '[PASS] invariant_principalAndRewardsAreBackedByIndependentTransfers()' "$log"
+          grep -Fq '[PASS] testFuzz_claimTimingCannotRelabelPrincipal(' "$log"
+          grep -Fq '[PASS] test_gasLimitedBookPreservesDividendShare()' "$log"
+          grep -Fq '[PASS] test_gasLimitedBookPreservesDividendShareWithActiveStaker()' "$log"
+      - name: Preserve seed and results, including failures
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: income-fuzz-${{ matrix.seed }}
+          path: contractV2/income-fuzz-${{ matrix.seed }}.log
+          if-no-files-found: warn

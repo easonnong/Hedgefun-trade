@@ -19,7 +19,7 @@ import {V2FactoryFixture} from "./utils/V2FactoryFixture.sol";
 
 /// The income kinds through the whole lifecycle: registered by the owner, chosen by the creator, launched,
 /// graduated, and then paying their post-graduation income to stakers and the buy-back in a fixed ratio.
-contract V2IncomeKindsTest is V2FactoryFixture {
+abstract contract V2IncomeKindsFixture is V2FactoryFixture {
     using PoolIdLibrary for PoolKey;
 
     V2TreasuryDeployer internal deployer;
@@ -41,7 +41,7 @@ contract V2IncomeKindsTest is V2FactoryFixture {
     }
 
     function setUp() public {
-        _setUpV2(18);
+        _setUpV2(_incomeStockDecimals());
         deployer = V2TreasuryDeployer(address(factory.treasuryDeployer()));
         router = new Router(factory);
         // the operator script is how an existing factory gets these kinds; the fixture is that factory
@@ -54,6 +54,8 @@ contract V2IncomeKindsTest is V2FactoryFixture {
         assertEq(splitKind, 4);
         stock.approve(address(router), type(uint256).max);
     }
+
+    function _incomeStockDecimals() internal pure virtual returns (uint8) { return 18; }
 
     function _launch(uint8 kind) internal returns (Launch memory l) {
         HedgeFunFactory.Request memory q = _request();
@@ -76,6 +78,10 @@ contract V2IncomeKindsTest is V2FactoryFixture {
         l = _launch(kind);
         _graduateV2(l.curve);
     }
+}
+
+contract V2IncomeKindsTest is V2IncomeKindsFixture {
+    using PoolIdLibrary for PoolKey;
 
     function test_creatorChoosesAKindAndGetsItsOwnStakingPool() public {
         Launch memory l = _launch(dividendKind);

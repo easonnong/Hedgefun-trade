@@ -26,8 +26,8 @@ import {MockToken, MockFeed, AlwaysOpen, SwitchableCalendar} from "./mocks/Mocks
 import {MirrorV3Pool, NoopHook} from "./InteractVenueParity.t.sol";
 
 /// The ordinary stock strategy with a staking dividend, against the same real concentrated-liquidity stock venue
-/// as the V2 scheduler suite. This test contract plays the factory: its first `book()` is the graduation booking,
-/// every later arrival is income.
+/// as the V2 scheduler suite. This test contract plays the factory: it wires the exact graduation transfer
+/// before optional booking. Other arrivals are income, independent of caller or claim timing.
 abstract contract V2StrategyIncomeBase is Test {
     using StateLibrary for IPoolManager;
     using PoolIdLibrary for PoolKey;
@@ -129,11 +129,11 @@ abstract contract V2StrategyIncomeBase is Test {
     function _deploy25(address oracle_) internal returns (HedgeFunV2StrategyIncomeTreasury d) {
         d = new HedgeFunV2StrategyDividend25Treasury(address(usdg), address(stock), address(mirror), oracle_,
             address(token), address(pm), address(this), _params());
-        d.wire(_tokenKey());
         staking = d.staking();
     }
 
     function _graduate(uint256 principal) internal {
+        t.wireWithGraduation(_tokenKey(), principal);
         stock.mint(address(t), principal);
         assertTrue(t.book(), "the factory's booking opens the principal's lot");
     }
@@ -252,6 +252,7 @@ abstract contract V2StrategyIncomeBase is Test {
             26 hours, 26 hours);
         t = _deploy25(address(closedOracle));
         cal.setClosed(true);
+        t.wireWithGraduation(_tokenKey(), 10 ether);
         stock.mint(address(t), 10 ether);
         t.book();                                       // graduation on a weekend: recorded, no price to open a lot at
         assertEq(t.principalStock(), 10 ether);

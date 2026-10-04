@@ -1084,6 +1084,46 @@
   "name": "wire",
   "inputs": [
    {
+    "name": "",
+    "type": "tuple",
+    "internalType": "struct PoolKey",
+    "components": [
+     {
+      "name": "currency0",
+      "type": "address",
+      "internalType": "Currency"
+     },
+     {
+      "name": "currency1",
+      "type": "address",
+      "internalType": "Currency"
+     },
+     {
+      "name": "fee",
+      "type": "uint24",
+      "internalType": "uint24"
+     },
+     {
+      "name": "tickSpacing",
+      "type": "int24",
+      "internalType": "int24"
+     },
+     {
+      "name": "hooks",
+      "type": "address",
+      "internalType": "contract IHooks"
+     }
+    ]
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "pure"
+ },
+ {
+  "type": "function",
+  "name": "wireWithGraduation",
+  "inputs": [
+   {
     "name": "key",
     "type": "tuple",
     "internalType": "struct PoolKey",
@@ -1114,6 +1154,11 @@
       "internalType": "contract IHooks"
      }
     ]
+   },
+   {
+    "name": "principal",
+    "type": "uint256",
+    "internalType": "uint256"
    }
   ],
   "outputs": [],
@@ -1410,6 +1455,11 @@
  {
   "type": "error",
   "name": "Cooldown",
+  "inputs": []
+ },
+ {
+  "type": "error",
+  "name": "GraduationPrincipalRequired",
   "inputs": []
  },
  {

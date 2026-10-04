@@ -3,6 +3,7 @@ pragma solidity ^0.8.24;
 
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+import {PoolKey} from "v4-core/src/types/PoolKey.sol";
 import {HedgeFunV2AllInTreasury} from "./HedgeFunV2AllInTreasury.sol";
 import {V2StakingIncome} from "./V2StakingIncome.sol";
 
@@ -24,9 +25,11 @@ import {V2StakingIncome} from "./V2StakingIncome.sol";
 abstract contract HedgeFunV2StrategyIncomeTreasury is HedgeFunV2AllInTreasury {
     using SafeERC20 for IERC20;
 
+    error GraduationPrincipalRequired();
+
     /// @notice This launch's staking pool: stake the launch token, earn the listed stock.
     V2StakingIncome public immutable staking;
-    /// @notice Stock held when the factory booked at graduation: strategy capital, never income.
+    /// @notice Exact graduation transfer recorded before optional booking: strategy capital, never income.
     uint256 public principalStock;
 
     constructor(address usdg_, address stock_, address v3Pool_, address oracle_, address token_,
@@ -41,6 +44,15 @@ abstract contract HedgeFunV2StrategyIncomeTreasury is HedgeFunV2AllInTreasury {
     /// @notice The share of profit and tax income paid to stakers, in bps. The remainder is buy-back budget.
     function stakingBps() public pure virtual returns (uint16);
 
+    function wire(PoolKey calldata) public pure override { revert GraduationPrincipalRequired(); }
+
+    /// @notice Separate graduation capital from earned fees, even when the optional book() fails.
+    /// @dev Factory-only and once-only through super.wire; the transfer is part of the same atomic graduation.
+    function wireWithGraduation(PoolKey calldata key, uint256 principal) external {
+        super.wire(key);
+        principalStock = principal;
+    }
+
     /// @dev Unbooked stock that is strategy capital: the principal until its lot opens, and released lot dust.
     function _capitalUnbooked() private view returns (uint256) {
         return (totalStockReceived == 0 ? principalStock : 0) + _releasedDustStock;
@@ -51,20 +63,15 @@ abstract contract HedgeFunV2StrategyIncomeTreasury is HedgeFunV2AllInTreasury {
     }
 
     /// @notice Classify arrived stock, then open the principal's lot when a live price allows it.
-    /// @dev The factory books in the transaction that transfers the graduation principal. Everything that arrives
-    ///      later is income.
+    /// @dev wireWithGraduation already identified principal; claim timing and caller cannot relabel income.
     function book() public override nonReentrant returns (bool booked) {
         if (hook == address(0)) return false;
         uint256 un = unbookedStock();
-        if (msg.sender == factory && principalStock == 0) {
-            principalStock = un;
-        } else {
-            uint256 capital = _capitalUnbooked();
-            if (un > capital) {
-                buybackStock += un - capital;
-                _split(un - capital);
-                booked = true;
-            }
+        uint256 capital = _capitalUnbooked();
+        if (un > capital) {
+            buybackStock += un - capital;
+            _split(un - capital);
+            booked = true;
         }
         if (_bookV2()) booked = true;
     }

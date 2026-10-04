@@ -1,0 +1,33 @@
+No files changed, compilation skipped
+
+Ran 12 tests for test/V2IncomeGraduation.t.sol:V2IncomeGraduationTest
+[PASS] testFuzz_claimTimingCannotRelabelPrincipal((uint8,uint16,uint96,uint96,uint96,bool,bool)) (runs: 4096, μ: 13124139, ~: 12354116)
+[PASS] testFuzz_failedInitializationCannotFallBackToLegacyWire(uint8) (runs: 4096, μ: 12618363, ~: 11911538)
+[PASS] testFuzz_failedPrincipalTransferRollsBackInitialization(uint8) (runs: 4096, μ: 16530719, ~: 15766204)
+[PASS] testFuzz_principalInitializationRequiresFactoryAndCannotRepeat(uint8) (runs: 4096, μ: 12795073, ~: 12011648)
+[PASS] test_optionalBookFailureDividend() (gas: 12007592)
+[PASS] test_optionalBookFailureSplit() (gas: 12008135)
+[PASS] test_optionalBookFailureStrategy25() (gas: 13889714)
+[PASS] test_optionalBookFailureStrategy50() (gas: 13889989)
+[PASS] test_preclaimedFeesDividend() (gas: 12193955)
+[PASS] test_preclaimedFeesSplit() (gas: 12214112)
+[PASS] test_preclaimedFeesStrategy25() (gas: 14042228)
+[PASS] test_preclaimedFeesStrategy50() (gas: 14042173)
+Suite result: ok. 12 passed; 0 failed; 0 skipped; finished in 8.50s (27.61s CPU time)
+
+Ran 12 tests for test/V2IncomeGraduation.t.sol:V2IncomeGraduationSixDecimalsTest
+[PASS] testFuzz_claimTimingCannotRelabelPrincipal((uint8,uint16,uint96,uint96,uint96,bool,bool)) (runs: 4096, μ: 13111586, ~: 12353488)
+[PASS] testFuzz_failedInitializationCannotFallBackToLegacyWire(uint8) (runs: 4096, μ: 12627676, ~: 11910508)
+[PASS] testFuzz_failedPrincipalTransferRollsBackInitialization(uint8) (runs: 4096, μ: 16540866, ~: 15765192)
+[PASS] testFuzz_principalInitializationRequiresFactoryAndCannotRepeat(uint8) (runs: 4096, μ: 12805479, ~: 12010618)
+[PASS] test_optionalBookFailureDividend() (gas: 12006562)
+[PASS] test_optionalBookFailureSplit() (gas: 12007105)
+[PASS] test_optionalBookFailureStrategy25() (gas: 13888617)
+[PASS] test_optionalBookFailureStrategy50() (gas: 13888892)
+[PASS] test_preclaimedFeesDividend() (gas: 12192925)
+[PASS] test_preclaimedFeesSplit() (gas: 12213082)
+[PASS] test_preclaimedFeesStrategy25() (gas: 14041131)
+[PASS] test_preclaimedFeesStrategy50() (gas: 14041076)
+Suite result: ok. 12 passed; 0 failed; 0 skipped; finished in 8.50s (27.57s CPU time)
+
+Ran 2 test suites in 8.50s (16.99s CPU time): 24 tests passed, 0 failed, 0 skipped (24 total tests)
