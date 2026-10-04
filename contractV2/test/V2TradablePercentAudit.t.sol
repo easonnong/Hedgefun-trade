@@ -126,8 +126,8 @@ contract V2TradablePercentAuditTest is V2TradablePercentEngineFixture {
         bool buy,
         bool payout
     ) public {
-        uint256 buyBps = bound(rawBuy, 1000, 3000);
-        uint256 sellBps = bound(rawSell, 1000, 3000);
+        uint256 buyBps = bound(rawBuy, 1000, 2500);
+        uint256 sellBps = bound(rawSell, 1000, 2500);
         uint16 fill = uint16(bound(rawFill, 1000, 9999));
         // A deliberately tiny legacy cap must not silently clip the new percentage action.
         vm.prank(owner);
@@ -181,7 +181,7 @@ contract V2TradablePercentAuditTest is V2TradablePercentEngineFixture {
     }
 
     function test_lpDonationsAndCreditedBuybackCannotInflateAnyTradingCap() public {
-        HedgeFunV2TradablePercentEngineTreasuryCore t = _launchPercent(3102, 2300, 3700, 5000, 0);
+        HedgeFunV2TradablePercentEngineTreasuryCore t = _launchPercent(3102, 2300, 1700, 5000, 0);
         AuditRisk memory before_ = _auditRisk(t);
         stock.mint(t.liquidityVault(), 1_000_000e18);
         usdg.mint(t.liquidityVault(), 1_000_000e6);
@@ -198,12 +198,12 @@ contract V2TradablePercentAuditTest is V2TradablePercentEngineFixture {
     }
 
     function test_unbookedDonationIsCountedOnceAndOnlyForItsInputAsset() public {
-        HedgeFunV2TradablePercentEngineTreasuryCore t = _launchPercent(3103, 2000, 3000, 5000, 0);
+        HedgeFunV2TradablePercentEngineTreasuryCore t = _launchPercent(3103, 2000, 2500, 5000, 0);
         AuditRisk memory before_ = _auditRisk(t);
         stock.mint(address(t), 17e18 + 11);
         AuditRisk memory donated = _auditRisk(t);
         assertEq(donated.buy, before_.buy);
-        assertEq(donated.sell, Math.mulDiv(t.bookedStock() + 17e18 + 11, 3000, 10_000));
+        assertEq(donated.sell, Math.mulDiv(t.bookedStock() + 17e18 + 11, 2500, 10_000));
         assertEq(donated.capital, Math.mulDiv(t.bookedStock() + 17e18 + 11, 100e18, SCALE));
         assertTrue(t.book());
         assertFalse(t.book());

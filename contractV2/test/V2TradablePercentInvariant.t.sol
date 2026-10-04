@@ -201,7 +201,7 @@ contract TradablePercentAuditHandler is Test {
             uint256 moved = s.stockBalance - stock.balanceOf(address(treasury)) + treasury.buybackStock() - s.buyback;
             consumed = Math.mulDiv(moved, s.price, SCALE);
             directionalInputAtLastSuccess = moved;
-            directionalCapAtLastSuccess = Math.mulDiv(s.inventory, 3000, 10_000);
+            directionalCapAtLastSuccess = Math.mulDiv(s.inventory, 2500, 10_000);
             uint256 gross = s.poolCash - usdg.balanceOf(address(venue));
             if (usdg.balanceOf(address(this)) - s.keeperCash != Math.mulDiv(gross, 50, 10_000)) _fail(16);
             if (treasury.bookedStock() != s.inventory - moved) _fail(32);
@@ -283,7 +283,7 @@ contract V2TradablePercentInvariantTest is V2TradablePercentEngineFixture {
         super.setUp();
         vm.prank(owner);
         factory.setListingGates(address(stock), 50, 100, 5e6);
-        treasury = _launchPercent(3200, 2000, 3000, 5000, 5000);
+        treasury = _launchPercent(3200, 2000, 2500, 5000, 5000);
         HedgeFunV2TradablePercentEngineTreasuryLogic next = new HedgeFunV2TradablePercentEngineTreasuryLogic(
             address(usdg),
             address(stock),

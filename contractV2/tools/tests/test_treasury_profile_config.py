@@ -29,7 +29,7 @@ def fixture_cast(operation, *args):
 
 def profile():
     return {"mode": "strategy", "strategy": "rebalance", "execution": "continuous",
-            "targetPercent": "50", "bandPercent": "5", "buyPercent": "20", "sellPercent": "30",
+            "targetPercent": "50", "bandPercent": "5", "buyPercent": "20", "sellPercent": "25",
             "dailyPercent": "50", "profitToBuybackPercent": "25", "cooldownSeconds": 600}
 
 
@@ -38,7 +38,7 @@ class ProfileSerializationTest(unittest.TestCase):
         c = TOOL.engine_config(profile(), "0x" + "AB" * 32)
         self.assertEqual((c["schema"], c["engineVersion"], c["policyKey"]), (3, 1, "0x" + "ab" * 32))
         self.assertEqual(c["words"], ["0x" + "09c40000025801f41388".zfill(64),
-                                     "0x" + "0bb807d0".zfill(64), "0x" + "1388".zfill(64)])
+                                     "0x" + "09c407d0".zfill(64), "0x" + "1388".zfill(64)])
         self.assertEqual(int(c["words"][0], 16) >> 80, 0)
         self.assertEqual(int(c["words"][1], 16) >> 32, 0)
 
@@ -52,14 +52,15 @@ class ProfileSerializationTest(unittest.TestCase):
 
     def test_input_asset_percentages_need_not_be_below_daily_percentage(self):
         p = profile()
-        p.update(buyPercent="100", sellPercent="100", dailyPercent="0.01")
+        p.update(buyPercent="25", sellPercent="25", dailyPercent="0.01")
         c = TOOL.engine_config(p, "0x" + "01" * 32)
-        self.assertEqual(int(c["words"][1], 16), 0x27102710)
+        self.assertEqual(int(c["words"][1], 16), 0x09c409c4)
         self.assertEqual(int(c["words"][2], 16), 1)
 
     def test_invalid_configuration_is_refused_before_any_readback(self):
         cases = (("targetPercent", "19.99"), ("targetPercent", "90.01"), ("bandPercent", "50"),
                  ("buyPercent", "0"), ("sellPercent", "0"), ("dailyPercent", "0"),
+                 ("buyPercent", "25.01"), ("sellPercent", "25.01"), ("sellPercent", "100"), ("bandPercent", "0"),
                  ("profitToBuybackPercent", "100.01"), ("cooldownSeconds", 599),
                  ("cooldownSeconds", 2**32), ("cooldownSeconds", True))
         for field, value in cases:

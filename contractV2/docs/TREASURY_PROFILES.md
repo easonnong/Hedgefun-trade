@@ -38,12 +38,13 @@ an old schema-1/2 implementation by interpreting old monetary words as percentag
 The new `V2TradablePercentRebalancePolicy` only proposes a target gap. The treasury independently checks its
 code, domain, nonce, direction and capability, and clips the proposed action against all budgets:
 
-- **Buy limit:** available USDG cash × buy percentage, rounded down.
-- **Sell limit:** tradable stock quantity × sell percentage, rounded down.
+- **Buy limit:** available USDG cash × buy percentage, rounded down. At most 25% per action.
+- **Sell limit:** tradable stock quantity × sell percentage, rounded down. At most 25% per action.
 - **Daily limit:** (tradable stock's live oracle value + available USDG) × daily percentage, rounded down.
   Remaining capacity subtracts actual turnover already recorded for the same US trading date.
 - Buys/sells are also bounded by the target gap, actual inventory and existing live-price/slippage guards.
-  The legacy `sellChunkUsdg` no longer clips schema-3 stock strategy execution. A small percentage on a small
+  The legacy `sellChunkUsdg` no longer clips schema-3 stock strategy execution; the 25% ceiling on each
+  action percentage is the protocol's bound in its place, and scales with the treasury. A small percentage on a small
   treasury cannot be inflated to the minimum lot: it waits instead.
 
 Tradable stock includes booked inventory and bookable incoming stock once, excluding reserved `buybackStock`.
@@ -65,14 +66,22 @@ this is not a rolling 24-hour window. A preview describes the current snapshot, 
 | Field | Encoding / bounds |
 |---|---|
 | `words[0]` | Target bps [0..15], allocation band bps [16..31], cooldown seconds [32..63], realized-profit-to-buyback bps [64..79]; higher bits zero |
-| Target | 20–90%; band must remain strictly inside the 0–100% allocation interval; zero band is accepted |
+| Target | 20–90%; band must remain strictly inside the 0–100% allocation interval |
+| Band | At least twice the listing's execution friction (`maxSlippageBps` + pool fee + `bountyBps`), the floor schema 1 has; checked by the treasury constructor, which knows the listing. A zero band is refused |
 | Cooldown | At least 600 seconds |
 | Profit share | 0–100% of realized stock profit, not graduation principal |
-| `words[1]` | Buy bps [0..15], sell bps [16..31]; higher bits zero; each 1–10,000 bps |
+| `words[1]` | Buy bps [0..15], sell bps [16..31]; higher bits zero; each 1–2,500 bps |
 | `words[2]` | Daily turnover bps, 1–10,000; no other bits |
 
 The action and daily fractions use different denominators, so the daily percentage is not required to exceed
-either action percentage. Schemas 1 (fixed money) and 2 (full external-asset percentages with a fixed listing
+either action percentage.
+
+The percentages are the creator's, under those two protocol limits. Without them a creator could launch with
+100% per action and no band: one permissionless `execute()` would then trade the whole allocation gap at up to
+the listing's slippage limit, and every small oracle move would pay execution friction again. The band floor
+depends on the listing, so the registry's `setEngineConfig` and `predict` cannot check it: a band under the
+floor, like any other invalid schema-3 word, is refused by the constructor and the launch reverts
+`TreasuryDeployFailed`. Schemas 1 (fixed money) and 2 (full external-asset percentages with a fixed listing
 cap) keep their existing behavior. An immutable old factory checks schema-3 metadata but not all its words;
 the constructor validates them authoritatively. Use the strict configuration adapter and a fresh launch
 simulation rather than assuming that an old factory's address prediction validates the complete config.

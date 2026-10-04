@@ -15,6 +15,8 @@ ROOT = Path(__file__).resolve().parents[1]
 PROFILE = "strategy/rebalance/continuous"
 PROXY = "HedgeFunV2TradablePercentEngineTreasury"
 POLICY = "V2TradablePercentRebalancePolicy"
+# TradablePercentEngineConfig.MAX_ACTION_BPS
+MAX_ACTION_BPS = 2_500
 
 
 def hex_value(value, size, name):
@@ -53,6 +55,12 @@ def engine_config(profile, policy_key):
         raise ValueError("target must be 20–90%; band must stay strictly inside 0–100% allocation")
     if min(buy, sell, daily) == 0:
         raise ValueError("buy, sell and daily percentages must be positive")
+    if max(buy, sell) > MAX_ACTION_BPS:
+        raise ValueError("one action may take at most 25% of the cash (buy) or of the tradable stock (sell)")
+    if band == 0:
+        # The treasury's floor is twice the listing's slippage + pool fee + keeper reward, which this tool
+        # does not read; zero is under it on every listing. A launch simulation checks the exact floor.
+        raise ValueError("bandPercent must be positive: the treasury refuses a band inside execution friction")
     return {"schema": 3, "engineVersion": 1, "policyKey": hex_value(policy_key, 32, "policyKey"),
             "words": [f"0x{x:064x}" for x in (target | band << 16 | cooldown << 32 | payout << 64,
                                               buy | sell << 16, daily)]}
