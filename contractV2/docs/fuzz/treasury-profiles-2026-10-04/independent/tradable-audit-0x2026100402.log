@@ -1,0 +1,92 @@
+No files changed, compilation skipped
+
+Ran 10 tests for test/V2TradablePercentAudit.t.sol:V2TradablePercentAuditTest
+[PASS] testFuzz_partialFillUsesIndependentDirectionalCapsAndActualReward(uint16,uint16,uint16,bool,bool) (runs: 1024, μ: 13794469, ~: 13790696)
+[PASS] testFuzz_sameDateCapitalShrinkAndDonationNeverEraseConsumedTurnover(uint96) (runs: 1024, μ: 14004785, ~: 14004544)
+[PASS] testFuzz_unboundedPolicyCannotBypassCoreInputOrDailyCaps(bool,uint16) (runs: 1024, μ: 14086464, ~: 14090906)
+[PASS] test_lpDonationsAndCreditedBuybackCannotInflateAnyTradingCap() (gas: 13859841)
+[PASS] test_malformedDomainNonceActionAndWrongDirectionAreAtomicallyRejected() (gas: 55323257)
+[PASS] test_matureUpgradePreservesCurrentDateSpendBeforeAnyEpochRollover() (gas: 19132969)
+[PASS] test_minimumLotCannotRoundUpOneBasisPointCap() (gas: 13958487)
+[PASS] test_oracleFailureReportsNoCapacityAndCannotChangeSpentHistory() (gas: 13826470)
+[PASS] test_rewardFailureRevertsSwapAndPercentageLedger() (gas: 13792013)
+[PASS] test_unbookedDonationIsCountedOnceAndOnlyForItsInputAsset() (gas: 13605306)
+Suite result: ok. 10 passed; 0 failed; 0 skipped; finished in 2.57s (6.61s CPU time)
+
+Ran 3 tests for test/V2TradablePercentInvariant.t.sol:V2TradablePercentInvariantTest
+[PASS] invariant_dynamicCapsUseInputAssetsAndNeverRewriteHistoricalSpend() (runs: 512, calls: 65536, reverts: 0)
+
+╭-----------------------------+-----------------+-------+---------+----------╮
+| Contract                    | Selector        | Calls | Reverts | Discards |
++============================================================================+
+| TradablePercentAuditHandler | advanceCooldown | 4385  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | attemptExecute  | 4413  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | book            | 4432  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | cancelUpgrade   | 4374  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | changeMarket    | 4338  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | creditLpIncome  | 4396  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | donateCash      | 4400  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | donateStock     | 4263  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | finishUpgrade   | 4431  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | nextEpoch       | 4342  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | pauseOracle     | 4303  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | refreshFeeds    | 4424  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | scheduleUpgrade | 4438  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | shoveVenue      | 4299  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | staleOracle     | 4298  | 0       | 0        |
+╰-----------------------------+-----------------+-------+---------+----------╯
+
+[PASS] invariant_inventoryAndNonceMatchActualSuccessfulFillsAcrossUpgrades() (runs: 512, calls: 65536, reverts: 0)
+
+╭-----------------------------+-----------------+-------+---------+----------╮
+| Contract                    | Selector        | Calls | Reverts | Discards |
++============================================================================+
+| TradablePercentAuditHandler | advanceCooldown | 4385  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | attemptExecute  | 4413  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | book            | 4432  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | cancelUpgrade   | 4374  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | changeMarket    | 4338  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | creditLpIncome  | 4396  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | donateCash      | 4400  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | donateStock     | 4263  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | finishUpgrade   | 4431  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | nextEpoch       | 4342  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | pauseOracle     | 4303  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | refreshFeeds    | 4424  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | scheduleUpgrade | 4438  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | shoveVenue      | 4299  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | staleOracle     | 4298  | 0       | 0        |
+╰-----------------------------+-----------------+-------+---------+----------╯
+
+[PASS] test_handlerWitnessBuysSellsRejectsAndPreservesHistoryThroughUpgrade() (gas: 1632752)
+Suite result: ok. 3 passed; 0 failed; 0 skipped; finished in 7.44s (13.04s CPU time)
+
+Ran 2 test suites in 7.45s (10.01s CPU time): 13 tests passed, 0 failed, 0 skipped (13 total tests)

@@ -1,6 +1,8 @@
 # Treasury product profiles and percentage limits
 
-Status: first implementation PR, stacked on #22. No registration or deployment has been broadcast.
+Status: first implementation PR [#26](https://github.com/0xHedgeHood/Hedgefun-trade/pull/26), stacked on #22.
+No public registration or deployment has been broadcast. Review results, reproduction commands and captured
+logs are in [the schema-3 audit evidence](fuzz/treasury-profiles-2026-10-04/README.md).
 The implemented new profile is **Strategy treasury → Rebalance → Continuous**. This is the first part of
 the product consolidation, not a claim that all of its price/cycle/buyback/frontend work is complete.
 
