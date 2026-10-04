@@ -141,8 +141,9 @@ frontend integration must perform equivalent checks and revalidate when the conn
    completion and re-entry. Ordinary dip buys cannot silently reopen a completed single round.
 2. Integrate recovery after both real take-profit and stop fills. The current All-in override does not call the
    old Cycle sale hook, so simply changing inheritance would lose recovery-after-profit behavior.
-3. Implement percentage buyback and the price strategy's percentage/day budgets with reviewed module/layout
-   boundaries. Current code-size headroom is limited; do not temporarily rewrite `_params` around delegatecalls.
+3. Implement percentage buyback for the buyback and rebalance treasuries, and the price strategy's
+   percentage/day budgets, with reviewed module/layout boundaries. The ordinary stock strategy has it as its own
+   kind, `HedgeFunV2PercentBuybackTreasury`: see [STRATEGY_PARAMETERS.md](./STRATEGY_PARAMETERS.md). Current code-size headroom is limited; do not temporarily rewrite `_params` around delegatecalls.
 4. Replace frontend kind choices with verified product profiles; retain legacy pool read/trade compatibility.
 5. Complete full product E2E, audit the complete release, then publish and verify testnet registration/deployment.
 
