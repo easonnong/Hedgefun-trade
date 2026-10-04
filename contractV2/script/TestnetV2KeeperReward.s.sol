@@ -9,7 +9,7 @@ import {HedgeFunFactory} from "../src/HedgeFunFactory.sol";
 import {HedgeFunTreasuryBase} from "../src/HedgeFunTreasuryBase.sol";
 import {HedgeFunV2Factory} from "../src/v2/HedgeFunV2Factory.sol";
 import {HedgeFunV2Treasury} from "../src/v2/HedgeFunV2Treasury.sol";
-import {HedgeFunV2EngineTreasury} from "../src/v2/HedgeFunV2EngineTreasury.sol";
+import {HedgeFunV2EngineTreasury, HedgeFunV2EngineTreasuryCore} from "../src/v2/HedgeFunV2EngineTreasury.sol";
 import {HedgeFunBondingCurve} from "../src/v2/HedgeFunBondingCurve.sol";
 import {V2TreasuryDeployer, V2InitCodeChunk} from "../src/v2/V2TreasuryDeployer.sol";
 import {EngineConfig, PolicyManifest, StrategyAction} from "../src/v2/strategy/IStrategyPolicy.sol";
@@ -196,7 +196,7 @@ contract TestnetV2KeeperReward is Script {
         if (after_.booked + after_.buyback != after_.stock || t.turnoverEpoch() != t.tradingCalendar().tradingDate(block.timestamp)) revert BadAccounting();
         // This call is local simulation after stopBroadcast: a reverted transaction is never scheduled.
         vm.prank(keeper);
-        (bool ok, bytes memory reason) = address(t).call(abi.encodeCall(HedgeFunV2EngineTreasury.execute, ()));
+        (bool ok, bytes memory reason) = address(t).call(abi.encodeCall(HedgeFunV2EngineTreasuryCore.execute, ()));
         bytes4 selector;
         if (reason.length >= 4) assembly ("memory-safe") { selector := mload(add(reason, 32)) }
         // The fixed policy returns Hold during cooldown, yielding NotDue; the core also enforces Cooldown.

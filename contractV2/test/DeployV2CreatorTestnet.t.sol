@@ -5,8 +5,8 @@ import {Test} from "forge-std/Test.sol";
 import {DeployV2CreatorTestnet} from "../script/DeployV2CreatorTestnet.s.sol";
 import {DeployV2FeeUpgradeTestnet} from "../script/DeployV2FeeUpgradeTestnet.s.sol";
 import {V2TreasuryDeployer} from "../src/v2/V2TreasuryDeployer.sol";
-import {HedgeFunV2BuybackTreasury} from "../src/v2/HedgeFunV2BuybackTreasury.sol";
-import {HedgeFunV2EngineTreasury} from "../src/v2/HedgeFunV2EngineTreasury.sol";
+import {HedgeFunV2UpgradeableBuybackTreasury} from "../src/v2/HedgeFunV2UpgradeableBuybackTreasury.sol";
+import {HedgeFunV2UpgradeableEngineTreasury} from "../src/v2/HedgeFunV2UpgradeableEngineTreasury.sol";
 
 contract CreatorRegistrationOwner {
     address public immutable owner;
@@ -60,12 +60,12 @@ contract DeployV2CreatorTestnetTest is Test {
         assertEq(engineA, vm.computeCreateAddress(tool.OPERATOR(), operatorNonce + 5));
         assertEq(engineB, vm.computeCreateAddress(tool.OPERATOR(), operatorNonce + 6));
         assertEq(vm.getNonce(tool.OPERATOR()), operatorNonce + 8);
-        assertEq(bytes.concat(buybackA.code, buybackB.code), type(HedgeFunV2BuybackTreasury).creationCode);
-        assertEq(bytes.concat(engineA.code, engineB.code), type(HedgeFunV2EngineTreasury).creationCode);
+        assertEq(bytes.concat(buybackA.code, buybackB.code), type(HedgeFunV2UpgradeableBuybackTreasury).creationCode);
+        assertEq(bytes.concat(engineA.code, engineB.code), type(HedgeFunV2UpgradeableEngineTreasury).creationCode);
         (,, bytes32 buybackHash,) = registry.kindManifest(1);
         (,, bytes32 engineHash,) = registry.kindManifest(2);
-        assertEq(buybackHash, keccak256(type(HedgeFunV2BuybackTreasury).creationCode));
-        assertEq(engineHash, keccak256(type(HedgeFunV2EngineTreasury).creationCode));
+        assertEq(buybackHash, keccak256(type(HedgeFunV2UpgradeableBuybackTreasury).creationCode));
+        assertEq(engineHash, keccak256(type(HedgeFunV2UpgradeableEngineTreasury).creationCode));
         assertEq(registry.kindCount(), 3);
         assertEq(tool.plannedTransactionCount(), 40);
         assertEq(new DeployV2FeeUpgradeTestnet().plannedTransactionCount(), 38);

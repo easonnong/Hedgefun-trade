@@ -1,0 +1,23 @@
+............................................../private/tmp/hedgefun-pr22-review-20261004/contractV2/tools/v2_launch_check.py:325: ResourceWarning: unclosed file <_io.TextIOWrapper name='/var/folders/w3/h0ft3bvj3076m58fwm5gj48h0000gn/T/tmp_umurmjy/plan.json' mode='r' encoding='UTF-8'>
+  plan = json.load(open(path))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./private/tmp/hedgefun-pr22-review-20261004/contractV2/tools/v2_launch_check.py:325: ResourceWarning: unclosed file <_io.TextIOWrapper name='/private/tmp/hedgefun-pr22-review-20261004/contractV2/deploy/v2-listings-plan.json' mode='r' encoding='UTF-8'>
+  plan = json.load(open(path))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+................/private/tmp/hedgefun-pr22-review-20261004/contractV2/tools/v2_launch_check.py:349: ResourceWarning: unclosed file <_io.TextIOWrapper name='/var/folders/w3/h0ft3bvj3076m58fwm5gj48h0000gn/T/tmplm2b2vnj.json' mode='r' encoding='UTF-8'>
+  book = json.load(open(path))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./private/tmp/hedgefun-pr22-review-20261004/contractV2/tools/v2_launch_check.py:349: ResourceWarning: unclosed file <_io.TextIOWrapper name='/var/folders/w3/h0ft3bvj3076m58fwm5gj48h0000gn/T/tmp8g_7aq0s.json' mode='r' encoding='UTF-8'>
+  book = json.load(open(path))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./private/tmp/hedgefun-pr22-review-20261004/contractV2/tools/v2_launch_check.py:349: ResourceWarning: unclosed file <_io.TextIOWrapper name='/var/folders/w3/h0ft3bvj3076m58fwm5gj48h0000gn/T/tmpw5fyvo03.json' mode='r' encoding='UTF-8'>
+  book = json.load(open(path))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/private/tmp/hedgefun-pr22-review-20261004/contractV2/tools/v2_launch_check.py:349: ResourceWarning: unclosed file <_io.TextIOWrapper name='/var/folders/w3/h0ft3bvj3076m58fwm5gj48h0000gn/T/tmptds3qteg.json' mode='r' encoding='UTF-8'>
+  book = json.load(open(path))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+............................
+----------------------------------------------------------------------
+Ran 93 tests in 0.051s
+
+OK

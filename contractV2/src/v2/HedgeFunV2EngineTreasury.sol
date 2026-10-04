@@ -19,7 +19,14 @@ import {
 } from "./strategy/IStrategyPolicy.sol";
 import {SpotEngineConfig} from "./strategy/SpotEngineConfig.sol";
 
-/// @notice Strategy kind 2: an immutable spot-policy engine.
+/// @dev Constructor context is explicit so proxy logic can bind its policy hash to the treasury address.
+struct EngineBinding {
+    EngineConfig config;
+    PolicyManifest manifest;
+    address treasury;
+}
+
+/// @notice Shared spot-policy execution and storage for direct and upgradeable deployments.
 ///
 /// The policy is advisory only. It is called with `STATICCALL`, has no custody and can propose one fixed-width
 /// action. This treasury independently rechecks the policy code hash, nonce, config commitment, live oracle,
@@ -35,7 +42,7 @@ import {SpotEngineConfig} from "./strategy/SpotEngineConfig.sol";
 /// cost realises a gain, and `payoutBps` of the gain -- the creator's choice, frozen in the config -- stays in stock
 /// and moves to `buybackStock` instead of being sold, for the inherited paced `buyback()` to burn. The principal and
 /// the rest of the gain are sold. `payoutBps = 0` is a pure rebalance whose buy-back is funded by LP fees alone.
-contract HedgeFunV2EngineTreasury is HedgeFunV2Treasury {
+abstract contract HedgeFunV2EngineTreasuryCore is HedgeFunV2Treasury {
     using SafeERC20 for IERC20;
 
     uint256 private constant BPS = 10_000;
@@ -43,7 +50,7 @@ contract HedgeFunV2EngineTreasury is HedgeFunV2Treasury {
     uint256 public constant MAX_POLICY_GAS = 500_000;
     uint256 private constant SPOT_CAPABILITIES = StrategyCapabilities.SPOT_BUY | StrategyCapabilities.SPOT_SELL;
 
-    EngineConfig private _engineConfig;
+    EngineConfig internal _engineConfig;
     address public immutable policyImplementation;
     bytes32 public immutable policyRuntimeCodeHash;
     uint256 public immutable policyCapabilities;
@@ -117,9 +124,11 @@ contract HedgeFunV2EngineTreasury is HedgeFunV2Treasury {
         address poolManager_,
         address factory_,
         Params memory p,
-        EngineConfig memory c
+        EngineBinding memory binding
     ) HedgeFunV2Treasury(usdg_, stock_, v3Pool_, oracle_, token_, poolManager_, factory_, p) {
-        PolicyManifest memory manifest = IV2StrategyRegistry(msg.sender).policy(c.policyKey);
+        EngineConfig memory c = binding.config;
+        PolicyManifest memory manifest = binding.manifest;
+        if (binding.treasury == address(0)) revert BadEngineConfig();
         _validateEngineConfig(c, p, manifest);
 
         _engineConfig = c;
@@ -133,7 +142,7 @@ contract HedgeFunV2EngineTreasury is HedgeFunV2Treasury {
         configHash = keccak256(
             abi.encode(
                 block.chainid,
-                address(this),
+                binding.treasury,
                 factory_,
                 stock_,
                 usdg_,
@@ -158,7 +167,7 @@ contract HedgeFunV2EngineTreasury is HedgeFunV2Treasury {
         if (
             c.schema != StrategyCapabilities.CONFIG_SCHEMA_V1 || c.engineVersion != StrategyCapabilities.SPOT_ENGINE_V1
                 || manifest.engineVersion != c.engineVersion || manifest.configSchema != c.schema
-                || !manifest.enabledForNewLaunches || manifest.implementation == address(0)
+                || manifest.implementation == address(0)
                 || actualCodeHash == bytes32(0) || actualCodeHash != manifest.runtimeCodeHash || manifest.maxGas == 0
                 || manifest.maxGas > MAX_POLICY_GAS || manifest.maxReturnBytes != INTENT_RETURN_BYTES
                 || manifest.capabilities & SPOT_CAPABILITIES == 0 || manifest.capabilities & ~SPOT_CAPABILITIES != 0
@@ -494,5 +503,21 @@ contract HedgeFunV2EngineTreasury is HedgeFunV2Treasury {
         // (options are 64 and up) is diagnosable.
         if (actionWord > uint256(type(StrategyAction).max)) revert BadPolicyReturn();
         intent = abi.decode(result, (StrategyIntent));
+    }
+}
+
+
+/// @notice Legacy direct-deployment spot engine. New upgradeable launches use the dedicated proxy wrapper.
+/// @dev Keep the existing constructor and behavior; disabling a policy prevents NEW deployments, not upgrades
+/// of an existing proxy whose frozen policy/config identity is already committed by its controller.
+contract HedgeFunV2EngineTreasury is HedgeFunV2EngineTreasuryCore {
+    constructor(address usdg_, address stock_, address v3Pool_, address oracle_, address token_,
+        address poolManager_, address factory_, Params memory p, EngineConfig memory c)
+        HedgeFunV2EngineTreasuryCore(usdg_, stock_, v3Pool_, oracle_, token_, poolManager_, factory_, p, _binding(c)) {}
+
+    function _binding(EngineConfig memory c) private view returns (EngineBinding memory b) {
+        PolicyManifest memory m = IV2StrategyRegistry(msg.sender).policy(c.policyKey);
+        if (!m.enabledForNewLaunches) revert BadEngineConfig();
+        b = EngineBinding(c, m, address(this));
     }
 }

@@ -49,7 +49,7 @@ contract HedgeFunV2AllInTreasury is HedgeFunV2Treasury {
 
     /// @dev Same bounded sizing/TP1/shrink algorithm as the legacy core. A keeper reward requires an actual
     ///      monetary fill. Non-tradable principal returns to unbooked stock, never the income-only buyback budget.
-    function _takeProfit(uint256 id) internal override {
+    function _takeProfit(uint256 id) internal virtual override {
         (bool ok, uint256 p) = health();
         if (!ok) revert Unhealthy();
         _book();

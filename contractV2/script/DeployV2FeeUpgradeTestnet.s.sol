@@ -11,8 +11,8 @@ import {CurveDeployer} from "../src/v2/CurveDeployer.sol";
 import {HedgeFunV2Hook} from "../src/hooks/HedgeFunV2Hook.sol";
 import {HedgeFunV2TradeRouter} from "../src/v2/HedgeFunV2TradeRouter.sol";
 import {HedgeFunV2NativeRouter, IWrappedNative} from "../src/v2/HedgeFunV2NativeRouter.sol";
-import {HedgeFunV2BuybackTreasury} from "../src/v2/HedgeFunV2BuybackTreasury.sol";
-import {HedgeFunV2EngineTreasury} from "../src/v2/HedgeFunV2EngineTreasury.sol";
+import {HedgeFunV2UpgradeableBuybackTreasury} from "../src/v2/HedgeFunV2UpgradeableBuybackTreasury.sol";
+import {HedgeFunV2UpgradeableEngineTreasury} from "../src/v2/HedgeFunV2UpgradeableEngineTreasury.sol";
 import {V2RebalancePolicy} from "../src/v2/strategy/V2RebalancePolicy.sol";
 import {StrategyCapabilities} from "../src/v2/strategy/IStrategyPolicy.sol";
 import {PriceOracle} from "../src/PriceOracle.sol";
@@ -320,7 +320,7 @@ contract DeployV2FeeUpgradeTestnet is Script {
     }
 
     function _register(Deployment memory x) internal virtual {
-        (address a, address b) = x.treasury.makeChunks(type(HedgeFunV2BuybackTreasury).creationCode);
+        (address a, address b) = x.treasury.makeChunks(type(HedgeFunV2UpgradeableBuybackTreasury).creationCode);
         if (x.treasury.registerKind(a, b) != 1) revert BadBinding("buyback kind");
         x.policy = new V2RebalancePolicy();
         x.policyKey = x.treasury
@@ -331,7 +331,7 @@ contract DeployV2FeeUpgradeTestnet is Script {
                 keccak256("hedgefun testnet 46630: V2RebalancePolicy dependencies (none audited for testnet)"),
                 keccak256("hedgefun testnet 46630: V2RebalancePolicy audit manifest (testnet placeholder)")
             );
-        (a, b) = x.treasury.makeChunks(type(HedgeFunV2EngineTreasury).creationCode);
+        (a, b) = x.treasury.makeChunks(type(HedgeFunV2UpgradeableEngineTreasury).creationCode);
         x.engineKind = x.treasury
             .registerEngineKind(
                 a,

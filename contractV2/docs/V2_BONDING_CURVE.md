@@ -238,12 +238,53 @@ and routers call. The constructor registers only kind 0; deployment scripts may 
 exact code. Creator-selected TP/dip/stop rungs remain available on that default; legacy kinds retain their own
 constructor restrictions and registry validation.
 
+Fresh deployment scripts now append `HedgeFunV2UpgradeableBuybackTreasury` as kind 1 and
+`HedgeFunV2UpgradeableEngineTreasury` as kind 2. All three default release choices therefore support the same
+48-hour controller flow. This is a source change for future deployments, not a receipt for updating testnet.
+On an existing compatible factory, `RegisterV2UpgradeableKinds` appends the two proxy kinds and returns their
+actual IDs; an existing kind 1 or 2 and every treasury it created remain unchanged. The script checks reviewed
+factory/module identities before broadcasting and uses operator CREATEs for its code chunks. Read back all
+six receipts and the registered code before enabling those IDs in a UI.
+
+```sh
+export OPERATOR=<factory-owner> V2_FACTORY=<factory>
+forge script script/RegisterV2UpgradeableKinds.s.sol:RegisterV2UpgradeableKinds \
+  --rpc-url "$RPC_URL" --sender "$OPERATOR"
+# Simulation only. Publish only after reviewing it and using the operator's keystore to broadcast.
+V2_FACTORY=<factory> UPGRADEABLE_BUYBACK_KIND=<returned-id> UPGRADEABLE_ENGINE_KIND=<returned-id> \
+  forge script script/RegisterV2UpgradeableKinds.s.sol:VerifyV2UpgradeableKinds --rpc-url "$RPC_URL"
+```
+
+`kind 0` is a registry entry, not a menu containing every lot implementation. The current entry delegates to
+`HedgeFunV2AllInTreasury`: creator-selected TP1/TP2, dip and stop rungs with the ordinary lot accounting.
+`HedgeFunV2Treasury` is the legacy fixed-rung implementation; `HedgeFunV2CycleTreasury` adds a bounded recovery
+buy after an actual sale. Neither is an additional mode automatically selected by the current kind-0 proxy.
+Portfolio-weight rebalancing is the separate Engine family.
+
 ### Treasury upgrades and LP isolation
 
 Each new default treasury has its own implementation and ledger. The proxy delegates to the ordinary all-in
 strategy; immutable asset, pool and factory identities are bound to a configuration hash. Future logic must
 preserve the storage layout and append fields (or use namespaced storage). The initial implementation can only
 initialize proxy parameters during proxy construction; post-deployment reinitialization is rejected.
+
+The new buyback proxy additionally preserves the protected graduation-principal bucket. The Engine proxy
+initializes both `Params` and `EngineConfig`, and policy intents bind to the proxy address rather than the
+implementation address. Its upgrade identity includes the complete frozen policy/configuration, chain and
+proxy identity, plus asset-unit conversion constants and the trading calendar. The buyback identity also binds
+its unit-conversion constants. A replacement reading changed token decimals is rejected by the controller.
+The policy's mutable `enabledForNewLaunches` flag is excluded from the Engine upgrade identity: a delisting
+blocks new launches but cannot prevent a compatible replacement for existing treasuries. Policy code/hash and
+limits remain bound. The two new initializers also put the proxy reentrancy guard in its constructor-equivalent state.
+
+Buyback and Engine have distinct storage-family identifiers. A future dividend implementation must extend that
+family's existing layout and initialize its staking income source to the proxy. Registering one of the direct
+income kinds from #22 is not that migration. Local tests exercise appended distribution state and retained
+principal/trading ledgers, but production dividend migration logic and frontend flows remain separate work.
+
+Verification evidence: [2026-10-04 upgradeable kinds](./fuzz/upgradeable-kinds-2026-10-04/results.json)
+records the full offline suite, three seeded income/upgrade campaigns, recursive Engine storage-layout
+comparison, code-size checks and the 21-scenario testnet fork. These are simulation results, not deployment receipts.
 
 `V2TreasuryUpgradeController` reads the current factory owner. That owner may schedule or cancel an upgrade
 for a specific treasury. Execution is permissionless only after a fixed **48-hour delay** and must match the

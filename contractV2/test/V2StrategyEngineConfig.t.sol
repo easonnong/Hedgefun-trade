@@ -3,7 +3,7 @@ pragma solidity ^0.8.24;
 
 import {HedgeFunFactory} from "../src/HedgeFunFactory.sol";
 import {HedgeFunTreasuryBase} from "../src/HedgeFunTreasuryBase.sol";
-import {HedgeFunV2EngineTreasury} from "../src/v2/HedgeFunV2EngineTreasury.sol";
+import {HedgeFunV2EngineTreasury, HedgeFunV2EngineTreasuryCore} from "../src/v2/HedgeFunV2EngineTreasury.sol";
 import {V2TreasuryDeployer} from "../src/v2/V2TreasuryDeployer.sol";
 import {
     EngineConfig,
@@ -184,7 +184,7 @@ contract V2StrategyEngineConfigTest is V2FactoryFixture {
         assertEq(d.error, V2TreasuryDeployer.BadEngineConfig.selector, string.concat("deployer error: ", what));
         assertEq(d.atConfiguration, atConfiguration, string.concat("deployer stage: ", what));
         assertFalse(k.ok, string.concat("constructor accepted: ", what));
-        assertEq(k.error, HedgeFunV2EngineTreasury.BadEngineConfig.selector, string.concat("constructor error: ", what));
+        assertEq(k.error, HedgeFunV2EngineTreasuryCore.BadEngineConfig.selector, string.concat("constructor error: ", what));
     }
 
     // ------------------------------------------------------------------------------ the bounds (E-1, E-6, C-4)
@@ -306,7 +306,7 @@ contract V2StrategyEngineConfigTest is V2FactoryFixture {
         assertEq(d.ok, k.ok, "the deployer and the constructor disagree");
         if (!d.ok) {
             assertEq(d.error, V2TreasuryDeployer.BadEngineConfig.selector);
-            assertEq(k.error, HedgeFunV2EngineTreasury.BadEngineConfig.selector);
+            assertEq(k.error, HedgeFunV2EngineTreasuryCore.BadEngineConfig.selector);
         }
     }
 

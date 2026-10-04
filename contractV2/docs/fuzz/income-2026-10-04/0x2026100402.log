@@ -1,0 +1,81 @@
+No files changed, compilation skipped
+
+Ran 13 tests for test/V2IncomeGasRegression.t.sol:V2IncomeGasRegressionTest
+[PASS] testFuzz_everyUnitStaysInALedger(uint96[5]) (runs: 1024, μ: 753502, ~: 759263)
+[PASS] test_aRefusedStakingTransferNeverBlocksATakeProfit() (gas: 898600)
+[PASS] test_dipBuysStillOpenLots_andWaitForUnclassifiedIncome() (gas: 1338238)
+[PASS] test_executeCannotTurnUnclassifiedIncomeIntoPrincipal() (gas: 680671)
+[PASS] test_gasLimitedBookPreservesDividendShare() (gas: 61203626)
+[PASS] test_gasLimitedBookPreservesDividendShareWithActiveStaker() (gas: 62913817)
+[PASS] test_graduationPrincipalOpensTheStrategyLotAndIsNotIncome() (gas: 491480)
+[PASS] test_lpFeesAllFundTheBuyback() (gas: 549352)
+[PASS] test_principalBookedAfterAClosure_isStillExactlyThePrincipal() (gas: 7350196)
+[PASS] test_realisedProfitIsSplitBetweenStakersAndBuyback() (gas: 1020622)
+[PASS] test_stakersClaimTheirShareOfProfit() (gas: 1259681)
+[PASS] test_taxArrivalIsIncomeNeverALot_whoeverBooksIt() (gas: 621930)
+[PASS] test_wiringAndRatios() (gas: 6169474)
+Suite result: ok. 13 passed; 0 failed; 0 skipped; finished in 395.91ms (448.44ms CPU time)
+
+Ran 12 tests for test/V2IncomeGraduation.t.sol:V2IncomeGraduationTest
+[PASS] testFuzz_claimTimingCannotRelabelPrincipal((uint8,uint16,uint96,uint96,uint96,bool,bool)) (runs: 1024, μ: 13171897, ~: 12364341)
+[PASS] testFuzz_failedInitializationCannotFallBackToLegacyWire(uint8) (runs: 1024, μ: 12670916, ~: 11911538)
+[PASS] testFuzz_failedPrincipalTransferRollsBackInitialization(uint8) (runs: 1024, μ: 16587560, ~: 15766204)
+[PASS] testFuzz_principalInitializationRequiresFactoryAndCannotRepeat(uint8) (runs: 1024, μ: 12853320, ~: 12011648)
+[PASS] test_optionalBookFailureDividend() (gas: 12007592)
+[PASS] test_optionalBookFailureSplit() (gas: 12008135)
+[PASS] test_optionalBookFailureStrategy25() (gas: 13889714)
+[PASS] test_optionalBookFailureStrategy50() (gas: 13889989)
+[PASS] test_preclaimedFeesDividend() (gas: 12193955)
+[PASS] test_preclaimedFeesSplit() (gas: 12214112)
+[PASS] test_preclaimedFeesStrategy25() (gas: 14042228)
+[PASS] test_preclaimedFeesStrategy50() (gas: 14042173)
+Suite result: ok. 12 passed; 0 failed; 0 skipped; finished in 2.24s (7.13s CPU time)
+
+Ran 12 tests for test/V2IncomeGraduation.t.sol:V2IncomeGraduationSixDecimalsTest
+[PASS] testFuzz_claimTimingCannotRelabelPrincipal((uint8,uint16,uint96,uint96,uint96,bool,bool)) (runs: 1024, μ: 13149692, ~: 12362629)
+[PASS] testFuzz_failedInitializationCannotFallBackToLegacyWire(uint8) (runs: 1024, μ: 12659955, ~: 11910508)
+[PASS] testFuzz_failedPrincipalTransferRollsBackInitialization(uint8) (runs: 1024, μ: 16575777, ~: 15765192)
+[PASS] testFuzz_principalInitializationRequiresFactoryAndCannotRepeat(uint8) (runs: 1024, μ: 12841253, ~: 12010618)
+[PASS] test_optionalBookFailureDividend() (gas: 12006562)
+[PASS] test_optionalBookFailureSplit() (gas: 12007105)
+[PASS] test_optionalBookFailureStrategy25() (gas: 13888617)
+[PASS] test_optionalBookFailureStrategy50() (gas: 13888892)
+[PASS] test_preclaimedFeesDividend() (gas: 12192925)
+[PASS] test_preclaimedFeesSplit() (gas: 12213082)
+[PASS] test_preclaimedFeesStrategy25() (gas: 14041131)
+[PASS] test_preclaimedFeesStrategy50() (gas: 14041076)
+Suite result: ok. 12 passed; 0 failed; 0 skipped; finished in 4.02s (9.13s CPU time)
+
+Ran 4 tests for test/V2StakingIncomeInvariant.t.sol:V2StakingIncomeInvariantTest
+[PASS] invariant_principalAndRewardsAreBackedByIndependentTransfers() (runs: 512, calls: 65536, reverts: 0)
+
+╭----------------------+----------------------------+-------+---------+----------╮
+| Contract             | Selector                   | Calls | Reverts | Discards |
++================================================================================+
+| StakingIncomeHandler | advanceTime                | 6635  | 0       | 0        |
+|----------------------+----------------------------+-------+---------+----------|
+| StakingIncomeHandler | advanceToLockBoundary      | 6508  | 0       | 0        |
+|----------------------+----------------------------+-------+---------+----------|
+| StakingIncomeHandler | claim                      | 6647  | 0       | 0        |
+|----------------------+----------------------------+-------+---------+----------|
+| StakingIncomeHandler | donate                     | 6526  | 0       | 0        |
+|----------------------+----------------------------+-------+---------+----------|
+| StakingIncomeHandler | fund                       | 6575  | 0       | 0        |
+|----------------------+----------------------------+-------+---------+----------|
+| StakingIncomeHandler | principalTransferFailure   | 6516  | 0       | 0        |
+|----------------------+----------------------------+-------+---------+----------|
+| StakingIncomeHandler | rewardTransferFailure      | 6523  | 0       | 0        |
+|----------------------+----------------------------+-------+---------+----------|
+| StakingIncomeHandler | stake                      | 6628  | 0       | 0        |
+|----------------------+----------------------------+-------+---------+----------|
+| StakingIncomeHandler | withdraw                   | 6611  | 0       | 0        |
+|----------------------+----------------------------+-------+---------+----------|
+| StakingIncomeHandler | withdrawWithBlockedRewards | 6367  | 0       | 0        |
+╰----------------------+----------------------------+-------+---------+----------╯
+
+[PASS] testFuzz_idleQueueAndRefillPreserveAccruedIncome(uint96,uint96,uint32) (runs: 1024, μ: 1101824, ~: 1101900)
+[PASS] testFuzz_rewardFailureNeverLocksPrincipal(uint96,uint96,uint8) (runs: 1024, μ: 969384, ~: 957194)
+[PASS] test_handlerExercisesEveryFailureAndLockBoundary() (gas: 2746931)
+Suite result: ok. 4 passed; 0 failed; 0 skipped; finished in 18.87s (20.51s CPU time)
+
+Ran 4 test suites in 18.87s (25.53s CPU time): 41 tests passed, 0 failed, 0 skipped (41 total tests)

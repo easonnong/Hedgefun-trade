@@ -8,7 +8,7 @@ import {ReentrancyGuard} from "@openzeppelin/contracts/utils/ReentrancyGuard.sol
 import {HedgeFunFactory} from "../src/HedgeFunFactory.sol";
 import {HedgeFunTreasuryBase} from "../src/HedgeFunTreasuryBase.sol";
 import {HedgeFunV2Treasury} from "../src/v2/HedgeFunV2Treasury.sol";
-import {HedgeFunV2EngineTreasury} from "../src/v2/HedgeFunV2EngineTreasury.sol";
+import {HedgeFunV2EngineTreasury, HedgeFunV2EngineTreasuryCore} from "../src/v2/HedgeFunV2EngineTreasury.sol";
 import {EngineConfig} from "../src/v2/strategy/IStrategyPolicy.sol";
 import {GraduationStock} from "./utils/V2FactoryFixture.sol";
 import {V2StrategyEngineAccountingFixture} from "./V2StrategyEngineAccounting.t.sol";
@@ -52,9 +52,9 @@ contract RewardObservingKeeper is IRewardObserver {
         seenLastStrategyAt = treasury.lastStrategyAt();
         seenTurnover = treasury.turnoverInEpoch();
         inventoryMatches = treasury.bookedStock() + treasury.buybackStock() == stock.balanceOf(address(treasury));
-        (bool ok, bytes memory reason) = address(treasury).call(abi.encodeCall(HedgeFunV2EngineTreasury.execute, ()));
+        (bool ok, bytes memory reason) = address(treasury).call(abi.encodeCall(HedgeFunV2EngineTreasuryCore.execute, ()));
         require(!ok); executeError = bytes4(reason);
-        (ok, reason) = address(treasury).call(abi.encodeCall(HedgeFunV2EngineTreasury.book, ()));
+        (ok, reason) = address(treasury).call(abi.encodeCall(HedgeFunV2EngineTreasuryCore.book, ()));
         require(!ok); bookError = bytes4(reason);
     }
 }

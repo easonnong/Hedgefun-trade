@@ -1,0 +1,117 @@
+{
+  "date": "2026-10-04",
+  "pr": "https://github.com/0xHedgeHood/Hedgefun-trade/pull/22",
+  "previous_head": "4884e4a1d20b82c1d5e1ccb9f10d304ea1140682",
+  "merged_base": "9be8cf48a723f1ab65412505e231f98b8fac450e",
+  "fixes": [
+    "Carry global and personal reward fractions across checkpoints, withdrawals and re-entry",
+    "Bound lifetime funding to keep one-wei stake reward index representable",
+    "Reject incompatible factory/module runtimes before registration and during readback"
+  ],
+  "toolchain": {
+    "forge": "1.5.0",
+    "solc": "0.8.26",
+    "optimizer_runs": 1,
+    "evm": "cancun"
+  },
+  "offline": {
+    "suites": 111,
+    "passed": 1008,
+    "failed": 0,
+    "skipped": 42
+  },
+  "python": {
+    "tests": 93,
+    "tools_tests": 53,
+    "failed": 0
+  },
+  "campaign": {
+    "seeds": [
+      "0x2026100401",
+      "0x2026100402",
+      "0x2026100403"
+    ],
+    "tests_per_seed": 56,
+    "runs_per_fuzz_test": 1024,
+    "invariant_runs_per_seed": 512,
+    "invariant_depth": 128,
+    "invariant_calls_per_seed": 65536,
+    "invariant_calls_total": 196608,
+    "handler_reverts": 0
+  },
+  "fork": {
+    "suites": 2,
+    "passed": 18,
+    "failed": 0,
+    "skipped": 0,
+    "chain_id": 46630,
+    "block": 128756765,
+    "factory": "0xc9610d4A749b2A62a7327a0f40B59013D8fC415a",
+    "rejected_legacy_factory": "0xACEB03aAeE5494Aa54929Ec840630ae32A9ade0A",
+    "mode": "in-memory, read-only RPC, no private keys or broadcasts"
+  },
+  "allocation_regressions": {
+    "six_decimal_reward_budget_raw": 10000,
+    "full_period_once_paid_raw": 9999,
+    "every_minute_paid_raw": 9999,
+    "every_five_minutes_paid_raw": 9999,
+    "minority_once_paid_raw": 1260,
+    "minority_every_minute_paid_raw": 1260
+  },
+  "runtime_bytes": {
+    "strategy25": 24374,
+    "strategy50": 24374,
+    "dividend": 16146,
+    "split": 16148,
+    "staking": 5147
+  },
+  "independent_agents": {
+    "staking_boundary_tests_passed": 7,
+    "compatibility_unit_tests_passed": 9,
+    "compatibility_fork_tests_passed": 2,
+    "compatibility_fork_block": 128756217,
+    "scope": "Focused mathematical and deployment-compatibility review; not comprehensive audit sign-off"
+  },
+  "limitations": [
+    "Income treasuries remain direct immutable deployments; upgradeable initialization/storage design remains outstanding",
+    "Dividend selector and stake/claim/withdraw frontend integration remain outstanding",
+    "Unassigned global dust follows the next stake set; personal fractions remain owned by the original account",
+    "Lifetime funding ceiling is floor(uint256.max / 1e45) raw reward units",
+    "Different compiler/runtime builds require a reviewed compatibility-template update",
+    "Passing bounded tests is not proof of absence of vulnerabilities"
+  ],
+  "commands": {
+    "offline": "forge test --root contractV2 --offline -vv",
+    "sizes": "forge build --root contractV2 --offline --sizes",
+    "campaign": "FOUNDRY_FUZZ_RUNS=1024 FOUNDRY_INVARIANT_RUNS=512 FOUNDRY_INVARIANT_DEPTH=128 FOUNDRY_INVARIANT_FAIL_ON_REVERT=true forge test --root contractV2 --offline --fuzz-seed <seed> --mc '^V2IncomeGraduation.*Test$|^V2StakingIncomeInvariantTest$|^V2StakingAllocationRegressionTest$|^V2StakingRemainderBoundaryTest$|^V2IncomeGasRegressionTest$' -vv",
+    "fork": "INCOME_KINDS_FORK=true INCOME_COMPAT_FORK=true INCOME_KINDS_FORK_BLOCK=<fresh-block> INCOME_COMPAT_FORK_BLOCK=<same-block> forge test --root contractV2 --threads 1 --mc '^TestnetV2IncomeKindsForkTest$|^TestnetV2IncomeCompatibilityForkTest$' -vv; RPC prunes state, select a fresh block after compilation"
+  },
+  "source_sha256": {
+    "contractV2/src/v2/V2StakingIncome.sol": "11100c29c7cba9e048bfd1c2303f95f3d1a5dd6aaea0cfc7929ffba530a85528",
+    "contractV2/src/v2/HedgeFunV2IncomeTreasury.sol": "a74fba48b38e5d7c6f62c556701b5c7f0175d88c1be9dad75b9b9665dc3a2755",
+    "contractV2/src/v2/HedgeFunV2StrategyIncomeTreasury.sol": "684b0a79557df018c39330fd8b167cd2fa5f99fba0328b2532892b16de523d60",
+    "contractV2/script/RegisterV2IncomeKinds.s.sol": "1bd06d362b6c9f8bc99e2077194d3d526214e25baab129fc71b9d106275c3980",
+    "contractV2/script/helpers/IncomeKindCompatibility.sol": "54f7d13971477fea55f75846c224a38a3bc04bcc18dbfbab045292095f000934",
+    "contractV2/test/V2IncomeKindCompatibility.t.sol": "a761815b5359ef960a6c8dcf807681e4079fd508f045ce0f11d50cce7b54b7cc",
+    "contractV2/test/V2StakingAllocationRegression.t.sol": "069008d312aa96047fd7d9500153994a6948634b3ed8fefe19d64f71343cd6fc",
+    "contractV2/test/V2StakingRemainderBoundary.t.sol": "64b4931d5cd36ec516ae80492782266c8785a195ac88200e06a40ffcd3d0df14",
+    "contractV2/test/V2StakingIncomeInvariant.t.sol": "eb871df719972944ff5cbd51d71989db46017ec7bdfe5eb8136e1d79d38ef069",
+    "contractV2/test/V2IncomeGraduation.t.sol": "574347409f3e285c72d50c73c470e5629123372da81cc60499eaafdec4f563c9",
+    "contractV2/test/V2IncomeGasRegression.t.sol": "9049d55fd4f1022f75e483235fc4734287e03bc2acf0b3fc235e4c707889619f",
+    "contractV2/test/TestnetV2IncomeKindsFork.t.sol": "4838524a0420ad4f2e267807d3f9033842c0fdd2c1acc29d2107a2d4c90a1c14",
+    ".github/workflows/contract-v2.yml": "a20b51337ad598ba8c164376d18a9d9f96bf4d2f1e8fc0e0793f2939e216e68e"
+  },
+  "log_sha256": {
+    "offline.log": "26eaa0b873442d09f2e98b2f0f6e2a4e5c63ce6d237f33e493da4c10818e80a2",
+    "sizes.log": "f665fb4febc7aa66d0db8f8dc142a2d7119e9dcfaecd3a79f09e7a32e4cf5640",
+    "fork.log": "3f91dd51a2daed83d1001c48bc28c767c75f39ed7c10a104ba9c32dc9ef09bb8",
+    "python-tests.log": "78490661f7d1020583073a82dafdda16fc2ebf685f272357f0200d044f69fc9d",
+    "python-tools.log": "4993a801fc12385cc10ec871dd0914a31c21cdb61d37cf8008857315c67bd7d5",
+    "agent-compatibility.log": "5894a076a2ed14a258e73eb9ea209f9711421b9ea54cb5632f52be93d026d501",
+    "agent-compatibility-fork.log": "b988bd0737bc87e0fd0f4eb17a46d17665605f73c6ce466b59f1347e773e5c64",
+    "agent-remainder.log": "c99138dd39e8605ec0330d41d10ffba461e9d0b9569c034ed3687cba58a8cd00",
+    "0x2026100401.log": "9ee308575506dd0ac04ed04946eb09adb37e9b37033670d26784cdf9cd0ebe24",
+    "0x2026100402.log": "ac39d4fffeae144198228c7cb372508a1c45e1fe34ce94a54b0a9126b72cf259",
+    "0x2026100403.log": "c058048e8c9e11bfb2db5cb6c0689a1567454690e0e240971da689da6cd749db"
+  }
+}

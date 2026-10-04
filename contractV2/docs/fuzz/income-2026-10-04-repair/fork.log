@@ -1,0 +1,84 @@
+No files changed, compilation skipped
+2026-10-04T14:29:30.880581Z  WARN evm::traces::external: etherscan config not found
+2026-10-04T14:29:31.174921Z  WARN foundry_fork_db::cache: Failed to read cache file err=Os { code: 2, kind: NotFound, message: "No such file or directory" } path="/Users/leo/.foundry/cache/rpc/46630/128756765"
+
+Ran 16 tests for test/TestnetV2IncomeKindsFork.t.sol:TestnetV2IncomeKindsForkTest
+[PASS] test_dividendKindOnDeployedFactory() (gas: 13531407)
+Logs:
+  income kinds fork block: 128756765
+
+[PASS] test_dividendKindOptionalBookFailureProtectsPrincipal() (gas: 12622363)
+Logs:
+  income kinds fork block: 128756765
+
+[PASS] test_dividendKindPreclaimedFeesRemainIncome() (gas: 12621784)
+Logs:
+  income kinds fork block: 128756765
+
+[PASS] test_splitKindOnDeployedFactory() (gas: 13857762)
+Logs:
+  income kinds fork block: 128756765
+
+[PASS] test_splitKindOptionalBookFailureProtectsPrincipal() (gas: 12640240)
+Logs:
+  income kinds fork block: 128756765
+
+[PASS] test_splitKindPreclaimedFeesRemainIncome() (gas: 12639925)
+Logs:
+  income kinds fork block: 128756765
+
+[PASS] test_strategy25KindOnDeployedFactory() (gas: 15464856)
+Logs:
+  income kinds fork block: 128756765
+
+[PASS] test_strategy25OptionalBookFailureProtectsPrincipal() (gas: 14280936)
+Logs:
+  income kinds fork block: 128756765
+
+[PASS] test_strategy25PreclaimedFeesRemainIncome() (gas: 14297035)
+Logs:
+  income kinds fork block: 128756765
+
+[PASS] test_strategy25StopLossOnDeployedVenue() (gas: 14941538)
+Logs:
+  income kinds fork block: 128756765
+
+[PASS] test_strategy25TakesProfitAndBuysTheDipOnDeployedVenue() (gas: 15617529)
+Logs:
+  income kinds fork block: 128756765
+
+[PASS] test_strategy50KindOnDeployedFactory() (gas: 15464793)
+Logs:
+  income kinds fork block: 128756765
+
+[PASS] test_strategy50OptionalBookFailureProtectsPrincipal() (gas: 14281260)
+Logs:
+  income kinds fork block: 128756765
+
+[PASS] test_strategy50PreclaimedFeesRemainIncome() (gas: 14297381)
+Logs:
+  income kinds fork block: 128756765
+
+[PASS] test_strategy50StopLossOnDeployedVenue() (gas: 14941637)
+Logs:
+  income kinds fork block: 128756765
+
+[PASS] test_strategy50TakesProfitAndBuysTheDipOnDeployedVenue() (gas: 15616990)
+Logs:
+  income kinds fork block: 128756765
+
+Suite result: ok. 16 passed; 0 failed; 0 skipped; finished in 49.99s (44.02s CPU time)
+2026-10-04T14:30:21.140819Z  WARN foundry_fork_db::cache: Failed to read cache file err=Os { code: 2, kind: NotFound, message: "No such file or directory" } path="/Users/leo/.foundry/cache/rpc/46630/128756765"
+
+Ran 2 tests for test/V2IncomeKindCompatibility.t.sol:TestnetV2IncomeCompatibilityForkTest
+[PASS] test_fork_legacyFactoryRejectsBeforeRegistrationAndDuringReadback() (gas: 27148628)
+Logs:
+  compatibility fork block: 128756765
+
+[PASS] test_fork_reviewedFactoryAcceptsRegistrationAndReadback() (gas: 55020955)
+Logs:
+  compatibility fork block: 128756765
+
+Suite result: ok. 2 passed; 0 failed; 0 skipped; finished in 944.46ms (675.36ms CPU time)
+
+Ran 2 test suites in 50.94s (50.94s CPU time): 18 tests passed, 0 failed, 0 skipped (18 total tests)

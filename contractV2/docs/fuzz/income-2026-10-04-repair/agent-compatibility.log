@@ -1,0 +1,15 @@
+No files changed, compilation skipped
+
+Ran 9 tests for test/V2IncomeKindCompatibility.t.sol:V2IncomeKindCompatibilityTest
+[PASS] test_curveCreationChunkMustMatchReviewedCode() (gas: 129470)
+[PASS] test_everyFactoryImmutableReferenceIsCheckedNotOnlyTheGetter() (gas: 5948838)
+[PASS] test_everyGraduationModuleImmutableReferenceIncludingPrivateSelfIsChecked() (gas: 1524713)
+[PASS] test_forgedGettersDoNotApproveUnreviewedFactoryCode() (gas: 241850)
+[PASS] test_moduleMustBeBoundToThisFactory() (gas: 96576)
+[PASS] test_readbackRepeatsFactoryCompatibilityCheck() (gas: 101608)
+[PASS] test_registryCountUnchangedAfterIncompatibleModuleRejected() (gas: 134089)
+[PASS] test_runtimeTemplatesReconstructEveryImmutableAcrossDifferentDeployments() (gas: 75747907)
+[PASS] test_vaultCreationChunkMustMatchReviewedCode() (gas: 132892)
+Suite result: ok. 9 passed; 0 failed; 0 skipped; finished in 122.52ms (36.13ms CPU time)
+
+Ran 1 test suite in 123.37ms (122.52ms CPU time): 9 tests passed, 0 failed, 0 skipped (9 total tests)

@@ -1,0 +1,104 @@
+{
+  "date": "2026-10-04",
+  "pr": "https://github.com/0xHedgeHood/Hedgefun-trade/pull/22",
+  "reviewed_original_head": "76849fdf6f804ec92322fe5ee42ffc0f3917ecd6",
+  "merged_base": "9be8cf48a723f1ab65412505e231f98b8fac450e",
+  "fixes": [
+    "Initialize exact graduation capital atomically before optional book",
+    "Keep earned fees as income regardless of claim timing",
+    "Reject legacy wire fallback for principal-aware kinds"
+  ],
+  "toolchain": {
+    "forge": "1.5.0",
+    "solc": "0.8.26",
+    "optimizer_runs": 1,
+    "evm": "cancun"
+  },
+  "offline": {
+    "passed": 984,
+    "failed": 0,
+    "skipped": 41,
+    "suites": 107
+  },
+  "python": {
+    "tests": 93,
+    "tools_tests": 53,
+    "failed": 0
+  },
+  "graduation_fuzz": {
+    "seed": "0x2026100401",
+    "runs_per_property": 4096,
+    "properties": 8,
+    "stock_decimals": [
+      6,
+      18
+    ]
+  },
+  "campaign": {
+    "seeds": [
+      "0x2026100401",
+      "0x2026100402",
+      "0x2026100403"
+    ],
+    "tests_per_seed": 41,
+    "fuzz_runs_per_test": 1024,
+    "invariant_runs_per_seed": 512,
+    "invariant_depth": 128,
+    "invariant_calls_per_seed": 65536,
+    "invariant_calls_total": 196608,
+    "handler_reverts": 0
+  },
+  "fork": {
+    "chain_id": 46630,
+    "block": 128583570,
+    "factory": "0xc9610d4A749b2A62a7327a0f40B59013D8fC415a",
+    "passed": 16,
+    "failed": 0,
+    "skipped": 0,
+    "mode": "in-memory, read-only RPC, no private keys or broadcasts"
+  },
+  "runtime_bytes": {
+    "strategy25": 24374,
+    "strategy50": 24374,
+    "dividend": 16146,
+    "split": 16148
+  },
+  "independent_agents": {
+    "started": 3,
+    "completed_test_tasks": 2,
+    "audit_task": "interrupted by platform cybersecurity risk check; partial findings and executable regressions retained, not a completed independent audit"
+  },
+  "limitations": [
+    "New income kinds remain directly deployed immutable treasuries; upgradeability is not implemented",
+    "Optional-book exception is fault injection, not proof an external attacker can force it",
+    "Passing bounded fuzz/invariant/fork tests is not proof of absence of vulnerabilities",
+    "Legacy factories without wireWithGraduation are incompatible with revised kinds"
+  ],
+  "commands": {
+    "offline": "forge test --root contractV2 --offline",
+    "graduation": "forge test --root contractV2 --offline --mc ^V2IncomeGraduation.*Test$ --fuzz-runs 4096 --fuzz-seed 0x2026100401",
+    "campaign": "FOUNDRY_FUZZ_RUNS=1024 FOUNDRY_INVARIANT_RUNS=512 FOUNDRY_INVARIANT_DEPTH=128 FOUNDRY_INVARIANT_FAIL_ON_REVERT=true forge test --root contractV2 --offline --fuzz-seed <seed> --mc \"^V2IncomeGraduation.*Test$|^V2StakingIncomeInvariantTest$|^V2IncomeGasRegressionTest$\" -vv",
+    "fork": "INCOME_KINDS_FORK=true INCOME_KINDS_FORK_BLOCK=128583570 V2_FACTORY=0xc9610d4A749b2A62a7327a0f40B59013D8fC415a forge test --root contractV2 --mc ^TestnetV2IncomeKindsForkTest$ --threads 1 -vv; public RPC prunes state, so select a fresh block for a new run"
+  },
+  "source_sha256": {
+    "contractV2/src/v2/HedgeFunV2IncomeTreasury.sol": "a74fba48b38e5d7c6f62c556701b5c7f0175d88c1be9dad75b9b9665dc3a2755",
+    "contractV2/src/v2/HedgeFunV2StrategyIncomeTreasury.sol": "684b0a79557df018c39330fd8b167cd2fa5f99fba0328b2532892b16de523d60",
+    "contractV2/src/v2/V2StakingIncome.sol": "f42e4f1737ead68bcb787324bbda9e88ecaa8263b4f91a88245cc38cb03ae3c1",
+    "contractV2/test/V2IncomeGraduation.t.sol": "574347409f3e285c72d50c73c470e5629123372da81cc60499eaafdec4f563c9",
+    "contractV2/test/V2StakingIncomeInvariant.t.sol": "c6cce22a4d82c68fb64bacd6185d67ffc98d692fe3e7a2605cb49f6735d63674",
+    "contractV2/test/V2IncomeGasRegression.t.sol": "9049d55fd4f1022f75e483235fc4734287e03bc2acf0b3fc235e4c707889619f",
+    "contractV2/test/TestnetV2IncomeKindsFork.t.sol": "4838524a0420ad4f2e267807d3f9033842c0fdd2c1acc29d2107a2d4c90a1c14",
+    ".github/workflows/contract-v2.yml": "1f1988de3148ac48032a60cc8add3f6369ecff4c02978eb64d5681a6f813597b"
+  },
+  "log_sha256": {
+    "offline.log": "0e14a24f269c981672981f5400cd734717f7dca4e224eedffcc34e7df102b975",
+    "sizes.log": "4cc2c087eeb9212450293195b2e67aef5503af1f6a011d40e4532439d85a0e7a",
+    "fork.log": "408d597e2593161fae3fadd9f8116ea0c99f8964236347e70c1d85b0193af04d",
+    "graduation-4096.log": "3ca040e0bf8d3f6f0129bcb09cca5479411d683efa4f3e9df53e6b9a746c2593",
+    "python-tests.log": "5f0bb1d3366e9b308100e95aa29cbc8460283ff88a2bb75266d04bf11f9b9e8b",
+    "python-tools.log": "d3aaae7d77c4a37d2a4707bda3ce8ff4d5bbfa03d175046afe11c13357c8c797",
+    "0x2026100401.log": "900069ed05d3794aba5d4219198b88557ce52be0f09fca82fc8887d3c42a23be",
+    "0x2026100402.log": "30aef7eb48e0c538d571b17db54a6df8ae29accee40dea785904066d92a960f8",
+    "0x2026100403.log": "2733819341176e52a74404db060162902cd115a7afc168701909ad82063cc7fd"
+  }
+}

@@ -1,0 +1,616 @@
+{
+  "comparison": "direct Engine and upgradeable Engine logic",
+  "equal": true,
+  "fields": 32,
+  "normalization": "Compare field name, slot, offset and recursive type encoding/label/width; ignore compiler AST IDs and owning contract name.",
+  "storage": [
+    {
+      "label": "_swapping",
+      "slot": "0",
+      "offset": 0,
+      "type": {
+        "encoding": "inplace",
+        "label": "bool",
+        "numberOfBytes": "1"
+      }
+    },
+    {
+      "label": "_status",
+      "slot": "1",
+      "offset": 0,
+      "type": {
+        "encoding": "inplace",
+        "label": "uint256",
+        "numberOfBytes": "32"
+      }
+    },
+    {
+      "label": "_params",
+      "slot": "2",
+      "offset": 0,
+      "type": {
+        "encoding": "inplace",
+        "label": "struct HedgeFunTreasuryBase.Params",
+        "numberOfBytes": "160",
+        "members": [
+          {
+            "label": "tp1Bps",
+            "slot": "0",
+            "offset": 0,
+            "type": {
+              "encoding": "inplace",
+              "label": "uint32",
+              "numberOfBytes": "4"
+            }
+          },
+          {
+            "label": "tp2Bps",
+            "slot": "0",
+            "offset": 4,
+            "type": {
+              "encoding": "inplace",
+              "label": "uint32",
+              "numberOfBytes": "4"
+            }
+          },
+          {
+            "label": "dipBps",
+            "slot": "0",
+            "offset": 8,
+            "type": {
+              "encoding": "inplace",
+              "label": "uint16",
+              "numberOfBytes": "2"
+            }
+          },
+          {
+            "label": "stopBps",
+            "slot": "0",
+            "offset": 10,
+            "type": {
+              "encoding": "inplace",
+              "label": "uint16",
+              "numberOfBytes": "2"
+            }
+          },
+          {
+            "label": "lotBps",
+            "slot": "0",
+            "offset": 12,
+            "type": {
+              "encoding": "inplace",
+              "label": "uint16",
+              "numberOfBytes": "2"
+            }
+          },
+          {
+            "label": "bountyBps",
+            "slot": "0",
+            "offset": 14,
+            "type": {
+              "encoding": "inplace",
+              "label": "uint16",
+              "numberOfBytes": "2"
+            }
+          },
+          {
+            "label": "maxSlippageBps",
+            "slot": "0",
+            "offset": 16,
+            "type": {
+              "encoding": "inplace",
+              "label": "uint16",
+              "numberOfBytes": "2"
+            }
+          },
+          {
+            "label": "maxDeviationBps",
+            "slot": "0",
+            "offset": 18,
+            "type": {
+              "encoding": "inplace",
+              "label": "uint16",
+              "numberOfBytes": "2"
+            }
+          },
+          {
+            "label": "maxBuybackImpactBps",
+            "slot": "0",
+            "offset": 20,
+            "type": {
+              "encoding": "inplace",
+              "label": "uint16",
+              "numberOfBytes": "2"
+            }
+          },
+          {
+            "label": "buybackCooldown",
+            "slot": "0",
+            "offset": 22,
+            "type": {
+              "encoding": "inplace",
+              "label": "uint32",
+              "numberOfBytes": "4"
+            }
+          },
+          {
+            "label": "minLotUsdg",
+            "slot": "1",
+            "offset": 0,
+            "type": {
+              "encoding": "inplace",
+              "label": "uint256",
+              "numberOfBytes": "32"
+            }
+          },
+          {
+            "label": "buybackChunkUsdg",
+            "slot": "2",
+            "offset": 0,
+            "type": {
+              "encoding": "inplace",
+              "label": "uint256",
+              "numberOfBytes": "32"
+            }
+          },
+          {
+            "label": "sellChunkUsdg",
+            "slot": "3",
+            "offset": 0,
+            "type": {
+              "encoding": "inplace",
+              "label": "uint256",
+              "numberOfBytes": "32"
+            }
+          },
+          {
+            "label": "bandBpsPerHour",
+            "slot": "4",
+            "offset": 0,
+            "type": {
+              "encoding": "inplace",
+              "label": "uint16",
+              "numberOfBytes": "2"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "label": "poolKey",
+      "slot": "7",
+      "offset": 0,
+      "type": {
+        "encoding": "inplace",
+        "label": "struct PoolKey",
+        "numberOfBytes": "96",
+        "members": [
+          {
+            "label": "currency0",
+            "slot": "0",
+            "offset": 0,
+            "type": {
+              "encoding": "inplace",
+              "label": "Currency",
+              "numberOfBytes": "20"
+            }
+          },
+          {
+            "label": "currency1",
+            "slot": "1",
+            "offset": 0,
+            "type": {
+              "encoding": "inplace",
+              "label": "Currency",
+              "numberOfBytes": "20"
+            }
+          },
+          {
+            "label": "fee",
+            "slot": "1",
+            "offset": 20,
+            "type": {
+              "encoding": "inplace",
+              "label": "uint24",
+              "numberOfBytes": "3"
+            }
+          },
+          {
+            "label": "tickSpacing",
+            "slot": "1",
+            "offset": 23,
+            "type": {
+              "encoding": "inplace",
+              "label": "int24",
+              "numberOfBytes": "3"
+            }
+          },
+          {
+            "label": "hooks",
+            "slot": "2",
+            "offset": 0,
+            "type": {
+              "encoding": "inplace",
+              "label": "contract IHooks",
+              "numberOfBytes": "20"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "label": "hook",
+      "slot": "10",
+      "offset": 0,
+      "type": {
+        "encoding": "inplace",
+        "label": "address",
+        "numberOfBytes": "20"
+      }
+    },
+    {
+      "label": "stockIsCurrency0InTokenPool",
+      "slot": "10",
+      "offset": 20,
+      "type": {
+        "encoding": "inplace",
+        "label": "bool",
+        "numberOfBytes": "1"
+      }
+    },
+    {
+      "label": "lots",
+      "slot": "11",
+      "offset": 0,
+      "type": {
+        "encoding": "dynamic_array",
+        "label": "struct HedgeFunTreasuryBase.Lot[]",
+        "numberOfBytes": "32",
+        "base": {
+          "encoding": "inplace",
+          "label": "struct HedgeFunTreasuryBase.Lot",
+          "numberOfBytes": "128",
+          "members": [
+            {
+              "label": "qty",
+              "slot": "0",
+              "offset": 0,
+              "type": {
+                "encoding": "inplace",
+                "label": "uint256",
+                "numberOfBytes": "32"
+              }
+            },
+            {
+              "label": "cost",
+              "slot": "1",
+              "offset": 0,
+              "type": {
+                "encoding": "inplace",
+                "label": "uint256",
+                "numberOfBytes": "32"
+              }
+            },
+            {
+              "label": "half",
+              "slot": "2",
+              "offset": 0,
+              "type": {
+                "encoding": "inplace",
+                "label": "bool",
+                "numberOfBytes": "1"
+              }
+            },
+            {
+              "label": "tp1Left",
+              "slot": "3",
+              "offset": 0,
+              "type": {
+                "encoding": "inplace",
+                "label": "uint256",
+                "numberOfBytes": "32"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "label": "bookedStock",
+      "slot": "12",
+      "offset": 0,
+      "type": {
+        "encoding": "inplace",
+        "label": "uint256",
+        "numberOfBytes": "32"
+      }
+    },
+    {
+      "label": "buybackStock",
+      "slot": "13",
+      "offset": 0,
+      "type": {
+        "encoding": "inplace",
+        "label": "uint256",
+        "numberOfBytes": "32"
+      }
+    },
+    {
+      "label": "lastSalePrice",
+      "slot": "14",
+      "offset": 0,
+      "type": {
+        "encoding": "inplace",
+        "label": "uint256",
+        "numberOfBytes": "32"
+      }
+    },
+    {
+      "label": "lastPoolOnlySaleAt",
+      "slot": "15",
+      "offset": 0,
+      "type": {
+        "encoding": "inplace",
+        "label": "uint256",
+        "numberOfBytes": "32"
+      }
+    },
+    {
+      "label": "lastBuybackAt",
+      "slot": "16",
+      "offset": 0,
+      "type": {
+        "encoding": "inplace",
+        "label": "uint256",
+        "numberOfBytes": "32"
+      }
+    },
+    {
+      "label": "buybackAnchorSqrtP",
+      "slot": "17",
+      "offset": 0,
+      "type": {
+        "encoding": "inplace",
+        "label": "uint160",
+        "numberOfBytes": "20"
+      }
+    },
+    {
+      "label": "buybackAnchorAt",
+      "slot": "18",
+      "offset": 0,
+      "type": {
+        "encoding": "inplace",
+        "label": "uint256",
+        "numberOfBytes": "32"
+      }
+    },
+    {
+      "label": "totalBurned",
+      "slot": "19",
+      "offset": 0,
+      "type": {
+        "encoding": "inplace",
+        "label": "uint256",
+        "numberOfBytes": "32"
+      }
+    },
+    {
+      "label": "lastGoodPrice",
+      "slot": "20",
+      "offset": 0,
+      "type": {
+        "encoding": "inplace",
+        "label": "uint256",
+        "numberOfBytes": "32"
+      }
+    },
+    {
+      "label": "lastGoodPriceAt",
+      "slot": "21",
+      "offset": 0,
+      "type": {
+        "encoding": "inplace",
+        "label": "uint256",
+        "numberOfBytes": "32"
+      }
+    },
+    {
+      "label": "totalStockReceived",
+      "slot": "22",
+      "offset": 0,
+      "type": {
+        "encoding": "inplace",
+        "label": "uint256",
+        "numberOfBytes": "32"
+      }
+    },
+    {
+      "label": "totalStockSpentOnBuybacks",
+      "slot": "23",
+      "offset": 0,
+      "type": {
+        "encoding": "inplace",
+        "label": "uint256",
+        "numberOfBytes": "32"
+      }
+    },
+    {
+      "label": "_releasedDustStock",
+      "slot": "24",
+      "offset": 0,
+      "type": {
+        "encoding": "inplace",
+        "label": "uint256",
+        "numberOfBytes": "32"
+      }
+    },
+    {
+      "label": "_swapKind",
+      "slot": "25",
+      "offset": 0,
+      "type": {
+        "encoding": "inplace",
+        "label": "uint8",
+        "numberOfBytes": "1"
+      }
+    },
+    {
+      "label": "liquidityVault",
+      "slot": "25",
+      "offset": 1,
+      "type": {
+        "encoding": "inplace",
+        "label": "address",
+        "numberOfBytes": "20"
+      }
+    },
+    {
+      "label": "lastStopPrice",
+      "slot": "26",
+      "offset": 0,
+      "type": {
+        "encoding": "inplace",
+        "label": "uint256",
+        "numberOfBytes": "32"
+      }
+    },
+    {
+      "label": "lastStopAt",
+      "slot": "27",
+      "offset": 0,
+      "type": {
+        "encoding": "inplace",
+        "label": "uint256",
+        "numberOfBytes": "32"
+      }
+    },
+    {
+      "label": "lastStopStockUpdatedAt",
+      "slot": "28",
+      "offset": 0,
+      "type": {
+        "encoding": "inplace",
+        "label": "uint256",
+        "numberOfBytes": "32"
+      }
+    },
+    {
+      "label": "_engineConfig",
+      "slot": "29",
+      "offset": 0,
+      "type": {
+        "encoding": "inplace",
+        "label": "struct EngineConfig",
+        "numberOfBytes": "160",
+        "members": [
+          {
+            "label": "schema",
+            "slot": "0",
+            "offset": 0,
+            "type": {
+              "encoding": "inplace",
+              "label": "uint32",
+              "numberOfBytes": "4"
+            }
+          },
+          {
+            "label": "engineVersion",
+            "slot": "0",
+            "offset": 4,
+            "type": {
+              "encoding": "inplace",
+              "label": "uint32",
+              "numberOfBytes": "4"
+            }
+          },
+          {
+            "label": "policyKey",
+            "slot": "1",
+            "offset": 0,
+            "type": {
+              "encoding": "inplace",
+              "label": "bytes32",
+              "numberOfBytes": "32"
+            }
+          },
+          {
+            "label": "words",
+            "slot": "2",
+            "offset": 0,
+            "type": {
+              "encoding": "inplace",
+              "label": "bytes32[3]",
+              "numberOfBytes": "96",
+              "base": {
+                "encoding": "inplace",
+                "label": "bytes32",
+                "numberOfBytes": "32"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "label": "policyState",
+      "slot": "34",
+      "offset": 0,
+      "type": {
+        "encoding": "inplace",
+        "label": "bytes32",
+        "numberOfBytes": "32"
+      }
+    },
+    {
+      "label": "avgCost",
+      "slot": "35",
+      "offset": 0,
+      "type": {
+        "encoding": "inplace",
+        "label": "uint256",
+        "numberOfBytes": "32"
+      }
+    },
+    {
+      "label": "strategyNonce",
+      "slot": "36",
+      "offset": 0,
+      "type": {
+        "encoding": "inplace",
+        "label": "uint64",
+        "numberOfBytes": "8"
+      }
+    },
+    {
+      "label": "lastStrategyAt",
+      "slot": "37",
+      "offset": 0,
+      "type": {
+        "encoding": "inplace",
+        "label": "uint256",
+        "numberOfBytes": "32"
+      }
+    },
+    {
+      "label": "turnoverEpoch",
+      "slot": "38",
+      "offset": 0,
+      "type": {
+        "encoding": "inplace",
+        "label": "uint64",
+        "numberOfBytes": "8"
+      }
+    },
+    {
+      "label": "turnoverInEpoch",
+      "slot": "39",
+      "offset": 0,
+      "type": {
+        "encoding": "inplace",
+        "label": "uint256",
+        "numberOfBytes": "32"
+      }
+    }
+  ]
+}

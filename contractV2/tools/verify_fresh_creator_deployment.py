@@ -104,14 +104,19 @@ def main():
         eq(book[key],'factory()',[book['factory']])
     eq(book['nativeRouter'],'router()',[book['tradeRouter']]);eq(book['nativeRouter'],'wrappedNative()',[book['weth']])
     eq(book['hook'],'version()',[2]);eq(book['treasuryDeployer'],'kindCount()',[3])
-    for i,name in enumerate(('HedgeFunV2AllInTreasury','HedgeFunV2BuybackTreasury','HedgeFunV2EngineTreasury')):
+    for i,name in enumerate(('HedgeFunV2UpgradeableTreasury','HedgeFunV2UpgradeableBuybackTreasury','HedgeFunV2UpgradeableEngineTreasury')):
         manifest=read(book['treasuryDeployer'],'kindManifest(uint8)',i)
         assert manifest[2]==int(cast('keccak',code(name)),16)
         assert manifest[:2]==([1,1] if i==2 else [0,0]) and manifest[3]==(3 if i==2 else 0)
         chunks=read(book['treasuryDeployer'],'kinds(uint8)',i)
         raw='0x'+''.join(rpc('eth_getCode',[f'0x{x:040x}',tag])[2:] for x in chunks)
         assert raw==code(name)
-    eq(book['treasuryDeployer'],'allInTriggerCodeHash()',[cast('keccak',code('HedgeFunV2AllInTreasury'))])
+    eq(book['treasuryDeployer'],'allInTriggerCodeHash()',[cast('keccak',code('HedgeFunV2UpgradeableTreasury'))])
+    controller = f"0x{read(book['treasuryDeployer'],'upgradeController()')[0]:040x}"
+    eq(controller, 'owner()', [book['owner']])
+    eq(controller, 'UPGRADE_DELAY()', [172800])
+    book['treasuryUpgradeController'] = controller
+    book['upgradeableKinds'] = [0, 1, 2]
     policy=read(book['treasuryDeployer'],'policy(bytes32)',book['rebalancePolicyKey'])
     assert policy[0]==int(book['rebalancePolicy'],16) and policy[2:]==[1,1,150000,160,3,1]
     assert policy[1]==int(cast('keccak',rpc('eth_getCode',[book['rebalancePolicy'],tag])),16)

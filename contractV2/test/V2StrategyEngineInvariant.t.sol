@@ -4,7 +4,7 @@ pragma solidity ^0.8.24;
 import {Test} from "forge-std/Test.sol";
 import {HedgeFunFactory} from "../src/HedgeFunFactory.sol";
 import {HedgeFunBondingCurve} from "../src/v2/HedgeFunBondingCurve.sol";
-import {HedgeFunV2EngineTreasury} from "../src/v2/HedgeFunV2EngineTreasury.sol";
+import {HedgeFunV2EngineTreasury, HedgeFunV2EngineTreasuryCore} from "../src/v2/HedgeFunV2EngineTreasury.sol";
 import {HedgeFunV2Treasury} from "../src/v2/HedgeFunV2Treasury.sol";
 import {V2TreasuryDeployer} from "../src/v2/V2TreasuryDeployer.sol";
 import {EngineConfig, StrategyCapabilities} from "../src/v2/strategy/IStrategyPolicy.sol";
@@ -124,7 +124,7 @@ contract StrategyEngineHandler is Test {
         uint256 turnoverBefore = treasury.turnoverInEpoch();
         bytes32 digestBefore = _stateDigest();
 
-        (bool ok, bytes memory data) = address(treasury).call(abi.encodeCall(HedgeFunV2EngineTreasury.execute, ()));
+        (bool ok, bytes memory data) = address(treasury).call(abi.encodeCall(HedgeFunV2EngineTreasuryCore.execute, ()));
         if (!ok) {
             ++failedExecutions;
             if (_stateDigest() != digestBefore) violation = true;

@@ -10,8 +10,8 @@ import {HedgeFunFactory, TokenDeployer} from "../src/HedgeFunFactory.sol";
 import {HedgeFunV2Hook} from "../src/hooks/HedgeFunV2Hook.sol";
 import {HedgeFunV2Factory} from "../src/v2/HedgeFunV2Factory.sol";
 import {V2TreasuryDeployer} from "../src/v2/V2TreasuryDeployer.sol";
-import {HedgeFunV2BuybackTreasury} from "../src/v2/HedgeFunV2BuybackTreasury.sol";
-import {HedgeFunV2EngineTreasury} from "../src/v2/HedgeFunV2EngineTreasury.sol";
+import {HedgeFunV2UpgradeableBuybackTreasury} from "../src/v2/HedgeFunV2UpgradeableBuybackTreasury.sol";
+import {HedgeFunV2UpgradeableEngineTreasury} from "../src/v2/HedgeFunV2UpgradeableEngineTreasury.sol";
 import {V2RebalancePolicy} from "../src/v2/strategy/V2RebalancePolicy.sol";
 import {StrategyCapabilities} from "../src/v2/strategy/IStrategyPolicy.sol";
 import {CurveDeployer} from "../src/v2/CurveDeployer.sol";
@@ -247,13 +247,13 @@ contract DeployV2Testnet is Script {
 
     /// kind 1 (buyback), the rebalance policy, and kind 2 (the spot engine), as test/V2StrategyEngine.t.sol
     function _register(Deployment memory x) internal {
-        (address a, address b) = x.treasury.makeChunks(type(HedgeFunV2BuybackTreasury).creationCode);
+        (address a, address b) = x.treasury.makeChunks(type(HedgeFunV2UpgradeableBuybackTreasury).creationCode);
         if (x.treasury.registerKind(a, b) != 1) revert ReadbackFailed("kind 1");
         x.policy = new V2RebalancePolicy();
         x.policyKey = x.treasury.registerPolicy(address(x.policy), 150_000, x.treasury.POLICY_RETURN_BYTES(),
             keccak256("hedgefun testnet 46630: V2RebalancePolicy dependencies (none audited for testnet)"),
             keccak256("hedgefun testnet 46630: V2RebalancePolicy audit manifest (testnet placeholder)"));
-        (a, b) = x.treasury.makeChunks(type(HedgeFunV2EngineTreasury).creationCode);
+        (a, b) = x.treasury.makeChunks(type(HedgeFunV2UpgradeableEngineTreasury).creationCode);
         x.engineKind = x.treasury.registerEngineKind(a, b, StrategyCapabilities.SPOT_ENGINE_V1,
             StrategyCapabilities.CONFIG_SCHEMA_V1, StrategyCapabilities.SPOT_BUY | StrategyCapabilities.SPOT_SELL);
     }
