@@ -1,0 +1,15 @@
+diff --git a/src/v2/V2TreasuryDeployer.sol b/src/v2/V2TreasuryDeployer.sol
+index 5ce7353..65f0527 100644
+--- a/src/v2/V2TreasuryDeployer.sol
++++ b/src/v2/V2TreasuryDeployer.sol
+@@ -381,10 +381,6 @@ contract V2TreasuryDeployer is BoundDeployer {
+             EngineConfig storage config = _engineConfigOf[salt];
+             IStrategyEngineIntrospection engine = IStrategyEngineIntrospection(a);
+             boundConfigHash = engine.configHash();
+-            if (
+-                engine.engineVersion() != config.engineVersion || engine.strategyId() != config.policyKey
+-                    || boundConfigHash == bytes32(0)
+-            ) revert TreasuryDeployFailed();
+         }
+         // `args` starts (usdg, stock, ...): the stock is its second word
+         lpBpsOfTreasury[a] = lpBps(address(uint160(uint256(bytes32(args[32:64])))));

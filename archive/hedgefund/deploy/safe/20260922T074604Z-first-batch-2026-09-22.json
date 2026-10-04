@@ -1,0 +1,829 @@
+{
+  "version": "1.0",
+  "chainId": "4663",
+  "createdAt": 1790063164901,
+  "meta": {
+    "name": "LISTING first-batch-2026-09-22 20260922T074604Z",
+    "description": "list x12, band ceilings, listing gates, setLauncher. Built from first-batch-2026-09-22.json.",
+    "txBuilderVersion": "1.16.5",
+    "createdFromSafeAddress": "0x2910117dd2cB431173Ae9Fb6eAF30726321d1693",
+    "createdFromOwnerAddress": "",
+    "checksum": "0xd3db1b823e9c32cb5b2b53e605798478dc5fd301eb35b46e9092adc4da03126d"
+  },
+  "transactions": [
+    {
+      "to": "0x58F6Ced8d02cD2567f1458801440Bc4eb67fA961",
+      "value": "0",
+      "data": "0xe5ac2799000000000000000000000000d0601ce157db5bdc3162bbac2a2c8af5320d9eec00000000000000000000000003c77f527aa1b0b304602e3fb9ac994dd1c157f8000000000000000000000000d4eb21209c4d6093f80b5b84f5c45cc093ea14a30000000000000000000000000000000000000000000000000000000a4a867a000000000000000000000000000000000000000000000000000000000000000001",
+      "contractMethod": {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "stock",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "oracle",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "v3Pool",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "openPriceE18",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bool",
+            "name": "enabled",
+            "type": "bool"
+          }
+        ],
+        "name": "list",
+        "payable": false
+      },
+      "contractInputsValues": {
+        "stock": "0xd0601CE157Db5bdC3162BbaC2a2C8aF5320D9EEC",
+        "oracle": "0x03c77f527Aa1B0B304602e3fB9Ac994dd1c157f8",
+        "v3Pool": "0xd4EB21209C4D6093f80B5b84f5C45cc093EA14a3",
+        "openPriceE18": "44200000000",
+        "enabled": "true"
+      }
+    },
+    {
+      "to": "0x58F6Ced8d02cD2567f1458801440Bc4eb67fA961",
+      "value": "0",
+      "data": "0xe5ac27990000000000000000000000004a0e65a3eccec6dbe60ae065f2e7bb85fae35eea000000000000000000000000c109426706b9d01719ed82e8cd027fa91fbcdc0b000000000000000000000000c61284332117c3fb23a2a56cceffd07f7af600290000000000000000000000000000000000000000000000000000000f461090000000000000000000000000000000000000000000000000000000000000000001",
+      "contractMethod": {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "stock",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "oracle",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "v3Pool",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "openPriceE18",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bool",
+            "name": "enabled",
+            "type": "bool"
+          }
+        ],
+        "name": "list",
+        "payable": false
+      },
+      "contractInputsValues": {
+        "stock": "0x4a0E65A3EcceC6dBe60AE065F2e7bb85Fae35eEa",
+        "oracle": "0xC109426706b9D01719ED82e8cd027fA91fBcdC0b",
+        "v3Pool": "0xc61284332117c3FB23A2A56cceFFD07F7aF60029",
+        "openPriceE18": "65600000000",
+        "enabled": "true"
+      }
+    },
+    {
+      "to": "0x58F6Ced8d02cD2567f1458801440Bc4eb67fA961",
+      "value": "0",
+      "data": "0xe5ac2799000000000000000000000000df0992e440dd0be65bd8439b609d6d4366bf1cb50000000000000000000000003bd2c093948d38a5ec2d945c5b065e5db89aab36000000000000000000000000654e4143e82a5824445ade0824351c2a9acd95a80000000000000000000000000000000000000000000000000000001960e802000000000000000000000000000000000000000000000000000000000000000001",
+      "contractMethod": {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "stock",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "oracle",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "v3Pool",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "openPriceE18",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bool",
+            "name": "enabled",
+            "type": "bool"
+          }
+        ],
+        "name": "list",
+        "payable": false
+      },
+      "contractInputsValues": {
+        "stock": "0xdF0992E440dD0be65BD8439b609d6D4366bf1CB5",
+        "oracle": "0x3bd2c093948D38A5eC2D945C5b065e5Db89aaB36",
+        "v3Pool": "0x654E4143e82a5824445Ade0824351C2A9ACD95a8",
+        "openPriceE18": "109000000000",
+        "enabled": "true"
+      }
+    },
+    {
+      "to": "0x58F6Ced8d02cD2567f1458801440Bc4eb67fA961",
+      "value": "0",
+      "data": "0xe5ac27990000000000000000000000002e0847e8910a9732eb3fb1bb4b70a580adad4fe300000000000000000000000015400359b0d14b4151fae80b837abf3fa197725600000000000000000000000034d0dc122cf9a8eb296fc5e0d3a233625d7d19b70000000000000000000000000000000000000000000000000000000684ee18000000000000000000000000000000000000000000000000000000000000000001",
+      "contractMethod": {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "stock",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "oracle",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "v3Pool",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "openPriceE18",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bool",
+            "name": "enabled",
+            "type": "bool"
+          }
+        ],
+        "name": "list",
+        "payable": false
+      },
+      "contractInputsValues": {
+        "stock": "0x2e0847E8910a9732eB3fb1bb4b70a580ADAD4FE3",
+        "oracle": "0x15400359B0D14B4151FAe80b837abF3fA1977256",
+        "v3Pool": "0x34D0dC122CF9A8Eb296fC5e0D3A233625D7d19b7",
+        "openPriceE18": "28000000000",
+        "enabled": "true"
+      }
+    },
+    {
+      "to": "0x58F6Ced8d02cD2567f1458801440Bc4eb67fA961",
+      "value": "0",
+      "data": "0xe5ac279900000000000000000000000012f190a9f9d7d37a250758b26824b97ce941bf54000000000000000000000000b34d278d2c792b7c48252c5eb8130db45e35294e0000000000000000000000008ac92da74ab5f3b1d024dc1943ad7e15dc4179ef00000000000000000000000000000000000000000000000000000008f6c761000000000000000000000000000000000000000000000000000000000000000001",
+      "contractMethod": {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "stock",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "oracle",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "v3Pool",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "openPriceE18",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bool",
+            "name": "enabled",
+            "type": "bool"
+          }
+        ],
+        "name": "list",
+        "payable": false
+      },
+      "contractInputsValues": {
+        "stock": "0x12f190a9F9d7D37a250758b26824B97CE941bF54",
+        "oracle": "0xb34d278D2c792B7C48252C5eB8130Db45e35294e",
+        "v3Pool": "0x8AC92DA74AB5F3b1d024Dc1943Ad7e15Dc4179Ef",
+        "openPriceE18": "38500000000",
+        "enabled": "true"
+      }
+    },
+    {
+      "to": "0x58F6Ced8d02cD2567f1458801440Bc4eb67fA961",
+      "value": "0",
+      "data": "0xe5ac27990000000000000000000000001b0e319c6a659f002271b69db8a7df2f911c153e0000000000000000000000007548a343d06e45507dd8f546d9d9fdf684575ece000000000000000000000000e2b46c905e12ab8e2f864e4821a4325884c1b126000000000000000000000000000000000000000000000000000000627cc3c6000000000000000000000000000000000000000000000000000000000000000001",
+      "contractMethod": {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "stock",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "oracle",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "v3Pool",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "openPriceE18",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bool",
+            "name": "enabled",
+            "type": "bool"
+          }
+        ],
+        "name": "list",
+        "payable": false
+      },
+      "contractInputsValues": {
+        "stock": "0x1b0E319c6A659F002271B69dB8A7df2F911c153E",
+        "oracle": "0x7548A343D06E45507Dd8F546D9d9Fdf684575ecE",
+        "v3Pool": "0xE2b46c905E12Ab8E2f864e4821a4325884C1B126",
+        "openPriceE18": "423000000000",
+        "enabled": "true"
+      }
+    },
+    {
+      "to": "0x58F6Ced8d02cD2567f1458801440Bc4eb67fA961",
+      "value": "0",
+      "data": "0xe5ac2799000000000000000000000000c0d6457c16cc70d6790dd43521c899c87ce02f35000000000000000000000000699e34068b8975be113ed5ff12e429c69bcf1011000000000000000000000000107a7cb40d8665360ba10e59471af06150a50922000000000000000000000000000000000000000000000000000000031eb3c6000000000000000000000000000000000000000000000000000000000000000001",
+      "contractMethod": {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "stock",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "oracle",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "v3Pool",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "openPriceE18",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bool",
+            "name": "enabled",
+            "type": "bool"
+          }
+        ],
+        "name": "list",
+        "payable": false
+      },
+      "contractInputsValues": {
+        "stock": "0xc0D6457C16Cc70d6790Dd43521C899C87ce02f35",
+        "oracle": "0x699E34068b8975bE113eD5fF12e429c69BCf1011",
+        "v3Pool": "0x107a7Cb40d8665360ba10E59471Af06150A50922",
+        "openPriceE18": "13400000000",
+        "enabled": "true"
+      }
+    },
+    {
+      "to": "0x58F6Ced8d02cD2567f1458801440Bc4eb67fA961",
+      "value": "0",
+      "data": "0xe5ac2799000000000000000000000000d917b029c761d264c6a312bbbcda868658ef86a600000000000000000000000002de419166ced89fc9fce2687cdbcbbc9ede261200000000000000000000000004391780f519b7d3ba59c9590459d76e23d225c40000000000000000000000000000000000000000000000000000008ac45e48000000000000000000000000000000000000000000000000000000000000000001",
+      "contractMethod": {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "stock",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "oracle",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "v3Pool",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "openPriceE18",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bool",
+            "name": "enabled",
+            "type": "bool"
+          }
+        ],
+        "name": "list",
+        "payable": false
+      },
+      "contractInputsValues": {
+        "stock": "0xd917B029C761D264c6A312BBbcDA868658eF86a6",
+        "oracle": "0x02dE419166CED89fc9FCe2687CdBcBbc9eDe2612",
+        "v3Pool": "0x04391780F519B7d3ba59c9590459D76e23d225C4",
+        "openPriceE18": "596000000000",
+        "enabled": "true"
+      }
+    },
+    {
+      "to": "0x58F6Ced8d02cD2567f1458801440Bc4eb67fA961",
+      "value": "0",
+      "data": "0xe5ac2799000000000000000000000000ec262a75e413fafd0df80480274532c79d42da0900000000000000000000000019d0328f3152d1361db7b3dd7708cc36a779d61200000000000000000000000017578c0e0d15da44f31677263114f71ae76653ea0000000000000000000000000000000000000000000000000000000e39d803000000000000000000000000000000000000000000000000000000000000000001",
+      "contractMethod": {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "stock",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "oracle",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "v3Pool",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "openPriceE18",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bool",
+            "name": "enabled",
+            "type": "bool"
+          }
+        ],
+        "name": "list",
+        "payable": false
+      },
+      "contractInputsValues": {
+        "stock": "0xec262a75e413fAfD0dF80480274532C79D42da09",
+        "oracle": "0x19d0328F3152d1361db7B3Dd7708Cc36A779d612",
+        "v3Pool": "0x17578C0e0D15da44f31677263114F71aE76653EA",
+        "openPriceE18": "61100000000",
+        "enabled": "true"
+      }
+    },
+    {
+      "to": "0x58F6Ced8d02cD2567f1458801440Bc4eb67fA961",
+      "value": "0",
+      "data": "0xe5ac279900000000000000000000000086923f96303d656e4aa86d9d42d1e57ad2023fdc000000000000000000000000c809bdf7e31e4830de2b03e6f809869fb99f224600000000000000000000000048d284a2a4d3dc1b3da08231fe44317e7e7aa51f00000000000000000000000000000000000000000000000000000003cb8e43000000000000000000000000000000000000000000000000000000000000000001",
+      "contractMethod": {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "stock",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "oracle",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "v3Pool",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "openPriceE18",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bool",
+            "name": "enabled",
+            "type": "bool"
+          }
+        ],
+        "name": "list",
+        "payable": false
+      },
+      "contractInputsValues": {
+        "stock": "0x86923f96303D656E4aa86D9d42D1e57ad2023fdC",
+        "oracle": "0xc809bDf7E31E4830de2b03e6f809869Fb99f2246",
+        "v3Pool": "0x48D284A2A4d3DC1b3Da08231Fe44317e7e7Aa51f",
+        "openPriceE18": "16300000000",
+        "enabled": "true"
+      }
+    },
+    {
+      "to": "0x58F6Ced8d02cD2567f1458801440Bc4eb67fA961",
+      "value": "0",
+      "data": "0xe5ac2799000000000000000000000000ff080c8ce2e5feadaca0da81314ae59d232d4afd0000000000000000000000004d15a4a1028f001800774a3d2dc31d77945399a4000000000000000000000000d057b1bc54917855bbee58ead58647f47cab35e5000000000000000000000000000000000000000000000000000000023d658d000000000000000000000000000000000000000000000000000000000000000001",
+      "contractMethod": {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "stock",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "oracle",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "v3Pool",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "openPriceE18",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bool",
+            "name": "enabled",
+            "type": "bool"
+          }
+        ],
+        "name": "list",
+        "payable": false
+      },
+      "contractInputsValues": {
+        "stock": "0xfF080c8ce2E5feadaCa0Da81314Ae59D232d4afD",
+        "oracle": "0x4D15A4A1028f001800774A3d2DC31d77945399a4",
+        "v3Pool": "0xd057B1Bc54917855BBee58eAd58647f47caB35E5",
+        "openPriceE18": "9620000000",
+        "enabled": "true"
+      }
+    },
+    {
+      "to": "0x58F6Ced8d02cD2567f1458801440Bc4eb67fA961",
+      "value": "0",
+      "data": "0xe5ac2799000000000000000000000000c72b96e0e48ecd4dc75e1e45396e26300bc39681000000000000000000000000d399113f3196044a001614ca9dda9cd8c94242640000000000000000000000002e5a92f5013a64661a49312111be2e8abd33f56a00000000000000000000000000000000000000000000000000000013414ddb000000000000000000000000000000000000000000000000000000000000000001",
+      "contractMethod": {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "stock",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "oracle",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "v3Pool",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "openPriceE18",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bool",
+            "name": "enabled",
+            "type": "bool"
+          }
+        ],
+        "name": "list",
+        "payable": false
+      },
+      "contractInputsValues": {
+        "stock": "0xc72b96e0E48ecd4DC75E1e45396e26300BC39681",
+        "oracle": "0xd399113f3196044A001614Ca9dda9cD8c9424264",
+        "v3Pool": "0x2e5a92f5013a64661A49312111be2e8aBd33F56a",
+        "openPriceE18": "82700000000",
+        "enabled": "true"
+      }
+    },
+    {
+      "to": "0x58F6Ced8d02cD2567f1458801440Bc4eb67fA961",
+      "value": "0",
+      "data": "0xd37f31b6000000000000000000000000df0992e440dd0be65bd8439b609d6d4366bf1cb5000000000000000000000000000000000000000000000000000000000000000a",
+      "contractMethod": {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "stock",
+            "type": "address"
+          },
+          {
+            "internalType": "uint16",
+            "name": "bps",
+            "type": "uint16"
+          }
+        ],
+        "name": "setBandCeiling",
+        "payable": false
+      },
+      "contractInputsValues": {
+        "stock": "0xdF0992E440dD0be65BD8439b609d6D4366bf1CB5",
+        "bps": "10"
+      }
+    },
+    {
+      "to": "0x58F6Ced8d02cD2567f1458801440Bc4eb67fA961",
+      "value": "0",
+      "data": "0xd37f31b600000000000000000000000012f190a9f9d7d37a250758b26824b97ce941bf540000000000000000000000000000000000000000000000000000000000000005",
+      "contractMethod": {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "stock",
+            "type": "address"
+          },
+          {
+            "internalType": "uint16",
+            "name": "bps",
+            "type": "uint16"
+          }
+        ],
+        "name": "setBandCeiling",
+        "payable": false
+      },
+      "contractInputsValues": {
+        "stock": "0x12f190a9F9d7D37a250758b26824B97CE941bF54",
+        "bps": "5"
+      }
+    },
+    {
+      "to": "0x58F6Ced8d02cD2567f1458801440Bc4eb67fA961",
+      "value": "0",
+      "data": "0xd37f31b60000000000000000000000001b0e319c6a659f002271b69db8a7df2f911c153e0000000000000000000000000000000000000000000000000000000000000005",
+      "contractMethod": {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "stock",
+            "type": "address"
+          },
+          {
+            "internalType": "uint16",
+            "name": "bps",
+            "type": "uint16"
+          }
+        ],
+        "name": "setBandCeiling",
+        "payable": false
+      },
+      "contractInputsValues": {
+        "stock": "0x1b0E319c6A659F002271B69dB8A7df2F911c153E",
+        "bps": "5"
+      }
+    },
+    {
+      "to": "0x58F6Ced8d02cD2567f1458801440Bc4eb67fA961",
+      "value": "0",
+      "data": "0xd37f31b6000000000000000000000000c0d6457c16cc70d6790dd43521c899c87ce02f350000000000000000000000000000000000000000000000000000000000000005",
+      "contractMethod": {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "stock",
+            "type": "address"
+          },
+          {
+            "internalType": "uint16",
+            "name": "bps",
+            "type": "uint16"
+          }
+        ],
+        "name": "setBandCeiling",
+        "payable": false
+      },
+      "contractInputsValues": {
+        "stock": "0xc0D6457C16Cc70d6790Dd43521C899C87ce02f35",
+        "bps": "5"
+      }
+    },
+    {
+      "to": "0x58F6Ced8d02cD2567f1458801440Bc4eb67fA961",
+      "value": "0",
+      "data": "0xd37f31b6000000000000000000000000d917b029c761d264c6a312bbbcda868658ef86a60000000000000000000000000000000000000000000000000000000000000005",
+      "contractMethod": {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "stock",
+            "type": "address"
+          },
+          {
+            "internalType": "uint16",
+            "name": "bps",
+            "type": "uint16"
+          }
+        ],
+        "name": "setBandCeiling",
+        "payable": false
+      },
+      "contractInputsValues": {
+        "stock": "0xd917B029C761D264c6A312BBbcDA868658eF86a6",
+        "bps": "5"
+      }
+    },
+    {
+      "to": "0x58F6Ced8d02cD2567f1458801440Bc4eb67fA961",
+      "value": "0",
+      "data": "0xc8ed517d000000000000000000000000d917b029c761d264c6a312bbbcda868658ef86a600000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000003b9aca00",
+      "contractMethod": {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "stock",
+            "type": "address"
+          },
+          {
+            "internalType": "uint16",
+            "name": "maxDeviationBps",
+            "type": "uint16"
+          },
+          {
+            "internalType": "uint16",
+            "name": "maxSlippageBps",
+            "type": "uint16"
+          },
+          {
+            "internalType": "uint64",
+            "name": "sellChunkUsdg",
+            "type": "uint64"
+          }
+        ],
+        "name": "setListingGates",
+        "payable": false
+      },
+      "contractInputsValues": {
+        "stock": "0xd917B029C761D264c6A312BBbcDA868658eF86a6",
+        "maxDeviationBps": "0",
+        "maxSlippageBps": "0",
+        "sellChunkUsdg": "1000000000"
+      }
+    },
+    {
+      "to": "0x58F6Ced8d02cD2567f1458801440Bc4eb67fA961",
+      "value": "0",
+      "data": "0xc8ed517d000000000000000000000000ec262a75e413fafd0df80480274532c79d42da09000000000000000000000000000000000000000000000000000000000000007d00000000000000000000000000000000000000000000000000000000000000af0000000000000000000000000000000000000000000000000000000000000000",
+      "contractMethod": {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "stock",
+            "type": "address"
+          },
+          {
+            "internalType": "uint16",
+            "name": "maxDeviationBps",
+            "type": "uint16"
+          },
+          {
+            "internalType": "uint16",
+            "name": "maxSlippageBps",
+            "type": "uint16"
+          },
+          {
+            "internalType": "uint64",
+            "name": "sellChunkUsdg",
+            "type": "uint64"
+          }
+        ],
+        "name": "setListingGates",
+        "payable": false
+      },
+      "contractInputsValues": {
+        "stock": "0xec262a75e413fAfD0dF80480274532C79D42da09",
+        "maxDeviationBps": "125",
+        "maxSlippageBps": "175",
+        "sellChunkUsdg": "0"
+      }
+    },
+    {
+      "to": "0x58F6Ced8d02cD2567f1458801440Bc4eb67fA961",
+      "value": "0",
+      "data": "0xc8ed517d00000000000000000000000086923f96303d656e4aa86d9d42d1e57ad2023fdc00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000003b9aca00",
+      "contractMethod": {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "stock",
+            "type": "address"
+          },
+          {
+            "internalType": "uint16",
+            "name": "maxDeviationBps",
+            "type": "uint16"
+          },
+          {
+            "internalType": "uint16",
+            "name": "maxSlippageBps",
+            "type": "uint16"
+          },
+          {
+            "internalType": "uint64",
+            "name": "sellChunkUsdg",
+            "type": "uint64"
+          }
+        ],
+        "name": "setListingGates",
+        "payable": false
+      },
+      "contractInputsValues": {
+        "stock": "0x86923f96303D656E4aa86D9d42D1e57ad2023fdC",
+        "maxDeviationBps": "0",
+        "maxSlippageBps": "0",
+        "sellChunkUsdg": "1000000000"
+      }
+    },
+    {
+      "to": "0x58F6Ced8d02cD2567f1458801440Bc4eb67fA961",
+      "value": "0",
+      "data": "0xc8ed517d000000000000000000000000c72b96e0e48ecd4dc75e1e45396e26300bc3968100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000003b9aca00",
+      "contractMethod": {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "stock",
+            "type": "address"
+          },
+          {
+            "internalType": "uint16",
+            "name": "maxDeviationBps",
+            "type": "uint16"
+          },
+          {
+            "internalType": "uint16",
+            "name": "maxSlippageBps",
+            "type": "uint16"
+          },
+          {
+            "internalType": "uint64",
+            "name": "sellChunkUsdg",
+            "type": "uint64"
+          }
+        ],
+        "name": "setListingGates",
+        "payable": false
+      },
+      "contractInputsValues": {
+        "stock": "0xc72b96e0E48ecd4DC75E1e45396e26300BC39681",
+        "maxDeviationBps": "0",
+        "maxSlippageBps": "0",
+        "sellChunkUsdg": "1000000000"
+      }
+    },
+    {
+      "to": "0x58F6Ced8d02cD2567f1458801440Bc4eb67fA961",
+      "value": "0",
+      "data": "0x4be27441000000000000000000000000470f5deb0897118f6575f72183781c6a0610e1fa0000000000000000000000000000000000000000000000000000000000000001",
+      "contractMethod": {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "launcher",
+            "type": "address"
+          },
+          {
+            "internalType": "bool",
+            "name": "ok",
+            "type": "bool"
+          }
+        ],
+        "name": "setLauncher",
+        "payable": false
+      },
+      "contractInputsValues": {
+        "launcher": "0x470F5DeB0897118F6575F72183781C6a0610E1FA",
+        "ok": "true"
+      }
+    }
+  ]
+}

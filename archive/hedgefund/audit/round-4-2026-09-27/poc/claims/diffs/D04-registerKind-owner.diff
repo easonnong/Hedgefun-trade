@@ -1,0 +1,12 @@
+diff --git a/src/v2/V2TreasuryDeployer.sol b/src/v2/V2TreasuryDeployer.sol
+index 5ce7353..3492bac 100644
+--- a/src/v2/V2TreasuryDeployer.sol
++++ b/src/v2/V2TreasuryDeployer.sol
+@@ -181,7 +181,6 @@ contract V2TreasuryDeployer is BoundDeployer {
+ 
+     /// @notice The bound factory's owner adds a strategy kind for FUTURE launches. Existing kinds never change.
+     function registerKind(address a, address b) external returns (uint8 kind) {
+-        _onlyOwner();
+         if (a.code.length == 0 || b.code.length == 0 || _kinds.length == type(uint8).max) revert BadKind();
+         kind = uint8(_kinds.length);
+         _kinds.push(Kind(a, b, 0, 0, _creationCodeHash(a, b), 0));

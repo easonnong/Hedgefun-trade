@@ -1,0 +1,152 @@
+Title:
+audit: external round 4 over the strategy-engine tip (5aedceb) — 0 Critical, 0 High, 3 Medium
+
+Base: main, once PR #84 and PR #91 are on it (until then, codex/v2-strategy-engine, so the diff is audit/ only)
+Compare: audit/round-4-2026-09-27
+
+Body:
+--------------------------------------------------------------------------------
+External audit round 4, numbered separately from `AUDIT.md`. It audits
+`codex/v2-strategy-engine` @ `5aedceb` — PR #84's tip `9679614` merged with PR #91
+"bounded strategy engine": the ~870 new lines of the engine (engine treasury, policy
+interface, rebalance policy, the deployer's policy registry), PR #84's ~40 changed source
+lines since round 3 audited `03ad70e`, and every round-3 finding re-graded at the tip.
+
+This branch adds documentation and offline PoCs under `audit/` only. It changes no
+contract, no test and no script.
+
+## Result
+
+| | Critical | High | Medium | Low | Info | total |
+|---|---|---|---|---|---|---|
+| everything found at `5aedceb` | **0** | **0** | **3** | **9** | **14** | **26** |
+| only new in PR #91 | 0 | 0 | 3 | 8 | 8 | 19 |
+| only on PR #84's side | 0 | 0 | 0 | 1 | 6 | 7 |
+
+Of round 3's findings: 3 Mediums fixed, 1 fixed for v2 with residue, 3 partially; **0 of
+6 Lows addressed**. Round 3's own PoCs fail exactly where its fixes landed and nowhere
+else.
+
+No path was found for a policy, keeper, creator or caller to move the engine's stock or
+USDG anywhere but the listed pool's swap callback and the buy-back's `settle()`, and
+nothing at `5aedceb` can reach the nine live V1 strategies. **But read `ISSUES.md`'s
+preamble before the counts.** The engine is the first contract here that trades other
+people's assets on a schedule anyone can read and anyone can call. One finding reports a
+certain gain to an unprivileged caller; every graded finding names the treasury as the
+loser; and two of the three Mediums live inside parameters nobody has set yet.
+
+## Go / no-go
+
+1. **Merging PR #84, then PR #91, to `main`: GO. Nothing found in this round blocks
+   it.** No finding reaches High; nothing at `5aedceb` can reach the nine live V1
+   strategies (`HedgeFunFactory` and six other V1 contracts are byte-identical to
+   `main`); and a merge deploys nothing. Two conditions: the `src/` that lands on `main`
+   must be `5aedceb`'s — `git diff 5aedceb origin/main -- src` empty after both merges —
+   or this round's four runners and the full suite must be re-run on what landed; and
+   nothing may be deployed from `main` until the blockers below are cleared, because from
+   the merge on they are `main`'s.
+2. **Deploying V2 from that tree: NO-GO** until every blocker below is cleared, or
+   accepted in writing by the Safe owners. The deadlines are structural: engine kinds are
+   append-only with no disable, a policy registration records its code for good, the
+   factory binds its treasury deployer once, and every launched treasury is immutable — so
+   a code fix that misses the first registration misses every launch under it.
+3. **The deploy blockers** are listed below by ID. `fix/v2-round-4` carries the code in the
+   first group. Before any deployment, re-run this round's runners and the full suite on
+   that branch's tip: the safe list is proved at `5aedceb` only.
+
+## Deploy blockers, by ID
+
+Code, before the engine kind, any policy or kind 1 is registered and before the factory
+binds its deployer (on `fix/v2-round-4`):
+- **M4-2 + L4-1** Floors in `_validateEngineConfig` — deadband at least slippage plus pool
+  fee and at least 100 bps, cooldown at least 600 s, daily cap at most 24 × `maxTradeUsdg`,
+  target 20–90%, `maxTradeUsdg ≥ minLotUsdg` — and the same word checks in `setEngineConfig`, so
+  `predict()` never quotes what `launch()` refuses. Constructor checks cost initcode, not
+  runtime: two were measured at 0 runtime bytes.
+- **L4-5** Kind 1's `book()` must write `totalStockReceived` before kind 1 is registered;
+  the registration pins its code chunks.
+- **L4-6 to L4-9** The unpinned guards pinned in the same PR that edits their lines — with
+  a nonce pin that works. **The claims lane's C1 does not**: it passes with the nonce check
+  deleted. The corrected pin is in `VERIFICATION.md`.
+
+Configuration and product decisions (zero bytes; into the Safe proposal or the launch terms):
+- **M4-1** `sellChunkUsdg` on every 0.05% listing at no more than 10% of the pool's
+  measured USDG-per-1% depth, re-read at listing (GME ≈ $1,300 on round 3's read). The
+  shipped model brackets the breakeven between 5% and 15%, so leave margin. Or the
+  ~150-byte spot bound in the engine.
+- **M4-2** The floor values, for any the fix does not enforce in code.
+- **L4-2** The UTC-day decision: a rolling limiter, or accept the calendar day and halve
+  `maxDailyTurnoverUsdg`. `docs/STRATEGY_ENGINE.md` itself leaves it open for "a release".
+- **M4-3** Whether rebalance gains reach the buy-back (a high-water-mark share, ~250 bytes)
+  or the launch terms and `STRATEGY_ENGINE.md` say they never do, with the 0.19%-of-supply
+  figure. A product decision; kind 2 should not be offered before it is made.
+- **L4-3, L4-4** Disclose that the engine sells its graduation lot down to target within
+  minutes, and extend round 3's M-2 listing rule to that sale; decide whether kind 2 pays a
+  bounty or ships with no keeper economics.
+
+Round 3, still NOT ADDRESSED and material to deployment:
+- **L-3** The rehearsal Defaults (`minTaxBps 100`, `maxBuybackImpactBps 300`, `lpFee 3000`)
+  sit on the wrong side of round 3's 257.7 bps threshold. Zero-byte fix in the V2 Defaults:
+  `minTaxBps ≥ 122`, or `maxBuybackImpactBps < 257`.
+- **M-3** A failed graduation still rolls back inside the final buy, with no retryable
+  state; the runbook's listing rule covers only the structural instance. Accept it
+  explicitly, or fix it with the bytes freed by deleting the dead `graduate(uint256)`
+  (L-1): the factory has 25.
+- **M-2, M-4** Process only: the runbook's fork-simulated full raise executed for every
+  listing, and `saleBps` / `lpBps` written explicitly into the Safe proposal.
+
+## The three Mediums
+
+- **M4-1** The rebalance is a predictable, permissionless, unpaid order that can be
+  sandwiched inside the gates. The treasury pays about 50 bps more per action whoever
+  sits at the gate's edge; on 0.05% pools the sandwicher is paid once the trade exceeds
+  about a tenth of the pool's depth per 1%.
+- **M4-2** The engine's configuration floors admit a 1 bp band, a 1 s cooldown and an
+  unbounded day, and the creator-side setter validates nothing. A 1 bp band trades on
+  every Chainlink print and leaks about 0.03–0.09% of the treasury a day on a volatile
+  name, for good.
+- **M4-3** Strategy gains never reach the burn — kind 2 burns 0.19% of supply over 90 days
+  on every path, kind 0 up to 2.20% — and nothing a buyer reads says so.
+
+## What this round got wrong
+
+Recorded in the report alongside what it found:
+
+- **One shipped PoC proves nothing, and the report told the fix branch to copy it.** C1 was
+  meant to pin the engine's nonce check; it passes with the check deleted. Found by
+  replaying the mutation; the fix branch was told on 2026-09-28.
+- **The economics lane's worst day for a 1 bp band was two orders of magnitude too
+  high** ($1,300–$3,400 on $10,000) and the first triage sitting carried it into M4-2. The
+  engine lane's ≈ 0.08% a day was right. The grade survives; the figure is corrected.
+- **The engine lane named the treasury's cost bound as the sandwicher's take**, and M4-1's
+  headline breakeven (10.1% of depth) is not printed by the shipped model.
+- **No adversarial pass, no source-free method review and no context-free lane ran this
+  round.** Every grade is single-layer; five disputes between lanes were settled by triage
+  alone. No source claims to have read all ~910 changed lines, and every source is a
+  Claude model.
+
+## What is in the branch
+
+| file | what it answers |
+|---|---|
+| `00-SCOPE.md` | the ref, the deployment reality, the byte budget, what is explicitly not covered |
+| `ISSUES.md` | the report — 26 findings, the round-3 ledger, the merged safe list, the recommended floors |
+| `README.md` | how the round was produced, every correction, where the lanes contradict each other |
+| `VERIFICATION.md` | how to re-run everything, and what triage re-ran |
+| `lanes/` | the four lane reports in full |
+| `poc/{engine,delta,claims,econ}/run.sh` | 58 Foundry tests, no network, no RPC |
+| `poc/claims/diffs/` | 41 mutation diffs for `git apply`, results in `mutations.md` |
+| `poc/econ/*.py` | the sandwich grid and kind 2 against kind 0, offline |
+
+Verified end to end on the merged tree on 2026-09-28: 21/21, 13/13, 13/13 and 11/11;
+both models exit 0; full suite 104 suites, 1,474 passed, 0 failed, 52 skipped; every size
+in the budget table reproduces.
+
+Note: round 3 (`audit/round-3-v2-review`, PR #90) is still unmerged. `audit/README.md`
+will conflict with it on the rounds table: keep PR #90's round-3 row and fourth rule, and
+this branch's round-4 row and fifth rule.
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+https://claude.ai/code/session_01EVi4t8N443HbmYKtfWTttp
+--------------------------------------------------------------------------------

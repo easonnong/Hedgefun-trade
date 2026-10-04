@@ -1,0 +1,23 @@
+{
+  "_safe": "The protocol Safe for OWNER, PROTOCOL and CALENDAR_OWNER: Safe 1.4.1 on the canonical singleton 0x29fcb43b46531bca003ddc8fcb67ffe91900c762, chain 4663, 3-of-4, no modules, no transaction guard. Re-verified on chain 2026-09-21 after the hot key 0x719A...F13b was swapped out for a hardware key 0x4Ab357B850C7Cb8a103C531303d5Ae38ff66D703 and the threshold was raised 2 -> 3; Safe nonce was 3. Re-verify with the commands in docs/DEPLOYMENT.md section 5 before relying on this line.",
+  "_": "Copy to emergency/addresses.json and replace EVERY placeholder. build.py refuses to run while one remains. See README, 'Filling in addresses.json'.",
+  "chainId": 4663,
+  "rpc": "https://rpc.mainnet.chain.robinhood.com",
+  "safe": "0x2910117dd2cB431173Ae9Fb6eAF30726321d1693",
+  "factory": "0xREPLACE_WITH_factory_FROM_DeployStrategyLaunchpad_OUTPUT",
+  "calendars": [
+    "0xREPLACE_WITH_EVERY_TradingCalendar_ANY_LISTED_ORACLE_WAS_EVER_BUILT_ON"
+  ],
+  "stocks": {
+    "NVDA": "0xd0601CE157Db5bdC3162BbaC2a2C8aF5320D9EEC",
+    "SPCX": "0x4a0E65A3EcceC6dBe60AE065F2e7bb85Fae35eEa",
+    "CRCL": "0xdF0992E440dD0be65BD8439b609d6D4366bf1CB5",
+    "GOOGL": "0x2e0847E8910a9732eB3fb1bb4b70a580ADAD4FE3",
+    "AMZN": "0x12f190a9F9d7D37a250758b26824B97CE941bF54",
+    "GME": "0x1b0E319c6A659F002271B69dB8A7df2F911c153E",
+    "META": "0xc0D6457C16Cc70d6790Dd43521C899C87ce02f35",
+    "USAR": "0xd917B029C761D264c6A312BBbcDA868658eF86a6",
+    "MSTR": "0xec262a75e413fAfD0dF80480274532C79D42da09"
+  },
+  "_stocks": "The first batch, decided 2026-09-21. This file must list EVERY stock ever passed to list(), not just the ones live today: a delisted stock still has launched treasuries priced off its oracle."
+}

@@ -1,0 +1,13 @@
+diff --git a/src/v2/HedgeFunV2EngineTreasury.sol b/src/v2/HedgeFunV2EngineTreasury.sol
+index 555f237..9014b0f 100644
+--- a/src/v2/HedgeFunV2EngineTreasury.sol
++++ b/src/v2/HedgeFunV2EngineTreasury.sol
+@@ -292,7 +292,7 @@ contract HedgeFunV2EngineTreasury is HedgeFunV2Treasury {
+         uint256 cooldown;
+         uint256 maxDaily;
+         (limits.targetBps, limits.deadbandBps, cooldown, limits.maxTrade, maxDaily) = _riskConfig();
+-        if (lastStrategyAt != 0 && block.timestamp < lastStrategyAt + cooldown) revert Cooldown();
++        cooldown;
+         limits.epoch = uint64(block.timestamp / 1 days);
+         limits.used = turnoverEpoch == limits.epoch ? turnoverInEpoch : 0;
+         if (limits.used >= maxDaily) revert NotDue();

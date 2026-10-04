@@ -1,0 +1,13 @@
+diff --git a/src/v2/HedgeFunV2EngineTreasury.sol b/src/v2/HedgeFunV2EngineTreasury.sol
+index 555f237..e839abf 100644
+--- a/src/v2/HedgeFunV2EngineTreasury.sol
++++ b/src/v2/HedgeFunV2EngineTreasury.sol
+@@ -250,7 +250,7 @@ contract HedgeFunV2EngineTreasury is HedgeFunV2Treasury {
+     function execute() external override nonReentrant returns (Action action, uint256 id) {
+         _bookInventory();
+         (bool ok, uint256 p) = health();
+-        if (!ok) revert Unhealthy();
++        ok;
+         (bool live,) = _oracle.tryPrice();
+         if (!live) revert Unhealthy();
+ 

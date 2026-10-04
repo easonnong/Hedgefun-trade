@@ -1,0 +1,15 @@
+{
+  "chain_id": 4663,
+  "factory": "0xc403504bc500d6aef82128ca3e312a7af15955c5",
+  "router": "0x9937bf2edf733f7f960e7fe78904045ad81d33cd",
+  "router_codehash": "0xb75bae8d9e32f2ebe2c0c386b3c9846a8bd0db42079e3959eed7483a327f8157",
+  "pool_manager": "0x8366a39cc670b4001a1121b8f6a443a643e40951",
+  "token": "0xed9288aab3c09f8ec899ca5f10a69b7c407df831",
+  "quote": "0x5fc5360d0400a0fd4f2af552add042d716f1d168",
+  "stock": "0xd0601ce157db5bdc3162bbac2a2c8af5320d9eec",
+  "stock_pool": "0xd4eb21209c4d6093f80b5b84f5c45cc093ea14a3",
+  "treasury": "0x86b6dc8f21a5c65a9441613e8aceb2e018f01960",
+  "hook": "0x45783cf9f91aa3661e4d9156d9b3313e702de844",
+  "strategy_id": 0,
+  "operator": "0x97fbf8e94b5e2873afb5c67bfe4546978670c48b"
+}

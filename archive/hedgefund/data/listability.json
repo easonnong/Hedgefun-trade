@@ -1,0 +1,3037 @@
+{
+ "generated_at": 1789940243,
+ "twap_window_s": 600,
+ "min_obs_slots": 660,
+ "rows": [
+  {
+   "symbol": "AAOI",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0x078c1690865964838ae346077046750846a552d1",
+   "fee_bps": 100.0,
+   "tvl_usdg": 17.15324616608721,
+   "obs_cardinality": 1,
+   "obs_cardinality_next": 1,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "short_obs_ring(1)",
+    "thin_pool($17)"
+   ]
+  },
+  {
+   "symbol": "AAPL",
+   "feed_name": "Robinhood AAPL / USD",
+   "feed": "0x6B22A786bAa607d76728168703a39Ea9C99f2cD0",
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0xaae0d815ee56e4092a5e5c2911e676fea50b2d6d",
+   "fee_bps": 5.0,
+   "tvl_usdg": 592836.6157524749,
+   "obs_cardinality": 1801,
+   "obs_cardinality_next": 1801,
+   "listable_v3": true,
+   "blockers": []
+  },
+  {
+   "symbol": "ABCL",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "ADBE",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0xd25e11e45f42660668acc3db09dfe56f890f2e58",
+   "fee_bps": 100.0,
+   "tvl_usdg": 0.9206298496793517,
+   "obs_cardinality": 1,
+   "obs_cardinality_next": 1,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "short_obs_ring(1)",
+    "thin_pool($1)"
+   ]
+  },
+  {
+   "symbol": "AEHR",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "AEIS",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "ALAB",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "AMAT",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0xa255bafb65f9c79047ec74814e456e53713c8cb3",
+   "fee_bps": 100.0,
+   "tvl_usdg": 0.8251776733285217,
+   "obs_cardinality": 1,
+   "obs_cardinality_next": 1,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "short_obs_ring(1)",
+    "thin_pool($1)"
+   ]
+  },
+  {
+   "symbol": "AMBA",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "AMC",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0xaa34fea710a1a737840329051d81d3b0b7c564d5",
+   "fee_bps": 30.0,
+   "tvl_usdg": 1645831.5824628798,
+   "obs_cardinality": 2400,
+   "obs_cardinality_next": 2400,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed"
+   ]
+  },
+  {
+   "symbol": "AMD",
+   "feed_name": "Robinhood AMD / USD",
+   "feed": "0x943A29E7ae51A4798823ca9eEd2ed533B2A22C72",
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0x48d284a2a4d3dc1b3da08231fe44317e7e7aa51f",
+   "fee_bps": 30.0,
+   "tvl_usdg": 264450.88486819284,
+   "obs_cardinality": 1400,
+   "obs_cardinality_next": 1400,
+   "listable_v3": true,
+   "blockers": []
+  },
+  {
+   "symbol": "AMKR",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "AMZN",
+   "feed_name": "Robinhood AMZN / USD",
+   "feed": "0xD5a1508ceD74c084eBf3cBe853e2C968fB2a651C",
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0x8ac92da74ab5f3b1d024dc1943ad7e15dc4179ef",
+   "fee_bps": 30.0,
+   "tvl_usdg": 971151.8012265542,
+   "obs_cardinality": 1801,
+   "obs_cardinality_next": 1801,
+   "listable_v3": true,
+   "blockers": []
+  },
+  {
+   "symbol": "ANET",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0x6369190700480ae579a331adfcdb7967255186dd",
+   "fee_bps": 100.0,
+   "tvl_usdg": 0.8981277252682335,
+   "obs_cardinality": 1,
+   "obs_cardinality_next": 1,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "short_obs_ring(1)",
+    "thin_pool($1)"
+   ]
+  },
+  {
+   "symbol": "APLD",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "APP",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "ASML",
+   "feed_name": "Robinhood ASML / USD",
+   "feed": "0xB4106147E8cce40b7d46124090d373A71b70f87D",
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0xedb22516b14eb2d1c86927db373b0e8bf70f5cd1",
+   "fee_bps": 100.0,
+   "tvl_usdg": 33433.885698457016,
+   "obs_cardinality": 1500,
+   "obs_cardinality_next": 1500,
+   "listable_v3": false,
+   "blockers": [
+    "thin_pool($33,434)"
+   ]
+  },
+  {
+   "symbol": "ASTS",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "AUR",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "AVAV",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "AVGO",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0x5b7c404f1d7d77f9f3885ab13d7764f8a173028c",
+   "fee_bps": 30.0,
+   "tvl_usdg": 39821.80136716271,
+   "obs_cardinality": 50,
+   "obs_cardinality_next": 50,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "short_obs_ring(50)",
+    "thin_pool($39,822)"
+   ]
+  },
+  {
+   "symbol": "AXON",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "AXTI",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "BA",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0xc6517047b189c72d3baa9ef37d1d28f27a63638a",
+   "fee_bps": 30.0,
+   "tvl_usdg": 173653.50195929152,
+   "obs_cardinality": 1400,
+   "obs_cardinality_next": 1801,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed"
+   ]
+  },
+  {
+   "symbol": "BABA",
+   "feed_name": "Robinhood BABA / USD",
+   "feed": "0x62Cc8F9b5f56a33c9C8A60c8B92779f523c4E984",
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0xa57ab582b310dd6f9e934ea1eeea152741545e6a",
+   "fee_bps": 30.0,
+   "tvl_usdg": 157056.67569974973,
+   "obs_cardinality": 1800,
+   "obs_cardinality_next": 1801,
+   "listable_v3": true,
+   "blockers": []
+  },
+  {
+   "symbol": "BB",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0xc424e56e816f148a8b30ccbde2128e04d21f51e9",
+   "fee_bps": 100.0,
+   "tvl_usdg": 16110.350615925105,
+   "obs_cardinality": 60,
+   "obs_cardinality_next": 60,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "short_obs_ring(60)",
+    "thin_pool($16,110)"
+   ]
+  },
+  {
+   "symbol": "BE",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0x1bad145c8f06444e0df81c28257cd20231bd1f16",
+   "fee_bps": 30.0,
+   "tvl_usdg": 154797.37374816844,
+   "obs_cardinality": 1400,
+   "obs_cardinality_next": 1400,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed"
+   ]
+  },
+  {
+   "symbol": "BND",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "BULL",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "CBRS",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "CCL",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0xb19ace635ef3a28b85bfb01bae97d0de80750680",
+   "fee_bps": 100.0,
+   "tvl_usdg": 27106.6596706822,
+   "obs_cardinality": 300,
+   "obs_cardinality_next": 300,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "short_obs_ring(300)",
+    "thin_pool($27,107)"
+   ]
+  },
+  {
+   "symbol": "CEG",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0xc9529b7dc74bf15da6cee01a282908e8c7ab6ba3",
+   "fee_bps": 100.0,
+   "tvl_usdg": 29047.773986595977,
+   "obs_cardinality": 64,
+   "obs_cardinality_next": 64,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "short_obs_ring(64)",
+    "thin_pool($29,048)"
+   ]
+  },
+  {
+   "symbol": "CELH",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "CIEN",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "CLOV",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0xbdfbc71db927fd566080ac21c6a2a89ae061f940",
+   "fee_bps": 100.0,
+   "tvl_usdg": 190.37853063507214,
+   "obs_cardinality": 300,
+   "obs_cardinality_next": 300,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "short_obs_ring(300)",
+    "thin_pool($190)"
+   ]
+  },
+  {
+   "symbol": "CLS",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0xaea7d4e856a1fc2bd23c7ea26a3433464de0428f",
+   "fee_bps": 100.0,
+   "tvl_usdg": 0.8941841705080028,
+   "obs_cardinality": 1,
+   "obs_cardinality_next": 1,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "short_obs_ring(1)",
+    "thin_pool($1)"
+   ]
+  },
+  {
+   "symbol": "CLSK",
+   "feed_name": "Robinhood CLSK / USD",
+   "feed": "0x810c12D3a554Bc47fd39597Fe3b3AAC4941F50eF",
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "COHR",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "COIN",
+   "feed_name": "Robinhood COIN / USD",
+   "feed": "0xA3a468A452940B7D6b69991207B508c609a98Ef2",
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "COST",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0x0a2121a50a09ed0796ae81f9c53ff9398355a398",
+   "fee_bps": 30.0,
+   "tvl_usdg": 628384.8372377283,
+   "obs_cardinality": 1801,
+   "obs_cardinality_next": 1801,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed"
+   ]
+  },
+  {
+   "symbol": "CRCL",
+   "feed_name": "Robinhood CRCL / USD",
+   "feed": "0x6652eDf64bA3731C4F2D3ce821A0Fb1f1f6b482a",
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0x654e4143e82a5824445ade0824351c2a9acd95a8",
+   "fee_bps": 30.0,
+   "tvl_usdg": 1705848.7305618385,
+   "obs_cardinality": 1801,
+   "obs_cardinality_next": 1860,
+   "listable_v3": true,
+   "blockers": []
+  },
+  {
+   "symbol": "CRDO",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "CRM",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "CRWD",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "CRWV",
+   "feed_name": "Robinhood CRWV / USD",
+   "feed": "0xe1b3aABCAFAd1c94708dc1367dcfF8Aa4407487C",
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "CSCO",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "CTSH",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "CVNA",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "DDOG",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0x8fbf4c8e6ee5a95f0d23ef7a065fe266fc59f680",
+   "fee_bps": 30.0,
+   "tvl_usdg": 2159.3272472548456,
+   "obs_cardinality": 1,
+   "obs_cardinality_next": 1,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "short_obs_ring(1)",
+    "thin_pool($2,159)"
+   ]
+  },
+  {
+   "symbol": "DELL",
+   "feed_name": "Robinhood DELL-USD",
+   "feed": "0x1C6c8cADBe02E19129c39dDB92281cE4c0bf206b",
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0xc30c89cb7815a1488b7998d15eec73961707fc5a",
+   "fee_bps": 100.0,
+   "tvl_usdg": 263132.304929015,
+   "obs_cardinality": 1500,
+   "obs_cardinality_next": 1500,
+   "listable_v3": true,
+   "blockers": []
+  },
+  {
+   "symbol": "DJT",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0x31a89afd92f9397465649ad03226c52292fc1ae5",
+   "fee_bps": 100.0,
+   "tvl_usdg": 603244.4265876985,
+   "obs_cardinality": 1801,
+   "obs_cardinality_next": 1801,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed"
+   ]
+  },
+  {
+   "symbol": "DOCN",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "ELF",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "EWT",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "EWY",
+   "feed_name": "Robinhood EWY / USD",
+   "feed": "0xEFdf54610B62A7753Ec30bDc380847c12D32e1D1",
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "F",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0x4dbac19e895322ac5b93abad9008691632bffc05",
+   "fee_bps": 30.0,
+   "tvl_usdg": 176000.24031685537,
+   "obs_cardinality": 1400,
+   "obs_cardinality_next": 1801,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed"
+   ]
+  },
+  {
+   "symbol": "FICO",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "FIG",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0xca5904c0a9d42f0ec1bf760fdf779907877144fd",
+   "fee_bps": 30.0,
+   "tvl_usdg": 124518.94266560068,
+   "obs_cardinality": 1400,
+   "obs_cardinality_next": 1400,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed"
+   ]
+  },
+  {
+   "symbol": "FISV",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "FIX",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0x745104601f86be0b2392c916442a922f2923fa6c",
+   "fee_bps": 100.0,
+   "tvl_usdg": 1.07958362303342,
+   "obs_cardinality": 1,
+   "obs_cardinality_next": 1,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "short_obs_ring(1)",
+    "thin_pool($1)"
+   ]
+  },
+  {
+   "symbol": "FLNC",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "FLY",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0x3594f65fe47577202c17bafb18e5096b44dcee6d",
+   "fee_bps": 100.0,
+   "tvl_usdg": 110.3855352277783,
+   "obs_cardinality": 1,
+   "obs_cardinality_next": 1,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "short_obs_ring(1)",
+    "thin_pool($110)"
+   ]
+  },
+  {
+   "symbol": "FTNT",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0x4f2e6b13f5b9595caee276e14f9f457e17484503",
+   "fee_bps": 100.0,
+   "tvl_usdg": 0.9665375851137104,
+   "obs_cardinality": 1,
+   "obs_cardinality_next": 1,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "short_obs_ring(1)",
+    "thin_pool($1)"
+   ]
+  },
+  {
+   "symbol": "FUTU",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "GE",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "GEV",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "GLD",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0x7a6a053eccf1446a2633e05aa6d40d09381997ec",
+   "fee_bps": 30.0,
+   "tvl_usdg": 3695306.8591966787,
+   "obs_cardinality": 1800,
+   "obs_cardinality_next": 1801,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed"
+   ]
+  },
+  {
+   "symbol": "GLW",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "GLXY",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0xc67c2d200e0b7e5d99f4cfbede8cb09b48892f2c",
+   "fee_bps": 30.0,
+   "tvl_usdg": 193897.41047245293,
+   "obs_cardinality": 1400,
+   "obs_cardinality_next": 1400,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed"
+   ]
+  },
+  {
+   "symbol": "GME",
+   "feed_name": "Robinhood GME / USD",
+   "feed": "0x27C71df6A64fB476468EdF256CF72c038baB5B67",
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0xe9713f453adb9245b19559790c96f470a18f2fdf",
+   "fee_bps": 100.0,
+   "tvl_usdg": 975831.9223070837,
+   "obs_cardinality": 1860,
+   "obs_cardinality_next": 1860,
+   "listable_v3": true,
+   "blockers": []
+  },
+  {
+   "symbol": "GOOGL",
+   "feed_name": "Robinhood GOOGL / USD",
+   "feed": "0xF6f373a037c30F0e5010d854385cA89185AE638b",
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0x34d0dc122cf9a8eb296fc5e0d3a233625d7d19b7",
+   "fee_bps": 5.0,
+   "tvl_usdg": 1270957.2598830708,
+   "obs_cardinality": 1801,
+   "obs_cardinality_next": 1801,
+   "listable_v3": true,
+   "blockers": []
+  },
+  {
+   "symbol": "HII",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "HIMS",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0xc8c90d3a1c1a24967e773ac2ad0d456ba3e31f64",
+   "fee_bps": 30.0,
+   "tvl_usdg": 1809076.289408722,
+   "obs_cardinality": 1800,
+   "obs_cardinality_next": 1801,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed"
+   ]
+  },
+  {
+   "symbol": "HPE",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0xe0e25884a3b690b1699732de475b2281600b0934",
+   "fee_bps": 30.0,
+   "tvl_usdg": 1259.6061965841204,
+   "obs_cardinality": 1,
+   "obs_cardinality_next": 1,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "short_obs_ring(1)",
+    "thin_pool($1,260)"
+   ]
+  },
+  {
+   "symbol": "HWM",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0xdaab22b473029a8f8f00cbe3a33de82dbbeb6ec9",
+   "fee_bps": 100.0,
+   "tvl_usdg": 0.891781727433602,
+   "obs_cardinality": 1,
+   "obs_cardinality_next": 1,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "short_obs_ring(1)",
+    "thin_pool($1)"
+   ]
+  },
+  {
+   "symbol": "IBM",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0x8cd848ce18b829c5c769aff27164078bb52e0e97",
+   "fee_bps": 30.0,
+   "tvl_usdg": 164107.85526531993,
+   "obs_cardinality": 1400,
+   "obs_cardinality_next": 1801,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed"
+   ]
+  },
+  {
+   "symbol": "IBRX",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "INDA",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0x2171c94d8073c4913f4653a0766d18aa8a29d1f6",
+   "fee_bps": 30.0,
+   "tvl_usdg": 9365.086637504113,
+   "obs_cardinality": 1,
+   "obs_cardinality_next": 1,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "short_obs_ring(1)",
+    "thin_pool($9,365)"
+   ]
+  },
+  {
+   "symbol": "INFQ",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "INOD",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "INTC",
+   "feed_name": "Robinhood INTC / USD",
+   "feed": "0x3f390C5C24628Ac7C489515402235FeAD71D1913",
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0x2e5a92f5013a64661a49312111be2e8abd33f56a",
+   "fee_bps": 30.0,
+   "tvl_usdg": 219552.06617629254,
+   "obs_cardinality": 1500,
+   "obs_cardinality_next": 1500,
+   "listable_v3": true,
+   "blockers": []
+  },
+  {
+   "symbol": "INTU",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "IONQ",
+   "feed_name": "Robinhood IONQ / USD",
+   "feed": "0x22EfeC4919baf55F360E0EDee4AbEB26DE4971eb",
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0xbc44b11f569d3feed9b4088f5a3fc569d2e3c77f",
+   "fee_bps": 100.0,
+   "tvl_usdg": 1.7853011295506205,
+   "obs_cardinality": 1,
+   "obs_cardinality_next": 1,
+   "listable_v3": false,
+   "blockers": [
+    "short_obs_ring(1)",
+    "thin_pool($2)"
+   ]
+  },
+  {
+   "symbol": "IREN",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "JBL",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "JNJ",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0x7f0ace18d1dced47063cf26e649bc8ab14d09e67",
+   "fee_bps": 30.0,
+   "tvl_usdg": 62467.43392423329,
+   "obs_cardinality": 1801,
+   "obs_cardinality_next": 1801,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed"
+   ]
+  },
+  {
+   "symbol": "JOBY",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "KLAC",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "KSS",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "KTOS",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "LHX",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "LITE",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "LLY",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0xf4274130137eee20bad928b593d992716516ceb9",
+   "fee_bps": 100.0,
+   "tvl_usdg": 564093.0830491916,
+   "obs_cardinality": 1400,
+   "obs_cardinality_next": 1801,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed"
+   ]
+  },
+  {
+   "symbol": "LMT",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0x54f160bea60ec5207918c539d86e0b906b4da297",
+   "fee_bps": 30.0,
+   "tvl_usdg": 22816.88015474673,
+   "obs_cardinality": 1400,
+   "obs_cardinality_next": 1400,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "thin_pool($22,817)"
+   ]
+  },
+  {
+   "symbol": "LRCX",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "LULU",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0x0f4227d27082b3bca6818381b9ea6460275e49f4",
+   "fee_bps": 30.0,
+   "tvl_usdg": 178455.79640364688,
+   "obs_cardinality": 1800,
+   "obs_cardinality_next": 1800,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed"
+   ]
+  },
+  {
+   "symbol": "LUNR",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "MDB",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "META",
+   "feed_name": "Robinhood META / USD",
+   "feed": "0x7C38C00C30BEe9378381E7B6135d7283356D71b1",
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0x107a7cb40d8665360ba10e59471af06150a50922",
+   "fee_bps": 30.0,
+   "tvl_usdg": 218607.7003548722,
+   "obs_cardinality": 1400,
+   "obs_cardinality_next": 1801,
+   "listable_v3": true,
+   "blockers": []
+  },
+  {
+   "symbol": "MOD",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "MPWR",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0x56ad01ae395869ae9c491a007c36be3b839a14a6",
+   "fee_bps": 100.0,
+   "tvl_usdg": 0.894845530745994,
+   "obs_cardinality": 1,
+   "obs_cardinality_next": 1,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "short_obs_ring(1)",
+    "thin_pool($1)"
+   ]
+  },
+  {
+   "symbol": "MRNA",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0xa34d0667334074df2d5bfd259e79e6b9cf1fa8bf",
+   "fee_bps": 100.0,
+   "tvl_usdg": 109548.17714025837,
+   "obs_cardinality": 1800,
+   "obs_cardinality_next": 1800,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed"
+   ]
+  },
+  {
+   "symbol": "MRVL",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0x06cc0b96be1fa1d754ce2e1228f5d8c616f795b0",
+   "fee_bps": 100.0,
+   "tvl_usdg": 33600.41996580898,
+   "obs_cardinality": 300,
+   "obs_cardinality_next": 300,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "short_obs_ring(300)",
+    "thin_pool($33,600)"
+   ]
+  },
+  {
+   "symbol": "MSFT",
+   "feed_name": "Robinhood MSFT / USD",
+   "feed": "0x45C3C877C15E6BA2EBB19eA114Ea508d14C1Af2E",
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0xeb60bcd1d920ad6e102690ccfc6fb488899e1510",
+   "fee_bps": 30.0,
+   "tvl_usdg": 765522.2009553788,
+   "obs_cardinality": 1801,
+   "obs_cardinality_next": 1801,
+   "listable_v3": true,
+   "blockers": []
+  },
+  {
+   "symbol": "MSTR",
+   "feed_name": "Robinhood MSTR / USD",
+   "feed": "0x396118bdFB181e6240E74D243F266B061c0edc3D",
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0x17578c0e0d15da44f31677263114f71ae76653ea",
+   "fee_bps": 100.0,
+   "tvl_usdg": 475347.1356466041,
+   "obs_cardinality": 1500,
+   "obs_cardinality_next": 1801,
+   "listable_v3": true,
+   "blockers": []
+  },
+  {
+   "symbol": "MTSI",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "MU",
+   "feed_name": "Robinhood MU / USD",
+   "feed": "0x425EEFdCf05ed6526C3cE61Af99429A228a6d596",
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0xd057b1bc54917855bbee58ead58647f47cab35e5",
+   "fee_bps": 30.0,
+   "tvl_usdg": 1032001.1275486465,
+   "obs_cardinality": 1860,
+   "obs_cardinality_next": 1860,
+   "listable_v3": true,
+   "blockers": []
+  },
+  {
+   "symbol": "MXL",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "NAVN",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "NBIS",
+   "feed_name": "Robinhood NBIS / USD",
+   "feed": "0xE1D87B116Ba0fe898998f1D140339D1fA1E09705",
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "NET",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0xa9caebb1b2fb2b954f192572b309aef1caf6a330",
+   "fee_bps": 30.0,
+   "tvl_usdg": 61497.079164713,
+   "obs_cardinality": 1400,
+   "obs_cardinality_next": 1400,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed"
+   ]
+  },
+  {
+   "symbol": "NFLX",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0x59895c0302f41aeaa129d2fa2442cec01e7ef45e",
+   "fee_bps": 30.0,
+   "tvl_usdg": 199223.6766710873,
+   "obs_cardinality": 1801,
+   "obs_cardinality_next": 1801,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed"
+   ]
+  },
+  {
+   "symbol": "NNE",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "NOW",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0x00ed6c6954edf77ffa945696f1eacf08edcc8d3a",
+   "fee_bps": 100.0,
+   "tvl_usdg": 0.6678160267591481,
+   "obs_cardinality": 1,
+   "obs_cardinality_next": 1,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "short_obs_ring(1)",
+    "thin_pool($1)"
+   ]
+  },
+  {
+   "symbol": "NU",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0x0e3faed512e7909758eb924e6919e0057bd6b45e",
+   "fee_bps": 30.0,
+   "tvl_usdg": 73824.43548103608,
+   "obs_cardinality": 1,
+   "obs_cardinality_next": 1,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "short_obs_ring(1)"
+   ]
+  },
+  {
+   "symbol": "NVDA",
+   "feed_name": "Robinhood NVDA / USD",
+   "feed": "0x379EC4f7C378F34a1B47E4F3cbeBCbAC3E8E9F15",
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0xd4eb21209c4d6093f80b5b84f5c45cc093ea14a3",
+   "fee_bps": 5.0,
+   "tvl_usdg": 6195860.06308991,
+   "obs_cardinality": 6000,
+   "obs_cardinality_next": 6000,
+   "listable_v3": true,
+   "blockers": []
+  },
+  {
+   "symbol": "NVTS",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "OKLO",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "ON",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0xfce637eead7d62d9ed27f81d9767de03e9e534cf",
+   "fee_bps": 100.0,
+   "tvl_usdg": 55234.041887669024,
+   "obs_cardinality": 300,
+   "obs_cardinality_next": 300,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "short_obs_ring(300)"
+   ]
+  },
+  {
+   "symbol": "ONTO",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "ORCL",
+   "feed_name": "Robinhood ORCL / USD",
+   "feed": "0x0e6a64a2B58A6693a531E6c555f3A5d042eEA844",
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "OUST",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "P",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "PANW",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "PATH",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0x85e93fa4a14b266643b8c9bace0312425815e72e",
+   "fee_bps": 100.0,
+   "tvl_usdg": 1.294445165819792,
+   "obs_cardinality": 1,
+   "obs_cardinality_next": 1,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "short_obs_ring(1)",
+    "thin_pool($1)"
+   ]
+  },
+  {
+   "symbol": "PENG",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0x1cd650500fa6f07646361f5f508aa6fbf7ddad36",
+   "fee_bps": 30.0,
+   "tvl_usdg": 16487.682959129626,
+   "obs_cardinality": 1,
+   "obs_cardinality_next": 1,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "short_obs_ring(1)",
+    "thin_pool($16,488)"
+   ]
+  },
+  {
+   "symbol": "PFE",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0xc7d573fcda6d2107c97fb582ae18411f9db32e7f",
+   "fee_bps": 30.0,
+   "tvl_usdg": 121743.20026133132,
+   "obs_cardinality": 1400,
+   "obs_cardinality_next": 1801,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed"
+   ]
+  },
+  {
+   "symbol": "PL",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "PLTR",
+   "feed_name": "Robinhood PLTR / USD",
+   "feed": "0x820ABedFF239034956B7A9d2F0a331f9F075eB4c",
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0x851680416a4f4e1c463d45171d61acddbc8554c0",
+   "fee_bps": 30.0,
+   "tvl_usdg": 145280.5280656567,
+   "obs_cardinality": 1801,
+   "obs_cardinality_next": 1801,
+   "listable_v3": true,
+   "blockers": []
+  },
+  {
+   "symbol": "POET",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0xa1c781ed62ac2d0283f50ff5a843647a56ddd80a",
+   "fee_bps": 100.0,
+   "tvl_usdg": 3908.214132020408,
+   "obs_cardinality": 1,
+   "obs_cardinality_next": 1,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "short_obs_ring(1)",
+    "thin_pool($3,908)"
+   ]
+  },
+  {
+   "symbol": "POWL",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "PR",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "PWR",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0x5cc24380a863119148723d2970ab712e4949b12c",
+   "fee_bps": 100.0,
+   "tvl_usdg": 0.9628022722133239,
+   "obs_cardinality": 1,
+   "obs_cardinality_next": 1,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "short_obs_ring(1)",
+    "thin_pool($1)"
+   ]
+  },
+  {
+   "symbol": "QBTS",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "QCOM",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "QQQ",
+   "feed_name": "Robinhood QQQ / USD",
+   "feed": "0x80901d846d5D7B030F26B480776EE3b29374C2ae",
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0xd60a5d14db690b7afad71f76b108071d7175597d",
+   "fee_bps": 5.0,
+   "tvl_usdg": 1466041.0025171249,
+   "obs_cardinality": 1800,
+   "obs_cardinality_next": 1801,
+   "listable_v3": true,
+   "blockers": []
+  },
+  {
+   "symbol": "QUBT",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0x227bbce9a81b3694b01754298a983be3f9e44a93",
+   "fee_bps": 30.0,
+   "tvl_usdg": 118530.70832713389,
+   "obs_cardinality": 1400,
+   "obs_cardinality_next": 1400,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed"
+   ]
+  },
+  {
+   "symbol": "RBLX",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0x2ef5945cd5664876b6481fdacfaa2942995a4da8",
+   "fee_bps": 100.0,
+   "tvl_usdg": 217593.78317922258,
+   "obs_cardinality": 1800,
+   "obs_cardinality_next": 1801,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed"
+   ]
+  },
+  {
+   "symbol": "RCAT",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0x64710a70839585af718e1b1faef9e7f1665f1116",
+   "fee_bps": 100.0,
+   "tvl_usdg": 42682.72195051146,
+   "obs_cardinality": 360,
+   "obs_cardinality_next": 360,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "short_obs_ring(360)",
+    "thin_pool($42,683)"
+   ]
+  },
+  {
+   "symbol": "RDDT",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0xa8744e76aed23b05f0126335e7bd38f7935d19fe",
+   "fee_bps": 100.0,
+   "tvl_usdg": 1448128.1131310388,
+   "obs_cardinality": 1801,
+   "obs_cardinality_next": 1801,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed"
+   ]
+  },
+  {
+   "symbol": "RDW",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "RGTI",
+   "feed_name": "Robinhood RGTI / USD",
+   "feed": "0x2A045cF1C49c61c166C036d2f06FA2D2d984f765",
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "RIVN",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0xb30a75b200d98a600a3766869344928e35823e23",
+   "fee_bps": 100.0,
+   "tvl_usdg": 99905.79420671538,
+   "obs_cardinality": 1800,
+   "obs_cardinality_next": 1800,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed"
+   ]
+  },
+  {
+   "symbol": "RKLB",
+   "feed_name": "Robinhood RKLB / USD",
+   "feed": "0x045477BF65Aef6f4F2386ad0164579e48381CC74",
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0xa9888de1b9d64a93eaeb495a39fe9b3d00654928",
+   "fee_bps": 100.0,
+   "tvl_usdg": 1.2025819279603338,
+   "obs_cardinality": 64,
+   "obs_cardinality_next": 64,
+   "listable_v3": false,
+   "blockers": [
+    "short_obs_ring(64)",
+    "thin_pool($1)"
+   ]
+  },
+  {
+   "symbol": "RUN",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0xe6d0f53073041e12bc46759519499764a4b92d13",
+   "fee_bps": 100.0,
+   "tvl_usdg": 1598.8196457007225,
+   "obs_cardinality": 1,
+   "obs_cardinality_next": 1,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "short_obs_ring(1)",
+    "thin_pool($1,599)"
+   ]
+  },
+  {
+   "symbol": "SATS",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "SCHD",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0x359555e1fa3f28d5a25091dd9f6d350cb66566cf",
+   "fee_bps": 100.0,
+   "tvl_usdg": 0.9664465611493904,
+   "obs_cardinality": 1,
+   "obs_cardinality_next": 1,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "short_obs_ring(1)",
+    "thin_pool($1)"
+   ]
+  },
+  {
+   "symbol": "SGOV",
+   "feed_name": "Robinhood SGOV-USD",
+   "feed": "0xa0DF4ee0fFf975306345875E3548Fcc519577A11",
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0xfab520051f96f4d2a32c22b6a3dd7fffdf231bfe",
+   "fee_bps": 30.0,
+   "tvl_usdg": 3765818.2644827142,
+   "obs_cardinality": 1800,
+   "obs_cardinality_next": 1801,
+   "listable_v3": true,
+   "blockers": []
+  },
+  {
+   "symbol": "SHOP",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0x18a1afa849a6940870c2163b7ecbcc85d455ad99",
+   "fee_bps": 100.0,
+   "tvl_usdg": 32776.96140109692,
+   "obs_cardinality": 1400,
+   "obs_cardinality_next": 1400,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "thin_pool($32,777)"
+   ]
+  },
+  {
+   "symbol": "SHY",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "SIMO",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "SKHY",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0x5f2a5025feb93a4c44da4e3b37e4fd3fb0ab5171",
+   "fee_bps": 30.0,
+   "tvl_usdg": 25573.15458044473,
+   "obs_cardinality": 64,
+   "obs_cardinality_next": 64,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "short_obs_ring(64)",
+    "thin_pool($25,573)"
+   ]
+  },
+  {
+   "symbol": "SLS",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "SLV",
+   "feed_name": "Robinhood SLV / USD",
+   "feed": "0x209b73908e92Ae021826eD79609845451Ecba2ce",
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0x8cb787e6c315d464775289bad00fdd67d53ecb3d",
+   "fee_bps": 30.0,
+   "tvl_usdg": 437263.65404117876,
+   "obs_cardinality": 1801,
+   "obs_cardinality_next": 1801,
+   "listable_v3": true,
+   "blockers": []
+  },
+  {
+   "symbol": "SMCI",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "SMH",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0xf9d5f058099707f60740c09bf67b32967971dc63",
+   "fee_bps": 100.0,
+   "tvl_usdg": 0.8865257269321409,
+   "obs_cardinality": 1,
+   "obs_cardinality_next": 1,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "short_obs_ring(1)",
+    "thin_pool($1)"
+   ]
+  },
+  {
+   "symbol": "SMR",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "SNAP",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0x0ebd4650c9e641e9745b5a508a2d46935dfe753e",
+   "fee_bps": 30.0,
+   "tvl_usdg": 79821.70006861344,
+   "obs_cardinality": 1400,
+   "obs_cardinality_next": 1400,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed"
+   ]
+  },
+  {
+   "symbol": "SNDK",
+   "feed_name": "Robinhood SNDK / USD",
+   "feed": "0xfb133Fa4B7b385802B693a293606682Df47109A3",
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0xa1e1c9519cd5ae47e9a935645e1a7b935b944559",
+   "fee_bps": 100.0,
+   "tvl_usdg": 66620.9330956961,
+   "obs_cardinality": 1400,
+   "obs_cardinality_next": 1400,
+   "listable_v3": true,
+   "blockers": []
+  },
+  {
+   "symbol": "SNOW",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0xe0ca1dfc1161500fb410c8181f7cc33860ffb16b",
+   "fee_bps": 30.0,
+   "tvl_usdg": 24666.909846824616,
+   "obs_cardinality": 1064,
+   "obs_cardinality_next": 1064,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "thin_pool($24,667)"
+   ]
+  },
+  {
+   "symbol": "SOFI",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0xea9368e1c88bce7f04d16919eb131778a0df826a",
+   "fee_bps": 100.0,
+   "tvl_usdg": 3.8836257780011425,
+   "obs_cardinality": 1,
+   "obs_cardinality_next": 1,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "short_obs_ring(1)",
+    "thin_pool($4)"
+   ]
+  },
+  {
+   "symbol": "SOUN",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "SOXX",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0x0663e66c880e27a5ce3c4c25234ab64ead7dff67",
+   "fee_bps": 30.0,
+   "tvl_usdg": 52549.20913351189,
+   "obs_cardinality": 1,
+   "obs_cardinality_next": 1,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "short_obs_ring(1)"
+   ]
+  },
+  {
+   "symbol": "SPCX",
+   "feed_name": "Robinhood SPCX / USD",
+   "feed": "0xB265810950ba6c5C0Ff821c9963014a56fD8Bffb",
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0xc61284332117c3fb23a2a56cceffd07f7af60029",
+   "fee_bps": 5.0,
+   "tvl_usdg": 2561916.5014214236,
+   "obs_cardinality": 3100,
+   "obs_cardinality_next": 3100,
+   "listable_v3": true,
+   "blockers": []
+  },
+  {
+   "symbol": "SPMO",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "SPY",
+   "feed_name": "Robinhood SPY / USD",
+   "feed": "0x319724394D3A0e3669269846abE664Cd621f9f6A",
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0xa7bb1ac63bbab0c44316e6c8c455213441689167",
+   "fee_bps": 5.0,
+   "tvl_usdg": 433512.65650568675,
+   "obs_cardinality": 1801,
+   "obs_cardinality_next": 1801,
+   "listable_v3": true,
+   "blockers": []
+  },
+  {
+   "symbol": "TE",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "TEAM",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "TEM",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "TER",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "TSEM",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "TSLA",
+   "feed_name": "Robinhood TSLA / USD",
+   "feed": "0x4A1166a659A55625345e9515b32adECea5547C38",
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0xf4acdaeeb7022862a763c9b1b885e11191c889e3",
+   "fee_bps": 30.0,
+   "tvl_usdg": 760451.1981386886,
+   "obs_cardinality": 1801,
+   "obs_cardinality_next": 1801,
+   "listable_v3": true,
+   "blockers": []
+  },
+  {
+   "symbol": "TSM",
+   "feed_name": "Robinhood TSM / USD",
+   "feed": "0x874cF94aa8eC88Fd9560094dD065f2fB3E41Fc2F",
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0x07e8ea83d4c1340774c8965125e26e12bf943bf1",
+   "fee_bps": 100.0,
+   "tvl_usdg": 115109.51578550313,
+   "obs_cardinality": 1801,
+   "obs_cardinality_next": 1801,
+   "listable_v3": true,
+   "blockers": []
+  },
+  {
+   "symbol": "TTD",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "TTWO",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0xd9ab4b7fae6dc2f7020134ec744a8f53ef3e5e24",
+   "fee_bps": 30.0,
+   "tvl_usdg": 209670.0495083799,
+   "obs_cardinality": 1800,
+   "obs_cardinality_next": 1800,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed"
+   ]
+  },
+  {
+   "symbol": "UMC",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0xd95a760934ddf6818176d51c12e89520dd7bac44",
+   "fee_bps": 100.0,
+   "tvl_usdg": 1.150499727474039,
+   "obs_cardinality": 1,
+   "obs_cardinality_next": 1,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "short_obs_ring(1)",
+    "thin_pool($1)"
+   ]
+  },
+  {
+   "symbol": "UNH",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "UPS",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0x3ab74c45dcecc6a62898204dd42143a816b44cb1",
+   "fee_bps": 100.0,
+   "tvl_usdg": 88554.20785326022,
+   "obs_cardinality": 1400,
+   "obs_cardinality_next": 1400,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed"
+   ]
+  },
+  {
+   "symbol": "USAR",
+   "feed_name": "Robinhood USAR-USD",
+   "feed": "0xA994d3684e8400A6c8078226925779FdeE682DD9",
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0x04391780f519b7d3ba59c9590459d76e23d225c4",
+   "fee_bps": 30.0,
+   "tvl_usdg": 80317.79361637938,
+   "obs_cardinality": 1400,
+   "obs_cardinality_next": 1400,
+   "listable_v3": true,
+   "blockers": []
+  },
+  {
+   "symbol": "USO",
+   "feed_name": "Robinhood USO / USD",
+   "feed": "0x75a9c76Ef439e2C7c2E5a34Ab105EcFe3766431c",
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0x02175608f1b5e6b5ed221ccfdc7be197d111d915",
+   "fee_bps": 30.0,
+   "tvl_usdg": 1839732.3318530135,
+   "obs_cardinality": 1801,
+   "obs_cardinality_next": 1860,
+   "listable_v3": true,
+   "blockers": []
+  },
+  {
+   "symbol": "VICR",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "VRT",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0xb15e0e29161917d36bbbc496ae482dce2c77c875",
+   "fee_bps": 100.0,
+   "tvl_usdg": 1.7798214811786708,
+   "obs_cardinality": 1,
+   "obs_cardinality_next": 1,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "short_obs_ring(1)",
+    "thin_pool($2)"
+   ]
+  },
+  {
+   "symbol": "VSAT",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "VST",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "VTI",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0xb78dd1a97fa544c65d7d1f12453ecaaf1e05c36d",
+   "fee_bps": 100.0,
+   "tvl_usdg": 86265.79519547826,
+   "obs_cardinality": 1400,
+   "obs_cardinality_next": 1801,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed"
+   ]
+  },
+  {
+   "symbol": "WDAY",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "WDC",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "WULF",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0x0c72e22d7a3ef8bb845478e5d77aec87789defc6",
+   "fee_bps": 100.0,
+   "tvl_usdg": 5055.907371678565,
+   "obs_cardinality": 300,
+   "obs_cardinality_next": 300,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "short_obs_ring(300)",
+    "thin_pool($5,056)"
+   ]
+  },
+  {
+   "symbol": "WYFI",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0x2a3063e34c60253abb23c2442f4cdfbc5cbd02c2",
+   "fee_bps": 30.0,
+   "tvl_usdg": 43866.5090374552,
+   "obs_cardinality": 720,
+   "obs_cardinality_next": 720,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "thin_pool($43,867)"
+   ]
+  },
+  {
+   "symbol": "XLK",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0xe20463635ceeea8e30a315ffc4d4e81c80e53147",
+   "fee_bps": 100.0,
+   "tvl_usdg": 4.204479591478806,
+   "obs_cardinality": 1,
+   "obs_cardinality_next": 1,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "short_obs_ring(1)",
+    "thin_pool($4)"
+   ]
+  },
+  {
+   "symbol": "XNDU",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "XOM",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": "0x6af79a2c154e7eea9c87b38617d5f0b598b690fb",
+   "fee_bps": 100.0,
+   "tvl_usdg": 2.9406295478210014,
+   "obs_cardinality": 1,
+   "obs_cardinality_next": 1,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "short_obs_ring(1)",
+    "thin_pool($3)"
+   ]
+  },
+  {
+   "symbol": "ZM",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  },
+  {
+   "symbol": "ZS",
+   "feed_name": null,
+   "feed": null,
+   "oracle_paused_implemented": true,
+   "best_v3_pool": null,
+   "fee_bps": null,
+   "tvl_usdg": 0,
+   "obs_cardinality": 0,
+   "obs_cardinality_next": 0,
+   "listable_v3": false,
+   "blockers": [
+    "no_chainlink_feed",
+    "no_live_v3_usdg_pool"
+   ]
+  }
+ ]
+}

@@ -1,5 +1,7 @@
 # Documentation
 
+Current organization entry points: [operations](../../docs/OPERATIONS.md), [contract scope](../../docs/CONTRACT_SCOPE.md) and [audit index](../../audit/README.md). New deployments recommend a 1% base fee; historical evidence retains its original parameters. Older security and operations documents below are archived source records.
+
 Developer documentation for the strategy-token launchpad on Robinhood Chain. Everything
 here is plain Markdown with relative links, so it reads the same on GitLab, GitHub or a
 local checkout. Diagrams are [Mermaid](https://mermaid.js.org/), which both render
@@ -9,7 +11,7 @@ natively.
 
 | If you want to… | Read |
 |---|---|
-| understand what this is and how the pieces fit | [ARCHITECTURE.md](https://github.com/keyuyuan/hedgefund/blob/64c0adc602bbcbb70c0b4511ac67ee2aa40fceca/docs/ARCHITECTURE.md) |
+| understand what this is and how the pieces fit | [ARCHITECTURE.md](../../archive/hedgefund/docs/ARCHITECTURE.md) |
 | integrate V2 curve launches, graduation and multi-asset trading | [V2_BONDING_CURVE.md](./V2_BONDING_CURVE.md) |
 | trace user, keeper and admin entries for V2 state-sequence testing | [V2_ACTOR_FLOW_FUZZ_MAP.md](./V2_ACTOR_FLOW_FUZZ_MAP.md) |
 | select the optional Cycle kind and follow its bounded recovery entry | [V2_SIMPLE_CYCLE.md](./V2_SIMPLE_CYCLE.md) |
@@ -24,19 +26,19 @@ natively.
 | verify V2 fee-funded buyback and burn on a real-venue fork | [V2_PROFIT_FORK.md](./V2_PROFIT_FORK.md) |
 | replay eight V2 market paths and six strategy parameter combinations on a real-venue fork | [V2_LOW_FREQUENCY_FORK.md](./V2_LOW_FREQUENCY_FORK.md) |
 | see what a stock that trends up, down or sideways does to a V2 raise, its treasury and its token | [V2_TREND_SCENARIOS.md](./V2_TREND_SCENARIOS.md) |
-| build it, run the tests, and make a change safely | [DEVELOPMENT.md](https://github.com/keyuyuan/hedgefund/blob/64c0adc602bbcbb70c0b4511ac67ee2aa40fceca/docs/DEVELOPMENT.md) |
-| know what is trusted, what is defended, what is knowingly open | [SECURITY.md](https://github.com/keyuyuan/hedgefund/blob/64c0adc602bbcbb70c0b4511ac67ee2aa40fceca/docs/SECURITY.md) |
+| build it, run the tests, and make a change safely | [Current V2 build instructions](../README.md#build-and-test), [historical DEVELOPMENT.md](../../archive/hedgefund/docs/DEVELOPMENT.md) |
+| know what is trusted, what is defended, what is knowingly open | [Current contract scope](../../docs/CONTRACT_SCOPE.md), [historical SECURITY.md](../../archive/hedgefund/docs/SECURITY.md) |
 | look up a function, selector, error or constant | [REFERENCE.md](./REFERENCE.md) *(generated — do not edit by hand)* |
-| rehearse or execute a deployment | [DEPLOYMENT.md](https://github.com/keyuyuan/hedgefund/blob/64c0adc602bbcbb70c0b4511ac67ee2aa40fceca/docs/DEPLOYMENT.md) |
+| rehearse or execute a deployment | [Current V2 rehearsal](V2_DEPLOYMENT_REHEARSAL.md), [historical DEPLOYMENT.md](../../archive/hedgefund/docs/DEPLOYMENT.md) |
 | deploy V2 on the public Robinhood Chain testnet (46630) for the team to test the front end with no real money | [TESTNET_V2.md](./TESTNET_V2.md) |
 | add native ETH payments and 24/7 ETH strategies with a pool TWAP | [TESTNET_V2_ETH_MARKET.md](./TESTNET_V2_ETH_MARKET.md) |
-| list a stock, run the routine checks, read an alert | [OPERATIONS.md](https://github.com/keyuyuan/hedgefund/blob/64c0adc602bbcbb70c0b4511ac67ee2aa40fceca/docs/OPERATIONS.md) |
+| list a stock, run the routine checks, read an alert | [Current operations](../../docs/OPERATIONS.md), [historical OPERATIONS.md](../../archive/hedgefund/docs/OPERATIONS.md) |
 | check a stock before a V2 listing or launch (graduation depth, gate, 0.05% sell chunk) | [`tools/v2_launch_check.py`](../tools/v2_launch_check.py), [V2_DEPLOYMENT_REHEARSAL.md](./V2_DEPLOYMENT_REHEARSAL.md#listing-check-first-live-run) |
-| see what ships first and what waits for v2, and why | [ROADMAP.md](https://github.com/keyuyuan/hedgefund/blob/64c0adc602bbcbb70c0b4511ac67ee2aa40fceca/docs/ROADMAP.md) |
-| write the site, the announcement or the launch form | [LAUNCH_KIT.md](https://github.com/keyuyuan/hedgefund/blob/64c0adc602bbcbb70c0b4511ac67ee2aa40fceca/docs/LAUNCH_KIT.md) |
-| respond to an incident | [`../emergency/README.md`](https://github.com/keyuyuan/hedgefund/blob/64c0adc602bbcbb70c0b4511ac67ee2aa40fceca/emergency/README.md) |
+| see what ships first and what remains pending | [Current contract scope](../../docs/CONTRACT_SCOPE.md), [historical ROADMAP.md](../../archive/hedgefund/docs/ROADMAP.md) |
+| write the site, the announcement or the launch form | [Current contract scope](../../docs/CONTRACT_SCOPE.md), [historical LAUNCH_KIT.md](../../archive/hedgefund/docs/LAUNCH_KIT.md) |
+| respond to an incident | [Current operations](../../docs/OPERATIONS.md), [historical V1 emergency kit](../../archive/hedgefund/emergency/README.md) |
 
-**Prefer a site to a folder?** `pip install mkdocs-material mkdocs-static-i18n jieba`, then `tools/docs_site.py serve` -- search, a sidebar, an English / 中文 switch and
+**Historical docs-site workflow:** `pip install mkdocs-material mkdocs-static-i18n jieba`, then the archived `tools/docs_site.py serve` in a pinned source checkout -- search, a sidebar, an English / 中文 switch and
 rendered Mermaid at http://127.0.0.1:8000, assembled from these same files (nothing is written for it, and the repo stays
 the source of truth). Keep it internal: SECURITY, AUDIT and the emergency runbook are in it.
 
@@ -59,7 +61,7 @@ payout addresses (the creator's only after a public 14-day wait the creator can 
 nothing else. A bug that ships in a token or treasury ships forever, for every strategy
 launched while it was there; a bug in the hook ships for **every strategy at once**. That is why the audit's fixes
 landed before the first launch, why every fix has a regression test that was confirmed to
-fail without it, and why [SECURITY.md](https://github.com/keyuyuan/hedgefund/blob/64c0adc602bbcbb70c0b4511ac67ee2aa40fceca/docs/SECURITY.md#rules-for-changing-the-code) has rules
+fail without it, and why [SECURITY.md](../../archive/hedgefund/docs/SECURITY.md#rules-for-changing-the-code) has rules
 for changing the code rather than suggestions.
 
 ## Evidence and analysis
@@ -72,22 +74,20 @@ they were written, and carry their dates.
 | [EQUITY_PARAMETER_FEES_2025_2026-10-03.md](EQUITY_PARAMETER_FEES_2025_2026-10-03.md) | One year of daily TSLA/NVDA/META prices, five strategy profiles, matched fee controls, 39 actual-contract fork cases and independently checked accounting |
 | [COMPETITOR_MECHANICS_2026-10-03.md](COMPETITOR_MECHANICS_2026-10-03.md) | Official-source comparison of Long/StonkFun mechanics and the limits of HedgeFun's claimed differences |
 | [V2_SIMPLE_CYCLE_AUDIT.md](./V2_SIMPLE_CYCLE_AUDIT.md), [V2_SIMPLE_CYCLE_BACKTEST.md](./V2_SIMPLE_CYCLE_BACKTEST.md) | Historical source #110 audit and frozen-price replay; their sizes and test counts describe the pinned source snapshot, with current target validation in the integration review |
-| [`../AUDIT.md`](https://github.com/keyuyuan/hedgefund/blob/64c0adc602bbcbb70c0b4511ac67ee2aa40fceca/AUDIT.md) | Security review, 2026-09-20: three adversarial passes, 43 Foundry reproductions, a go/no-go, and the measured chain facts each finding was sized against. Status banners record which rounds fixed what |
-| [STOCK_TOKEN_ASSESSMENT.md](https://github.com/keyuyuan/hedgefund/blob/64c0adc602bbcbb70c0b4511ac67ee2aa40fceca/docs/STOCK_TOKEN_ASSESSMENT.md) | What the real Robinhood stock token can do to a holder: beacon proxy, upgrader, deny-list, pause, `adminBurn`. Every row VERIFIED or INFERRED |
-| [`../LISTING_CANDIDATES.md`](https://github.com/keyuyuan/hedgefund/blob/64c0adc602bbcbb70c0b4511ac67ee2aa40fceca/LISTING_CANDIDATES.md) | Which stocks can be listed (194 → 35 → 25), the first-wave decision, and what the feeds actually do across a weekend |
-| [rule-backtest/](https://github.com/keyuyuan/hedgefund/blob/64c0adc602bbcbb70c0b4511ac67ee2aa40fceca/docs/rule-backtest/README.md) | What a creator's `tp1`/`dip`/`stop` would have done on eleven listed stocks, hourly, replayed forwards and backwards. About the **rule's economics**, not about whether a stock can be listed |
-| [`../POOL_SELECTION.md`](https://github.com/keyuyuan/hedgefund/blob/64c0adc602bbcbb70c0b4511ac67ee2aa40fceca/POOL_SELECTION.md) | A *different* product — a delta-neutral LP hedged with a Lighter perp. Shares the pool census |
-| [robinhood-chain/](https://github.com/keyuyuan/hedgefund/blob/64c0adc602bbcbb70c0b4511ac67ee2aa40fceca/docs/robinhood-chain/README.md) | Mirrors of three Robinhood Chain docs pages, each reconciled against what the chain actually does |
-| [research/PONS_TAX_ELASTICITY.md](https://github.com/keyuyuan/hedgefund/blob/64c0adc602bbcbb70c0b4511ac67ee2aa40fceca/docs/research/PONS_TAX_ELASTICITY.md) | Does the trade tax predict volume and graduation? 106,631 pons.family launches on our chain, 2026-09-16 to 09-27, at a creator-chosen 1-11% tax. The same creator does as well at 2-5% as at 1%; above 5% volume halves and graduation nearly stops. Evidence for the 1-2% cap decision |
+| [`../AUDIT.md`](../../archive/hedgefund/AUDIT.md) | Security review, 2026-09-20: three adversarial passes, 43 Foundry reproductions, a go/no-go, and the measured chain facts each finding was sized against. Status banners record which rounds fixed what |
+| [STOCK_TOKEN_ASSESSMENT.md](../../archive/hedgefund/docs/STOCK_TOKEN_ASSESSMENT.md) | What the real Robinhood stock token can do to a holder: beacon proxy, upgrader, deny-list, pause, `adminBurn`. Every row VERIFIED or INFERRED |
+| [`../LISTING_CANDIDATES.md`](../../archive/hedgefund/LISTING_CANDIDATES.md) | Which stocks can be listed (194 → 35 → 25), the first-wave decision, and what the feeds actually do across a weekend |
+| [rule-backtest/](../../archive/hedgefund/docs/rule-backtest/README.md) | What a creator's `tp1`/`dip`/`stop` would have done on eleven listed stocks, hourly, replayed forwards and backwards. About the **rule's economics**, not about whether a stock can be listed |
+| [`../POOL_SELECTION.md`](../../archive/hedgefund/POOL_SELECTION.md) | A *different* product — a delta-neutral LP hedged with a Lighter perp. Shares the pool census |
+| [robinhood-chain/](../../archive/hedgefund/docs/robinhood-chain/README.md) | Mirrors of three Robinhood Chain docs pages, each reconciled against what the chain actually does |
+| [research/PONS_TAX_ELASTICITY.md](../../archive/hedgefund/docs/research/PONS_TAX_ELASTICITY.md) | Does the trade tax predict volume and graduation? 106,631 pons.family launches on our chain, 2026-09-16 to 09-27, at a creator-chosen 1-11% tax. The same creator does as well at 2-5% as at 1%; above 5% volume halves and graduation nearly stops. Evidence for the 1-2% cap decision |
 
 ## Keeping these docs true
 
 - **[REFERENCE.md](./REFERENCE.md) is generated** from the compiler's ABI output and the
   source's NatSpec by `tools/gen_reference.py`. Change the NatSpec, not the Markdown, then
   regenerate. A missing description in the reference is a missing `///` in the source.
-- **`python3 tools/check_docs.py`** fails if any relative link or heading anchor in any
-  tracked Markdown file is broken, or if the reference is stale. Run it before pushing
-  anything that renames a file, a heading or a function.
+- **`python3 tools/check_archive.py`** from the organization repository root checks the imported records and documentation links. Regenerate the current V2 reference from `contractV2/` with `python3 tools/gen_reference.py` after source changes.
 - **A PR that changes behaviour changes the doc that describes it, in the same PR.**
   ARCHITECTURE for how it works, SECURITY for what it defends or accepts, OPERATIONS and
   `emergency/` for anything an operator would do differently. The root

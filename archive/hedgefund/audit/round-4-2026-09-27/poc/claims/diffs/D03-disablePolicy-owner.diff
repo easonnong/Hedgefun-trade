@@ -1,0 +1,12 @@
+diff --git a/src/v2/V2TreasuryDeployer.sol b/src/v2/V2TreasuryDeployer.sol
+index 5ce7353..e06973c 100644
+--- a/src/v2/V2TreasuryDeployer.sol
++++ b/src/v2/V2TreasuryDeployer.sol
+@@ -278,7 +278,6 @@ contract V2TreasuryDeployer is BoundDeployer {
+     }
+ 
+     function disablePolicy(bytes32 policyKey) external {
+-        _onlyOwner();
+         PolicyManifest storage manifest = _policies[policyKey];
+         if (manifest.implementation == address(0) || !manifest.enabledForNewLaunches) revert BadPolicy();
+         manifest.enabledForNewLaunches = false;

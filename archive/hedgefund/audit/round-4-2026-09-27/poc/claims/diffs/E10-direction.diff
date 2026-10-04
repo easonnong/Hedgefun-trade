@@ -1,0 +1,22 @@
+diff --git a/src/v2/HedgeFunV2EngineTreasury.sol b/src/v2/HedgeFunV2EngineTreasury.sol
+index 555f237..c884efc 100644
+--- a/src/v2/HedgeFunV2EngineTreasury.sol
++++ b/src/v2/HedgeFunV2EngineTreasury.sol
+@@ -325,7 +325,7 @@ contract HedgeFunV2EngineTreasury is HedgeFunV2Treasury {
+         ExecutionLimits memory limits
+     ) private returns (ExecutionResult memory result) {
+         uint256 upperValue = Math.mulDiv(limits.totalValue, limits.targetBps + limits.deadbandBps, BPS);
+-        if (policyCapabilities & StrategyCapabilities.SPOT_SELL == 0 || context.stockValueUsdg <= upperValue) {
++        if (policyCapabilities & StrategyCapabilities.SPOT_SELL == 0) {
+             revert BadIntent();
+         }
+         uint256 excessUsdg = context.stockValueUsdg - Math.mulDiv(limits.totalValue, limits.targetBps, BPS);
+@@ -345,7 +345,7 @@ contract HedgeFunV2EngineTreasury is HedgeFunV2Treasury {
+         ExecutionLimits memory limits
+     ) private returns (ExecutionResult memory result) {
+         uint256 lowerValue = Math.mulDiv(limits.totalValue, limits.targetBps - limits.deadbandBps, BPS);
+-        if (policyCapabilities & StrategyCapabilities.SPOT_BUY == 0 || context.stockValueUsdg >= lowerValue) {
++        if (policyCapabilities & StrategyCapabilities.SPOT_BUY == 0) {
+             revert BadIntent();
+         }
+         uint256 deficitUsdg = Math.mulDiv(limits.totalValue, limits.targetBps, BPS) - context.stockValueUsdg;

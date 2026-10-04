@@ -1,0 +1,12 @@
+diff --git a/src/v2/V2TreasuryDeployer.sol b/src/v2/V2TreasuryDeployer.sol
+index 5ce7353..5e75d5b 100644
+--- a/src/v2/V2TreasuryDeployer.sol
++++ b/src/v2/V2TreasuryDeployer.sol
+@@ -294,7 +294,6 @@ contract V2TreasuryDeployer is BoundDeployer {
+     ///         moves the treasury address and the launch reverts `Restated` -- re-quote. Kind 0 needs no call.
+     function setStrategyKind(string calldata symbol, uint96 nonce, uint8 kind) external {
+         if (kind >= _kinds.length) revert BadKind();
+-        if (_kinds[kind].engineConfigSchema != 0) revert BadKind();
+         strategyKindOf[keccak256(abi.encode(symbol, msg.sender, nonce))] = kind;
+         emit StrategyKindSet(msg.sender, symbol, nonce, kind);
+     }

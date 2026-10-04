@@ -1,0 +1,71 @@
+{
+  "version": "1.0",
+  "chainId": "4663",
+  "createdAt": 1790831123579,
+  "meta": {
+    "name": "CC-DESK setup 20261001T050523Z",
+    "description": "list NVDA, setWriter(Safe) (no buyer yet). Built against desk 0xb28Aa6ADE3f4504B5554dc1BDb23EBa2FE1afD87.",
+    "txBuilderVersion": "1.16.5",
+    "createdFromSafeAddress": "0x2910117dd2cB431173Ae9Fb6eAF30726321d1693",
+    "createdFromOwnerAddress": "",
+    "checksum": "0x8528f940aab2845167038b5c984a6e63a8314ba196e1f3f424a4c3f4a7b6d0b4"
+  },
+  "transactions": [
+    {
+      "to": "0xb28Aa6ADE3f4504B5554dc1BDb23EBa2FE1afD87",
+      "value": "0",
+      "data": "0xaabd41eb000000000000000000000000d0601ce157db5bdc3162bbac2a2c8af5320d9eec000000000000000000000000379ec4f7c378f34a1b47e4f3cbebcbac3e8e9f150000000000000000000000000000000000000000000000000000000000000001",
+      "contractMethod": {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "underlying",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "feed",
+            "type": "address"
+          },
+          {
+            "internalType": "bool",
+            "name": "enabled",
+            "type": "bool"
+          }
+        ],
+        "name": "list",
+        "payable": false
+      },
+      "contractInputsValues": {
+        "underlying": "0xd0601CE157Db5bdC3162BbaC2a2C8aF5320D9EEC",
+        "feed": "0x379EC4f7C378F34a1B47E4F3cbeBCbAC3E8E9F15",
+        "enabled": "true"
+      }
+    },
+    {
+      "to": "0xb28Aa6ADE3f4504B5554dc1BDb23EBa2FE1afD87",
+      "value": "0",
+      "data": "0x1f91b39f0000000000000000000000002910117dd2cb431173ae9fb6eaf30726321d16930000000000000000000000000000000000000000000000000000000000000001",
+      "contractMethod": {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "writer",
+            "type": "address"
+          },
+          {
+            "internalType": "bool",
+            "name": "allowed",
+            "type": "bool"
+          }
+        ],
+        "name": "setWriter",
+        "payable": false
+      },
+      "contractInputsValues": {
+        "writer": "0x2910117dd2cB431173Ae9Fb6eAF30726321d1693",
+        "allowed": "true"
+      }
+    }
+  ]
+}

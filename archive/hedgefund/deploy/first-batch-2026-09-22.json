@@ -1,0 +1,150 @@
+{
+  "_": "First-batch listing plan, 2026-09-22. Every number here is reviewed in PR; tools/listing_batch.py turns it into a Safe Transaction Builder file and refuses if the chain disagrees. Measurements: pool tracking from each pool's observation ring against Chainlink rounds, sells simulated on a mainnet fork (see PR).",
+  "chainId": 4663,
+  "safe": "0x2910117dd2cB431173Ae9Fb6eAF30726321d1693",
+  "factory": "0x58F6Ced8d02cD2567f1458801440Bc4eb67fA961",
+  "calendar": "0xFE9E85f0C258Fc2757eB6Acd1ca032Ec860487F5",
+  "launchRouter": "0x470F5DeB0897118F6575F72183781C6a0610E1FA",
+  "usdgFeed": "0x61B7e5650328764B076A108EFF5fa7282a1B9aD2",
+  "maxAge": 93600,
+  "openFdvUsdg": 10000,
+  "_openPrice": "openPriceE18 = openFdvUsdg * 1e27 / oraclePriceE18, three significant figures; priceE18 is the oracle's lastPriceAt at 2026-09-22 ~07:40 UTC, recorded here so the number can be re-derived.",
+  "stocks": {
+    "NVDA": {
+      "token": "0xd0601CE157Db5bdC3162BbaC2a2C8aF5320D9EEC",
+      "oracle": "0x03c77f527Aa1B0B304602e3fB9Ac994dd1c157f8",
+      "v3Pool": "0xD4EB21209c4d6093F80B5b84f5C45cC093eA14A3",
+      "fee": 500,
+      "priceE18": "226142082973362131029",
+      "openPriceE18": "44200000000",
+      "bandCeiling": 0,
+      "gates": null
+    },
+    "SPCX": {
+      "token": "0x4a0E65A3EcceC6dBe60AE065F2e7bb85Fae35eEa",
+      "oracle": "0xC109426706b9D01719ED82e8cd027fA91fBcdC0b",
+      "v3Pool": "0xc61284332117c3fB23A2a56ccEfFD07F7aF60029",
+      "fee": 500,
+      "priceE18": "152524098072154227661",
+      "openPriceE18": "65600000000",
+      "bandCeiling": 0,
+      "gates": null
+    },
+    "CRCL": {
+      "token": "0xdF0992E440dD0be65BD8439b609d6D4366bf1CB5",
+      "oracle": "0x3bd2c093948D38A5eC2D945C5b065e5Db89aaB36",
+      "v3Pool": "0x654E4143e82a5824445Ade0824351C2A9ACD95a8",
+      "fee": 3000,
+      "priceE18": "91412686985041196704",
+      "openPriceE18": "109000000000",
+      "bandCeiling": 10,
+      "gates": null
+    },
+    "GOOGL": {
+      "token": "0x2e0847E8910a9732eB3fb1bb4b70a580ADAD4FE3",
+      "oracle": "0x15400359B0D14B4151FAe80b837abF3fA1977256",
+      "v3Pool": "0x34D0dC122CF9A8Eb296fC5e0D3A233625D7d19b7",
+      "fee": 500,
+      "priceE18": "356675626179905607551",
+      "openPriceE18": "28000000000",
+      "bandCeiling": 0,
+      "gates": null
+    },
+    "AMZN": {
+      "token": "0x12f190a9F9d7D37a250758b26824B97CE941bF54",
+      "oracle": "0xb34d278D2c792B7C48252C5eB8130Db45e35294e",
+      "v3Pool": "0x8AC92DA74AB5F3b1d024Dc1943Ad7e15Dc4179Ef",
+      "fee": 3000,
+      "priceE18": "259694224462043036557",
+      "openPriceE18": "38500000000",
+      "bandCeiling": 5,
+      "gates": null
+    },
+    "GME": {
+      "token": "0x1b0E319c6A659F002271B69dB8A7df2F911c153E",
+      "oracle": "0x7548A343D06E45507Dd8F546D9d9Fdf684575ecE",
+      "v3Pool": "0xE2b46c905E12Ab8E2f864e4821a4325884C1B126",
+      "fee": 500,
+      "priceE18": "23628109751219902407",
+      "openPriceE18": "423000000000",
+      "bandCeiling": 5,
+      "gates": null
+    },
+    "META": {
+      "token": "0xc0D6457C16Cc70d6790Dd43521C899C87ce02f35",
+      "oracle": "0x699E34068b8975bE113eD5fF12e429c69BCf1011",
+      "v3Pool": "0x107a7Cb40d8665360ba10E59471Af06150A50922",
+      "fee": 3000,
+      "priceE18": "745989057725381969442",
+      "openPriceE18": "13400000000",
+      "bandCeiling": 5,
+      "gates": null
+    },
+    "USAR": {
+      "token": "0xd917B029C761D264c6A312BBbcDA868658eF86a6",
+      "oracle": "0x02dE419166CED89fc9FCe2687CdBcBbc9eDe2612",
+      "v3Pool": "0x04391780F519B7d3ba59c9590459D76e23d225C4",
+      "fee": 3000,
+      "priceE18": "16773658107351411887",
+      "openPriceE18": "596000000000",
+      "bandCeiling": 5,
+      "gates": [
+        0,
+        0,
+        1000000000
+      ]
+    },
+    "MSTR": {
+      "token": "0xec262a75e413fAfD0dF80480274532C79D42da09",
+      "oracle": "0x19d0328F3152d1361db7B3Dd7708Cc36A779d612",
+      "v3Pool": "0x17578C0e0D15da44f31677263114F71aE76653EA",
+      "fee": 10000,
+      "priceE18": "163581913446924246060",
+      "openPriceE18": "61100000000",
+      "bandCeiling": 0,
+      "gates": [
+        125,
+        175,
+        0
+      ]
+    },
+    "AMD": {
+      "token": "0x86923f96303D656E4aa86D9d42D1e57ad2023fdC",
+      "oracle": "0xc809bDf7E31E4830de2b03e6f809869Fb99f2246",
+      "v3Pool": "0x48D284A2A4d3DC1b3Da08231Fe44317e7e7Aa51f",
+      "fee": 3000,
+      "priceE18": "612361011119110471162",
+      "openPriceE18": "16300000000",
+      "bandCeiling": 0,
+      "gates": [
+        0,
+        0,
+        1000000000
+      ]
+    },
+    "MU": {
+      "token": "0xfF080c8ce2E5feadaCa0Da81314Ae59D232d4afD",
+      "oracle": "0x4D15A4A1028f001800774A3d2DC31d77945399a4",
+      "v3Pool": "0xd057B1Bc54917855BBee58eAd58647f47caB35E5",
+      "fee": 3000,
+      "priceE18": "1039654618320534357251",
+      "openPriceE18": "9620000000",
+      "bandCeiling": 0,
+      "gates": null
+    },
+    "INTC": {
+      "token": "0xc72b96e0E48ecd4DC75E1e45396e26300BC39681",
+      "oracle": "0xd399113f3196044A001614Ca9dda9cD8c9424264",
+      "v3Pool": "0x2e5a92f5013a64661A49312111be2e8aBd33F56a",
+      "fee": 3000,
+      "priceE18": "120985321174306055515",
+      "openPriceE18": "82700000000",
+      "bandCeiling": 0,
+      "gates": [
+        0,
+        0,
+        1000000000
+      ]
+    }
+  }
+}

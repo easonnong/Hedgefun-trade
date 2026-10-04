@@ -14,7 +14,8 @@ variables or calldata. Offline tests alone subclass the venue getters.
 The script reads the previous factory's defaults and copies them with `sweepTipBps=0`; protocol share must remain
 2000 bps and supply must be 1 billion tokens. Each stock's enabled listing, open price, gates and LP share are
 read from the previous deployment and registered on the new core. Recommended launch parameters are
-`taxBps=300`, `creatorBps=1000`, giving 20% protocol / 10% creator / 70% treasury of the base fee. Tax and creator
+`taxBps=100`, `creatorBps=1000`, giving 20% protocol / 10% creator / 70% treasury of the base fee. The original
+3% deployment and journey retain their historical parameters. Tax and creator
 share remain bounded creator choices and become frozen per launch.
 
 New components are treasury/token/curve deployers, a newly mined `HedgeFunV2Hook`, V2 factory, trade router,

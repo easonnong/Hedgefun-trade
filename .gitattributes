@@ -16,3 +16,5 @@ contractV2/deploy/equity-history-2025-2026-10-03/charts/*.svg whitespace=-blank-
 contractV2/deploy/equity-history-2025-2026-10-03/*.csv whitespace=cr-at-eol
 contractV2/deploy/equity-history-2025-2026-10-03/*.log whitespace=-blank-at-eof
 contractV2/data/equity-screening-2025.csv whitespace=cr-at-eol
+# Historical source files retain their original bytes, including existing whitespace.
+archive/hedgefund/** -text whitespace=-blank-at-eol,-blank-at-eof,-space-before-tab

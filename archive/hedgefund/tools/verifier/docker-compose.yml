@@ -1,0 +1,28 @@
+# The source verifier on the API host, beside the indexer. No secrets and no ports: it only reads the chain and
+# talks to Sourcify. State (what is verified, what to retry when) lives in the named volume.
+name: hedgefun-verifier
+services:
+  verifier:
+    build: .
+    image: hedgefun-verifier:3dc07eb
+    restart: unless-stopped
+    command: ["--watch", "30"]
+    volumes:
+      - state:/state
+    # Hardening: the image is read-only; the only writable places are the state volume and these two tmpfs
+    # mounts. That includes /source/out and /source/cache: forge reads the build-time cache and writes nothing
+    # there, which the image build checks. HOME itself stays in the image, because solc lives in ~/.svm; only
+    # forge's own scratch directory ~/.foundry is a tmpfs.
+    read_only: true
+    tmpfs:
+      - /tmp:size=64m,mode=1777
+      - /home/verifier/.foundry:size=64m,uid=10001,gid=10001,mode=0700
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    pids_limit: 256
+    mem_limit: 1g
+    cpus: 0.5
+    stop_grace_period: 20s
+    logging: { driver: json-file, options: { max-size: "10m", max-file: "3" } }
+volumes:
+  state:

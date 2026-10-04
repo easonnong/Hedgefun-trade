@@ -1,0 +1,21 @@
+diff --git a/src/v2/HedgeFunV2EngineTreasury.sol b/src/v2/HedgeFunV2EngineTreasury.sol
+index 555f237..ab9570e 100644
+--- a/src/v2/HedgeFunV2EngineTreasury.sol
++++ b/src/v2/HedgeFunV2EngineTreasury.sol
+@@ -331,7 +331,7 @@ contract HedgeFunV2EngineTreasury is HedgeFunV2Treasury {
+         uint256 excessUsdg = context.stockValueUsdg - Math.mulDiv(limits.totalValue, limits.targetBps, BPS);
+         uint256 capUsdg = Math.min(Math.min(limits.maxTrade, limits.remainingDaily), excessUsdg);
+         uint256 offered = Math.min(requested, Math.min(bookedStock, _ruleStockFor(capUsdg, price)));
+-        if (offered == 0 || _ruleValue(offered, price) < _params.minLotUsdg) revert NotDue();
++        if (offered == 0) revert NotDue();
+         (result.actualInput, result.actualOutput) = _swapStock(false, offered, price);
+         bookedStock -= result.actualInput;
+         result.turnover = _ruleValue(result.actualInput, price);
+@@ -351,7 +351,6 @@ contract HedgeFunV2EngineTreasury is HedgeFunV2Treasury {
+         uint256 deficitUsdg = Math.mulDiv(limits.totalValue, limits.targetBps, BPS) - context.stockValueUsdg;
+         uint256 capUsdg = Math.min(Math.min(limits.maxTrade, limits.remainingDaily), deficitUsdg);
+         uint256 offered = Math.min(Math.min(requested, capUsdg), context.usdgInventory);
+-        if (offered < _params.minLotUsdg) revert NotDue();
+         (result.actualInput, result.actualOutput) = _swapStock(true, offered, price);
+         bookedStock += result.actualOutput;
+         result.turnover = result.actualInput;

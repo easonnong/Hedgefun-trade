@@ -1,0 +1,12 @@
+diff --git a/src/v2/V2TreasuryDeployer.sol b/src/v2/V2TreasuryDeployer.sol
+index 5ce7353..decd350 100644
+--- a/src/v2/V2TreasuryDeployer.sol
++++ b/src/v2/V2TreasuryDeployer.sol
+@@ -194,7 +194,6 @@ contract V2TreasuryDeployer is BoundDeployer {
+         external
+         returns (uint8 kind)
+     {
+-        _onlyOwner();
+         if (
+             a.code.length == 0 || b.code.length == 0 || engineVersion == 0 || configSchema == 0 || capabilities == 0
+                 || _kinds.length == type(uint8).max

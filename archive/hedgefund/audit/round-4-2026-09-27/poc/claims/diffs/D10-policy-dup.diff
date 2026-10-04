@@ -1,0 +1,12 @@
+diff --git a/src/v2/V2TreasuryDeployer.sol b/src/v2/V2TreasuryDeployer.sol
+index 5ce7353..f29c2d0 100644
+--- a/src/v2/V2TreasuryDeployer.sol
++++ b/src/v2/V2TreasuryDeployer.sol
+@@ -250,7 +250,6 @@ contract V2TreasuryDeployer is BoundDeployer {
+                 auditManifestHash
+             )
+         );
+-        if (_policies[policyKey].implementation != address(0)) revert BadPolicy();
+         _policies[policyKey] = PolicyManifest({
+             implementation: implementation,
+             runtimeCodeHash: runtimeCodeHash,

@@ -1,0 +1,24 @@
+{
+ "_": "Token metadata, reviewed in PR. tools/metadata_batch.py turns this into a Safe Transaction Builder file and refuses if the chain disagrees. setMetadata REPLACES the whole entry, so every field a token should keep is written here in full -- `description` below is byte-identical to the one initMetadata wrote at launch (304 bytes, sha256 4bcce831781f9d20cd528a19e9ec928196e698617fba9c6e0ae141506adac2db); the tool refuses if it has moved.",
+ "chainId": 4663,
+ "safe": "0x2910117dd2cB431173Ae9Fb6eAF30726321d1693",
+ "iconHost": "hedgefun.trade",
+ "_icon": "Logos are content-addressed objects in the site's R2 bucket `hedgefun-icons`, served by server/icons.ts at /media/icons/<sha256>.png with an immutable cache and no way to overwrite a key (`onlyIf: {etagDoesNotMatch: '*'}`). The URL's own path is the sha256 of the bytes behind it, which the tool verifies with one GET. Source for the entry below: public/fd-hedgehog.png in the site repo (1024x1024 RGBA), scaled to 512x512 and stripped of its eXIf chunk -- sips writes one and validIconPng only admits sRGB/gAMA/cHRM/pHYs, so an un-stripped upload is rejected 415.",
+ "tokens": {
+  "CRCLGRID": {
+   "token": "0xF5501c0D85992dD59371e15e3e7b60654ebaF332",
+   "logo": "https://hedgefun.trade/media/icons/2e131bb672ed67fd81107857366e31e1c395b4aaf84fcb047702940f909897ff.png",
+   "description": "A strategy token on CRCL. Sell tax is paid in CRCL into an on-chain treasury nobody can withdraw from. Its rule, fixed at launch: take profit at +20% and +40%, buy back 15% dips with 20% of the reserve, never sell at a loss; profits buy the token back and burn it. Launched by the Hedgefun protocol Safe.",
+   "socials": {
+    "twitter": "https://x.com/0xHedgehood",
+    "telegram": "",
+    "discord": "",
+    "website": "https://hedgefun.trade",
+    "farcaster": ""
+   },
+   "extraURI": "",
+   "editor": null,
+   "_": "The desk's own FD hedgehog on the Safe-launched first strategy. Every other launch carries its creator's icon; this one carries the protocol's on purpose. `website` is hedgefun.trade, the desk where this token trades, not hedgehood.app -- see wrangler.toml in the site repo for why they are separate registrable domains. `editor` is null: while it is, only the Safe can rewrite this entry."
+  }
+ }
+}

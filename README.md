@@ -27,6 +27,8 @@ The V2 source lives in [`contractV2/`](./contractV2/README.md), laid out the sam
 | Uniswap V3 pools | External stock/USDG execution; the required interfaces are in `contractV1/src/interfaces/IUniswapV3.sol` |
 | [Foundry](https://getfoundry.sh/) | Reproducible Solidity build and tests |
 
-The V1 source snapshot is commit `5c28050cae10e73166aa993bdfe3c2cbf0b71823`; V2 provenance and validation are recorded in its [README](./contractV2/README.md). Contract source files are copied without Solidity changes. This repository omits deployment credentials, live operations, and third-party reference source. Mirrored PR branches may include reviewed public testnet receipt archives copied from the development repository.
+The V1 source snapshot is commit `5c28050cae10e73166aa993bdfe3c2cbf0b71823`; V2 provenance and validation are recorded in its [README](./contractV2/README.md). This organization repository is the current development baseline. New V2 deployments recommend a **1% base trading fee**, with the LP fee accounted for separately; historical deployments retain their frozen terms.
+
+Use the [operations guide](./docs/OPERATIONS.md), [contract scope](./docs/CONTRACT_SCOPE.md) and [audit index](./audit/README.md) for current work. The [historical Hedgefund archive](./archive/hedgefund/README.md) preserves source-pinned audit rounds, PoCs, runbooks, emergency tools, public deployment records and measurements. Deployment credentials and third-party reference source are omitted. Historical evidence does not establish activation of newly merged contracts.
 
 The original Hedgefun Solidity files are [MIT licensed](LICENSE). Git submodule dependencies retain their own licenses and copyright notices.

@@ -1,0 +1,31 @@
+diff --git a/src/v2/HedgeFunV2EngineTreasury.sol b/src/v2/HedgeFunV2EngineTreasury.sol
+index 555f237..c8cb41a 100644
+--- a/src/v2/HedgeFunV2EngineTreasury.sol
++++ b/src/v2/HedgeFunV2EngineTreasury.sol
+@@ -174,7 +174,7 @@ contract HedgeFunV2EngineTreasury is HedgeFunV2Treasury {
+     }
+ 
+     /// @notice Simulate the immutable policy. `execute()` always recomputes the context and intent on chain.
+-    function preview() external view returns (bool due, StrategyAction action, uint256 amountIn) {
++    function preview() external returns (bool due, StrategyAction action, uint256 amountIn) {
+         (bool ok, uint256 p) = health();
+         (bool live,) = _oracle.tryPrice();
+         if (!ok || !live) return (false, StrategyAction.Hold, 0);
+@@ -389,7 +389,7 @@ contract HedgeFunV2EngineTreasury is HedgeFunV2Treasury {
+         maxDaily = uint256(_engineConfig.words[2]);
+     }
+ 
+-    function _policyIntent(StrategyContext memory context) private view returns (StrategyIntent memory intent) {
++    function _policyIntent(StrategyContext memory context) private returns (StrategyIntent memory intent) {
+         address implementation = policyImplementation;
+         if (implementation.codehash != policyRuntimeCodeHash) revert PolicyUnavailable();
+         bytes memory callData = abi.encodeCall(IStrategyPolicy.decide, (context, _engineConfig, policyState));
+@@ -397,7 +397,7 @@ contract HedgeFunV2EngineTreasury is HedgeFunV2Treasury {
+         uint256 size;
+         uint256 gasLimit = policyGasLimit;
+         assembly ("memory-safe") {
+-            success := staticcall(gasLimit, implementation, add(callData, 0x20), mload(callData), 0, 0)
++            success := call(gasLimit, implementation, 0, add(callData, 0x20), mload(callData), 0, 0)
+             size := returndatasize()
+         }
+         if (!success) revert PolicyFailure();

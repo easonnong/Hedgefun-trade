@@ -1,0 +1,15 @@
+diff --git a/src/v2/V2TreasuryDeployer.sol b/src/v2/V2TreasuryDeployer.sol
+index 5ce7353..7edeac2 100644
+--- a/src/v2/V2TreasuryDeployer.sol
++++ b/src/v2/V2TreasuryDeployer.sol
+@@ -217,9 +217,7 @@ contract V2TreasuryDeployer is BoundDeployer {
+     ) external returns (bytes32 policyKey) {
+         _onlyOwner();
+         if (
+-            implementation.code.length == 0 || maxGas == 0 || maxGas > MAX_POLICY_GAS
+-                || maxReturnBytes != POLICY_RETURN_BYTES || dependencyManifestHash == bytes32(0)
+-                || auditManifestHash == bytes32(0)
++            implementation.code.length == 0
+         ) revert BadPolicy();
+ 
+         uint32 engineVersion;

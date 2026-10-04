@@ -1,0 +1,3022 @@
+{
+  "schema": "hedgefun-historical-records-v1",
+  "source_repository": "https://github.com/keyuyuan/hedgefund",
+  "source_commit": "48a41e2d53c8d24505e3313ae01a01c153b9e721",
+  "organization_base_commit": "9be8cf48a723f1ab65412505e231f98b8fac450e",
+  "imported_at": "2026-10-04",
+  "directories": [
+    "audit",
+    "emergency",
+    "docs",
+    "tools",
+    "script",
+    "deploy",
+    "data"
+  ],
+  "adaptation": "Markdown scope banners and links to omitted source/test/reference files only. Other file bytes are unchanged.",
+  "files": [
+    {
+      "path": "AUDIT.md",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/AUDIT.md",
+      "source_sha256": "e7a0031ab8b9671fbf2de9a4c24bab562ca127973885e8ce407b1c131fe1a4f9",
+      "sha256": "429f5d4e689486e145de9faf65d7e1bea6190daeb95a5e764f5a9765f84db9fa",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "LISTING_CANDIDATES.md",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/LISTING_CANDIDATES.md",
+      "source_sha256": "00cf62f8f2390af8d49982a39d3d318732f575dbe05023b0e216680917b2a87e",
+      "sha256": "6864303230d227e4e4920c72a102cb0ee2bdd7a31470870ed1281b2b86a87d1d",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "POOL_SELECTION.md",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/POOL_SELECTION.md",
+      "source_sha256": "37451b185f33a6c5b2a3aa4ce13c5af328f05e41c3c28b6355c785140b22a6ab",
+      "sha256": "f24e3f3bc64997f9fe26e6d7ed9c770cce9a55a93570925555bb2fd27b254e05",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/README.md",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/README.md",
+      "source_sha256": "acb35e924f96aa1912d7a477dfb13cc232f5f707bc1fc2a920f738c53dd69a86",
+      "sha256": "5a4b94361c1af3bf250f7b43989ed6dd6560e4f74896e953e237763da5a6366c",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-1-2026-09-21/00-SCOPE.md",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-1-2026-09-21/00-SCOPE.md",
+      "source_sha256": "b88fb6c2d80ab2985705ac8204c327895501096da90f3531c1108a023a8c5117",
+      "sha256": "8b959d4948ac4e7616eb5818fb9fdad3004b842c659399ac58ccacb54dc28bb9",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-1-2026-09-21/ISSUES.md",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-1-2026-09-21/ISSUES.md",
+      "source_sha256": "d58d91e2aa04a170be8812f8887dea2a820d9b34da051ed8e4b724ad131f5c83",
+      "sha256": "ae81ae4650a6b0c1a49b936f5a17e0435e2b048c07d37827c374444a136c4aa7",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-1-2026-09-21/PRIOR-ROUNDS.md",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-1-2026-09-21/PRIOR-ROUNDS.md",
+      "source_sha256": "0a0affc99d0b9f5b11df3be828c667a71a33073f835d038aede6054d3dcad047",
+      "sha256": "f38968b78529330494b78aae434229a340e36300e750578d551e24231e7657c6",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-1-2026-09-21/README.md",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-1-2026-09-21/README.md",
+      "source_sha256": "ab151ade3d95570d884235863fa84c04348c8b9b86a267eeeecc56fa12ce1b01",
+      "sha256": "76731b1ec1fc835d28e15a34586aae219bb9498e81da3648d74a7ec67f17f1b0",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-1-2026-09-21/VERIFICATION.md",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-1-2026-09-21/VERIFICATION.md",
+      "source_sha256": "bcf0ddeef97d77511e8e7d8a357104ed14528929642004ee13d654a8f565204b",
+      "sha256": "53c39cc9460e456c0fd1064e9b856220d1b88fdd9307170841bdb1d9a475ac5f",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-1-2026-09-21/poc/ZZLeadDefaults.t.sol",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-1-2026-09-21/poc/ZZLeadDefaults.t.sol",
+      "source_sha256": "eb30735a082b4c728b6d612188f9b70d5ca282d6281861c4df77927fe1d4181a",
+      "sha256": "eb30735a082b4c728b6d612188f9b70d5ca282d6281861c4df77927fe1d4181a",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-1-2026-09-21/poc/ZZLeadLots.t.sol",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-1-2026-09-21/poc/ZZLeadLots.t.sol",
+      "source_sha256": "e432b54dbd64765dc624a5f876ffe12901bb71b3d3cab4acf7677de0b0b0cada",
+      "sha256": "e432b54dbd64765dc624a5f876ffe12901bb71b3d3cab4acf7677de0b0b0cada",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-1-2026-09-21/poc/ZZLeadRing.t.sol",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-1-2026-09-21/poc/ZZLeadRing.t.sol",
+      "source_sha256": "1b7690f8243872cb41a94ad9380d6d0d32c6e6333ff098dc20bfd0bab99cd0e3",
+      "sha256": "1b7690f8243872cb41a94ad9380d6d0d32c6e6333ff098dc20bfd0bab99cd0e3",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-1-2026-09-21/poc/ZZLeadSeededImpact.t.sol",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-1-2026-09-21/poc/ZZLeadSeededImpact.t.sol",
+      "source_sha256": "6bd1908788a67518f8ff85a0ac59bfe07b39adabffcabf5b6654d8247ac8a6b8",
+      "sha256": "6bd1908788a67518f8ff85a0ac59bfe07b39adabffcabf5b6654d8247ac8a6b8",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-1-2026-09-21/poc/ZZLeadShoveCost.t.sol",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-1-2026-09-21/poc/ZZLeadShoveCost.t.sol",
+      "source_sha256": "f8a74fc1d576472984c202ba8d62f5e07cc3327a71c2ad2aa42fa97c1981f3c1",
+      "sha256": "f8a74fc1d576472984c202ba8d62f5e07cc3327a71c2ad2aa42fa97c1981f3c1",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-1-2026-09-21/poc/ZZLeadSpike.t.sol",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-1-2026-09-21/poc/ZZLeadSpike.t.sol",
+      "source_sha256": "7cc16d5ffb33907e988f8bb50900de0c547d595259b206309fa81e62929c68b5",
+      "sha256": "7cc16d5ffb33907e988f8bb50900de0c547d595259b206309fa81e62929c68b5",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-1-2026-09-21/poc/ZZLeadSplit.t.sol",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-1-2026-09-21/poc/ZZLeadSplit.t.sol",
+      "source_sha256": "5546e6e6de8ef08cac70f9e983394881cbf50f533f59bc37442b7a31ff1339b0",
+      "sha256": "5546e6e6de8ef08cac70f9e983394881cbf50f533f59bc37442b7a31ff1339b0",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-1-2026-09-21/poc/run.sh",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-1-2026-09-21/poc/run.sh",
+      "source_sha256": "3881f47b1febb446d34d45dee471ebcce5036902e5cfcb1ae5ecc597d226e1de",
+      "sha256": "3881f47b1febb446d34d45dee471ebcce5036902e5cfcb1ae5ecc597d226e1de",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-2-2026-09-21/00-SCOPE.md",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-2-2026-09-21/00-SCOPE.md",
+      "source_sha256": "f88835cc065563e4a1333d22ade32ab3b60299d99ccb02ca1266ba008ac17175",
+      "sha256": "d8680f65d494283eb4212c3aa21844e65d5ed193de052d070e2de05f7b89af08",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-2-2026-09-21/DISPOSITION.md",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-2-2026-09-21/DISPOSITION.md",
+      "source_sha256": "7fe56be1d1f41ee60374ca6d3ae1e7c5b62fcf7a03da2dd786f66df83eab261c",
+      "sha256": "92774266e7901ea505ad7407aa3ca953544e12b73bb6d6032b9bc7622f819361",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-2-2026-09-21/ISSUES.md",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-2-2026-09-21/ISSUES.md",
+      "source_sha256": "fa847306ec815da10bc4d8d2358f9255d7f3da93e329bd6d91283a35a7adb255",
+      "sha256": "54f833478244749c42030cc40a4337f39d4eb50d961f655970159c3567d8ada6",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-2-2026-09-21/NEW-SURFACE.md",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-2-2026-09-21/NEW-SURFACE.md",
+      "source_sha256": "28027460f688d9c2d5077e7958fc63487d25bac8044edbc20dea60b329d19d02",
+      "sha256": "01519f0a98fcf5fe0f524bf9df9ac6a0c45f07d3cc7e768c244c2c8918522011",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-2-2026-09-21/README.md",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-2-2026-09-21/README.md",
+      "source_sha256": "b12dd17cfbe184dfc193c39849374ba084a55b7e1ff1621980589363bc7daec3",
+      "sha256": "6a8fff46f91634eb78e04c5cd8d60187d189d55251993832838441a7388a9185",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-3-2026-09-27/00-SCOPE.md",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-3-2026-09-27/00-SCOPE.md",
+      "source_sha256": "fd6416edc07b245103d3b9188c4d78030cfd1bb302c6b3a531b112ccd05a6da0",
+      "sha256": "5f5a643ac4b822628631a52d4909331885f90abcc0fe58587f795cb75d4a5e53",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-3-2026-09-27/FINDINGS-FULL.md",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-3-2026-09-27/FINDINGS-FULL.md",
+      "source_sha256": "e82443e950583d6353dcdb45bd5a00db1322da11cf15d9119c775d659f311547",
+      "sha256": "2b5c047cc34860bcc7b3f5824e6f1e0d0eb0a3ea435d516a4b19fc1e553f4af3",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-3-2026-09-27/ISSUES.md",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-3-2026-09-27/ISSUES.md",
+      "source_sha256": "373e63cf36164932f9bf232e739b33799b1ec98852a23fa87e2d69482fc61c8c",
+      "sha256": "f17809a643a3403c02e102070f6caeeae294dd8c98ac6230cab91a0c9de0ddc3",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-3-2026-09-27/README.md",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-3-2026-09-27/README.md",
+      "source_sha256": "b43b26c1c9d188d39cbef91b47d4ff8fede7c70858924a0abaad00cee774e5f8",
+      "sha256": "00edb4027dbf7b61b9f22cf54cf2bae368841fbb2712b7a4824499d27caa8368",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-3-2026-09-27/VERIFICATION.md",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-3-2026-09-27/VERIFICATION.md",
+      "source_sha256": "86c4fc0d888558a92e137227cc5c57d9d1f8f8871f35698173ce53988d4c34cb",
+      "sha256": "3a33de8f99da4e2a6a5948560cf22b2053b861d4d9842cdf108df2c232e2c503",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-3-2026-09-27/poc/AuditAdv3.t.sol",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-3-2026-09-27/poc/AuditAdv3.t.sol",
+      "source_sha256": "814185c8ba9114dd9f290d495eca9bbbe9ecb04250848673f6d762ad6135c23f",
+      "sha256": "814185c8ba9114dd9f290d495eca9bbbe9ecb04250848673f6d762ad6135c23f",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-3-2026-09-27/poc/AuditLane13V2.t.sol",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-3-2026-09-27/poc/AuditLane13V2.t.sol",
+      "source_sha256": "6f03f4be19bba073feab88e9b32b13733e78b7bd6ab82cb7c1327e1b5be13198",
+      "sha256": "6f03f4be19bba073feab88e9b32b13733e78b7bd6ab82cb7c1327e1b5be13198",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-3-2026-09-27/poc/AuditLane13V2b.t.sol",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-3-2026-09-27/poc/AuditLane13V2b.t.sol",
+      "source_sha256": "5814531382254db6c6d264fb3db7704f97534214bfc1ced329988d7b5f088be9",
+      "sha256": "5814531382254db6c6d264fb3db7704f97534214bfc1ced329988d7b5f088be9",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-3-2026-09-27/poc/AuditTriage3.t.sol",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-3-2026-09-27/poc/AuditTriage3.t.sol",
+      "source_sha256": "dfe7913e6c48b3e3a1b65de880fba7f31d058ba40bf2938dda3f6a76ea27b633",
+      "sha256": "dfe7913e6c48b3e3a1b65de880fba7f31d058ba40bf2938dda3f6a76ea27b633",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-3-2026-09-27/poc/AuditTriage3b.t.sol",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-3-2026-09-27/poc/AuditTriage3b.t.sol",
+      "source_sha256": "5dd9cf3179a66a658b0726a191d17caf2a9f8cd3f16e89ff3008a24e912299d3",
+      "sha256": "5dd9cf3179a66a658b0726a191d17caf2a9f8cd3f16e89ff3008a24e912299d3",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-3-2026-09-27/poc/AuditV1Delta.t.sol",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-3-2026-09-27/poc/AuditV1Delta.t.sol",
+      "source_sha256": "aa6d89ea39c34b6ded3a6301f895dc71ef0c5af3ae1a4e919c35f61fc353ca39",
+      "sha256": "aa6d89ea39c34b6ded3a6301f895dc71ef0c5af3ae1a4e919c35f61fc353ca39",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-3-2026-09-27/poc/fork/All18.t.sol",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-3-2026-09-27/poc/fork/All18.t.sol",
+      "source_sha256": "68a0b3ff64b82a4b7c89e8239df64a572f9175e6781a64efeb26b4fa09d71fb3",
+      "sha256": "68a0b3ff64b82a4b7c89e8239df64a572f9175e6781a64efeb26b4fa09d71fb3",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-3-2026-09-27/poc/fork/Depth.t.sol",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-3-2026-09-27/poc/fork/Depth.t.sol",
+      "source_sha256": "f1833fcfe91c9921888450e6f00fc0e16da18332aca1fa74033ebd34e3b1a08b",
+      "sha256": "f1833fcfe91c9921888450e6f00fc0e16da18332aca1fa74033ebd34e3b1a08b",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-3-2026-09-27/poc/fork/Grad.t.sol",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-3-2026-09-27/poc/fork/Grad.t.sol",
+      "source_sha256": "c53f2859cc979edf90d0f2abbecf1bfc1f6d519921ac94f37f1c0624b36ea789",
+      "sha256": "c53f2859cc979edf90d0f2abbecf1bfc1f6d519921ac94f37f1c0624b36ea789",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-3-2026-09-27/poc/fork/Grad2.t.sol",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-3-2026-09-27/poc/fork/Grad2.t.sol",
+      "source_sha256": "18c6386e387eb8a54777ab9c2f7017274f5ec11e56aa3cbc622e6978bbe4499c",
+      "sha256": "18c6386e387eb8a54777ab9c2f7017274f5ec11e56aa3cbc622e6978bbe4499c",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-3-2026-09-27/poc/fork/Rest7.t.sol",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-3-2026-09-27/poc/fork/Rest7.t.sol",
+      "source_sha256": "9eb13348b0f2c8b3fcf78786517f9c1af11f34eb0f4820633774f186a7a9fa3c",
+      "sha256": "9eb13348b0f2c8b3fcf78786517f9c1af11f34eb0f4820633774f186a7a9fa3c",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-3-2026-09-27/poc/fork/run-fork.sh",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-3-2026-09-27/poc/fork/run-fork.sh",
+      "source_sha256": "433f3191b333e74d60ae16e4bfd3d0ec9f78be3cbedb02cbcb27cdf4723aa891",
+      "sha256": "433f3191b333e74d60ae16e4bfd3d0ec9f78be3cbedb02cbcb27cdf4723aa891",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-3-2026-09-27/poc/run.sh",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-3-2026-09-27/poc/run.sh",
+      "source_sha256": "d3130832a1a5354d18e1d878ac5dbc144e7c525bd09d3c3e3a3d403102d68c25",
+      "sha256": "d3130832a1a5354d18e1d878ac5dbc144e7c525bd09d3c3e3a3d403102d68c25",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-3-2026-09-27/pr-body.txt",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-3-2026-09-27/pr-body.txt",
+      "source_sha256": "6aba366d27c31eb2f0619b581f7462fb834fe7d0aeb2f9ddd983d745e59df1cd",
+      "sha256": "6aba366d27c31eb2f0619b581f7462fb834fe7d0aeb2f9ddd983d745e59df1cd",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-4-2026-09-27/00-SCOPE.md",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-4-2026-09-27/00-SCOPE.md",
+      "source_sha256": "5b4eada58ed11714df4a5fa7df6bd9677667bbb84d4db2100cabc6bb4c164438",
+      "sha256": "47d3592133ff54247751f4b65c23844a6c799002a68707e7cade754fde2823c8",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-4-2026-09-27/ISSUES.md",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-4-2026-09-27/ISSUES.md",
+      "source_sha256": "651ab541669ed9d63b4a0bd19105cc42d201c997a150162e23cece91d9498dc1",
+      "sha256": "1fa6cf074d95768f1e770d03d748107b632fcf93edd4d01e66df37e85aa338a5",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-4-2026-09-27/README.md",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-4-2026-09-27/README.md",
+      "source_sha256": "98ca8f59e47c98ba0d2c319e1c5d1c3740857d988d599114411af90bfa54616e",
+      "sha256": "2340e3bef2b5c78978e6127bf7e01eed422e8d795a8db7acc67e3ba11211c4b3",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-4-2026-09-27/VERIFICATION.md",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-4-2026-09-27/VERIFICATION.md",
+      "source_sha256": "c8bee664fc4e1f279480409ed72d981a214a28f83f4cd96ec47cdfc3ca97b0e4",
+      "sha256": "d8bf3b22eaeffdec1c89263b27b69b2b1cfefed05bb1e79a4f56c43d6980db6a",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-4-2026-09-27/lanes/claims.md",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-4-2026-09-27/lanes/claims.md",
+      "source_sha256": "5f1982607c62f379b80838ddffe4ed3cee0a7a0511bea5403a650cce9c553a92",
+      "sha256": "5db6b665358dab536f7ad967217fd580f421e9205d70f44bc2b10009585182a0",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-4-2026-09-27/lanes/delta.md",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-4-2026-09-27/lanes/delta.md",
+      "source_sha256": "9d602ce02bc390fff48c832b7ab8bb455a083d4dbfe793d0868e81fd63559191",
+      "sha256": "e15de59dec4a7b6ef551bc1e5a8685c3bff4ab346c349fa39343128bbfc9948d",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-4-2026-09-27/lanes/econ.md",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-4-2026-09-27/lanes/econ.md",
+      "source_sha256": "62a06f7379e5f52f33d719a0b9003c3ab72aafba6abfd1fe2182330b29ef65ec",
+      "sha256": "97afa7cb2c7fb0d950b54b7b266beed4a46d9251754db51ea4b197bfce89ec36",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-4-2026-09-27/lanes/engine.md",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-4-2026-09-27/lanes/engine.md",
+      "source_sha256": "73b7434f2679368da8668ec03a9b9355114e19fd18c676a3ec909c73c0225c43",
+      "sha256": "7eb4cbb07bae06cbdaa20b8eea54df47487ec020bd738d8931e6d926879ba0a6",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-4-2026-09-27/poc/claims/AuditClaims4.t.sol",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-4-2026-09-27/poc/claims/AuditClaims4.t.sol",
+      "source_sha256": "b15615711b9e50f389695873208ef0c47d797d651bde761ecb14cba4d1725acc",
+      "sha256": "b15615711b9e50f389695873208ef0c47d797d651bde761ecb14cba4d1725acc",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-4-2026-09-27/poc/claims/diffs/D01-registerPolicy-owner.diff",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-4-2026-09-27/poc/claims/diffs/D01-registerPolicy-owner.diff",
+      "source_sha256": "f6248a304268d22a934b90844eaa0382940de3a14dea30385cc0504c199f04fd",
+      "sha256": "f6248a304268d22a934b90844eaa0382940de3a14dea30385cc0504c199f04fd",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-4-2026-09-27/poc/claims/diffs/D02-registerEngineKind-owner.diff",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-4-2026-09-27/poc/claims/diffs/D02-registerEngineKind-owner.diff",
+      "source_sha256": "8bba9e02316115e9784ee3e062575ba8efae856222a830c169ebd7acc50ff990",
+      "sha256": "8bba9e02316115e9784ee3e062575ba8efae856222a830c169ebd7acc50ff990",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-4-2026-09-27/poc/claims/diffs/D03-disablePolicy-owner.diff",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-4-2026-09-27/poc/claims/diffs/D03-disablePolicy-owner.diff",
+      "source_sha256": "68b4e7b61ff62af2ee481920ada63a748b23c2cd4602c542a35ebe82745d07e0",
+      "sha256": "68b4e7b61ff62af2ee481920ada63a748b23c2cd4602c542a35ebe82745d07e0",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-4-2026-09-27/poc/claims/diffs/D04-registerKind-owner.diff",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-4-2026-09-27/poc/claims/diffs/D04-registerKind-owner.diff",
+      "source_sha256": "f2d7b3223a6ead89fd30caac67aedd69e512100e10682f7bb37a4dbf30ccca1f",
+      "sha256": "f2d7b3223a6ead89fd30caac67aedd69e512100e10682f7bb37a4dbf30ccca1f",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-4-2026-09-27/poc/claims/diffs/D05-deploy-onlyFactory.diff",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-4-2026-09-27/poc/claims/diffs/D05-deploy-onlyFactory.diff",
+      "source_sha256": "c99c34931d1ceb6e5855b5ecef39d59954884cf0a77ca31844da45f4e0b1ed41",
+      "sha256": "c99c34931d1ceb6e5855b5ecef39d59954884cf0a77ca31844da45f4e0b1ed41",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-4-2026-09-27/poc/claims/diffs/D06-deploy-introspection.diff",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-4-2026-09-27/poc/claims/diffs/D06-deploy-introspection.diff",
+      "source_sha256": "02a6f1b0a771b4776079280323ae309b1566748085a97aec460510e82cfb91aa",
+      "sha256": "02a6f1b0a771b4776079280323ae309b1566748085a97aec460510e82cfb91aa",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-4-2026-09-27/poc/claims/diffs/D07-registerPolicy-bounds.diff",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-4-2026-09-27/poc/claims/diffs/D07-registerPolicy-bounds.diff",
+      "source_sha256": "112d96b7617048e3386a25c2b81c681dc93c0fbb073669020056ed1e3acb7cbe",
+      "sha256": "112d96b7617048e3386a25c2b81c681dc93c0fbb073669020056ed1e3acb7cbe",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-4-2026-09-27/poc/claims/diffs/D08-setEngineConfig-capsubset.diff",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-4-2026-09-27/poc/claims/diffs/D08-setEngineConfig-capsubset.diff",
+      "source_sha256": "599861f0ece9eddb628fd7145547f6b0f3e93afd8187075ce00446f168d7c26f",
+      "sha256": "599861f0ece9eddb628fd7145547f6b0f3e93afd8187075ce00446f168d7c26f",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-4-2026-09-27/poc/claims/diffs/D09-setEngineConfig-codehash.diff",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-4-2026-09-27/poc/claims/diffs/D09-setEngineConfig-codehash.diff",
+      "source_sha256": "97b9db1968e9ca808426b57203e07babb741755cf73dde63de991451d2f4e841",
+      "sha256": "97b9db1968e9ca808426b57203e07babb741755cf73dde63de991451d2f4e841",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-4-2026-09-27/poc/claims/diffs/D10-policy-dup.diff",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-4-2026-09-27/poc/claims/diffs/D10-policy-dup.diff",
+      "source_sha256": "f2e0abb052c849ee6bd41df26a3ef6859bc59b358d08b8a9ca61458d9e3a36bb",
+      "sha256": "f2e0abb052c849ee6bd41df26a3ef6859bc59b358d08b8a9ca61458d9e3a36bb",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-4-2026-09-27/poc/claims/diffs/D11-setStrategyKind-engine.diff",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-4-2026-09-27/poc/claims/diffs/D11-setStrategyKind-engine.diff",
+      "source_sha256": "dd1c76f6e7aa2b48a26a23b3be022e57b5b0f788e668cd76e892701fa3e981d3",
+      "sha256": "dd1c76f6e7aa2b48a26a23b3be022e57b5b0f788e668cd76e892701fa3e981d3",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-4-2026-09-27/poc/claims/diffs/D12-policyMetadata-consistency.diff",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-4-2026-09-27/poc/claims/diffs/D12-policyMetadata-consistency.diff",
+      "source_sha256": "486b8ff43d363de455b3417caf129ff8af2dd0d168d40562177199afb68518d0",
+      "sha256": "486b8ff43d363de455b3417caf129ff8af2dd0d168d40562177199afb68518d0",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-4-2026-09-27/poc/claims/diffs/E01-nonce.diff",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-4-2026-09-27/poc/claims/diffs/E01-nonce.diff",
+      "source_sha256": "b0e5b642fdc5c248943083ea580c016c18ceb714d540673d54c58cf08ef8f02f",
+      "sha256": "b0e5b642fdc5c248943083ea580c016c18ceb714d540673d54c58cf08ef8f02f",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-4-2026-09-27/poc/claims/diffs/E02-confighash.diff",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-4-2026-09-27/poc/claims/diffs/E02-confighash.diff",
+      "source_sha256": "a6f12860c6a90f2e5091f12f5e17b067d93c419011fcaaee6e4ed1593e7a8835",
+      "sha256": "a6f12860c6a90f2e5091f12f5e17b067d93c419011fcaaee6e4ed1593e7a8835",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-4-2026-09-27/poc/claims/diffs/E03-codehash-exec.diff",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-4-2026-09-27/poc/claims/diffs/E03-codehash-exec.diff",
+      "source_sha256": "1210c6c97702eb2f427220614d612fd06c6640f37f3c9a620c605823abdb5fc0",
+      "sha256": "1210c6c97702eb2f427220614d612fd06c6640f37f3c9a620c605823abdb5fc0",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-4-2026-09-27/poc/claims/diffs/E04-gas.diff",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-4-2026-09-27/poc/claims/diffs/E04-gas.diff",
+      "source_sha256": "496ca33d57365946b2df8d9083558381910c8ffd054f48b58a302a34035a810f",
+      "sha256": "496ca33d57365946b2df8d9083558381910c8ffd054f48b58a302a34035a810f",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-4-2026-09-27/poc/claims/diffs/E05-retsize.diff",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-4-2026-09-27/poc/claims/diffs/E05-retsize.diff",
+      "source_sha256": "02ab08d3b69c757f22caf1ba190ea36cf949552290498c3eb8567141e4365b75",
+      "sha256": "02ab08d3b69c757f22caf1ba190ea36cf949552290498c3eb8567141e4365b75",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-4-2026-09-27/poc/claims/diffs/E06-health.diff",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-4-2026-09-27/poc/claims/diffs/E06-health.diff",
+      "source_sha256": "437683ccbb922868ed9bd111c24b39affa6c8115fe24955c0e21efc9ca1f1b55",
+      "sha256": "437683ccbb922868ed9bd111c24b39affa6c8115fe24955c0e21efc9ca1f1b55",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-4-2026-09-27/poc/claims/diffs/E07-live.diff",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-4-2026-09-27/poc/claims/diffs/E07-live.diff",
+      "source_sha256": "ce4c2f73a99b8aa29045b0e679544645c13daa78282a6a2eff0b30c2a465c307",
+      "sha256": "ce4c2f73a99b8aa29045b0e679544645c13daa78282a6a2eff0b30c2a465c307",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-4-2026-09-27/poc/claims/diffs/E08-capability.diff",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-4-2026-09-27/poc/claims/diffs/E08-capability.diff",
+      "source_sha256": "ac030bb964c9169619f9c2f26e82ae48a77fb788221051609905dd77cf92d2a2",
+      "sha256": "ac030bb964c9169619f9c2f26e82ae48a77fb788221051609905dd77cf92d2a2",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-4-2026-09-27/poc/claims/diffs/E09-cooldown.diff",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-4-2026-09-27/poc/claims/diffs/E09-cooldown.diff",
+      "source_sha256": "dac5244c5155adc216a4f9e7472c64a05dafaa715bae700e28ad1c7af2168f54",
+      "sha256": "dac5244c5155adc216a4f9e7472c64a05dafaa715bae700e28ad1c7af2168f54",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-4-2026-09-27/poc/claims/diffs/E10-direction.diff",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-4-2026-09-27/poc/claims/diffs/E10-direction.diff",
+      "source_sha256": "15111a78014b4bb15d2f7f7a98cbcc291ae97abc456b5e17c333d27a696ad605",
+      "sha256": "15111a78014b4bb15d2f7f7a98cbcc291ae97abc456b5e17c333d27a696ad605",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-4-2026-09-27/poc/claims/diffs/E11-percall.diff",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-4-2026-09-27/poc/claims/diffs/E11-percall.diff",
+      "source_sha256": "0bbb5b9de06592a756b07268deceb3f1e7bccf0ce6f7083f1a795f5a90534d53",
+      "sha256": "0bbb5b9de06592a756b07268deceb3f1e7bccf0ce6f7083f1a795f5a90534d53",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-4-2026-09-27/poc/claims/diffs/E12-daily.diff",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-4-2026-09-27/poc/claims/diffs/E12-daily.diff",
+      "source_sha256": "7fb0aed1bab7425a4589273864ebf42e011dfba8f865eebf0fa04b306929b1b4",
+      "sha256": "7fb0aed1bab7425a4589273864ebf42e011dfba8f865eebf0fa04b306929b1b4",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-4-2026-09-27/poc/claims/diffs/E13-minlot-actual.diff",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-4-2026-09-27/poc/claims/diffs/E13-minlot-actual.diff",
+      "source_sha256": "5833c8ce6f47ded38146ae131da4dfa03f2c917b39b50f9abac52a93f0b3120f",
+      "sha256": "5833c8ce6f47ded38146ae131da4dfa03f2c917b39b50f9abac52a93f0b3120f",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-4-2026-09-27/poc/claims/diffs/E14-daily-post.diff",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-4-2026-09-27/poc/claims/diffs/E14-daily-post.diff",
+      "source_sha256": "222a4a63b9513989b85ebdef8b43473c0a95068b4a214e34f138c2b5a073a698",
+      "sha256": "222a4a63b9513989b85ebdef8b43473c0a95068b4a214e34f138c2b5a073a698",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-4-2026-09-27/poc/claims/diffs/E15-options-cap.diff",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-4-2026-09-27/poc/claims/diffs/E15-options-cap.diff",
+      "source_sha256": "260a6b6d4a28def6db38c2d8b01f54bf987db9d4813b0ba08deb6c77095b0590",
+      "sha256": "260a6b6d4a28def6db38c2d8b01f54bf987db9d4813b0ba08deb6c77095b0590",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-4-2026-09-27/poc/claims/diffs/E16-reserved-bits.diff",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-4-2026-09-27/poc/claims/diffs/E16-reserved-bits.diff",
+      "source_sha256": "a8d647eef42c360b10cc4d7321fa29ca5a187fdaa4f8d0d5242cd04d27cdceeb",
+      "sha256": "a8d647eef42c360b10cc4d7321fa29ca5a187fdaa4f8d0d5242cd04d27cdceeb",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-4-2026-09-27/poc/claims/diffs/E17-config-bounds.diff",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-4-2026-09-27/poc/claims/diffs/E17-config-bounds.diff",
+      "source_sha256": "6db2f97cf9b68dbb89049f99f97b5aa93ec1082975bf9ff1f7aad34f1d3f7274",
+      "sha256": "6db2f97cf9b68dbb89049f99f97b5aa93ec1082975bf9ff1f7aad34f1d3f7274",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-4-2026-09-27/poc/claims/diffs/E18-action-range.diff",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-4-2026-09-27/poc/claims/diffs/E18-action-range.diff",
+      "source_sha256": "464d9f465111ba77b33233ab7702b6c31c60a106d434cc7e79016d17804818ba",
+      "sha256": "464d9f465111ba77b33233ab7702b6c31c60a106d434cc7e79016d17804818ba",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-4-2026-09-27/poc/claims/diffs/E19-call-not-staticcall.diff",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-4-2026-09-27/poc/claims/diffs/E19-call-not-staticcall.diff",
+      "source_sha256": "ff960b0eb3bf94da93469ad89fe39bf1ad17c66c05e52362f2b129d7349a9c2f",
+      "sha256": "ff960b0eb3bf94da93469ad89fe39bf1ad17c66c05e52362f2b129d7349a9c2f",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-4-2026-09-27/poc/claims/diffs/E20-book-in-execute.diff",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-4-2026-09-27/poc/claims/diffs/E20-book-in-execute.diff",
+      "source_sha256": "cf931ac4884e3300021c38960e219e8281cb159b79c0b4afb11a93fd74551fd6",
+      "sha256": "cf931ac4884e3300021c38960e219e8281cb159b79c0b4afb11a93fd74551fd6",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-4-2026-09-27/poc/claims/diffs/E21-preview-minlot.diff",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-4-2026-09-27/poc/claims/diffs/E21-preview-minlot.diff",
+      "source_sha256": "4e622a662af1871116738d7cf825e5bed1dbea0a88813da63580b58101efaba1",
+      "sha256": "4e622a662af1871116738d7cf825e5bed1dbea0a88813da63580b58101efaba1",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-4-2026-09-27/poc/claims/diffs/E22-preswap-minlot.diff",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-4-2026-09-27/poc/claims/diffs/E22-preswap-minlot.diff",
+      "source_sha256": "f0ac43e11e9a81e2b2e8b16ee313cef3ba866ad45b4d34bdaf348ffdeef5341a",
+      "sha256": "f0ac43e11e9a81e2b2e8b16ee313cef3ba866ad45b4d34bdaf348ffdeef5341a",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-4-2026-09-27/poc/claims/diffs/E23-inventory-offered.diff",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-4-2026-09-27/poc/claims/diffs/E23-inventory-offered.diff",
+      "source_sha256": "544db101daa451886c72996c52cee7a53e9bb97fa42c3daf364cd5c2f4ed90c8",
+      "sha256": "544db101daa451886c72996c52cee7a53e9bb97fa42c3daf364cd5c2f4ed90c8",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-4-2026-09-27/poc/claims/diffs/E24-enabled-both.diff",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-4-2026-09-27/poc/claims/diffs/E24-enabled-both.diff",
+      "source_sha256": "0f03dc44361836d302db71532a90de910e2a2681c571aec61a50aced32c999a7",
+      "sha256": "0f03dc44361836d302db71532a90de910e2a2681c571aec61a50aced32c999a7",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-4-2026-09-27/poc/claims/diffs/F01-spike.diff",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-4-2026-09-27/poc/claims/diffs/F01-spike.diff",
+      "source_sha256": "66ea1d612d3a14c6a4aa1f3da15455469fc0e53bf7b8ca7d41482faf10d07784",
+      "sha256": "66ea1d612d3a14c6a4aa1f3da15455469fc0e53bf7b8ca7d41482faf10d07784",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-4-2026-09-27/poc/claims/diffs/T01-creditfee-sender.diff",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-4-2026-09-27/poc/claims/diffs/T01-creditfee-sender.diff",
+      "source_sha256": "8f62668d8d619240ae3015e46c04585148e53a64270c1f33ea194e2baabcdef5",
+      "sha256": "8f62668d8d619240ae3015e46c04585148e53a64270c1f33ea194e2baabcdef5",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-4-2026-09-27/poc/claims/diffs/V01-no-retry.diff",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-4-2026-09-27/poc/claims/diffs/V01-no-retry.diff",
+      "source_sha256": "48fb612e81d2fd86d85d9388c11ec2598db856ba47e6a33cafc53251cbc7683d",
+      "sha256": "48fb612e81d2fd86d85d9388c11ec2598db856ba47e6a33cafc53251cbc7683d",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-4-2026-09-27/poc/claims/diffs/V02-no-clear.diff",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-4-2026-09-27/poc/claims/diffs/V02-no-clear.diff",
+      "source_sha256": "85294013e34ed1d031e80e44632e2c2a2fb35ef02a6ab8d2a2df52db026e3b9f",
+      "sha256": "85294013e34ed1d031e80e44632e2c2a2fb35ef02a6ab8d2a2df52db026e3b9f",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-4-2026-09-27/poc/claims/diffs/V03-selfcall.diff",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-4-2026-09-27/poc/claims/diffs/V03-selfcall.diff",
+      "source_sha256": "698c87e2df22d911681679304149b6c027e697c5a3cd301d58874f7743213c13",
+      "sha256": "698c87e2df22d911681679304149b6c027e697c5a3cd301d58874f7743213c13",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-4-2026-09-27/poc/claims/mutations.md",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-4-2026-09-27/poc/claims/mutations.md",
+      "source_sha256": "a3f3073240690c14b91a5f28e3f325eeb69267298976a75ac368c17210403f45",
+      "sha256": "b1aa68239e5e6f955b9631b000349958d6f88ad4a39f9013bc07d6f4139fd6cc",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-4-2026-09-27/poc/claims/run.sh",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-4-2026-09-27/poc/claims/run.sh",
+      "source_sha256": "9d26341118b565bb87381f3d0a7f1bc5ce23058c4c97f099255630de768208b9",
+      "sha256": "9d26341118b565bb87381f3d0a7f1bc5ce23058c4c97f099255630de768208b9",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-4-2026-09-27/poc/delta/AuditDelta4Buyback.t.sol",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-4-2026-09-27/poc/delta/AuditDelta4Buyback.t.sol",
+      "source_sha256": "f5429583c26121c3410f136d62a811a34bc7d1e6dacc4e0f335f0bc4b1d62792",
+      "sha256": "f5429583c26121c3410f136d62a811a34bc7d1e6dacc4e0f335f0bc4b1d62792",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-4-2026-09-27/poc/delta/AuditDelta4Kind1.t.sol",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-4-2026-09-27/poc/delta/AuditDelta4Kind1.t.sol",
+      "source_sha256": "af333951e89c7e84e5890e46375bc4dbac9d43720a36a030299b2ade7b5fc74c",
+      "sha256": "af333951e89c7e84e5890e46375bc4dbac9d43720a36a030299b2ade7b5fc74c",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-4-2026-09-27/poc/delta/AuditDelta4Spike.t.sol",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-4-2026-09-27/poc/delta/AuditDelta4Spike.t.sol",
+      "source_sha256": "890e80cb3e0c6342260504fe7bc0930c3539162c154efe2d57cbcf0e5b4f56f8",
+      "sha256": "890e80cb3e0c6342260504fe7bc0930c3539162c154efe2d57cbcf0e5b4f56f8",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-4-2026-09-27/poc/delta/AuditDelta4Vault.t.sol",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-4-2026-09-27/poc/delta/AuditDelta4Vault.t.sol",
+      "source_sha256": "499fa54f2954af21cff8839cfa9c10ec7890660bb2e831f2a16e4338cafcd828",
+      "sha256": "499fa54f2954af21cff8839cfa9c10ec7890660bb2e831f2a16e4338cafcd828",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-4-2026-09-27/poc/delta/run.sh",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-4-2026-09-27/poc/delta/run.sh",
+      "source_sha256": "ae99eabb115c3a58ac129e069b62dfeec5adf95f98dd961093d54bda48fe7cd9",
+      "sha256": "ae99eabb115c3a58ac129e069b62dfeec5adf95f98dd961093d54bda48fe7cd9",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-4-2026-09-27/poc/econ/AuditEcon4.t.sol",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-4-2026-09-27/poc/econ/AuditEcon4.t.sol",
+      "source_sha256": "65eafd434f6c17769687cdb1730c17efd56efc83711cb55912b8552fe471c74a",
+      "sha256": "65eafd434f6c17769687cdb1730c17efd56efc83711cb55912b8552fe471c74a",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-4-2026-09-27/poc/econ/constant_mix.py",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-4-2026-09-27/poc/econ/constant_mix.py",
+      "source_sha256": "4d450d1dc4c98f96f1bda5b20f30b775007c8112c08bc29e8b141483c1a9825a",
+      "sha256": "4d450d1dc4c98f96f1bda5b20f30b775007c8112c08bc29e8b141483c1a9825a",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-4-2026-09-27/poc/econ/run.sh",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-4-2026-09-27/poc/econ/run.sh",
+      "source_sha256": "ce1e48e151b11a8541d5ae050507660a3f610e8344eef2dc44663854c46fdf14",
+      "sha256": "ce1e48e151b11a8541d5ae050507660a3f610e8344eef2dc44663854c46fdf14",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-4-2026-09-27/poc/econ/sandwich_model.py",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-4-2026-09-27/poc/econ/sandwich_model.py",
+      "source_sha256": "3aeea5009bbaf526aef042fe45b4061f507c66525ebf72eb849188129f2b8dfe",
+      "sha256": "3aeea5009bbaf526aef042fe45b4061f507c66525ebf72eb849188129f2b8dfe",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-4-2026-09-27/poc/econ/vendor/README.md",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-4-2026-09-27/poc/econ/vendor/README.md",
+      "source_sha256": "df9a2ed594256b48f908749c60c7107ca1d2263d24c9caa76344df0ca07febe6",
+      "sha256": "10cd6e95ec9344c1f7bf3cba675c171ff5786c4e75f0d0cbcd217e349cf58f03",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-4-2026-09-27/poc/econ/vendor/lab/__init__.py",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-4-2026-09-27/poc/econ/vendor/lab/__init__.py",
+      "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-4-2026-09-27/poc/econ/vendor/lab/model.py",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-4-2026-09-27/poc/econ/vendor/lab/model.py",
+      "source_sha256": "59ba73e172f02647fd13846b0ff0804c6e5dffbea9a45e8094d828eef8a6278e",
+      "sha256": "59ba73e172f02647fd13846b0ff0804c6e5dffbea9a45e8094d828eef8a6278e",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-4-2026-09-27/poc/econ/vendor/lab/trend.py",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-4-2026-09-27/poc/econ/vendor/lab/trend.py",
+      "source_sha256": "62c5e02352dcdacb156664776cf2bb8be925f6c6fa1db6bb4af44df42d5127dd",
+      "sha256": "62c5e02352dcdacb156664776cf2bb8be925f6c6fa1db6bb4af44df42d5127dd",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-4-2026-09-27/poc/econ/vendor/tools/rule_backtest.py",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-4-2026-09-27/poc/econ/vendor/tools/rule_backtest.py",
+      "source_sha256": "60c7448d886e576287f9971c0f78d2bb89e076fda592941975dae04c33f08151",
+      "sha256": "60c7448d886e576287f9971c0f78d2bb89e076fda592941975dae04c33f08151",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-4-2026-09-27/poc/engine/AuditEngineConfig.t.sol",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-4-2026-09-27/poc/engine/AuditEngineConfig.t.sol",
+      "source_sha256": "6d37fc48e22302c164b9ad59f839d84192017cc2edd4fdd31eb32cf1d1802c0a",
+      "sha256": "6d37fc48e22302c164b9ad59f839d84192017cc2edd4fdd31eb32cf1d1802c0a",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-4-2026-09-27/poc/engine/AuditEngineCustody.t.sol",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-4-2026-09-27/poc/engine/AuditEngineCustody.t.sol",
+      "source_sha256": "a2f158a529e5e5801a10596337c1d73b280708b7faae3128927b0199f587f50d",
+      "sha256": "a2f158a529e5e5801a10596337c1d73b280708b7faae3128927b0199f587f50d",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-4-2026-09-27/poc/engine/AuditEngineFixture.sol",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-4-2026-09-27/poc/engine/AuditEngineFixture.sol",
+      "source_sha256": "7dce5f3dec2cd3b3847f5c22d59092dcc2acc814b01c00acc0073f6a47258242",
+      "sha256": "7dce5f3dec2cd3b3847f5c22d59092dcc2acc814b01c00acc0073f6a47258242",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-4-2026-09-27/poc/engine/AuditEnginePolicy.t.sol",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-4-2026-09-27/poc/engine/AuditEnginePolicy.t.sol",
+      "source_sha256": "c7984be1a7440766a73e231ea85d6df7fbaa122e0589033708053a37447afb6d",
+      "sha256": "c7984be1a7440766a73e231ea85d6df7fbaa122e0589033708053a37447afb6d",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-4-2026-09-27/poc/engine/run.sh",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-4-2026-09-27/poc/engine/run.sh",
+      "source_sha256": "e2f4043d8640fa2ffdca3526a3bd751f30cb9b8bc169948dd0033c898e4ace0a",
+      "sha256": "e2f4043d8640fa2ffdca3526a3bd751f30cb9b8bc169948dd0033c898e4ace0a",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "audit/round-4-2026-09-27/pr-body.txt",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/audit/round-4-2026-09-27/pr-body.txt",
+      "source_sha256": "6e2cd03bc229c4c79e4b726dab6887a975b72296cf5d4ca96b555ed2ab94b35b",
+      "sha256": "6e2cd03bc229c4c79e4b726dab6887a975b72296cf5d4ca96b555ed2ab94b35b",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "data/chainlink_feeds.json",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/data/chainlink_feeds.json",
+      "source_sha256": "49834537fe161b610962d22cff2258977a930a003030b281f888755d2b040678",
+      "sha256": "49834537fe161b610962d22cff2258977a930a003030b281f888755d2b040678",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "data/fee_samples.json",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/data/fee_samples.json",
+      "source_sha256": "759b4fdd930e32437151b028fb86d7812ca3671cd415799baf6dacb69d9bece2",
+      "sha256": "759b4fdd930e32437151b028fb86d7812ca3671cd415799baf6dacb69d9bece2",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "data/lighter_details.json",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/data/lighter_details.json",
+      "source_sha256": "351c2d95b3c11df919a08fce645e3f1d07204d9fdefc0bf63d3c3b42be276418",
+      "sha256": "351c2d95b3c11df919a08fce645e3f1d07204d9fdefc0bf63d3c3b42be276418",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "data/lighter_orderbooks.json",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/data/lighter_orderbooks.json",
+      "source_sha256": "075f331bfeacabed11e0397dd12c505e36cfe9ea50332fd5a30b10e759d46a98",
+      "sha256": "075f331bfeacabed11e0397dd12c505e36cfe9ea50332fd5a30b10e759d46a98",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "data/listability.json",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/data/listability.json",
+      "source_sha256": "10c764052416b670ea89680071c047c2a49785789f55ef563b7ede5c812b6059",
+      "sha256": "10c764052416b670ea89680071c047c2a49785789f55ef563b7ede5c812b6059",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "data/pons/launches_extract.csv.gz",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/data/pons/launches_extract.csv.gz",
+      "source_sha256": "6420d5b1d67400a315497ffa6a3d81fdb7f783cfe1c7178b700048a7c6867d3d",
+      "sha256": "6420d5b1d67400a315497ffa6a3d81fdb7f783cfe1c7178b700048a7c6867d3d",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "data/pons/quote_prices.json",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/data/pons/quote_prices.json",
+      "source_sha256": "9661a9a94ce138edd0dedd51a40e64468ffea46a755cd606ea74bea735b7e9fc",
+      "sha256": "9661a9a94ce138edd0dedd51a40e64468ffea46a755cd606ea74bea735b7e9fc",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "data/pons/quote_tokens.json",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/data/pons/quote_tokens.json",
+      "source_sha256": "fea29884be391aa8f3d682c855e9f64a3af126ccf852a5f86686adcd7a2d5a65",
+      "sha256": "fea29884be391aa8f3d682c855e9f64a3af126ccf852a5f86686adcd7a2d5a65",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "data/pons/summary.json",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/data/pons/summary.json",
+      "source_sha256": "cfbc6d73409b32893991c00395d4469b14a6d597f9ac078f249e4878980f43a4",
+      "sha256": "cfbc6d73409b32893991c00395d4469b14a6d597f9ac078f249e4878980f43a4",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "data/pool_ranking.json",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/data/pool_ranking.json",
+      "source_sha256": "3dc33cfda79bf282e5853dad518175ac5d24a39c4ccaa3c962db396dc77a558e",
+      "sha256": "3dc33cfda79bf282e5853dad518175ac5d24a39c4ccaa3c962db396dc77a558e",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "data/rh_stock_tokens.json",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/data/rh_stock_tokens.json",
+      "source_sha256": "344c485d074490f7f374ec57f830b1ab56f11d691ffeb255fafe3b4f4810b1ee",
+      "sha256": "344c485d074490f7f374ec57f830b1ab56f11d691ffeb255fafe3b4f4810b1ee",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "data/sbox-multiwallet.json",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/data/sbox-multiwallet.json",
+      "source_sha256": "fb460eb32432aeab02a00c246b9783b98b27a5b45ad33804fd774f0f2e7e55e1",
+      "sha256": "fb460eb32432aeab02a00c246b9783b98b27a5b45ad33804fd774f0f2e7e55e1",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "data/shortlist.json",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/data/shortlist.json",
+      "source_sha256": "4e383560b783a30f320a1ba2f843cffb8ba2821b05705131a60da7ae53d42bbf",
+      "sha256": "4e383560b783a30f320a1ba2f843cffb8ba2821b05705131a60da7ae53d42bbf",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "data/v3_pool_census.json",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/data/v3_pool_census.json",
+      "source_sha256": "aa264916b9f9479bf70a5f96da4f3ff5339d0f6b5748a3e8de90ba11d4a6ebd3",
+      "sha256": "aa264916b9f9479bf70a5f96da4f3ff5339d0f6b5748a3e8de90ba11d4a6ebd3",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "data/vol_samples.json",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/data/vol_samples.json",
+      "source_sha256": "db7edd77c87ef07176b7e8c3db88855a4cbd676fad9fd86e48ab7493e53359f6",
+      "sha256": "db7edd77c87ef07176b7e8c3db88855a4cbd676fad9fd86e48ab7493e53359f6",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "deploy/first-batch-2026-09-22.json",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/deploy/first-batch-2026-09-22.json",
+      "source_sha256": "794e4f0784a4459fd7440ed5d9b85cf1a0c8e69a974ae3fdcd1e32febb2a6916",
+      "sha256": "794e4f0784a4459fd7440ed5d9b85cf1a0c8e69a974ae3fdcd1e32febb2a6916",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "deploy/metadata-crclgrid-2026-09-22.json",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/deploy/metadata-crclgrid-2026-09-22.json",
+      "source_sha256": "99abfaf0cf62e1b091cb7d36f5a95f965a2ab3381ed185102c8bca0d6fb934af",
+      "sha256": "99abfaf0cf62e1b091cb7d36f5a95f965a2ab3381ed185102c8bca0d6fb934af",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "deploy/safe/20260922T074604Z-first-batch-2026-09-22.json",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/deploy/safe/20260922T074604Z-first-batch-2026-09-22.json",
+      "source_sha256": "5818c75c293fd23240bea98bf94bca7a0e6e64c6d68b6ebf4d0cd162c620d468",
+      "sha256": "5818c75c293fd23240bea98bf94bca7a0e6e64c6d68b6ebf4d0cd162c620d468",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "deploy/safe/20260922T184755Z-metadata-crclgrid-2026-09-22.json",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/deploy/safe/20260922T184755Z-metadata-crclgrid-2026-09-22.json",
+      "source_sha256": "7b5f409ccb2221ddb5ba2414ae457db2e5d2dd300660bff7dcd4ea4efcfb814a",
+      "sha256": "7b5f409ccb2221ddb5ba2414ae457db2e5d2dd300660bff7dcd4ea4efcfb814a",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "deploy/safe/20260924T050000Z-oracles-second-batch-2026-09-24.json",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/deploy/safe/20260924T050000Z-oracles-second-batch-2026-09-24.json",
+      "source_sha256": "831fc52ee6c5d68caaee9e4155c2183729840bd3f155652fed84a0307e40f957",
+      "sha256": "831fc52ee6c5d68caaee9e4155c2183729840bd3f155652fed84a0307e40f957",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "deploy/safe/20260924T050051Z-second-batch-2026-09-24.json",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/deploy/safe/20260924T050051Z-second-batch-2026-09-24.json",
+      "source_sha256": "c20a31ef7d99931e2ef97403f4e8c2c41fe9a531223ed20e7ee76467fbff0e5e",
+      "sha256": "c20a31ef7d99931e2ef97403f4e8c2c41fe9a531223ed20e7ee76467fbff0e5e",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "deploy/safe/20261001T050523Z-cc-desk-setup.json",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/deploy/safe/20261001T050523Z-cc-desk-setup.json",
+      "source_sha256": "a2f7e2a84a6b4616d6d55c47bcda481e67b0100b85a7ef365e4d3ecab759a29b",
+      "sha256": "a2f7e2a84a6b4616d6d55c47bcda481e67b0100b85a7ef365e4d3ecab759a29b",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "deploy/safe/20261001T050523Z-cc-desk-setup.txt",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/deploy/safe/20261001T050523Z-cc-desk-setup.txt",
+      "source_sha256": "dc33753c27e4558271519c9e9b885891ebf00ce1f10101d9340eecdeb45ef975",
+      "sha256": "dc33753c27e4558271519c9e9b885891ebf00ce1f10101d9340eecdeb45ef975",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "deploy/second-batch-2026-09-24.json",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/deploy/second-batch-2026-09-24.json",
+      "source_sha256": "44fcc0af33f26fe243ba7feb4584228e553a80e925615f9fec467d3dfe60877b",
+      "sha256": "44fcc0af33f26fe243ba7feb4584228e553a80e925615f9fec467d3dfe60877b",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "deploy/testnet-v2-keeper-reward-proof/fee-core-book.json",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/deploy/testnet-v2-keeper-reward-proof/fee-core-book.json",
+      "source_sha256": "ada428eb04ac0f982fd6a002e8745b4100c6db99ce620adcf254e42ac1cbc82c",
+      "sha256": "ada428eb04ac0f982fd6a002e8745b4100c6db99ce620adcf254e42ac1cbc82c",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "deploy/testnet-v2-keeper-reward-proof/manifest.json",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/deploy/testnet-v2-keeper-reward-proof/manifest.json",
+      "source_sha256": "105686519c316e530a3702c4eeccbb12945406fd0365d1072e0926360683fc4d",
+      "sha256": "105686519c316e530a3702c4eeccbb12945406fd0365d1072e0926360683fc4d",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "deploy/testnet-v2-keeper-reward-proof/phase-00-appendEngine.json",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/deploy/testnet-v2-keeper-reward-proof/phase-00-appendEngine.json",
+      "source_sha256": "40799cf80c525ee464071a0194eed9f5a7c531d003dfceccf07f60e40faa208e",
+      "sha256": "40799cf80c525ee464071a0194eed9f5a7c531d003dfceccf07f60e40faa208e",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "deploy/testnet-v2-keeper-reward-proof/phase-01-launchSell.json",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/deploy/testnet-v2-keeper-reward-proof/phase-01-launchSell.json",
+      "source_sha256": "d025c74147c0786456575f3af52672cf2dfb20eb74ab40dff25e6381ef419f91",
+      "sha256": "d025c74147c0786456575f3af52672cf2dfb20eb74ab40dff25e6381ef419f91",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "deploy/testnet-v2-keeper-reward-proof/phase-02-graduateSell.json",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/deploy/testnet-v2-keeper-reward-proof/phase-02-graduateSell.json",
+      "source_sha256": "f59354d0b9ab15405cc43f397b6a065dd983529d46ee1fc1a5a0b8e1d0babc3f",
+      "sha256": "f59354d0b9ab15405cc43f397b6a065dd983529d46ee1fc1a5a0b8e1d0babc3f",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "deploy/testnet-v2-keeper-reward-proof/phase-03-executeSell.json",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/deploy/testnet-v2-keeper-reward-proof/phase-03-executeSell.json",
+      "source_sha256": "efc39669bfc3b1bb1ffc780c6a71d678bd6732e3da52e59bb72facaf8914afc4",
+      "sha256": "efc39669bfc3b1bb1ffc780c6a71d678bd6732e3da52e59bb72facaf8914afc4",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "deploy/testnet-v2-keeper-reward-proof/phase-04-launchBuy.json",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/deploy/testnet-v2-keeper-reward-proof/phase-04-launchBuy.json",
+      "source_sha256": "995e554abd79554e23c8ce7e0781a44abb4ab7556a9d98da7935a516f418358e",
+      "sha256": "995e554abd79554e23c8ce7e0781a44abb4ab7556a9d98da7935a516f418358e",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "deploy/testnet-v2-keeper-reward-proof/phase-05-graduateBuy.json",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/deploy/testnet-v2-keeper-reward-proof/phase-05-graduateBuy.json",
+      "source_sha256": "f2f0afaf19e3f2b1a070bb4d3a7f55cabf5b74e35ab162256b45dc5f2bf1e1f9",
+      "sha256": "f2f0afaf19e3f2b1a070bb4d3a7f55cabf5b74e35ab162256b45dc5f2bf1e1f9",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "deploy/testnet-v2-keeper-reward-proof/phase-06-executeBuy.json",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/deploy/testnet-v2-keeper-reward-proof/phase-06-executeBuy.json",
+      "source_sha256": "7828a188151ff966b5b0ab45296601ee16e41d1cd3b379d3590a9ed2a2a30b6f",
+      "sha256": "7828a188151ff966b5b0ab45296601ee16e41d1cd3b379d3590a9ed2a2a30b6f",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "deploy/testnet-v2-keeper-reward.json",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/deploy/testnet-v2-keeper-reward.json",
+      "source_sha256": "c28a0cb9ea71a9e21e46838ee229a294bd0424099b6be9bc2e63cfe26a81071c",
+      "sha256": "c28a0cb9ea71a9e21e46838ee229a294bd0424099b6be9bc2e63cfe26a81071c",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "deploy/testnet-v2-whitelist.journey.json",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/deploy/testnet-v2-whitelist.journey.json",
+      "source_sha256": "d880ae1a636e2913270bb1be3e5eb46074c962332635652244e8d32c74c64b14",
+      "sha256": "d880ae1a636e2913270bb1be3e5eb46074c962332635652244e8d32c74c64b14",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "deploy/testnet-v2-whitelist.json",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/deploy/testnet-v2-whitelist.json",
+      "source_sha256": "7e1aa5d8a4c635d9ff1cf1c79f098804bbce05003b649d9fd0a5a7bdb1bf0c02",
+      "sha256": "7e1aa5d8a4c635d9ff1cf1c79f098804bbce05003b649d9fd0a5a7bdb1bf0c02",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "deploy/testnet-v2-whitelist.verification.json",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/deploy/testnet-v2-whitelist.verification.json",
+      "source_sha256": "e7b66f6042965a0c09ada6c4dd9857d108a804d44fba3c3b1e5ec4d2e49ae308",
+      "sha256": "e7b66f6042965a0c09ada6c4dd9857d108a804d44fba3c3b1e5ec4d2e49ae308",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "deploy/tsla-stress-local.json",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/deploy/tsla-stress-local.json",
+      "source_sha256": "4ff23d683f6e09968b43c5475cfe866386eb3aba71194ba81785c38f055f6a67",
+      "sha256": "4ff23d683f6e09968b43c5475cfe866386eb3aba71194ba81785c38f055f6a67",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "deploy/tsla-stress-report.json",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/deploy/tsla-stress-report.json",
+      "source_sha256": "72180ec75ec2ff01ccd490a4e062ac1540d3b3c77f5ed0caa232c2f5e90bc1cf",
+      "sha256": "72180ec75ec2ff01ccd490a4e062ac1540d3b3c77f5ed0caa232c2f5e90bc1cf",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "deploy/tsla-stress-transactions.json",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/deploy/tsla-stress-transactions.json",
+      "source_sha256": "488b266f8f1945315033849efc9ee48820193b754148607382fa45da1460066f",
+      "sha256": "488b266f8f1945315033849efc9ee48820193b754148607382fa45da1460066f",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "deploy/tsla-stress-wallets.json",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/deploy/tsla-stress-wallets.json",
+      "source_sha256": "2875e842a0699d18c00380fd2b164851aa7654d105348e3f5688024cef2300f3",
+      "sha256": "2875e842a0699d18c00380fd2b164851aa7654d105348e3f5688024cef2300f3",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "deploy/v2-budget32-40k.json",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/deploy/v2-budget32-40k.json",
+      "source_sha256": "02d9605a6f902ab3fb4bbcc461defd79ef9180c22ac3d78adfa5a03bbc362235",
+      "sha256": "02d9605a6f902ab3fb4bbcc461defd79ef9180c22ac3d78adfa5a03bbc362235",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "deploy/v2-capital-simulation.json",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/deploy/v2-capital-simulation.json",
+      "source_sha256": "2548a9696888640de998d9e2fde141d0864077a8e01af01947d70f19826bbdb5",
+      "sha256": "2548a9696888640de998d9e2fde141d0864077a8e01af01947d70f19826bbdb5",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "deploy/v2-listings-plan.json",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/deploy/v2-listings-plan.json",
+      "source_sha256": "d617d95d6764b0760a71a04ccd9f179a0011dfc461d371439967ce0d50018709",
+      "sha256": "d617d95d6764b0760a71a04ccd9f179a0011dfc461d371439967ce0d50018709",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "deploy/v2-original-supply-participation.json",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/deploy/v2-original-supply-participation.json",
+      "source_sha256": "70b89ec125934c94cb7187a4956f365db21bd346edbe446ffa261185a386a8f3",
+      "sha256": "70b89ec125934c94cb7187a4956f365db21bd346edbe446ffa261185a386a8f3",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "deploy/v2-wallet-targets.json",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/deploy/v2-wallet-targets.json",
+      "source_sha256": "02989cfb846748197810a7767d5b850ae0183b170eb808e4aaac5ab598376f64",
+      "sha256": "02989cfb846748197810a7767d5b850ae0183b170eb808e4aaac5ab598376f64",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "docs/ADDRESSES.md",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/docs/ADDRESSES.md",
+      "source_sha256": "7aee2d943ddb684b8291f60120c754eac57f809dcfc74317b36cd2955a390e55",
+      "sha256": "40b5cab4abdce2865612675ae73f593a2a330bc0176dd0ea81025792fe950e87",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "docs/ARCHITECTURE.md",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/docs/ARCHITECTURE.md",
+      "source_sha256": "b64aec1b014269e629e2a57cfc1010cb00382b1ef2aee2bfde090d8614b1bf9a",
+      "sha256": "bbafc8eb4003e3566afd5a75c68d473078fc8663442f698c3c7a9e7b4d7ce40a",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "docs/CONTRACT_VERIFICATION.md",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/docs/CONTRACT_VERIFICATION.md",
+      "source_sha256": "bbd38feffe780ab80134b8f646fc6eba46e89ebfce9ed05f408ba4393c725950",
+      "sha256": "aeb2455826680c2e361f3159d061426c9a6ceae87a6e96e90dc3a6536e7ae39f",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "docs/COVERED_CALL_DESK.md",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/docs/COVERED_CALL_DESK.md",
+      "source_sha256": "a08d4a860652cacda0b56919d28922c25aae00cbf2f9eb86468726e6d95803c6",
+      "sha256": "2c57f03bf566e5d11c98e6d724777740f4674c1c0dd7beae5ce2252ada19860b",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "docs/DEPLOYMENT.md",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/docs/DEPLOYMENT.md",
+      "source_sha256": "a8520bfb509a1cb78aaf3d04f324240fdc5dbbb448d98ebfb31f44192e25158c",
+      "sha256": "51bfed2e06abcad00ec37cfaca918a429db2d45190578210beb8f5cb5e9ca9e7",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "docs/DEVELOPMENT.md",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/docs/DEVELOPMENT.md",
+      "source_sha256": "54a12064876619569272c74067923b3c60b8dfc98de91a9520bdc50eacfd1239",
+      "sha256": "2d00d8fb5bc695ee7217349d409e9916a53aa76da270c196bad64229614ed4b5",
+      "markdown_link_changes": [
+        {
+          "from": "../.github/workflows/test.yml",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/.github/workflows/test.yml"
+        },
+        {
+          "from": "../foundry.toml",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/foundry.toml"
+        },
+        {
+          "from": "../README.md",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/README.md"
+        },
+        {
+          "from": "../test/HedgeFunMath.t.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/test/HedgeFunMath.t.sol"
+        },
+        {
+          "from": "../test/HedgeFunTreasuryMath.t.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/test/HedgeFunTreasuryMath.t.sol"
+        },
+        {
+          "from": "../.github/workflows/test.yml",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/.github/workflows/test.yml"
+        }
+      ]
+    },
+    {
+      "path": "docs/LAUNCH_KIT.md",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/docs/LAUNCH_KIT.md",
+      "source_sha256": "3a4bfc2ca96d596d051068453faee65af2e48679047c58441e68f489ab33801c",
+      "sha256": "7a348dcdcbaf68cf55d3a8b39bbd839f9d5cbd79bfd710bdd2e98939f0e0ed50",
+      "markdown_link_changes": [
+        {
+          "from": "../abi/SURFACE.md",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/abi/SURFACE.md"
+        }
+      ]
+    },
+    {
+      "path": "docs/OPERATIONS.md",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/docs/OPERATIONS.md",
+      "source_sha256": "366e8590ec8fd5ee70ee5965cd35133eb803bb20e96be655a985003211b47e6e",
+      "sha256": "5d9ed94fc3a9b500c3176651f5bfbce1d06c8d4e77cdb1e68ca22379d3670ead",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "docs/README.md",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/docs/README.md",
+      "source_sha256": "4a6bf1eccc28bccccbd8d241dc19f1528e4d7375b8b29a80b35e41fc3bfee33d",
+      "sha256": "31e2789b0c5373f51ecac3d473effe7efd365b6997f0fb928d3ef20f9b09381e",
+      "markdown_link_changes": [
+        {
+          "from": "../lab/README.md",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/lab/README.md"
+        },
+        {
+          "from": "../README.md",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/README.md"
+        }
+      ]
+    },
+    {
+      "path": "docs/README.zh.md",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/docs/README.zh.md",
+      "source_sha256": "e4d87cdc6f78139c3faa13550f91cf5f03315b2bb0edd205173eb6366b12e985",
+      "sha256": "b87c83ddde6df87ac2b5c62b8e73f07195f1ad11fe251ddd9777b02ba25463a7",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "docs/REFERENCE.md",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/docs/REFERENCE.md",
+      "source_sha256": "e35fb2269b8232dad3e4896677a87ab37e81c22f439a2444d2f1273107f11a13",
+      "sha256": "58d2efc09f1991ae1f43385bf713e2dee21d9e58ba40f633b72abf45e89666ae",
+      "markdown_link_changes": [
+        {
+          "from": "../src/HedgeFunFactory.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/HedgeFunFactory.sol"
+        },
+        {
+          "from": "../src/HedgeFunDeployers.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/HedgeFunDeployers.sol"
+        },
+        {
+          "from": "../src/HedgeFunDeployers.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/HedgeFunDeployers.sol"
+        },
+        {
+          "from": "../src/HedgeFunDeployers.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/HedgeFunDeployers.sol"
+        },
+        {
+          "from": "../src/hooks/HedgeFunHook.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/hooks/HedgeFunHook.sol"
+        },
+        {
+          "from": "../src/hooks/HedgeFunV2Hook.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/hooks/HedgeFunV2Hook.sol"
+        },
+        {
+          "from": "../src/HedgeFunTreasuryBase.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/HedgeFunTreasuryBase.sol"
+        },
+        {
+          "from": "../src/HedgeFunTreasury.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/HedgeFunTreasury.sol"
+        },
+        {
+          "from": "../src/PoolTrader.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/PoolTrader.sol"
+        },
+        {
+          "from": "../src/PriceOracle.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/PriceOracle.sol"
+        },
+        {
+          "from": "../src/TradingCalendar.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/TradingCalendar.sol"
+        },
+        {
+          "from": "../src/libraries/TwapRing.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/libraries/TwapRing.sol"
+        },
+        {
+          "from": "../src/HedgeFunToken.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/HedgeFunToken.sol"
+        },
+        {
+          "from": "../src/HedgeFunLaunchRouter.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/HedgeFunLaunchRouter.sol"
+        },
+        {
+          "from": "../src/HedgeFunTradeRouter.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/HedgeFunTradeRouter.sol"
+        },
+        {
+          "from": "../src/v2/HedgeFunV2Factory.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/v2/HedgeFunV2Factory.sol"
+        },
+        {
+          "from": "../src/v2/HedgeFunBondingCurve.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/v2/HedgeFunBondingCurve.sol"
+        },
+        {
+          "from": "../src/v2/CurveDeployer.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/v2/CurveDeployer.sol"
+        },
+        {
+          "from": "../src/v2/V2LiquidityVault.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/v2/V2LiquidityVault.sol"
+        },
+        {
+          "from": "../src/v2/HedgeFunV2Treasury.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/v2/HedgeFunV2Treasury.sol"
+        },
+        {
+          "from": "../src/v2/HedgeFunV2AllInTreasury.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/v2/HedgeFunV2AllInTreasury.sol"
+        },
+        {
+          "from": "../src/v2/HedgeFunV2EngineTreasury.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/v2/HedgeFunV2EngineTreasury.sol"
+        },
+        {
+          "from": "../src/v2/strategy/V2RebalancePolicy.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/v2/strategy/V2RebalancePolicy.sol"
+        },
+        {
+          "from": "../src/v2/HedgeFunV2AssetPercentEngineTreasury.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/v2/HedgeFunV2AssetPercentEngineTreasury.sol"
+        },
+        {
+          "from": "../src/v2/V2FundAssetReader.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/v2/V2FundAssetReader.sol"
+        },
+        {
+          "from": "../src/v2/strategy/V2AssetPercentRebalancePolicy.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/v2/strategy/V2AssetPercentRebalancePolicy.sol"
+        },
+        {
+          "from": "../src/v2/V2TreasuryDeployer.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/v2/V2TreasuryDeployer.sol"
+        },
+        {
+          "from": "../src/v2/HedgeFunV2TradeRouter.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/v2/HedgeFunV2TradeRouter.sol"
+        },
+        {
+          "from": "../src/v2/HedgeFunV2NativeRouter.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/v2/HedgeFunV2NativeRouter.sol"
+        },
+        {
+          "from": "../src/v2/HedgeFunV2LaunchNativeRouter.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/v2/HedgeFunV2LaunchNativeRouter.sol"
+        },
+        {
+          "from": "../src/HedgeFunFactory.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/HedgeFunFactory.sol"
+        },
+        {
+          "from": "../src/HedgeFunDeployers.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/HedgeFunDeployers.sol"
+        },
+        {
+          "from": "../src/HedgeFunDeployers.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/HedgeFunDeployers.sol"
+        },
+        {
+          "from": "../src/HedgeFunDeployers.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/HedgeFunDeployers.sol"
+        },
+        {
+          "from": "../src/hooks/HedgeFunHook.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/hooks/HedgeFunHook.sol"
+        },
+        {
+          "from": "../src/hooks/HedgeFunV2Hook.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/hooks/HedgeFunV2Hook.sol"
+        },
+        {
+          "from": "../src/HedgeFunTreasuryBase.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/HedgeFunTreasuryBase.sol"
+        },
+        {
+          "from": "../src/HedgeFunTreasury.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/HedgeFunTreasury.sol"
+        },
+        {
+          "from": "../src/PoolTrader.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/PoolTrader.sol"
+        },
+        {
+          "from": "../src/PriceOracle.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/PriceOracle.sol"
+        },
+        {
+          "from": "../src/TradingCalendar.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/TradingCalendar.sol"
+        },
+        {
+          "from": "../src/libraries/TwapRing.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/libraries/TwapRing.sol"
+        },
+        {
+          "from": "../src/HedgeFunToken.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/HedgeFunToken.sol"
+        },
+        {
+          "from": "../src/HedgeFunLaunchRouter.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/HedgeFunLaunchRouter.sol"
+        },
+        {
+          "from": "../src/HedgeFunTradeRouter.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/HedgeFunTradeRouter.sol"
+        },
+        {
+          "from": "../src/v2/HedgeFunV2Factory.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/v2/HedgeFunV2Factory.sol"
+        },
+        {
+          "from": "../src/v2/HedgeFunBondingCurve.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/v2/HedgeFunBondingCurve.sol"
+        },
+        {
+          "from": "../src/v2/CurveDeployer.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/v2/CurveDeployer.sol"
+        },
+        {
+          "from": "../src/v2/V2LiquidityVault.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/v2/V2LiquidityVault.sol"
+        },
+        {
+          "from": "../src/v2/HedgeFunV2Treasury.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/v2/HedgeFunV2Treasury.sol"
+        },
+        {
+          "from": "../src/v2/HedgeFunV2AllInTreasury.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/v2/HedgeFunV2AllInTreasury.sol"
+        },
+        {
+          "from": "../src/v2/HedgeFunV2EngineTreasury.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/v2/HedgeFunV2EngineTreasury.sol"
+        },
+        {
+          "from": "../src/v2/strategy/V2RebalancePolicy.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/v2/strategy/V2RebalancePolicy.sol"
+        },
+        {
+          "from": "../src/v2/HedgeFunV2AssetPercentEngineTreasury.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/v2/HedgeFunV2AssetPercentEngineTreasury.sol"
+        },
+        {
+          "from": "../src/v2/V2FundAssetReader.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/v2/V2FundAssetReader.sol"
+        },
+        {
+          "from": "../src/v2/strategy/V2AssetPercentRebalancePolicy.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/v2/strategy/V2AssetPercentRebalancePolicy.sol"
+        },
+        {
+          "from": "../src/v2/V2TreasuryDeployer.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/v2/V2TreasuryDeployer.sol"
+        },
+        {
+          "from": "../src/v2/HedgeFunV2TradeRouter.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/v2/HedgeFunV2TradeRouter.sol"
+        },
+        {
+          "from": "../src/v2/HedgeFunV2NativeRouter.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/v2/HedgeFunV2NativeRouter.sol"
+        },
+        {
+          "from": "../src/v2/HedgeFunV2LaunchNativeRouter.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/v2/HedgeFunV2LaunchNativeRouter.sol"
+        },
+        {
+          "from": "../src/interfaces/IAggregatorV3.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/interfaces/IAggregatorV3.sol"
+        },
+        {
+          "from": "../src/interfaces/IAggregatorV3.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/interfaces/IAggregatorV3.sol"
+        },
+        {
+          "from": "../src/interfaces/IHedgeFunHook.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/interfaces/IHedgeFunHook.sol"
+        },
+        {
+          "from": "../src/interfaces/IHedgeFunHook.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/interfaces/IHedgeFunHook.sol"
+        },
+        {
+          "from": "../src/interfaces/IHedgeFunHook.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/interfaces/IHedgeFunHook.sol"
+        },
+        {
+          "from": "../src/interfaces/IHedgeFunToken.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/interfaces/IHedgeFunToken.sol"
+        },
+        {
+          "from": "../src/interfaces/IHedgeFunTreasury.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/interfaces/IHedgeFunTreasury.sol"
+        },
+        {
+          "from": "../src/interfaces/IHedgeFunTreasury.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/interfaces/IHedgeFunTreasury.sol"
+        },
+        {
+          "from": "../src/interfaces/IHedgeFunTreasury.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/interfaces/IHedgeFunTreasury.sol"
+        },
+        {
+          "from": "../src/interfaces/IOwned.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/interfaces/IOwned.sol"
+        },
+        {
+          "from": "../src/interfaces/IStockToken.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/interfaces/IStockToken.sol"
+        },
+        {
+          "from": "../src/interfaces/IStockToken.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/interfaces/IStockToken.sol"
+        },
+        {
+          "from": "../src/interfaces/ITradingCalendar.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/interfaces/ITradingCalendar.sol"
+        },
+        {
+          "from": "../src/interfaces/ITradingCalendar.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/interfaces/ITradingCalendar.sol"
+        },
+        {
+          "from": "../src/interfaces/ITradingCalendar.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/interfaces/ITradingCalendar.sol"
+        },
+        {
+          "from": "../src/interfaces/IUniswapV3.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/interfaces/IUniswapV3.sol"
+        },
+        {
+          "from": "../src/interfaces/IUniswapV3.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/interfaces/IUniswapV3.sol"
+        },
+        {
+          "from": "../src/interfaces/IUniswapV3.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/interfaces/IUniswapV3.sol"
+        },
+        {
+          "from": "../src/interfaces/IUniswapV3.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/interfaces/IUniswapV3.sol"
+        },
+        {
+          "from": "../src/interfaces/IUniswapV3.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/interfaces/IUniswapV3.sol"
+        },
+        {
+          "from": "../src/interfaces/IUniswapV3.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/interfaces/IUniswapV3.sol"
+        },
+        {
+          "from": "../src/interfaces/IUniswapV3.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/interfaces/IUniswapV3.sol"
+        },
+        {
+          "from": "../src/v2/CurveDeployer.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/v2/CurveDeployer.sol"
+        },
+        {
+          "from": "../src/v2/CurveDeployer.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/v2/CurveDeployer.sol"
+        },
+        {
+          "from": "../src/v2/CurveDeployer.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/v2/CurveDeployer.sol"
+        },
+        {
+          "from": "../src/v2/CurveDeployer.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/v2/CurveDeployer.sol"
+        },
+        {
+          "from": "../src/v2/CurveDeployer.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/v2/CurveDeployer.sol"
+        },
+        {
+          "from": "../src/v2/CurveDeployer.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/v2/CurveDeployer.sol"
+        },
+        {
+          "from": "../src/v2/HedgeFunBondingCurve.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/v2/HedgeFunBondingCurve.sol"
+        },
+        {
+          "from": "../src/v2/HedgeFunBondingCurve.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/v2/HedgeFunBondingCurve.sol"
+        },
+        {
+          "from": "../src/v2/HedgeFunV2NativeRouter.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/v2/HedgeFunV2NativeRouter.sol"
+        },
+        {
+          "from": "../src/v2/HedgeFunV2NativeRouter.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/v2/HedgeFunV2NativeRouter.sol"
+        },
+        {
+          "from": "../src/v2/HedgeFunV2NativeRouter.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/v2/HedgeFunV2NativeRouter.sol"
+        },
+        {
+          "from": "../src/v2/HedgeFunV2NativeRouter.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/v2/HedgeFunV2NativeRouter.sol"
+        },
+        {
+          "from": "../src/v2/HedgeFunV2NativeRouter.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/v2/HedgeFunV2NativeRouter.sol"
+        },
+        {
+          "from": "../src/v2/HedgeFunV2NativeRouter.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/v2/HedgeFunV2NativeRouter.sol"
+        },
+        {
+          "from": "../src/v2/HedgeFunV2NativeRouter.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/v2/HedgeFunV2NativeRouter.sol"
+        },
+        {
+          "from": "../src/v2/HedgeFunV2NativeRouter.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/v2/HedgeFunV2NativeRouter.sol"
+        },
+        {
+          "from": "../src/v2/HedgeFunV2TradeRouter.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/v2/HedgeFunV2TradeRouter.sol"
+        },
+        {
+          "from": "../src/v2/HedgeFunV2TradeRouter.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/v2/HedgeFunV2TradeRouter.sol"
+        },
+        {
+          "from": "../src/v2/HedgeFunV2TradeRouter.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/v2/HedgeFunV2TradeRouter.sol"
+        },
+        {
+          "from": "../src/v2/HedgeFunV2TradeRouter.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/v2/HedgeFunV2TradeRouter.sol"
+        },
+        {
+          "from": "../src/v2/V2FundAssetReader.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/v2/V2FundAssetReader.sol"
+        },
+        {
+          "from": "../src/v2/V2FundAssetReader.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/v2/V2FundAssetReader.sol"
+        },
+        {
+          "from": "../src/v2/V2LiquidityVault.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/v2/V2LiquidityVault.sol"
+        },
+        {
+          "from": "../src/v2/V2TreasuryDeployer.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/v2/V2TreasuryDeployer.sol"
+        },
+        {
+          "from": "../src/v2/V2TreasuryDeployer.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/v2/V2TreasuryDeployer.sol"
+        },
+        {
+          "from": "../src/v2/V2TreasuryDeployer.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/v2/V2TreasuryDeployer.sol"
+        },
+        {
+          "from": "../src/v2/V2TreasuryDeployer.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/v2/V2TreasuryDeployer.sol"
+        }
+      ]
+    },
+    {
+      "path": "docs/ROADMAP.md",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/docs/ROADMAP.md",
+      "source_sha256": "429f68c8fc12e5c7de53464905f6022c473aaaa7077452850954b1063edd6af8",
+      "sha256": "3f2cda36b772cc07200459fda5c69c6de5ae4aaddde38a8329627413a9931fab",
+      "markdown_link_changes": [
+        {
+          "from": "../ref/CLAUDE.md",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/ref/CLAUDE.md"
+        }
+      ]
+    },
+    {
+      "path": "docs/SANDBOX.md",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/docs/SANDBOX.md",
+      "source_sha256": "9e925fc370c3727ed867de5beb03479e470ab25b366f4998094afbb127d41af5",
+      "sha256": "5f7ec974d43e4883e67d6a0741a8987e68f32173ef266138fb827a7334039908",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "docs/SANDBOX_AUDIT.md",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/docs/SANDBOX_AUDIT.md",
+      "source_sha256": "48904edd0013fadff0f622f3817080d674cf663b042737ebf6ad6a362b7ec903",
+      "sha256": "6db086f5b80f9c0c123634d2c1efb9cd592bf0e85c2b5e36037c62a0092d54b6",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "docs/SBOX_MULTIWALLET.md",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/docs/SBOX_MULTIWALLET.md",
+      "source_sha256": "ed712cab1c3b72b30940e8dc1c6bcc5809b766110a62e77b762bd8e85b6208e9",
+      "sha256": "b9246d729cb2cdfd74ec243640fc56739415ff640a08fa28dfebac7251afe467",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "docs/SECURITY.md",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/docs/SECURITY.md",
+      "source_sha256": "9337cc772c9d9017f7f9ae55b7c7caa11e73e1423004241edd3fbcebbf1fd3ff",
+      "sha256": "7b975b88089571b54a3eea540b038ca6718891d8bd9b218a691d58224599dcf4",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "docs/STOCK_TOKEN_ASSESSMENT.md",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/docs/STOCK_TOKEN_ASSESSMENT.md",
+      "source_sha256": "01de6b810fb5c34402214a7c6965e632987efb079d48e3f7ae2180d1fa0cc0eb",
+      "sha256": "3fbbbc8ebcab0c9b3e0746ac603ff1e9630e99a2cafbe8aac3a6329851b1c895",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "docs/STRATEGY_ENGINE.md",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/docs/STRATEGY_ENGINE.md",
+      "source_sha256": "24e8b8be7281dd67787da21e84f311db19c01fb5668427eecf31a036673d56a5",
+      "sha256": "1acc99e4380727bb1a0e680cae2c227e3e674842a5cad700cdf907ab24f0f374",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "docs/TESTNET_DEMO_BALLOT.md",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/docs/TESTNET_DEMO_BALLOT.md",
+      "source_sha256": "f699c6dee3153ccc0f0a5258c38baf144e1f94fc1d35b9f7d971dfd5a7407973",
+      "sha256": "c1effe9c66022e295c62d9206ac2ce8afcdca1c35a909f98d8aef270f33cf088",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "docs/TESTNET_STOCK_EXTENSION.md",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/docs/TESTNET_STOCK_EXTENSION.md",
+      "source_sha256": "6083584fc5d5e36dd446b5ee9893ee6d44531d9ffb0344949f5b94cfdd9dc7e6",
+      "sha256": "8fa80ea723513755b3d3c904c41ccde0a4fe6a5758b7f47ef72e90a369fe77bd",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "docs/TESTNET_V2.md",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/docs/TESTNET_V2.md",
+      "source_sha256": "8f6c64a03c9e1470fcaa9aa8b407689683e6f128ace813abe708b81613ca77e8",
+      "sha256": "ec2b3736f18ecbdbb84bee9aa57635f88f57a8b971a062f89fb9b73190d7c97e",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "docs/TESTNET_V2_ETH_BRIDGE.md",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/docs/TESTNET_V2_ETH_BRIDGE.md",
+      "source_sha256": "8c3e3ce85bb5cf40bfe5aff8efd8f307bbc361e4177ddcd3d8901f0bf984c1a3",
+      "sha256": "8893dee40cb0058fffeb87f10f6802ba7abed30dd78904ba3a4b32cb2ae3f201",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "docs/TESTNET_V2_ETH_MARKET.md",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/docs/TESTNET_V2_ETH_MARKET.md",
+      "source_sha256": "b8b3df50b5f3f8f638b2a6942d81829082b627f0b2c19942a51b7e6afdda0965",
+      "sha256": "96e5144296c2d029dc0c64d921c598ee43ddc13d5ee116141c7fab853a232687",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "docs/TESTNET_V2_FEE_UPGRADE.md",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/docs/TESTNET_V2_FEE_UPGRADE.md",
+      "source_sha256": "fa50c7f7c7ef0b5f22320d4b602769ff294ad233aa165a8961a93330e9361328",
+      "sha256": "3a9cb80ff8e652dedde2107fef32b9952144042a3ed05cc81bff3382ba46455a",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "docs/TESTNET_V2_JOURNEY.md",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/docs/TESTNET_V2_JOURNEY.md",
+      "source_sha256": "76aed1d062cfaa4c5c2f456bd03d408799f9d636f7159a15e51d7541513d6fc3",
+      "sha256": "d0f2b61b2f24c94ade2ec251271e79f8f3a3fbf2c7cef0033b7694a08566a3ce",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "docs/TESTNET_V2_KEEPER_REWARD.md",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/docs/TESTNET_V2_KEEPER_REWARD.md",
+      "source_sha256": "a8af787a5fe5fa1d788f92a7cae6bf2ef02258f53b1f3172aff1ac4112bfb06a",
+      "sha256": "2dea83e43c4267782eec36080d5efbed9a8ff7bd32fac97428e92a6f314f254a",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "docs/TSLA_STRESS_2026-09-30.md",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/docs/TSLA_STRESS_2026-09-30.md",
+      "source_sha256": "82ba5b4fe92f519d84fdf44f27a835176662737d6d694318f5dcafd94cd0a773",
+      "sha256": "60c259090a208851816a0f5b1198e4150913041ddcb808d118dd5bd3e4ac3441",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "docs/V2_ACTOR_FLOW_FUZZ_MAP.md",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/docs/V2_ACTOR_FLOW_FUZZ_MAP.md",
+      "source_sha256": "c521a80ff2ca75a62e6b40c6993533984227230130c942c8a773e5ed0d688db2",
+      "sha256": "1ec5a8428a431672710dab411293140cdc06ba490112902cec3e944817158bec",
+      "markdown_link_changes": [
+        {
+          "from": "../src/v2/HedgeFunV2Factory.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/v2/HedgeFunV2Factory.sol"
+        },
+        {
+          "from": "../src/v2/HedgeFunV2LaunchNativeRouter.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/v2/HedgeFunV2LaunchNativeRouter.sol"
+        },
+        {
+          "from": "../src/v2/CurveDeployer.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/v2/CurveDeployer.sol"
+        },
+        {
+          "from": "../src/v2/V2TreasuryDeployer.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/v2/V2TreasuryDeployer.sol"
+        },
+        {
+          "from": "../src/HedgeFunFactory.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/HedgeFunFactory.sol"
+        },
+        {
+          "from": "../src/HedgeFunFactory.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/HedgeFunFactory.sol"
+        },
+        {
+          "from": "../src/v2/HedgeFunV2LaunchNativeRouter.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/v2/HedgeFunV2LaunchNativeRouter.sol"
+        },
+        {
+          "from": "../src/v2/HedgeFunBondingCurve.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/v2/HedgeFunBondingCurve.sol"
+        },
+        {
+          "from": "../src/v2/HedgeFunV2TradeRouter.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/v2/HedgeFunV2TradeRouter.sol"
+        },
+        {
+          "from": "../src/v2/HedgeFunV2NativeRouter.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/v2/HedgeFunV2NativeRouter.sol"
+        },
+        {
+          "from": "../src/v2/HedgeFunV2Factory.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/v2/HedgeFunV2Factory.sol"
+        },
+        {
+          "from": "../src/v2/HedgeFunV2TradeRouter.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/v2/HedgeFunV2TradeRouter.sol"
+        },
+        {
+          "from": "../src/hooks/HedgeFunV2Hook.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/hooks/HedgeFunV2Hook.sol"
+        },
+        {
+          "from": "../src/v2/HedgeFunBondingCurve.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/v2/HedgeFunBondingCurve.sol"
+        },
+        {
+          "from": "../src/hooks/HedgeFunHook.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/hooks/HedgeFunHook.sol"
+        },
+        {
+          "from": "../src/hooks/HedgeFunV2Hook.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/hooks/HedgeFunV2Hook.sol"
+        },
+        {
+          "from": "../src/v2/V2LiquidityVault.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/v2/V2LiquidityVault.sol"
+        },
+        {
+          "from": "../src/HedgeFunToken.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/HedgeFunToken.sol"
+        },
+        {
+          "from": "../src/v2/HedgeFunV2AllInTreasury.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/v2/HedgeFunV2AllInTreasury.sol"
+        },
+        {
+          "from": "../src/v2/HedgeFunV2Treasury.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/v2/HedgeFunV2Treasury.sol"
+        },
+        {
+          "from": "../src/HedgeFunTreasuryBase.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/HedgeFunTreasuryBase.sol"
+        },
+        {
+          "from": "../src/HedgeFunTreasury.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/HedgeFunTreasury.sol"
+        },
+        {
+          "from": "../src/PoolTrader.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/PoolTrader.sol"
+        },
+        {
+          "from": "../src/v2/HedgeFunV2EngineTreasury.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/v2/HedgeFunV2EngineTreasury.sol"
+        },
+        {
+          "from": "../src/v2/HedgeFunV2AssetPercentEngineTreasury.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/v2/HedgeFunV2AssetPercentEngineTreasury.sol"
+        },
+        {
+          "from": "../test/V2Execute.t.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/test/V2Execute.t.sol"
+        },
+        {
+          "from": "../src/PriceOracle.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/PriceOracle.sol"
+        },
+        {
+          "from": "../src/PoolTrader.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/PoolTrader.sol"
+        },
+        {
+          "from": "../src/HedgeFunFactory.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/HedgeFunFactory.sol"
+        },
+        {
+          "from": "../src/v2/V2TreasuryDeployer.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/v2/V2TreasuryDeployer.sol"
+        },
+        {
+          "from": "../src/hooks/HedgeFunHook.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/hooks/HedgeFunHook.sol"
+        },
+        {
+          "from": "../src/hooks/HedgeFunV2Hook.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/hooks/HedgeFunV2Hook.sol"
+        },
+        {
+          "from": "../src/TradingCalendar.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/TradingCalendar.sol"
+        },
+        {
+          "from": "../src/HedgeFunTreasuryBase.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/HedgeFunTreasuryBase.sol"
+        },
+        {
+          "from": "../test/V2Execute.t.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/test/V2Execute.t.sol"
+        },
+        {
+          "from": "../test/V2LaunchNativeRouterFork.t.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/test/V2LaunchNativeRouterFork.t.sol"
+        },
+        {
+          "from": "../test/TestnetV2EthBridgeFork.t.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/test/TestnetV2EthBridgeFork.t.sol"
+        },
+        {
+          "from": "../test/V2StrategyEngine.t.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/test/V2StrategyEngine.t.sol"
+        },
+        {
+          "from": "../test/V2StrategyEngineAccounting.t.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/test/V2StrategyEngineAccounting.t.sol"
+        },
+        {
+          "from": "../test/V2StrategyEngineGuards.t.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/test/V2StrategyEngineGuards.t.sol"
+        },
+        {
+          "from": "../test/V2AssetPercentEngine.t.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/test/V2AssetPercentEngine.t.sol"
+        }
+      ]
+    },
+    {
+      "path": "docs/V2_ADVERSARIAL_REVIEW.md",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/docs/V2_ADVERSARIAL_REVIEW.md",
+      "source_sha256": "0ee4c8652e40ccd7160c5f2ce7f7e33c2c982209bd7431bbcc8b1c64a73a409f",
+      "sha256": "2b8178ad8ecb64c58fd6a648d009ec524117075ccac7ce9a849f32c52a0d7a33",
+      "markdown_link_changes": [
+        {
+          "from": "../test/V2AdversarialCallbacks.t.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/test/V2AdversarialCallbacks.t.sol"
+        },
+        {
+          "from": "../test/V2AdversarialTrading.t.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/test/V2AdversarialTrading.t.sol"
+        },
+        {
+          "from": "../test/V2AdversarialAccounting.t.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/test/V2AdversarialAccounting.t.sol"
+        },
+        {
+          "from": "../test/V2LiveVenueFork.t.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/test/V2LiveVenueFork.t.sol"
+        }
+      ]
+    },
+    {
+      "path": "docs/V2_ALL_IN_TESTNET_RUNBOOK.md",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/docs/V2_ALL_IN_TESTNET_RUNBOOK.md",
+      "source_sha256": "ce5b1e94174f06d87bf06251b535179e08f4cb06044625e186b1522f06bf43d0",
+      "sha256": "075b50137344f31dc41a23cedfd4ada7e96db682dc9df7d2fc1e8917ca70dfc2",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "docs/V2_ALL_IN_TRIGGER_FLOOR.md",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/docs/V2_ALL_IN_TRIGGER_FLOOR.md",
+      "source_sha256": "77f7cd1d426810d89b903ecfd1c694b5831f4f2c826a3ff072fe445c0e2c739f",
+      "sha256": "56aa44c4d662edf4dcb73e192dc533196f2255eef5961ef0d72931a07cfd349d",
+      "markdown_link_changes": [
+        {
+          "from": "../src/v2/strategy/V2CreatorParams.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/v2/strategy/V2CreatorParams.sol"
+        },
+        {
+          "from": "../src/v2/HedgeFunV2AllInTreasury.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/v2/HedgeFunV2AllInTreasury.sol"
+        },
+        {
+          "from": "../src/v2/V2TreasuryDeployer.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/v2/V2TreasuryDeployer.sol"
+        },
+        {
+          "from": "../test/V2CreatorParameters.t.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/test/V2CreatorParameters.t.sol"
+        },
+        {
+          "from": "../test/V2CreatorTakeProfit.t.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/test/V2CreatorTakeProfit.t.sol"
+        },
+        {
+          "from": "../test/TestnetV2CreatorCore.t.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/test/TestnetV2CreatorCore.t.sol"
+        },
+        {
+          "from": "../test/DeployV2CreatorTestnet.t.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/test/DeployV2CreatorTestnet.t.sol"
+        }
+      ]
+    },
+    {
+      "path": "docs/V2_ASSET_PERCENT_ENGINE.md",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/docs/V2_ASSET_PERCENT_ENGINE.md",
+      "source_sha256": "5039f27590e91fc2dd2f52c367a41c78e1a7f8b991a94b069bb63f66fff607a9",
+      "sha256": "48087fc83425188d25536b457778bae08ece0afe1a1913ed2acc9e6d94ff2b59",
+      "markdown_link_changes": [
+        {
+          "from": "../abi/SURFACE.md",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/abi/SURFACE.md"
+        }
+      ]
+    },
+    {
+      "path": "docs/V2_ASSET_PERCENT_FORK_REPORT.md",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/docs/V2_ASSET_PERCENT_FORK_REPORT.md",
+      "source_sha256": "f0567efee779e04027e078172c8148f90c7aef3d13c13c6a96a768998de64bd0",
+      "sha256": "39d82064a7695c9eb93a8f740c2d078eaf8c65fff02860df07c7a67502048f88",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "docs/V2_BATCH_OPENING_EXPERIMENT.md",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/docs/V2_BATCH_OPENING_EXPERIMENT.md",
+      "source_sha256": "ffcc3ff34ad0b6e856571a97a91480a4c765a601fe3ebb9e4b9e272b35a74dd6",
+      "sha256": "5db2adbe975a969f2b6f6bad41ecbe63562580eaa362808873023842663a1ae5",
+      "markdown_link_changes": [
+        {
+          "from": "../lab/README.md",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/lab/README.md"
+        }
+      ]
+    },
+    {
+      "path": "docs/V2_BONDING_CURVE.md",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/docs/V2_BONDING_CURVE.md",
+      "source_sha256": "79add0d0699e7d3afd39a05077b771927baf48981a18ec30fd35d191aae34154",
+      "sha256": "e6564ad68602b31731e4424ee0efcc42621e3d83cd8c07809f895f08d19cf6c3",
+      "markdown_link_changes": [
+        {
+          "from": "../abi/SURFACE.md",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/abi/SURFACE.md"
+        }
+      ]
+    },
+    {
+      "path": "docs/V2_CAPITAL_SIMULATION.md",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/docs/V2_CAPITAL_SIMULATION.md",
+      "source_sha256": "480140fa44e1c77995320e694eb5c54fa03795d5847b2d9923bd05469a0a9448",
+      "sha256": "ac0cd268fde41544a2322d32ad9508339f842ae481185f8c19ea3987060204ca",
+      "markdown_link_changes": [
+        {
+          "from": "../test/V2CapitalSimulationFork.t.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/test/V2CapitalSimulationFork.t.sol"
+        }
+      ]
+    },
+    {
+      "path": "docs/V2_DEPLOYMENT_REHEARSAL.md",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/docs/V2_DEPLOYMENT_REHEARSAL.md",
+      "source_sha256": "fb78a932d12de731ce7fbcfd274679e5f697de121717cf04a87934f441fe495e",
+      "sha256": "bd1e51e0b391421aa25fceddfa3be4a9aec3a6d4727f72498bdba6c87a179631",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "docs/V2_DUAL_ENGINE_REVIEW.md",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/docs/V2_DUAL_ENGINE_REVIEW.md",
+      "source_sha256": "064a1c8a3db689288816bd8a00882afcb57921cc24e5cf6bce2f42731f3f611f",
+      "sha256": "31f08ff30579b9cfc0658393c8f2be93a1aa289e4656e9d5cfa52a3145be2365",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "docs/V2_LOW_FREQUENCY_FORK.md",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/docs/V2_LOW_FREQUENCY_FORK.md",
+      "source_sha256": "0f944390a7bd4a7fe61f459ad9547cacd968b4945885d109806b2adc75bd2c8e",
+      "sha256": "7be047bc7f43a4007acdf5edf324eee49e223094b0e97eb751df0faac0ba7b95",
+      "markdown_link_changes": [
+        {
+          "from": "../test/V2LowFrequencyFork.t.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/test/V2LowFrequencyFork.t.sol"
+        },
+        {
+          "from": "../test/V2Execute.t.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/test/V2Execute.t.sol"
+        }
+      ]
+    },
+    {
+      "path": "docs/V2_LP_DEPTH_EXPERIMENT.md",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/docs/V2_LP_DEPTH_EXPERIMENT.md",
+      "source_sha256": "db84ddf9806ebe1d7bea19d4195dc5303a27acb746d7f631e2dae75b42d25808",
+      "sha256": "d3602d2fae2e1987a2678191e59bbec08b566c3edda6ebd4a0bf87b941f4eef2",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "docs/V2_MARKET_SCENARIOS.md",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/docs/V2_MARKET_SCENARIOS.md",
+      "source_sha256": "481bf3b983295a44a844476e33cf400e4445b01d46781fb6d303475287b7fcb6",
+      "sha256": "3c7568266035326f1ac3621157745b0a93d321e58a8e682c5dde9c2366a2cbcc",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "docs/V2_NATIVE_LAUNCH.md",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/docs/V2_NATIVE_LAUNCH.md",
+      "source_sha256": "f6624d58ff5da0dd024b377dddc02cb60999321c4bcc8d8692b480c8dfd8bc96",
+      "sha256": "44d3a6d14259da0698c8e944419d2d9dc163b1f9c66a81062814852352eb63b7",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "docs/V2_OPENING_TAX_WHITELIST.md",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/docs/V2_OPENING_TAX_WHITELIST.md",
+      "source_sha256": "11bbde5cfdd8164d32f8e851ce1942f28a56d5eaffb865d1ab99e3588bd9f835",
+      "sha256": "e6960671b2a5202689cf43beb1f7c766ec9bc6da3b962bbeab4877828647426c",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "docs/V2_ORIGINAL_SUPPLY_PARTICIPATION.md",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/docs/V2_ORIGINAL_SUPPLY_PARTICIPATION.md",
+      "source_sha256": "3edbf0064315779556e8c12a7d0e4c622178bb23289c10147f8acac01199d6d1",
+      "sha256": "f89e4824a5b8614125262fd201eadfe29944b47544bc7c411b24d395d20fb78d",
+      "markdown_link_changes": [
+        {
+          "from": "../test/V2OriginalSupplyParticipationFork.t.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/test/V2OriginalSupplyParticipationFork.t.sol"
+        }
+      ]
+    },
+    {
+      "path": "docs/V2_PROFIT_FORK.md",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/docs/V2_PROFIT_FORK.md",
+      "source_sha256": "0d593fb05c1bbe2a7db255b32ad362cb090e8053c0a0645d72efa30af47aba09",
+      "sha256": "135c1ed7e1c67d88a82c2f4bbc795199f9baa9dba40cf6d88810a0144f05a6ab",
+      "markdown_link_changes": [
+        {
+          "from": "../test/V2LiveVenueFork.t.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/test/V2LiveVenueFork.t.sol"
+        }
+      ]
+    },
+    {
+      "path": "docs/V2_SANDWICH_FORK.md",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/docs/V2_SANDWICH_FORK.md",
+      "source_sha256": "cdccc066142f540051ec8fce051f8513d75ea6cce9dd4ce46fa36983e0c1b980",
+      "sha256": "7f54e27260aacfc6840e7fda05d27561ab297cef840220666a7dbb110868dfef",
+      "markdown_link_changes": [
+        {
+          "from": "../test/V2LiveVenueFork.t.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/test/V2LiveVenueFork.t.sol"
+        },
+        {
+          "from": "../test/V2LowFrequencyFork.t.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/test/V2LowFrequencyFork.t.sol"
+        }
+      ]
+    },
+    {
+      "path": "docs/V2_TREND_SCENARIOS.md",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/docs/V2_TREND_SCENARIOS.md",
+      "source_sha256": "6d23a499992c97d95ee2beaa7c7d6befc02ad299b6cd814e624280af040de78e",
+      "sha256": "73c3f700e4b84fd4c1e107bb799a8acb713823ec8a18cc07a0e572164d19d9f0",
+      "markdown_link_changes": [
+        {
+          "from": "../lab/README.md",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/lab/README.md"
+        }
+      ]
+    },
+    {
+      "path": "docs/V2_TWO_SIDED_FEES.md",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/docs/V2_TWO_SIDED_FEES.md",
+      "source_sha256": "35722a557ead6fbb7120b5d60ea3584766c42cada9bb8992e3c58f75c8ada08d",
+      "sha256": "6df5ec0d5d9d70abeeec128073bbf6c25a74ce77c3ecd2ecc3e95afea7d99387",
+      "markdown_link_changes": [
+        {
+          "from": "../src/v2/HedgeFunBondingCurve.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/v2/HedgeFunBondingCurve.sol"
+        },
+        {
+          "from": "../src/hooks/HedgeFunV2Hook.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/hooks/HedgeFunV2Hook.sol"
+        },
+        {
+          "from": "../src/v2/HedgeFunV2Factory.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/src/v2/HedgeFunV2Factory.sol"
+        }
+      ]
+    },
+    {
+      "path": "docs/V2_WALLET_BUDGET.md",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/docs/V2_WALLET_BUDGET.md",
+      "source_sha256": "3b5fe6feb1959ae957556b1431c9c5c2e148c5aaeed935535d8037f8c17c4711",
+      "sha256": "4ed9d3416aa00f53a5e51e4a575c7853852dc2decd71f16d6f946f1edfcfa67d",
+      "markdown_link_changes": [
+        {
+          "from": "../test/V2Budget32Fork.t.sol",
+          "to": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/test/V2Budget32Fork.t.sol"
+        }
+      ]
+    },
+    {
+      "path": "docs/band/amzn-usdg-14d.csv",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/docs/band/amzn-usdg-14d.csv",
+      "source_sha256": "7988f848468f7c2a1d6cb6c0bf19386286ce843aa58344242c0c659041da4579",
+      "sha256": "7988f848468f7c2a1d6cb6c0bf19386286ce843aa58344242c0c659041da4579",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "docs/band/amzn-usdg-14d.png",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/docs/band/amzn-usdg-14d.png",
+      "source_sha256": "5ccd20cb2739948ed520371d25e32c2ca0985cdc36a4f0dfc3500450fceb1af4",
+      "sha256": "5ccd20cb2739948ed520371d25e32c2ca0985cdc36a4f0dfc3500450fceb1af4",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "docs/band/crcl-usdg-14d.csv",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/docs/band/crcl-usdg-14d.csv",
+      "source_sha256": "c74ffc943b5a9f6d3b328688e5d5f06685ede3dfc9ab51aa4729127244253bfc",
+      "sha256": "c74ffc943b5a9f6d3b328688e5d5f06685ede3dfc9ab51aa4729127244253bfc",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "docs/band/crcl-usdg-14d.png",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/docs/band/crcl-usdg-14d.png",
+      "source_sha256": "120e9d05e528d4ed7fe58335c9d78aadd3d264bda930c0864f397175b2fa7861",
+      "sha256": "120e9d05e528d4ed7fe58335c9d78aadd3d264bda930c0864f397175b2fa7861",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "docs/band/gme-005-usdg-14d.csv",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/docs/band/gme-005-usdg-14d.csv",
+      "source_sha256": "46e07a7a34f87ba65ce4e54304d2953b603f124a3b4b8839c3a059eac71b4bfa",
+      "sha256": "46e07a7a34f87ba65ce4e54304d2953b603f124a3b4b8839c3a059eac71b4bfa",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "docs/band/gme-005-usdg-14d.png",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/docs/band/gme-005-usdg-14d.png",
+      "source_sha256": "3099d8fed39eef973923a078c93e66936360638bf33ea9e01df5d72b12829fc6",
+      "sha256": "3099d8fed39eef973923a078c93e66936360638bf33ea9e01df5d72b12829fc6",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "docs/band/meta-usdg-14d.csv",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/docs/band/meta-usdg-14d.csv",
+      "source_sha256": "a4e895510fecbd5633f79336635b738d6bfc03ad52749f11172484b8bd1f2d66",
+      "sha256": "a4e895510fecbd5633f79336635b738d6bfc03ad52749f11172484b8bd1f2d66",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "docs/band/meta-usdg-14d.png",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/docs/band/meta-usdg-14d.png",
+      "source_sha256": "4eada9f9ce03fdb886222d6af5ea5566cc593021e2c2168c5579eac2a4a010d5",
+      "sha256": "4eada9f9ce03fdb886222d6af5ea5566cc593021e2c2168c5579eac2a4a010d5",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "docs/band/usar-usdg-14d.csv",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/docs/band/usar-usdg-14d.csv",
+      "source_sha256": "df8153c57726b0bc3d0d67cd3c266d84f7f1c37664e445e9833f49f1190d1484",
+      "sha256": "df8153c57726b0bc3d0d67cd3c266d84f7f1c37664e445e9833f49f1190d1484",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "docs/band/usar-usdg-14d.png",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/docs/band/usar-usdg-14d.png",
+      "source_sha256": "64c701d69db6374e317984b80a6f1e1a7f716e0aef8f394e0d4f7f0426f81f84",
+      "sha256": "64c701d69db6374e317984b80a6f1e1a7f716e0aef8f394e0d4f7f0426f81f84",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "docs/research/PONS_TAX_ELASTICITY.md",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/docs/research/PONS_TAX_ELASTICITY.md",
+      "source_sha256": "09012093d3f1cc8cb18e5148faf6386747726c50d0d71f7dbf59baa39b16c7e5",
+      "sha256": "7ee2040608dfc439bba7f084654450bc8e6fd999ce055681ee6020e0c60c4050",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "docs/robinhood-chain/README.md",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/docs/robinhood-chain/README.md",
+      "source_sha256": "8611e24dc44cb9f3ef9041cc60e02f39b6ea0af08d5d794daf863d1b2f0e54bf",
+      "sha256": "3fb2df6d758bcc154c42cce961aa6209d85e9623ce0aa7844b748a6fb9b40560",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "docs/robinhood-chain/building-with-stock-tokens.md",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/docs/robinhood-chain/building-with-stock-tokens.md",
+      "source_sha256": "c7cd28190a4296156fbb59cfdeda83749bd3195ebaa5e9676ac3be64d4d0f922",
+      "sha256": "4ab5da01096cb12f7e9420c9edd303365352a0efe7ca0976b8f55cd4b5f0f548",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "docs/robinhood-chain/contracts.md",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/docs/robinhood-chain/contracts.md",
+      "source_sha256": "e1272d22426c2a1840ecfd6c79a12c68bc52f78b85c36275990d2d0ad8e41311",
+      "sha256": "4d5a8b44b7f213494aa09f00cc9a3988c2f2059365e5632d043be6fb503e50e9",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "docs/robinhood-chain/oracles-and-price-feeds.md",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/docs/robinhood-chain/oracles-and-price-feeds.md",
+      "source_sha256": "dca69a31ae7d8af262a51f88da634c944a61f7c851bf2f4f70472bf1fade1f33",
+      "sha256": "fb644d62de513b0c93b30ec20ce689eb40ada287432a4d2332b4df4e77f9f025",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "docs/rule-backtest/README.md",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/docs/rule-backtest/README.md",
+      "source_sha256": "db9c9d255e77cb8004531495bd3aa95bf9e325d6c475ad6180ce3166f1062ff1",
+      "sha256": "6304a37b849c955e479e2131842842c9032e8604f0ff2e4f66888b1a21688351",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "docs/rule-backtest/all-stocks.csv",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/docs/rule-backtest/all-stocks.csv",
+      "source_sha256": "57185cf01fcabb33b6059a972510c8b9e1d097647e472454ed963405fc22fb93",
+      "sha256": "57185cf01fcabb33b6059a972510c8b9e1d097647e472454ed963405fc22fb93",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "docs/rule-backtest/all-stocks.png",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/docs/rule-backtest/all-stocks.png",
+      "source_sha256": "3b55679324d8e1c48ab254bdffa6c6ac99ac4d5fe74b31772ef4bbbbbb9df877",
+      "sha256": "3b55679324d8e1c48ab254bdffa6c6ac99ac4d5fe74b31772ef4bbbbbb9df877",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "docs/rule-backtest/deep-pools.csv",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/docs/rule-backtest/deep-pools.csv",
+      "source_sha256": "a7fdd9a3b5aed1d3c9b75bbf99ca643ab71311ec7a7f182ccebf21d47ca2e557",
+      "sha256": "a7fdd9a3b5aed1d3c9b75bbf99ca643ab71311ec7a7f182ccebf21d47ca2e557",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "docs/rule-backtest/deep-pools.png",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/docs/rule-backtest/deep-pools.png",
+      "source_sha256": "cc45e3e8d2a4993311d66b7ab0c1f2381c405bf37abf5f0f036c2f82da30d983",
+      "sha256": "cc45e3e8d2a4993311d66b7ab0c1f2381c405bf37abf5f0f036c2f82da30d983",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "docs/rule-backtest/eleven-stocks.csv",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/docs/rule-backtest/eleven-stocks.csv",
+      "source_sha256": "7955cc2af4ff16c5f51a57a52981c5cf2acb7969ffcd8aca147bfe3411dce609",
+      "sha256": "7955cc2af4ff16c5f51a57a52981c5cf2acb7969ffcd8aca147bfe3411dce609",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "docs/rule-backtest/eleven-stocks.png",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/docs/rule-backtest/eleven-stocks.png",
+      "source_sha256": "5b9d08f19e7af7d540f8ceaaf9c997b00f3b3033ea52b48e4efd496c5539fdc4",
+      "sha256": "5b9d08f19e7af7d540f8ceaaf9c997b00f3b3033ea52b48e4efd496c5539fdc4",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "emergency/.gitignore",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/emergency/.gitignore",
+      "source_sha256": "f7fd98e49a5d5647e8262452de5d4150580c779f99350c8ff27284cf86ec6ed1",
+      "sha256": "f7fd98e49a5d5647e8262452de5d4150580c779f99350c8ff27284cf86ec6ed1",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "emergency/README.md",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/emergency/README.md",
+      "source_sha256": "b5b59c78f8cd1415f259e0a9272fb73485e58049fedf47a53c5e3d231cf21115",
+      "sha256": "fa74b7bc7e76a6fbf22ea4180a99c21aed4d86c0ea355236a01ebe1d1932adae",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "emergency/addresses.example.json",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/emergency/addresses.example.json",
+      "source_sha256": "fcb737486571ea6d271846ce14e2c2cd5e3cdec57397bc7bbb28c137c1907a24",
+      "sha256": "fcb737486571ea6d271846ce14e2c2cd5e3cdec57397bc7bbb28c137c1907a24",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "emergency/addresses.json",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/emergency/addresses.json",
+      "source_sha256": "860f1527620119d0b7b73a81d342923c1b5e6bb38f6d60160f55980dc99cfc5f",
+      "sha256": "860f1527620119d0b7b73a81d342923c1b5e6bb38f6d60160f55980dc99cfc5f",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "emergency/build.py",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/emergency/build.py",
+      "source_sha256": "ca88f21695bd90dde91beb138477af94c7fa7543f9c6f6a63aecb3f5338b73db",
+      "sha256": "ca88f21695bd90dde91beb138477af94c7fa7543f9c6f6a63aecb3f5338b73db",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "emergency/drill_apply.py",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/emergency/drill_apply.py",
+      "source_sha256": "467e8e725e1595ec56a2bf1bd9c8b800a9b50596b896a90cff96e5f6dab49ed5",
+      "sha256": "467e8e725e1595ec56a2bf1bd9c8b800a9b50596b896a90cff96e5f6dab49ed5",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "emergency/out/.gitkeep",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/emergency/out/.gitkeep",
+      "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "script/ActivateV2NativeLaunch.s.sol",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/script/ActivateV2NativeLaunch.s.sol",
+      "source_sha256": "b870f9d8514f9a3913c80f930431f0219ecb41eb525f26319b53d84c13d07d0b",
+      "sha256": "b870f9d8514f9a3913c80f930431f0219ecb41eb525f26319b53d84c13d07d0b",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "script/AddV2TestnetStocks.s.sol",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/script/AddV2TestnetStocks.s.sol",
+      "source_sha256": "ed5160d97470cd46821ae16f3171af65aa5e373a2103f3217627323629042288",
+      "sha256": "ed5160d97470cd46821ae16f3171af65aa5e373a2103f3217627323629042288",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "script/CheckV2Listings.s.sol",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/script/CheckV2Listings.s.sol",
+      "source_sha256": "926706e3e9d13333c09ec573e2d97ed70f2edf720af886747d9d76d6be4e5c8c",
+      "sha256": "926706e3e9d13333c09ec573e2d97ed70f2edf720af886747d9d76d6be4e5c8c",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "script/DeployCoveredCallDesk.s.sol",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/script/DeployCoveredCallDesk.s.sol",
+      "source_sha256": "357da54af5bb86c7c529a06be2090e24993610215f394625774fe1d9b7852ada",
+      "sha256": "357da54af5bb86c7c529a06be2090e24993610215f394625774fe1d9b7852ada",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "script/DeployPriceOracles.s.sol",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/script/DeployPriceOracles.s.sol",
+      "source_sha256": "05515dc82cc24e88b7754b348111027dce914a44eab6d0b264e7bdc612fe6c4b",
+      "sha256": "05515dc82cc24e88b7754b348111027dce914a44eab6d0b264e7bdc612fe6c4b",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "script/DeployStrategyLaunchpad.s.sol",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/script/DeployStrategyLaunchpad.s.sol",
+      "source_sha256": "3480dd8e5fe2171c49e722402b42ad8920318293ba8d9d621720e7cdee81c20f",
+      "sha256": "3480dd8e5fe2171c49e722402b42ad8920318293ba8d9d621720e7cdee81c20f",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "script/DeployV2CreatorTestnet.s.sol",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/script/DeployV2CreatorTestnet.s.sol",
+      "source_sha256": "a067571cdb8d0493ec6e7c771dea0d21dc99b2042ab96e962f53dc9cd784f7ab",
+      "sha256": "a067571cdb8d0493ec6e7c771dea0d21dc99b2042ab96e962f53dc9cd784f7ab",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "script/DeployV2FeeUpgradeTestnet.s.sol",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/script/DeployV2FeeUpgradeTestnet.s.sol",
+      "source_sha256": "5f2f022363ac2922ce6634db4a5386f5c633fb27522c16d95de449cf057f53df",
+      "sha256": "5f2f022363ac2922ce6634db4a5386f5c633fb27522c16d95de449cf057f53df",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "script/DeployV2Testnet.s.sol",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/script/DeployV2Testnet.s.sol",
+      "source_sha256": "847b9b63d4a5382ab49cc4ea4e4ea9fa6b269715b8be89557f6a54fb6320f8fc",
+      "sha256": "847b9b63d4a5382ab49cc4ea4e4ea9fa6b269715b8be89557f6a54fb6320f8fc",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "script/LaunchStrategy.s.sol",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/script/LaunchStrategy.s.sol",
+      "source_sha256": "e0422838df63958f9ef654bed4f9b51ecfcc8c043cb5dd158d0af343c665451d",
+      "sha256": "e0422838df63958f9ef654bed4f9b51ecfcc8c043cb5dd158d0af343c665451d",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "script/RehearseV2Launchpad.s.sol",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/script/RehearseV2Launchpad.s.sol",
+      "source_sha256": "dd2832e4ac2367a50d1ca8fab2cc301ee84d4d58bb4dfd1f58b626432284402e",
+      "sha256": "dd2832e4ac2367a50d1ca8fab2cc301ee84d4d58bb4dfd1f58b626432284402e",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "script/Sandbox.s.sol",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/script/Sandbox.s.sol",
+      "source_sha256": "6643ad5198d97f2e16324f3dac7f224a2ee25eb946142975543f4207d62f533e",
+      "sha256": "6643ad5198d97f2e16324f3dac7f224a2ee25eb946142975543f4207d62f533e",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "script/SandboxFakeUsd.s.sol",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/script/SandboxFakeUsd.s.sol",
+      "source_sha256": "15a2347e2daa1077582ab19217e8015774c2036e6ec280238b565282221a0fe8",
+      "sha256": "15a2347e2daa1077582ab19217e8015774c2036e6ec280238b565282221a0fe8",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "script/SeedTestnet.s.sol",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/script/SeedTestnet.s.sol",
+      "source_sha256": "a21dd322a545dc980be97933d71c2fb5a7aa1934185f170e1c99841a1999346b",
+      "sha256": "a21dd322a545dc980be97933d71c2fb5a7aa1934185f170e1c99841a1999346b",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "script/TestRun.s.sol",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/script/TestRun.s.sol",
+      "source_sha256": "acc6d4ae8d497be374f28ca19fa0b26d27568f94439d2f6e80f9a3daf1ee64bc",
+      "sha256": "acc6d4ae8d497be374f28ca19fa0b26d27568f94439d2f6e80f9a3daf1ee64bc",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "script/TestnetHackathonDemo.s.sol",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/script/TestnetHackathonDemo.s.sol",
+      "source_sha256": "2ad9cebdee8d2850a1b2fe6b6d53d823b31b48775931dc6a4b4d9de223b40404",
+      "sha256": "2ad9cebdee8d2850a1b2fe6b6d53d823b31b48775931dc6a4b4d9de223b40404",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "script/TestnetTSLAStressLaunch.s.sol",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/script/TestnetTSLAStressLaunch.s.sol",
+      "source_sha256": "c97d0da8fb7d925c6ab3f097cc9e562fe1fff77585e15f0303254da0086f172f",
+      "sha256": "c97d0da8fb7d925c6ab3f097cc9e562fe1fff77585e15f0303254da0086f172f",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "script/TestnetV2AllInFloor.s.sol",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/script/TestnetV2AllInFloor.s.sol",
+      "source_sha256": "f53ab8d711cd0361954f93fa9f6a5e5b32505c16b830ba6e90047f8b5632f68a",
+      "sha256": "f53ab8d711cd0361954f93fa9f6a5e5b32505c16b830ba6e90047f8b5632f68a",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "script/TestnetV2EthBridge.s.sol",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/script/TestnetV2EthBridge.s.sol",
+      "source_sha256": "217f015c6dc659505da88f7acd1e8d469529e2a2c86522ec6dab13764863f14c",
+      "sha256": "217f015c6dc659505da88f7acd1e8d469529e2a2c86522ec6dab13764863f14c",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "script/TestnetV2EthMarket.s.sol",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/script/TestnetV2EthMarket.s.sol",
+      "source_sha256": "15ae394f4eb53f87950f57bb380fcadbd38401f07ac6df1eb17794e1381291f2",
+      "sha256": "15ae394f4eb53f87950f57bb380fcadbd38401f07ac6df1eb17794e1381291f2",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "script/TestnetV2FeesJourney.s.sol",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/script/TestnetV2FeesJourney.s.sol",
+      "source_sha256": "4a32793101242ae6ea6fb4ab71f1797547d7f660d8f6f421d09caed59c4dd6e9",
+      "sha256": "4a32793101242ae6ea6fb4ab71f1797547d7f660d8f6f421d09caed59c4dd6e9",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "script/TestnetV2Journey.s.sol",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/script/TestnetV2Journey.s.sol",
+      "source_sha256": "ec17e1688055aaa6eb6daa09684311db3360e57b8c9d55d33b7c1599cc1f3ad3",
+      "sha256": "ec17e1688055aaa6eb6daa09684311db3360e57b8c9d55d33b7c1599cc1f3ad3",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "script/TestnetV2KeeperReward.s.sol",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/script/TestnetV2KeeperReward.s.sol",
+      "source_sha256": "93818dcb655400a2cba2aa27f984a6de7a9f720c20dcabaadccee47ab49e42e0",
+      "sha256": "93818dcb655400a2cba2aa27f984a6de7a9f720c20dcabaadccee47ab49e42e0",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "script/V3Survey.s.sol",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/script/V3Survey.s.sol",
+      "source_sha256": "ccf0b7d30b1c5e1d618ba3e7cbc9a5dc2c64ee51398fcd960920a874586c44a7",
+      "sha256": "ccf0b7d30b1c5e1d618ba3e7cbc9a5dc2c64ee51398fcd960920a874586c44a7",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "script/sandbox/SandboxAssets.sol",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/script/sandbox/SandboxAssets.sol",
+      "source_sha256": "5e5e5d6b79eb54fdbc222e8d1c7e161896d967937f3c82da3a7b4382ff11f9cf",
+      "sha256": "5e5e5d6b79eb54fdbc222e8d1c7e161896d967937f3c82da3a7b4382ff11f9cf",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "script/sandbox/SandboxLaunchBundle.sol",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/script/sandbox/SandboxLaunchBundle.sol",
+      "source_sha256": "9e94feeaea8d5bef0538d1cb664348549fefe54519bd301b7bbc6e6006adae66",
+      "sha256": "9e94feeaea8d5bef0538d1cb664348549fefe54519bd301b7bbc6e6006adae66",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "script/sandbox/SandboxLp.sol",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/script/sandbox/SandboxLp.sol",
+      "source_sha256": "ab19db6795ce67c1ba86b070e98bbd27765415dd1abcbfcc9f2c69af2ea9cc8d",
+      "sha256": "ab19db6795ce67c1ba86b070e98bbd27765415dd1abcbfcc9f2c69af2ea9cc8d",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "script/testnet/TestnetAssets.sol",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/script/testnet/TestnetAssets.sol",
+      "source_sha256": "eb706ea5806690d60d73110ffab8a6a6e90c25c83b06a60d1df3fc5049212484",
+      "sha256": "eb706ea5806690d60d73110ffab8a6a6e90c25c83b06a60d1df3fc5049212484",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "script/testnet/TestnetCryptoOracle.sol",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/script/testnet/TestnetCryptoOracle.sol",
+      "source_sha256": "4f2c7a63d35e7e698d844729fa839a6467ba81c53ffee108d2516aca4f3358b6",
+      "sha256": "4f2c7a63d35e7e698d844729fa839a6467ba81c53ffee108d2516aca4f3358b6",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "script/testnet/TestnetEthBridgeLiquidity.sol",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/script/testnet/TestnetEthBridgeLiquidity.sol",
+      "source_sha256": "6275546159925d6d8dc0a38e00bfa56fd23279a274c4132104a4fc246e1607d3",
+      "sha256": "6275546159925d6d8dc0a38e00bfa56fd23279a274c4132104a4fc246e1607d3",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "script/testnet/TestnetMarket.sol",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/script/testnet/TestnetMarket.sol",
+      "source_sha256": "e625b5e223e198e1b0a966325c2055922633f7fabc1b3725657c16eda4c56f04",
+      "sha256": "e625b5e223e198e1b0a966325c2055922633f7fabc1b3725657c16eda4c56f04",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "script/testnet/TestnetNativeMarket.sol",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/script/testnet/TestnetNativeMarket.sol",
+      "source_sha256": "657dcde33f30a3d2ecdee476a67f01b4f6a06748f1e26a4c3d3b83a19bfc82bd",
+      "sha256": "657dcde33f30a3d2ecdee476a67f01b4f6a06748f1e26a4c3d3b83a19bfc82bd",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "tools/.gitignore",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/tools/.gitignore",
+      "source_sha256": "32dae3052f331ee34d628ef535709b301259a45df7c7522c4d35dcf49873f00b",
+      "sha256": "32dae3052f331ee34d628ef535709b301259a45df7c7522c4d35dcf49873f00b",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "tools/_registry.py",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/tools/_registry.py",
+      "source_sha256": "09c0a21c4e2190e0ad97517aaafd786caacb42e78003e53709b01d389b64741a",
+      "sha256": "09c0a21c4e2190e0ad97517aaafd786caacb42e78003e53709b01d389b64741a",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "tools/audit_v2_all_in_floor.py",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/tools/audit_v2_all_in_floor.py",
+      "source_sha256": "f6cac2ab012ba412f5f9bc45f28ec472a628a1d5b3c9ceb89d685a30c7b5ccf3",
+      "sha256": "f6cac2ab012ba412f5f9bc45f28ec472a628a1d5b3c9ceb89d685a30c7b5ccf3",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "tools/audit_v2_keeper_reward.py",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/tools/audit_v2_keeper_reward.py",
+      "source_sha256": "22d234f66d242836ebf3288a06fb0818c67707eb86c58433b7138ee7c5dd9eb8",
+      "sha256": "22d234f66d242836ebf3288a06fb0818c67707eb86c58433b7138ee7c5dd9eb8",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "tools/band_backtest.py",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/tools/band_backtest.py",
+      "source_sha256": "76265fee54a191d19fa31f2be7ae35248cb2b50f7ef06e389d4942fae80f298b",
+      "sha256": "76265fee54a191d19fa31f2be7ae35248cb2b50f7ef06e389d4942fae80f298b",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "tools/cc_desk_batch.py",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/tools/cc_desk_batch.py",
+      "source_sha256": "9894b0f69d7ad787b1492a0bf6aa12ccce06a8c11205c17a561d8a8c901dbcc0",
+      "sha256": "9894b0f69d7ad787b1492a0bf6aa12ccce06a8c11205c17a561d8a8c901dbcc0",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "tools/cc_round_at.py",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/tools/cc_round_at.py",
+      "source_sha256": "37d0f5b847734d607d0fec809612c99661ae8edd7fc2bfab4f78be9ff3218cdb",
+      "sha256": "37d0f5b847734d607d0fec809612c99661ae8edd7fc2bfab4f78be9ff3218cdb",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "tools/check_docs.py",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/tools/check_docs.py",
+      "source_sha256": "fabf012c7fbcc1aa45b109516e7fb1532428874a41c84aee0d7e9da1636c85b6",
+      "sha256": "fabf012c7fbcc1aa45b109516e7fb1532428874a41c84aee0d7e9da1636c85b6",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "tools/dashboard.py",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/tools/dashboard.py",
+      "source_sha256": "d4f7ce9ae24846d5e24ab061eef6f28107bcac0790d302b3829268f7d27e47a2",
+      "sha256": "d4f7ce9ae24846d5e24ab061eef6f28107bcac0790d302b3829268f7d27e47a2",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "tools/docs_site.py",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/tools/docs_site.py",
+      "source_sha256": "b10346a5e327faac5dce901fecdec5ad647147ae8088011d0d3b5fe07d7099fe",
+      "sha256": "b10346a5e327faac5dce901fecdec5ad647147ae8088011d0d3b5fe07d7099fe",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "tools/export_abi.py",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/tools/export_abi.py",
+      "source_sha256": "745f0c393d19d8c8cf25463e55bf349abb760eb9c00c5f0bafd1d52eee51ad10",
+      "sha256": "745f0c393d19d8c8cf25463e55bf349abb760eb9c00c5f0bafd1d52eee51ad10",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "tools/fork_rpc_proxy.py",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/tools/fork_rpc_proxy.py",
+      "source_sha256": "acdc9bf4337227b925228857be102ff7b4a746bce1affe0a5048a078dea993ab",
+      "sha256": "acdc9bf4337227b925228857be102ff7b4a746bce1affe0a5048a078dea993ab",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "tools/gate_uptime.py",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/tools/gate_uptime.py",
+      "source_sha256": "8a6420a8a2e541460f3cc4827a0298b900d1e4e54693f9f9ddb345cff4a3bb66",
+      "sha256": "8a6420a8a2e541460f3cc4827a0298b900d1e4e54693f9f9ddb345cff4a3bb66",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "tools/gen_reference.py",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/tools/gen_reference.py",
+      "source_sha256": "beee5dda62d34dcc8a9f7aa8b15180c4c0c633874c2b90c14922acf348f2cfcc",
+      "sha256": "beee5dda62d34dcc8a9f7aa8b15180c4c0c633874c2b90c14922acf348f2cfcc",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "tools/listability.py",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/tools/listability.py",
+      "source_sha256": "6de7a62f722921a85df9ca23c4ca49f9e5a8c840c45894e4465ee1b9ac6f5f60",
+      "sha256": "6de7a62f722921a85df9ca23c4ca49f9e5a8c840c45894e4465ee1b9ac6f5f60",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "tools/listing_batch.py",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/tools/listing_batch.py",
+      "source_sha256": "0a3706d05d4035a04507f5556ab8cc6f4ef74093f3fc2e5aefbaf1aeb91128de",
+      "sha256": "0a3706d05d4035a04507f5556ab8cc6f4ef74093f3fc2e5aefbaf1aeb91128de",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "tools/metadata_batch.py",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/tools/metadata_batch.py",
+      "source_sha256": "334c0ce176aaa3412cbe8d3fe1c8173aaea6ad7e14eba1ae94b7db36fd4a4f44",
+      "sha256": "334c0ce176aaa3412cbe8d3fe1c8173aaea6ad7e14eba1ae94b7db36fd4a4f44",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "tools/native_testnet_config.py",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/tools/native_testnet_config.py",
+      "source_sha256": "9f74e6edb459d75c7311e9170d791c131414108ef75e0f1ddd79a2af837c7526",
+      "sha256": "9f74e6edb459d75c7311e9170d791c131414108ef75e0f1ddd79a2af837c7526",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "tools/oracle_batch.py",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/tools/oracle_batch.py",
+      "source_sha256": "25325350edfbf603b2db626002bb79d4ab9f33ea2447bc22bf6428515cc035cf",
+      "sha256": "25325350edfbf603b2db626002bb79d4ab9f33ea2447bc22bf6428515cc035cf",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "tools/pons_elasticity.py",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/tools/pons_elasticity.py",
+      "source_sha256": "f52c3493a53b8e22ffe39ac350c448d74c30ab500b267b26956d7b0b48592bb4",
+      "sha256": "f52c3493a53b8e22ffe39ac350c448d74c30ab500b267b26956d7b0b48592bb4",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "tools/rank_pools.py",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/tools/rank_pools.py",
+      "source_sha256": "77c7f4b92acb30896f782068e176c34088a46cd58a008d3927e660222aebef71",
+      "sha256": "77c7f4b92acb30896f782068e176c34088a46cd58a008d3927e660222aebef71",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "tools/report_testnet_v2_whitelist_journey.py",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/tools/report_testnet_v2_whitelist_journey.py",
+      "source_sha256": "fa1fbe3427b4f9a2e74f84f4b859861f03b15cb8973d15f1d8f89525cbf978c3",
+      "sha256": "fa1fbe3427b4f9a2e74f84f4b859861f03b15cb8973d15f1d8f89525cbf978c3",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "tools/report_v2_capital_simulation.py",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/tools/report_v2_capital_simulation.py",
+      "source_sha256": "de91a1f7d2c67fcb0b78795f6ca8647d01a0bd8654d7d889e824854b88ba0ce8",
+      "sha256": "de91a1f7d2c67fcb0b78795f6ca8647d01a0bd8654d7d889e824854b88ba0ce8",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "tools/rule_backtest.py",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/tools/rule_backtest.py",
+      "source_sha256": "60c7448d886e576287f9971c0f78d2bb89e076fda592941975dae04c33f08151",
+      "sha256": "60c7448d886e576287f9971c0f78d2bb89e076fda592941975dae04c33f08151",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "tools/sample_fees.py",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/tools/sample_fees.py",
+      "source_sha256": "dc0973359625a05be355d073e652300102ce0e6057f9f46b0d35e3b4dfaae378",
+      "sha256": "dc0973359625a05be355d073e652300102ce0e6057f9f46b0d35e3b4dfaae378",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "tools/sample_vol.py",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/tools/sample_vol.py",
+      "source_sha256": "cf0405093ee25fc834f0f17ca77d82cf0da8c783a05bde1ebc6d3a6e8ec9e6fd",
+      "sha256": "cf0405093ee25fc834f0f17ca77d82cf0da8c783a05bde1ebc6d3a6e8ec9e6fd",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "tools/sandbox_wallets.py",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/tools/sandbox_wallets.py",
+      "source_sha256": "6d7088064b78f7cec4c9c00997fa11e9b33919c07b3245df7cb964e8146c639e",
+      "sha256": "6d7088064b78f7cec4c9c00997fa11e9b33919c07b3245df7cb964e8146c639e",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "tools/sbox_parallel_players.py",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/tools/sbox_parallel_players.py",
+      "source_sha256": "4e512c5bec42814ca9c356bd9caf027048ec77be02ac5ed6c7f579c487c1ec28",
+      "sha256": "4e512c5bec42814ca9c356bd9caf027048ec77be02ac5ed6c7f579c487c1ec28",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "tools/sbox_players.py",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/tools/sbox_players.py",
+      "source_sha256": "548579e528fc41fb86ec3c912ee5650f1bf5fcdf09fd076728735abd2c25353a",
+      "sha256": "548579e528fc41fb86ec3c912ee5650f1bf5fcdf09fd076728735abd2c25353a",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "tools/sbox_reactive_players.py",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/tools/sbox_reactive_players.py",
+      "source_sha256": "eb6818d4f223e3ffc76357a973542ea3af7b6ca538a2db22623772448d51b703",
+      "sha256": "eb6818d4f223e3ffc76357a973542ea3af7b6ca538a2db22623772448d51b703",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "tools/sbox_spot.py",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/tools/sbox_spot.py",
+      "source_sha256": "8c7921bdeb405d6293fbf232bb1c66a010cfcdec08b5f561b4030de2bd673569",
+      "sha256": "8c7921bdeb405d6293fbf232bb1c66a010cfcdec08b5f561b4030de2bd673569",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "tools/sbox_trade_chart.py",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/tools/sbox_trade_chart.py",
+      "source_sha256": "6d6dd17b2f32a3b278410031b4653e84f21cfb91eaf30b6ae3aaca8366e287a1",
+      "sha256": "6d6dd17b2f32a3b278410031b4653e84f21cfb91eaf30b6ae3aaca8366e287a1",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "tools/scan_v3_pools.py",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/tools/scan_v3_pools.py",
+      "source_sha256": "38714c0cdef3e56992fce60ac5871461059df07f3393e3da721b7d6c941a8c11",
+      "sha256": "38714c0cdef3e56992fce60ac5871461059df07f3393e3da721b7d6c941a8c11",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "tools/shortlist.py",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/tools/shortlist.py",
+      "source_sha256": "1759a90baf8d5c109d6ac4e21cb173ca1eca4007bc84d39d319bb6fb692158f6",
+      "sha256": "1759a90baf8d5c109d6ac4e21cb173ca1eca4007bc84d39d319bb6fb692158f6",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "tools/test_cc_desk_batch.py",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/tools/test_cc_desk_batch.py",
+      "source_sha256": "5dd1498f6f12690e704a924933e0a39c9e9d5a3bf010779318a7ab853dbaba9c",
+      "sha256": "5dd1498f6f12690e704a924933e0a39c9e9d5a3bf010779318a7ab853dbaba9c",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "tools/test_fork_rpc_proxy.py",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/tools/test_fork_rpc_proxy.py",
+      "source_sha256": "0e09d051f5b4d698e3a68c0f2b2368fc3fce8613e537774f515895c65ee40e48",
+      "sha256": "0e09d051f5b4d698e3a68c0f2b2368fc3fce8613e537774f515895c65ee40e48",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "tools/test_sandbox_wallets.py",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/tools/test_sandbox_wallets.py",
+      "source_sha256": "fa8702d1c34c3fbe5536a8717d03e4badc3ba9ca0184ecb74f5304d6af491b21",
+      "sha256": "fa8702d1c34c3fbe5536a8717d03e4badc3ba9ca0184ecb74f5304d6af491b21",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "tools/test_sbox_parallel_players.py",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/tools/test_sbox_parallel_players.py",
+      "source_sha256": "a87f41be0f35201c57be9cf0c868c6b0e24730108ae3d26188893a85d4562182",
+      "sha256": "a87f41be0f35201c57be9cf0c868c6b0e24730108ae3d26188893a85d4562182",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "tools/test_sbox_players.py",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/tools/test_sbox_players.py",
+      "source_sha256": "b09aa0962da03c427da3bcca4e0a37473025894df8370b97f8239ad042ba7a95",
+      "sha256": "b09aa0962da03c427da3bcca4e0a37473025894df8370b97f8239ad042ba7a95",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "tools/test_sbox_reactive_players.py",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/tools/test_sbox_reactive_players.py",
+      "source_sha256": "c70980a8d67d343805d57ff733e657a9ab02d67036a43b30cf0098c2e50039a0",
+      "sha256": "c70980a8d67d343805d57ff733e657a9ab02d67036a43b30cf0098c2e50039a0",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "tools/test_sbox_spot.py",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/tools/test_sbox_spot.py",
+      "source_sha256": "b25b7df4dd859981cd6b44077d6d4b3d11eb9f57c24eae6d53f5dc85cd48be82",
+      "sha256": "b25b7df4dd859981cd6b44077d6d4b3d11eb9f57c24eae6d53f5dc85cd48be82",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "tools/tests/test_audit_v2_all_in_floor.py",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/tools/tests/test_audit_v2_all_in_floor.py",
+      "source_sha256": "64e9a57c045f4b3ac2788f0454f0208d9dff0eda9aa10c4b666b6617bb3da45b",
+      "sha256": "64e9a57c045f4b3ac2788f0454f0208d9dff0eda9aa10c4b666b6617bb3da45b",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "tools/tests/test_native_testnet_config.py",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/tools/tests/test_native_testnet_config.py",
+      "source_sha256": "97cbcbf9669922142ced4af59f7835166d4611310641bd3a88bb714c791fa8e8",
+      "sha256": "97cbcbf9669922142ced4af59f7835166d4611310641bd3a88bb714c791fa8e8",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "tools/tsla_stress_replay.py",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/tools/tsla_stress_replay.py",
+      "source_sha256": "7ec66cbffeb3784ffbcad95ed768fe0b73a1baa7925f28f073ab04cdcf4faa32",
+      "sha256": "7ec66cbffeb3784ffbcad95ed768fe0b73a1baa7925f28f073ab04cdcf4faa32",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "tools/v2_launch_check.py",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/tools/v2_launch_check.py",
+      "source_sha256": "3f1229f26841d452336e962da7fa8f5fe85a22e3e64deb72a398e39cc8f795c3",
+      "sha256": "3f1229f26841d452336e962da7fa8f5fe85a22e3e64deb72a398e39cc8f795c3",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "tools/verifier/Dockerfile",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/tools/verifier/Dockerfile",
+      "source_sha256": "9a98e3bcb0548286879189d354cfaae6d8240919ea1a631d8072cf931eada4ec",
+      "sha256": "9a98e3bcb0548286879189d354cfaae6d8240919ea1a631d8072cf931eada4ec",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "tools/verifier/build-context.sh",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/tools/verifier/build-context.sh",
+      "source_sha256": "030dac2d7f538ce876c62b0ad73d21ea45896ac5bf0289834742cbf4ed802be4",
+      "sha256": "030dac2d7f538ce876c62b0ad73d21ea45896ac5bf0289834742cbf4ed802be4",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "tools/verifier/docker-compose.yml",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/tools/verifier/docker-compose.yml",
+      "source_sha256": "826fce61821c958891ab6d5ac4d439049316900e7cd4c1c0bdd088c31c50286d",
+      "sha256": "826fce61821c958891ab6d5ac4d439049316900e7cd4c1c0bdd088c31c50286d",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "tools/verify_contracts.py",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/tools/verify_contracts.py",
+      "source_sha256": "dad98282ae1973083e24e580a5cd88aae290d68fd46aaf0ced0fde4bb5915158",
+      "sha256": "dad98282ae1973083e24e580a5cd88aae290d68fd46aaf0ced0fde4bb5915158",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "tools/verify_feeds.py",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/tools/verify_feeds.py",
+      "source_sha256": "9b155fcd557f075d7f89aa372eb1340ab2811474d714b756c9a722466cf769dd",
+      "sha256": "9b155fcd557f075d7f89aa372eb1340ab2811474d714b756c9a722466cf769dd",
+      "markdown_link_changes": []
+    },
+    {
+      "path": "tools/verify_testnet_whitelist.py",
+      "source_url": "https://github.com/keyuyuan/hedgefund/blob/48a41e2d53c8d24505e3313ae01a01c153b9e721/tools/verify_testnet_whitelist.py",
+      "source_sha256": "faeb2fce6698ef8aedca2177c917552079cd9a47632e7a46602ab45884e1d891",
+      "sha256": "faeb2fce6698ef8aedca2177c917552079cd9a47632e7a46602ab45884e1d891",
+      "markdown_link_changes": []
+    }
+  ]
+}

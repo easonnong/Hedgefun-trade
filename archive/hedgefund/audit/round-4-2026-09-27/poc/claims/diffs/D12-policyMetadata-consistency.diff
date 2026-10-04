@@ -1,0 +1,12 @@
+diff --git a/src/v2/V2TreasuryDeployer.sol b/src/v2/V2TreasuryDeployer.sol
+index 5ce7353..286ac27 100644
+--- a/src/v2/V2TreasuryDeployer.sol
++++ b/src/v2/V2TreasuryDeployer.sol
+@@ -234,7 +234,6 @@ contract V2TreasuryDeployer is BoundDeployer {
+         } catch {
+             revert BadPolicy();
+         }
+-        if (engineVersion == 0 || configSchema == 0 || capabilities == 0) revert BadPolicy();
+ 
+         bytes32 runtimeCodeHash = implementation.codehash;
+         policyKey = keccak256(

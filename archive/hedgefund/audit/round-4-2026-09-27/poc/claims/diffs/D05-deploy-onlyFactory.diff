@@ -1,0 +1,12 @@
+diff --git a/src/v2/V2TreasuryDeployer.sol b/src/v2/V2TreasuryDeployer.sol
+index 5ce7353..6fecd2f 100644
+--- a/src/v2/V2TreasuryDeployer.sol
++++ b/src/v2/V2TreasuryDeployer.sol
+@@ -366,7 +366,6 @@ contract V2TreasuryDeployer is BoundDeployer {
+     }
+ 
+     function deploy(bytes32 salt, bytes calldata args) external returns (address a) {
+-        _onlyFactory();
+         _validate(args);
+         bytes memory code = _code(salt, args);
+         bytes32 initCodeHash = keccak256(code);

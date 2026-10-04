@@ -1,0 +1,12 @@
+diff --git a/src/v2/HedgeFunV2EngineTreasury.sol b/src/v2/HedgeFunV2EngineTreasury.sol
+index 555f237..39d8dbb 100644
+--- a/src/v2/HedgeFunV2EngineTreasury.sol
++++ b/src/v2/HedgeFunV2EngineTreasury.sol
+@@ -269,7 +269,6 @@ contract HedgeFunV2EngineTreasury is HedgeFunV2Treasury {
+         // barely consuming the daily budget. The check must use the actual fill and must happen before any strategy
+         // state is committed; reverting here rolls the swap and its transfers back atomically.
+         if (result.turnover < _params.minLotUsdg) revert NotDue();
+-        if (result.turnover > limits.remainingDaily) revert BadIntent();
+         turnoverEpoch = limits.epoch;
+         turnoverInEpoch = limits.used + result.turnover;
+         lastStrategyAt = block.timestamp;

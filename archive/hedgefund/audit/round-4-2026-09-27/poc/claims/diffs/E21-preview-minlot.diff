@@ -1,0 +1,21 @@
+diff --git a/src/v2/HedgeFunV2EngineTreasury.sol b/src/v2/HedgeFunV2EngineTreasury.sol
+index 555f237..535f1b1 100644
+--- a/src/v2/HedgeFunV2EngineTreasury.sol
++++ b/src/v2/HedgeFunV2EngineTreasury.sol
+@@ -228,7 +228,7 @@ contract HedgeFunV2EngineTreasury is HedgeFunV2Treasury {
+         uint256 capUsdg =
+             Math.min(Math.min(limits.maxTrade, limits.remainingDaily), context.stockValueUsdg - targetValue);
+         offered = Math.min(requested, Math.min(context.stockInventory, _ruleStockFor(capUsdg, price)));
+-        if (offered == 0 || _ruleValue(offered, price) < _params.minLotUsdg) return 0;
++        if (offered == 0) return 0;
+     }
+ 
+     function _previewBuy(StrategyContext memory context, uint256 requested, ExecutionLimits memory limits)
+@@ -243,7 +243,6 @@ contract HedgeFunV2EngineTreasury is HedgeFunV2Treasury {
+         uint256 capUsdg =
+             Math.min(Math.min(limits.maxTrade, limits.remainingDaily), targetValue - context.stockValueUsdg);
+         offered = Math.min(Math.min(requested, capUsdg), context.usdgInventory);
+-        if (offered < _params.minLotUsdg) return 0;
+     }
+ 
+     /// @notice Execute one bounded policy action. Keepers choose no action, route, lot, price or recipient.

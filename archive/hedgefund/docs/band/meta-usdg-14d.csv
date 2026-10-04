@@ -1,0 +1,5 @@
+bandBpsPerHour,open_cash_pct,open_overnight_pct,open_weekend_pct,open_all_pct,pull_p50_bps,pull_p99_bps,pull_max_bps,worstcase_pull_p50_bps,worstcase_pull_p99_bps,worstcase_fill_vs_feed_p99_bps
+0,97.4,99.4,0.0,64.0,0.0,0.0,0.0,0.0,0.0,100.0
+5,97.4,99.4,100.0,99.3,0.0,17.5,35.4,23.6,367.4,467.4
+10,97.4,99.4,100.0,99.3,0.0,17.5,35.4,47.2,734.7,834.7
+25,97.4,99.4,100.0,99.3,0.0,17.5,35.4,118.0,1836.8,1936.8

@@ -1,0 +1,12 @@
+diff --git a/src/v2/HedgeFunV2EngineTreasury.sol b/src/v2/HedgeFunV2EngineTreasury.sol
+index 555f237..f678945 100644
+--- a/src/v2/HedgeFunV2EngineTreasury.sol
++++ b/src/v2/HedgeFunV2EngineTreasury.sol
+@@ -391,7 +391,6 @@ contract HedgeFunV2EngineTreasury is HedgeFunV2Treasury {
+ 
+     function _policyIntent(StrategyContext memory context) private view returns (StrategyIntent memory intent) {
+         address implementation = policyImplementation;
+-        if (implementation.codehash != policyRuntimeCodeHash) revert PolicyUnavailable();
+         bytes memory callData = abi.encodeCall(IStrategyPolicy.decide, (context, _engineConfig, policyState));
+         bool success;
+         uint256 size;

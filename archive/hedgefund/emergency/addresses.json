@@ -1,0 +1,34 @@
+{
+  "_safe": "The protocol Safe for OWNER, PROTOCOL and CALENDAR_OWNER: Safe 1.4.1 on the canonical singleton 0x29fcb43b46531bca003ddc8fcb67ffe91900c762, chain 4663, 3-of-4, no modules, no transaction guard. Re-verified on chain 2026-09-21 after the hot key 0x719A...F13b was swapped out for a hardware key 0x4Ab357B850C7Cb8a103C531303d5Ae38ff66D703 and the threshold was raised 2 -> 3; Safe nonce was 3; the 3-of-4 test transfer (nonce 3 -> 4, tx 0xebb2bf18...8279) was signed by 0x4Ab3...D703 (Ledger), 0x6912...490b and 0xF9D2...9692. Re-verify with the commands in docs/DEPLOYMENT.md section 5 before relying on this line.",
+  "chainId": 4663,
+  "rpc": "https://rpc.mainnet.chain.robinhood.com",
+  "safe": "0x2910117dd2cB431173Ae9Fb6eAF30726321d1693",
+  "factory": "0x58F6Ced8d02cD2567f1458801440Bc4eb67fA961",
+  "calendars": [
+    "0xFE9E85f0C258Fc2757eB6Acd1ca032Ec860487F5"
+  ],
+  "coveredCallDesk": "0xb28Aa6ADE3f4504B5554dc1BDb23EBa2FE1afD87",
+  "_coveredCallDesk": "CoveredCallDesk (src/options/CoveredCallDesk.sol), deployed 2026-10-01 at block 77098456, tx 0xd73c0dfaf079c056994d24c694d7fac09259ba6ef4c3f78265e4cd3222c65fda, deployer 0x97FBf8E94B5e2873aFB5c67BFe4546978670c48B (no role). owner = safe; usdg and calendar as above; runtime 15,265 B. Inert until the Safe signs the setup batch (tools/cc_desk_batch.py setup): nothing listed, no writer, no buyer. tools/cc_desk_batch.py decode names this address.",
+  "stocks": {
+    "NVDA": "0xd0601CE157Db5bdC3162BbaC2a2C8aF5320D9EEC",
+    "SPCX": "0x4a0E65A3EcceC6dBe60AE065F2e7bb85Fae35eEa",
+    "CRCL": "0xdF0992E440dD0be65BD8439b609d6D4366bf1CB5",
+    "GOOGL": "0x2e0847E8910a9732eB3fb1bb4b70a580ADAD4FE3",
+    "AMZN": "0x12f190a9F9d7D37a250758b26824B97CE941bF54",
+    "GME": "0x1b0E319c6A659F002271B69dB8A7df2F911c153E",
+    "META": "0xc0D6457C16Cc70d6790Dd43521C899C87ce02f35",
+    "USAR": "0xd917B029C761D264c6A312BBbcDA868658eF86a6",
+    "MSTR": "0xec262a75e413fAfD0dF80480274532C79D42da09",
+    "AMD": "0x86923f96303D656E4aa86D9d42D1e57ad2023fdC",
+    "MU": "0xfF080c8ce2E5feadaCa0Da81314Ae59D232d4afD",
+    "INTC": "0xc72b96e0E48ecd4DC75E1e45396e26300BC39681",
+    "AAPL": "0xaF3D76f1834A1d425780943C99Ea8A608f8a93f9",
+    "QQQ": "0xD5f3879160bc7c32ebb4dC785F8a4F505888de68",
+    "MSFT": "0xe93237C50D904957Cf27E7B1133b510C669c2e74",
+    "TSLA": "0x322F0929c4625eD5bAd873c95208D54E1c003b2d",
+    "USO": "0xa30FA36Db767ad9eD3f7a60fC79526fB4d56D344",
+    "GLD": "0xC9a981FEE1F9DEc688bb123ccDeCc63D0deBFC4e"
+  },
+  "_stocks": "The first batch: nine decided 2026-09-21, AMD/MU/INTC added 2026-09-22. This file must list EVERY stock ever passed to list(), not just the ones live today: a delisted stock still has launched treasuries priced off its oracle. Oracles (one per stock, production calendar, 26 h ages) deployed at block 69486810; see deploy/first-batch-2026-09-22.json. Second batch, prepared 2026-09-24 (AAPL, QQQ, MSFT, TSLA, USO, GLD): oracles by Safe CreateCall.performCreate2 at the addresses in deploy/second-batch-2026-09-24.json. Listed on chain at block 71689915 (Safe nonces 9 and 10).",
+  "_deploy": "Production deploy 2026-09-22, commit 3dc07eb (src identical to sandbox-tested 8bb330e), block 69454565, deployer 0x97FBf8E94B5e2873aFB5c67BFe4546978670c48B. hook 0x2A16d0973385952cFBE750D37f803d0958472844 (bound to the factory), launchRouter 0x470F5DeB0897118F6575F72183781C6a0610E1FA, treasuryDeployer 0x05BC7875a7d61C3bbA2D7737D40C81aF5fD10DBE, tokenDeployer 0x9C0440dCc1b651C4707aa44E0eA083Fa4E0E8A6b. tradeRouter 0xb281F7D91325A3A386A00cA0F6010BC8B1491c8C (forge create, same commit, tx 0x015f0524...b16e; periphery, needs no setLauncher). All seven verified on Sourcify (creation and runtime match). owner = protocol = calendar owner = safe. State on 2026-09-22: all twelve stocks listed, launch fee 5 USDG, and publicLaunch was opened at Safe nonce 8 -- anyone can launch, so the only complete index of strategies is the chain (factory.strategyCount/strategies, or Launched events from block 69454565); see docs/ADDRESSES.md."
+}

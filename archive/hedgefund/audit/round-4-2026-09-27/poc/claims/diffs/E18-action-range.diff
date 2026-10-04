@@ -1,0 +1,14 @@
+diff --git a/src/v2/HedgeFunV2EngineTreasury.sol b/src/v2/HedgeFunV2EngineTreasury.sol
+index 555f237..a03f663 100644
+--- a/src/v2/HedgeFunV2EngineTreasury.sol
++++ b/src/v2/HedgeFunV2EngineTreasury.sol
+@@ -372,8 +372,7 @@ contract HedgeFunV2EngineTreasury is HedgeFunV2Treasury {
+     }
+ 
+     function _basicIntentValid(StrategyIntent memory intent) private view returns (bool) {
+-        return intent.configHash == configHash && intent.nonce == strategyNonce
+-            && uint8(intent.action) <= uint8(StrategyAction.BuybackBurn);
++        return intent.configHash == configHash && intent.nonce == strategyNonce;
+     }
+ 
+     function _riskConfig()

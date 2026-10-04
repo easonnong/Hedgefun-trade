@@ -1,0 +1,12 @@
+diff --git a/src/v2/V2LiquidityVault.sol b/src/v2/V2LiquidityVault.sol
+index ad496af..bb6db2a 100644
+--- a/src/v2/V2LiquidityVault.sol
++++ b/src/v2/V2LiquidityVault.sol
+@@ -113,7 +113,6 @@ contract V2LiquidityVault is IUnlockCallback {
+ 
+     /// @dev Only collectFees can make this self-call. A later collectFees retries any parked stock fee.
+     function creditPendingStock() external returns (uint256 amount) {
+-        if (msg.sender != address(this)) revert Busy();
+         amount = pendingStockFee;
+         if (amount == 0) return 0;
+         IERC20 asset = IERC20(stock);

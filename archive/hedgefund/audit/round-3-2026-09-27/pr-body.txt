@@ -1,0 +1,97 @@
+Title:
+audit: external round 3 over the v2 PR (03ad70e) — 0 Critical, 0 High, 6 Medium
+
+Base: main    Compare: audit/round-3-v2-review
+
+Body:
+--------------------------------------------------------------------------------
+External audit round 3, numbered separately from `AUDIT.md`. It audits
+`codex/v2-main-integration` @ `03ad70e` against `main` @ `7c3c137`: the nine new v2
+contracts (~1,458 lines — bonding curve, liquidity vault, factory, treasury, two routers,
+two deployers), the ~55 changed lines in four contracts that are already deployed and
+immutable, and the ten `docs/V2_*` documents.
+
+This branch adds documentation only. It changes no contract, no test and no script.
+
+## Result
+
+| | Critical | High | Medium | Low | Info | total |
+|---|---|---|---|---|---|---|
+| everything in the PR | **0** | **0** | **6** | **6** | **23** | **35** |
+| only new in `src/v2/` | 0 | 0 | 4 | 4 | 8 | 16 |
+
+No path was found for anyone to take value that is not theirs. The two places a Critical
+would have lived — the curve's solvency invariant and the vault's structural "fee-only"
+property — were attacked hardest and held, each verified independently by more than one
+layer.
+
+**But read `ISSUES.md`'s preamble before the counts.** V2 is the first thing in this
+protocol that custodies other people's assets, and the rubric this track has been applying
+measures whether anyone *took* money rather than whether anyone *loses* it. "0 Critical"
+means less here than it did in rounds 1 and 2.
+
+## Three scoping facts that set every severity
+
+- **V1 is live** — 9 strategies, 18 listings, read on chain 2026-09-27 — and **nothing in
+  this PR can reach any of it.** `HedgeFunFactory` compiles byte-identically at both refs;
+  the hook grows +873 bytes, so v2 needs its own hook at a newly mined address.
+- **No v2 `Defaults` exist**, so the deployment configuration cannot be audited. Four
+  graded findings live inside parameters nobody has set. This audit certifies no
+  configuration.
+- **Two of the six remediation budgets are already spent**: `CurveDeployer` has 176 bytes
+  of margin and `HedgeFunV2Factory` has 27.
+
+## The six Mediums
+
+- **M-0** The LP fee turns the 90% sell spike from profit-gated into volume-gated and
+  re-armable by anyone every 240 s. A 1-wei buy-back pot arms it; the "buy-back" buys
+  nothing and burns nothing. Fix is zero bytes: ship `spikeBps = 0`, or gate `noteEvent()`
+  on a nonzero `burned`.
+- **M-1** `collectFees()` couples the stock leg to the token burn, so a refused stock
+  transfer also reverts a burn that does not depend on it. The hook in this same repo
+  splits exactly these two legs and says why.
+- **M-2** A full v2 raise is a one-directional buy through the stock's only V3 pool; ten of
+  the eighteen listings are too thin for it. The deliverable is a listing rule, not a count.
+- **M-3** Buyer funds can be permanently stranded on a curve that can never graduate. INTC
+  is a live instance and it is getting worse: the pool delivered 104.1%, then 115.9%, then
+  126.1% short of the requirement over 2026-09-27 alone.
+- **M-4** The enforced parameter floors are 6x and 11x wider than the project's own
+  experiment recommends.
+- **M-5 / M-6** The v2 documents' quantitative evidence does not reproduce at this ref, and
+  its GO verdict is scoped to a ref at which two of the nine contracts did not exist.
+
+## What this round got wrong
+
+Recorded in the report alongside what it found, because a report that lists only its
+successes cannot be used as an input to the next one:
+
+- The lead shipped **two stale baseline numbers** to all four lanes — the same mistake the
+  report criticises the v2 documents for in M-5.
+- The round's **most-promoted structural conclusion was false**. "The only correct
+  `collectFees()` fix is 36 bytes over EIP-170, so `CurveDeployer` must be split" was
+  relayed as the round's most actionable finding; the adversarial pass rebuilt all three
+  candidate fixes and showed it **fits, at +15**.
+- **I-11 was a false positive** on its central sentence, and the lead's tripwire synthesis
+  built on the splitting argument died with it.
+- No context-free lane ran this round, no source claims to have read all 1,458 new lines,
+  and all six sources share one model family.
+
+## What is in the branch
+
+| file | what it answers |
+|---|---|
+| `00-SCOPE.md` | the ref, the live deployment, the byte budget, what is explicitly not covered |
+| `ISSUES.md` | the report — the graded findings and the consolidated safe list |
+| `README.md` | how the round was produced, and every correction made along the way |
+| `VERIFICATION.md` | the adversarial pass and the no-source method review, both in full |
+| `FINDINGS-FULL.md` | all 35 findings written out, the binding rubric, the 75-item safe list, the rejected list |
+| `poc/run.sh` | 32 tests, no network, no RPC — everything marked EXECUTED |
+| `poc/fork/run-fork.sh` | re-measures the live pools behind M-2 and M-3 |
+
+Both runners were verified end to end from a clean checkout of `03ad70e` on 2026-09-27:
+32/32 and 5/5.
+
+Note: `audit/round-2-corrections` (head `c60f12b`) is pushed and still unmerged.
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+--------------------------------------------------------------------------------

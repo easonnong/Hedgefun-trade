@@ -1,0 +1,13 @@
+diff --git a/src/v2/V2TreasuryDeployer.sol b/src/v2/V2TreasuryDeployer.sol
+index 5ce7353..4e32639 100644
+--- a/src/v2/V2TreasuryDeployer.sol
++++ b/src/v2/V2TreasuryDeployer.sol
+@@ -309,7 +309,7 @@ contract V2TreasuryDeployer is BoundDeployer {
+                 || config.schema != k.engineConfigSchema || manifest.implementation == address(0)
+                 || !manifest.enabledForNewLaunches || manifest.implementation.codehash != manifest.runtimeCodeHash
+                 || manifest.engineVersion != config.engineVersion || manifest.configSchema != config.schema
+-                || manifest.capabilities & ~k.capabilities != 0
++
+         ) revert BadPolicy();
+         bytes32 salt = keccak256(abi.encode(symbol, msg.sender, nonce));
+         strategyKindOf[salt] = kind;

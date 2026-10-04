@@ -1,0 +1,12 @@
+diff --git a/src/v2/HedgeFunV2EngineTreasury.sol b/src/v2/HedgeFunV2EngineTreasury.sol
+index 555f237..f61818e 100644
+--- a/src/v2/HedgeFunV2EngineTreasury.sol
++++ b/src/v2/HedgeFunV2EngineTreasury.sol
+@@ -248,7 +248,6 @@ contract HedgeFunV2EngineTreasury is HedgeFunV2Treasury {
+ 
+     /// @notice Execute one bounded policy action. Keepers choose no action, route, lot, price or recipient.
+     function execute() external override nonReentrant returns (Action action, uint256 id) {
+-        _bookInventory();
+         (bool ok, uint256 p) = health();
+         if (!ok) revert Unhealthy();
+         (bool live,) = _oracle.tryPrice();

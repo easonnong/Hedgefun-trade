@@ -1,0 +1,12 @@
+diff --git a/src/v2/HedgeFunV2EngineTreasury.sol b/src/v2/HedgeFunV2EngineTreasury.sol
+index 555f237..435ea9e 100644
+--- a/src/v2/HedgeFunV2EngineTreasury.sol
++++ b/src/v2/HedgeFunV2EngineTreasury.sol
+@@ -401,7 +401,6 @@ contract HedgeFunV2EngineTreasury is HedgeFunV2Treasury {
+             size := returndatasize()
+         }
+         if (!success) revert PolicyFailure();
+-        if (size != INTENT_RETURN_BYTES || size > policyReturnLimit) revert BadPolicyReturn();
+         bytes memory result = new bytes(size);
+         assembly ("memory-safe") { returndatacopy(add(result, 0x20), 0, size) }
+         intent = abi.decode(result, (StrategyIntent));

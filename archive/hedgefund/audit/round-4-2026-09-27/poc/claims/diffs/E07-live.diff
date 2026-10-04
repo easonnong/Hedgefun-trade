@@ -1,0 +1,13 @@
+diff --git a/src/v2/HedgeFunV2EngineTreasury.sol b/src/v2/HedgeFunV2EngineTreasury.sol
+index 555f237..b2d37f3 100644
+--- a/src/v2/HedgeFunV2EngineTreasury.sol
++++ b/src/v2/HedgeFunV2EngineTreasury.sol
+@@ -252,7 +252,7 @@ contract HedgeFunV2EngineTreasury is HedgeFunV2Treasury {
+         (bool ok, uint256 p) = health();
+         if (!ok) revert Unhealthy();
+         (bool live,) = _oracle.tryPrice();
+-        if (!live) revert Unhealthy();
++        live;
+ 
+         StrategyContext memory context = _context(p, bookedStock);
+         StrategyIntent memory intent = _policyIntent(context);

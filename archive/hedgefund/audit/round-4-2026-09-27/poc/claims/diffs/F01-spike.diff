@@ -1,0 +1,12 @@
+diff --git a/src/v2/HedgeFunV2Factory.sol b/src/v2/HedgeFunV2Factory.sol
+index f5f0387..fa11f99 100644
+--- a/src/v2/HedgeFunV2Factory.sol
++++ b/src/v2/HedgeFunV2Factory.sol
+@@ -103,7 +103,6 @@ contract HedgeFunV2Factory is HedgeFunFactory {
+         rates.snipeSeconds = 0;
+         // LP fees can fund permissionless buy-backs without any realised strategy profit.
+         // They must not re-arm the sell spike for every new burst of trading volume.
+-        rates.spikeBps = 0;
+         _frozen[id] = Frozen(key, rates);
+         IERC20(token).safeTransfer(curve, d.supply);
+         emit CurveLaunched(id, curve, p.saleBps, p.virtualStock);
