@@ -8,6 +8,8 @@ import {HedgeFunV2EngineTreasury} from "../src/v2/HedgeFunV2EngineTreasury.sol";
 import {HedgeFunV2UpgradeableBuybackTreasury} from "../src/v2/HedgeFunV2UpgradeableBuybackTreasury.sol";
 import {HedgeFunV2UpgradeableEngineTreasury} from "../src/v2/HedgeFunV2UpgradeableEngineTreasury.sol";
 import {RegisterV2UpgradeableKinds} from "../script/RegisterV2UpgradeableKinds.s.sol";
+import {ReviewedTreasuryRegistry} from "../script/helpers/ReviewedTreasuryRegistry.sol";
+import {MisleadingDelayController} from "./V2TradablePercentRegistration.t.sol";
 
 contract V2UpgradeableKindRegistrationTest is V2FactoryFixture {
     RegisterV2UpgradeableKinds private tool;
@@ -65,6 +67,17 @@ contract V2UpgradeableKindRegistrationTest is V2FactoryFixture {
         assertEq(a, vm.computeCreateAddress(owner, 14));
         assertEq(b, vm.computeCreateAddress(owner, 15));
         assertEq(vm.getNonce(owner), 17);
+        tool.check(registry, k);
+    }
+
+    function test_matchingDelayGettersDoNotSubstituteForControllerCode() public {
+        RegisterV2UpgradeableKinds.Kinds memory k = tool.register(owner, factory);
+        uint256 count = registry.kindCount();
+        vm.etch(address(registry.upgradeController()), address(new MisleadingDelayController()).code);
+        vm.expectRevert(ReviewedTreasuryRegistry.IncompatibleTreasuryRegistry.selector);
+        tool.register(owner, factory);
+        assertEq(registry.kindCount(), count, "nothing registered behind an unreviewed controller");
+        vm.expectRevert(ReviewedTreasuryRegistry.IncompatibleTreasuryRegistry.selector);
         tool.check(registry, k);
     }
 

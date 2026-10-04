@@ -8,12 +8,14 @@ import {V2TreasuryUpgradeController} from "../src/v2/V2TreasuryUpgradeController
 import {HedgeFunV2UpgradeableBuybackTreasury} from "../src/v2/HedgeFunV2UpgradeableBuybackTreasury.sol";
 import {HedgeFunV2UpgradeableEngineTreasury} from "../src/v2/HedgeFunV2UpgradeableEngineTreasury.sol";
 import {StrategyCapabilities} from "../src/v2/strategy/IStrategyPolicy.sol";
-import {IncomeKindCompatibility} from "./helpers/IncomeKindCompatibility.sol";
+import {ReviewedTreasuryRegistry} from "./helpers/ReviewedTreasuryRegistry.sol";
 
 /// @notice Append upgradeable buyback and spot-engine kinds for FUTURE launches on a reviewed #25 factory.
 /// @dev Existing immutable kinds and treasuries are not modified. Kind IDs come from readback, not constants.
 /// Each kind uses two operator CREATEs plus one registration: six transactions, simulated before broadcasting.
-contract RegisterV2UpgradeableKinds is IncomeKindCompatibility {
+/// The registry and its upgrade controller must be the reviewed runtimes with every immutable bound: a
+/// controller's `owner()` and `UPGRADE_DELAY()` getters alone do not prove that it enforces either.
+contract RegisterV2UpgradeableKinds is ReviewedTreasuryRegistry {
     error BadBinding();
     error BadReadback();
 
@@ -32,8 +34,7 @@ contract RegisterV2UpgradeableKinds is IncomeKindCompatibility {
     }
 
     function register(address operator, HedgeFunV2Factory factory) public returns (Kinds memory k) {
-        _checkIncomeCompatibility(factory);
-        V2TreasuryDeployer registry = V2TreasuryDeployer(address(factory.treasuryDeployer()));
+        V2TreasuryDeployer registry = _reviewedRegistry(factory);
         V2TreasuryUpgradeController controller = registry.upgradeController();
         if (
             factory.owner() != operator || registry.factory() != address(factory)
@@ -57,8 +58,7 @@ contract RegisterV2UpgradeableKinds is IncomeKindCompatibility {
 
     function check(V2TreasuryDeployer registry, Kinds memory k) public view {
         HedgeFunV2Factory factory = HedgeFunV2Factory(registry.factory());
-        if (address(factory.treasuryDeployer()) != address(registry)) revert BadBinding();
-        _checkIncomeCompatibility(factory);
+        if (address(_reviewedRegistry(factory)) != address(registry)) revert BadBinding();
         if (k.buyback == 0 || k.engine == 0 || k.buyback == k.engine) revert BadReadback();
         _same(registry, k.buyback, type(HedgeFunV2UpgradeableBuybackTreasury).creationCode, 0, 0, 0);
         _same(registry, k.engine, type(HedgeFunV2UpgradeableEngineTreasury).creationCode, 1, 1, 3);

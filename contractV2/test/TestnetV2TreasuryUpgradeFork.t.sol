@@ -54,7 +54,8 @@ contract TestnetV2TreasuryUpgradeForkTest is Test {
     address internal creator = makeAddr("upgradeable kinds fork creator");
     address internal keeper = makeAddr("upgradeable kinds fork keeper");
     bytes32 internal policyKey;
-    bytes32[3] internal oldKinds;
+    bytes32[] internal oldKinds;
+    uint8 internal firstNewKind;
 
     struct Launch {
         uint256 id;
@@ -86,14 +87,17 @@ contract TestnetV2TreasuryUpgradeForkTest is Test {
         stock = IERC20(listed);
         (oracle, venue,,) = factory.listings(listed);
         market = TestnetMarket(vm.envOr("TESTNET_MARKET", address(0xc1AF2f52980F8A7AA4E90A8E30D5c3FaF0375f21)));
-        assertEq(registry.kindCount(), 3, "recorded deployment starts with legacy kinds 0/1/2");
-        for (uint8 i; i < 3; ++i) {
-            oldKinds[i] = _kindDigest(i);
+        // The registry is append-only and this runs at a floating block: whatever is registered there now is
+        // the baseline, and must still be there, unchanged, after this registration.
+        firstNewKind = uint8(registry.kindCount());
+        assertGe(firstNewKind, 3, "recorded deployment has at least the legacy kinds 0/1/2");
+        for (uint8 i; i < firstNewKind; ++i) {
+            oldKinds.push(_kindDigest(i));
         }
         kinds = new RegisterV2UpgradeableKinds().register(factory.owner(), factory);
-        assertEq(kinds.buyback, 3);
-        assertEq(kinds.engine, 4);
-        assertEq(registry.kindCount(), 5);
+        assertEq(kinds.buyback, firstNewKind);
+        assertEq(kinds.engine, firstNewKind + 1);
+        assertEq(registry.kindCount(), uint256(firstNewKind) + 2);
         _assertLegacyKindsUnchanged();
 
         V2RebalancePolicy policy = new V2RebalancePolicy();
@@ -373,7 +377,7 @@ contract TestnetV2TreasuryUpgradeForkTest is Test {
     }
 
     function _assertLegacyKindsUnchanged() private view {
-        for (uint8 i; i < 3; ++i) {
+        for (uint8 i; i < firstNewKind; ++i) {
             assertEq(_kindDigest(i), oldKinds[i], "legacy kind manifest/chunks changed");
         }
     }
