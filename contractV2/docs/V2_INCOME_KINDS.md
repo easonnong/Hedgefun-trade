@@ -176,10 +176,14 @@ Local, offline:
   hook and vault.
 
 Fork, no key and no broadcast, against the deployed testnet factory
-`0xACEB03aAeE5494Aa54929Ec840630ae32A9ade0A` at block 128485038: the registration script run as the factory's
-owner, then a launch of each of the four kinds through the deployed factory, hook and vault, graduation, trades
-both ways, and the income split at the kind's ratio. The take-profit and dip rungs are not exercised on the fork;
-they need the test stock's price moved.
+`0xACEB03aAeE5494Aa54929Ec840630ae32A9ade0A` at block 128498681, six tests:
+
+- the registration script run as the factory's owner, then a launch of each of the four kinds through the
+  deployed factory, hook and vault, graduation, trades both ways, and the income split at the kind's ratio;
+- with the clock moved to a Tuesday session and the deployed test market's owner moving the stock's V3 pool and
+  feed: a strategy kind opens its principal lot at graduation, takes profit on the deployed venue with the profit
+  split 25/75, refuses a dip while arrived tax is unclassified, splits that tax on `book()` and then buys the dip;
+- a strategy kind with a stop sells at the stop and pays no dividend.
 
 ```sh
 INCOME_KINDS_FORK=true INCOME_KINDS_FORK_BLOCK=$(cast block-number --rpc-url https://rpc.testnet.chain.robinhood.com) \

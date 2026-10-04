@@ -16,6 +16,9 @@ import {V2StakingIncome} from "../src/v2/V2StakingIncome.sol";
 import {V2LiquidityVault} from "../src/v2/V2LiquidityVault.sol";
 import {V2TreasuryDeployer} from "../src/v2/V2TreasuryDeployer.sol";
 import {RegisterV2IncomeKinds} from "../script/RegisterV2IncomeKinds.s.sol";
+import {TestnetMarket} from "../script/testnet/TestnetMarket.sol";
+import {PriceOracle} from "../src/PriceOracle.sol";
+import {HedgeFunV2Treasury} from "../src/v2/HedgeFunV2Treasury.sol";
 
 /// Opt-in, in-memory fork only: no key, no broadcast. The registration script runs as the DEPLOYED testnet factory's
 /// owner against the deployed registry, then a creator launches with each income kind through the deployed factory,
@@ -61,6 +64,100 @@ contract TestnetV2IncomeKindsForkTest is Test {
     function test_strategy25KindOnDeployedFactory() public { _strategyLifecycle(kinds.strategy25, 2500); }
     function test_strategy50KindOnDeployedFactory() public { _strategyLifecycle(kinds.strategy50, 5000); }
 
+    /// The strategy's rungs on the deployed venue. The clock is moved to a Tuesday session so the stock oracle is
+    /// live; the deployed test market's owner moves the stock's V3 pool and feed together, as it does on testnet.
+    function test_strategy25TakesProfitAndBuysTheDipOnDeployedVenue() public {
+        TestnetMarket market = TestnetMarket(vm.envOr("TESTNET_MARKET", address(0xc1AF2f52980F8A7AA4E90A8E30D5c3FaF0375f21)));
+        (address oracle_, address pool,,) = factory.listings(address(stock));
+        vm.warp(_nextTuesdaySession());
+        (bool live, uint256 p0) = PriceOracle(oracle_).tryPrice();
+        assertTrue(live, "the stock oracle is live in the session");
+
+        _launch(kinds.strategy25);
+        HedgeFunV2StrategyIncomeTreasury s = HedgeFunV2StrategyIncomeTreasury(address(treasury));
+        vm.startPrank(creator);
+        stock.approve(address(curve), type(uint256).max);
+        curve.buy(type(uint256).max, 1, creator, block.timestamp);
+        vm.stopPrank();
+        assertEq(s.lotCount(), 1, "the principal's lot opened at graduation");
+        (uint256 qty, uint256 cost,,) = s.lots(0);
+        assertEq(qty, s.principalStock());
+        assertEq(cost, p0);
+
+        _move(market, pool, p0 * 106 / 100);
+        (bool healthy,) = s.health();
+        assertTrue(healthy);
+        uint256 usdgBefore = s.reserveUsdg();
+        vm.prank(staker); // any keeper
+        (HedgeFunV2Treasury.Action a,) = s.execute();
+        assertEq(uint256(a), uint256(HedgeFunV2Treasury.Action.TakeProfit));
+        uint256 toStakers = staking.totalFunded();
+        uint256 toBuyback = s.buybackStock();
+        assertGt(toStakers, 0, "profit reached the staking pool");
+        assertEq(toStakers, (toStakers + toBuyback) * 2500 / 10000);
+        assertGt(s.reserveUsdg(), usdgBefore, "the sold principal is USDG for the next dip");
+        assertGt(stock.balanceOf(staker), 0, "the keeper was paid its bounty in stock");
+        assertEq(stock.balanceOf(address(s)), s.bookedStock() + s.buybackStock());
+
+        // tax arrives, then the stock falls more than 5% below the sale
+        vm.prank(creator);
+        stock.transfer(address(s), 1e18);
+        _move(market, pool, p0);
+        uint256 lots = s.lotCount();
+        vm.expectRevert();
+        s.execute();
+        assertEq(s.lotCount(), lots, "no dip while arrived stock is unclassified");
+        assertTrue(s.book());
+        assertEq(staking.totalFunded(), toStakers + 0.25e18);
+        (a,) = s.execute();
+        assertEq(uint256(a), uint256(HedgeFunV2Treasury.Action.BuyDip));
+        assertEq(s.lotCount(), lots + 1);
+        assertEq(stock.balanceOf(address(s)), s.bookedStock() + s.buybackStock());
+    }
+
+    /// A stop is a loss: it must still execute, and it pays no dividend.
+    function test_strategy25StopLossOnDeployedVenue() public {
+        TestnetMarket market = TestnetMarket(vm.envOr("TESTNET_MARKET", address(0xc1AF2f52980F8A7AA4E90A8E30D5c3FaF0375f21)));
+        (address oracle_, address pool,,) = factory.listings(address(stock));
+        vm.warp(_nextTuesdaySession());
+        (bool live, uint256 p0) = PriceOracle(oracle_).tryPrice();
+        assertTrue(live);
+        stopBps = 500;
+        _launch(kinds.strategy25);
+        HedgeFunV2StrategyIncomeTreasury s = HedgeFunV2StrategyIncomeTreasury(address(treasury));
+        vm.startPrank(creator);
+        stock.approve(address(curve), type(uint256).max);
+        curve.buy(type(uint256).max, 1, creator, block.timestamp);
+        vm.stopPrank();
+        assertEq(s.lotCount(), 1);
+        uint256 booked = s.bookedStock();
+        _move(market, pool, p0 * 94 / 100);
+        vm.prank(staker);
+        (HedgeFunV2Treasury.Action a,) = s.execute();
+        assertEq(uint256(a), uint256(HedgeFunV2Treasury.Action.Stop));
+        assertLt(s.bookedStock(), booked, "stock was sold at the stop");
+        assertGt(s.reserveUsdg(), 0);
+        assertEq(staking.totalFunded(), 0, "a loss pays no dividend");
+        assertEq(s.buybackStock(), 0);
+        assertEq(stock.balanceOf(address(s)), s.bookedStock());
+    }
+
+    function _move(TestnetMarket market, address pool, uint256 price) private {
+        address marketOwner = market.owner();
+        vm.prank(marketOwner);
+        market.setPrice(pool, price);
+        vm.warp(block.timestamp + 11 minutes); // past the treasury's 10-minute pool mean
+        vm.prank(marketOwner);
+        market.poke(pool);
+    }
+
+    /// 15:00 UTC on the first Tuesday after the fork block: inside the US session in either daylight regime.
+    function _nextTuesdaySession() private view returns (uint256) {
+        uint256 day = block.timestamp / 1 days + 1;
+        while ((day + 4) % 7 != 2) ++day; // day 0 was a Thursday
+        return day * 1 days + 15 hours;
+    }
+
     /// The deployed registry, factory, hook and vault accept a strategy kind: it launches, graduates, records its
     /// principal, splits the tax share and sends LP fees to the buy-back. Whether the principal's lot opens at
     /// graduation depends on the testnet stock market being open at the fork block, so both outcomes are checked.
@@ -100,6 +197,7 @@ contract TestnetV2IncomeKindsForkTest is Test {
         assertEq(stock.balanceOf(address(s)), principal + s.buybackStock(), "principal untouched");
     }
 
+    uint16 stopBps; // 0 unless a test sets it before _launch
     uint256 id;
     HedgeFunBondingCurve curve;
     HedgeFunV2IncomeTreasury treasury;
@@ -124,7 +222,7 @@ contract TestnetV2IncomeKindsForkTest is Test {
         q.creator = creator;
         q.taxBps = d.minTaxBps;
         q.creatorBps = 1000;
-        q.tp1Bps = 500; q.tp2Bps = 1000; q.dipBps = 500; q.lotBps = 2000;
+        q.tp1Bps = 500; q.tp2Bps = 1000; q.dipBps = 500; q.lotBps = 2000; q.stopBps = stopBps;
         q.maxFee = d.launchFeeAmount;
         (,, q.expectedOpenPriceE18,) = factory.listings(address(stock));
         bool native = d.launchFeeCurrency == HedgeFunFactory.FeeCurrency.Native;
