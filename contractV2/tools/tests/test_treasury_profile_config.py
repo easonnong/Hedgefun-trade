@@ -184,6 +184,16 @@ class RegistrationIdentityTest(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "does not commit"):
             self.verify()
 
+    def test_registry_kind_zero_is_the_reviewed_code_or_this_builds_own(self):
+        r = self.reader.responses
+        own = int(fixture_cast("keccak", self.template), 16)
+        for accepted in (TOOL.REVIEWED_KIND_ZERO, own):
+            r[self.registry, "allInTriggerCodeHash()", ()] = [accepted]
+            self.assertEqual(TOOL.kind_zero(self.reader, self.registry, fixture_cast), accepted)
+        r[self.registry, "allInTriggerCodeHash()", ()] = [own + 1]
+        with self.assertRaisesRegex(ValueError, "unreviewed kind-0"):
+            TOOL.kind_zero(self.reader, self.registry, fixture_cast)
+
     def test_numeric_kind_must_not_overflow_or_accept_boolean_alias(self):
         for kind in (0, 255, 256, -1, True, "4"):
             with self.subTest(kind=kind), self.assertRaises(ValueError):

@@ -15,6 +15,7 @@ ROOT = Path(__file__).resolve().parents[1]
 PROFILE = "strategy/rebalance/continuous"
 PROXY = "HedgeFunV2TradablePercentEngineTreasury"
 POLICY = "V2TradablePercentRebalancePolicy"
+REVIEWED_KIND_ZERO = 0x09fb34de0fb09901d28f6ccc1cd6a344471209deb9153d8a4801d48f7e47062e
 # TradablePercentEngineConfig.MAX_ACTION_BPS
 MAX_ACTION_BPS = 2_500
 
@@ -117,6 +118,16 @@ def verify_runtime(reader, address, name, bindings, template_hash, keccak=cast):
         raise ValueError(f"{name}: runtime differs from reviewed release")
 
 
+def kind_zero(reader, registry, keccak=cast):
+    # The reviewed deployment's kind 0, or this build's own for a registry deployed from it; a registry
+    # keeps the kind-0 code it was built with, and this source's moves with the shared treasury base.
+    trigger = reader.words(registry, "allInTriggerCodeHash()")[0]
+    if trigger not in (REVIEWED_KIND_ZERO,
+                       int(keccak("keccak", artifact_bytecode("HedgeFunV2UpgradeableTreasury", "bytecode")), 16)):
+        raise ValueError("registry was built with an unreviewed kind-0 implementation")
+    return trigger
+
+
 def verify_infrastructure(reader, factory, registry, controller, keccak=cast):
     # Same complete immutable binding as the Solidity publication guard. Do not
     # replace these comparisons with a few getters or operator-supplied hashes.
@@ -149,7 +160,7 @@ def verify_infrastructure(reader, factory, registry, controller, keccak=cast):
             or keccak("keccak", reader.code(vault_chunk)).lower()
             != "0xe0b01f54fd3d486753adada93bee53dc2602c494ed2faba0144215b58a2d73f0"):
         raise ValueError("graduation creation code differs from reviewed release")
-    trigger = int(keccak("keccak", artifact_bytecode("HedgeFunV2UpgradeableTreasury", "bytecode")), 16)
+    trigger = kind_zero(reader, registry, keccak)
     verify_runtime(reader, registry, "V2TreasuryDeployer",
         {1335: trigger, 7163: trigger, 975: int(controller, 16)},
         "0xb1b1adc4d2960d06e0eaa957fba812db587e4c8a701b342a027854b6425cacb7", keccak)

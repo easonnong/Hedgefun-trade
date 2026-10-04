@@ -504,7 +504,7 @@ abstract contract HedgeFunTreasuryBase is ReentrancyGuard, IUnlockCallback {
             ok = p != 0 && block.timestamp - lastGoodPriceAt <= MAX_SIZING_AGE;
         }
         if (!ok) revert Unhealthy();
-        uint256 amountIn = Math.min(buybackStock, _ruleStockFor(_params.buybackChunkUsdg, p));
+        uint256 amountIn = Math.min(buybackStock, _buybackChunk(p));
 
         _swapKind = 2;
         (spent, burned) = abi.decode(poolManager.unlock(abi.encode(amountIn)), (uint256, uint256));
@@ -526,6 +526,13 @@ abstract contract HedgeFunTreasuryBase is ReentrancyGuard, IUnlockCallback {
         totalBurned += burned;
         IHedgeFunHook(hook).noteEvent();                                        // starts the sell spike
         emit Buyback(spent, burned);
+    }
+
+    /// @dev the most one buy-back offers the token pool, in stock, before the budget caps it: the listing's fixed
+    ///      `buybackChunkUsdg`. A kind may size it another way; the price limit, the cooldown and the dust floor in
+    ///      `buyback` are not its to change.
+    function _buybackChunk(uint256 p) internal view virtual returns (uint256) {
+        return _ruleStockFor(_params.buybackChunkUsdg, p);
     }
 
     /// @dev the actual token-pool swap: sell `amountIn` of stock for the launch token in `poolKey`. The launch token

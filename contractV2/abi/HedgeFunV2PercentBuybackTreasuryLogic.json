@@ -119,6 +119,19 @@
  },
  {
   "type": "function",
+  "name": "BUYBACK_BPS",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "type": "function",
   "name": "BUYBACK_TWAP_WINDOW",
   "inputs": [],
   "outputs": [
@@ -126,19 +139,6 @@
     "name": "",
     "type": "uint32",
     "internalType": "uint32"
-   }
-  ],
-  "stateMutability": "view"
- },
- {
-  "type": "function",
-  "name": "FUND_GAS_FLOOR",
-  "inputs": [],
-  "outputs": [
-   {
-    "name": "",
-    "type": "uint256",
-    "internalType": "uint256"
    }
   ],
   "stateMutability": "view"
@@ -266,7 +266,7 @@
   "inputs": [],
   "outputs": [
    {
-    "name": "booked",
+    "name": "",
     "type": "bool",
     "internalType": "bool"
    }
@@ -424,6 +424,91 @@
    }
   ],
   "stateMutability": "view"
+ },
+ {
+  "type": "function",
+  "name": "initializeProxy",
+  "inputs": [
+   {
+    "name": "p",
+    "type": "tuple",
+    "internalType": "struct HedgeFunTreasuryBase.Params",
+    "components": [
+     {
+      "name": "tp1Bps",
+      "type": "uint32",
+      "internalType": "uint32"
+     },
+     {
+      "name": "tp2Bps",
+      "type": "uint32",
+      "internalType": "uint32"
+     },
+     {
+      "name": "dipBps",
+      "type": "uint16",
+      "internalType": "uint16"
+     },
+     {
+      "name": "stopBps",
+      "type": "uint16",
+      "internalType": "uint16"
+     },
+     {
+      "name": "lotBps",
+      "type": "uint16",
+      "internalType": "uint16"
+     },
+     {
+      "name": "bountyBps",
+      "type": "uint16",
+      "internalType": "uint16"
+     },
+     {
+      "name": "maxSlippageBps",
+      "type": "uint16",
+      "internalType": "uint16"
+     },
+     {
+      "name": "maxDeviationBps",
+      "type": "uint16",
+      "internalType": "uint16"
+     },
+     {
+      "name": "maxBuybackImpactBps",
+      "type": "uint16",
+      "internalType": "uint16"
+     },
+     {
+      "name": "buybackCooldown",
+      "type": "uint32",
+      "internalType": "uint32"
+     },
+     {
+      "name": "minLotUsdg",
+      "type": "uint256",
+      "internalType": "uint256"
+     },
+     {
+      "name": "buybackChunkUsdg",
+      "type": "uint256",
+      "internalType": "uint256"
+     },
+     {
+      "name": "sellChunkUsdg",
+      "type": "uint256",
+      "internalType": "uint256"
+     },
+     {
+      "name": "bandBpsPerHour",
+      "type": "uint16",
+      "internalType": "uint16"
+     }
+    ]
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
  },
  {
   "type": "function",
@@ -787,19 +872,6 @@
  },
  {
   "type": "function",
-  "name": "principalStock",
-  "inputs": [],
-  "outputs": [
-   {
-    "name": "",
-    "type": "uint256",
-    "internalType": "uint256"
-   }
-  ],
-  "stateMutability": "view"
- },
- {
-  "type": "function",
   "name": "reserveUsdg",
   "inputs": [],
   "outputs": [
@@ -849,32 +921,6 @@
    }
   ],
   "stateMutability": "view"
- },
- {
-  "type": "function",
-  "name": "staking",
-  "inputs": [],
-  "outputs": [
-   {
-    "name": "",
-    "type": "address",
-    "internalType": "contract V2StakingIncome"
-   }
-  ],
-  "stateMutability": "view"
- },
- {
-  "type": "function",
-  "name": "stakingBps",
-  "inputs": [],
-  "outputs": [
-   {
-    "name": "",
-    "type": "uint16",
-    "internalType": "uint16"
-   }
-  ],
-  "stateMutability": "pure"
  },
  {
   "type": "function",
@@ -1081,6 +1127,19 @@
  },
  {
   "type": "function",
+  "name": "upgradeConfigHash",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "type": "function",
   "name": "usdg",
   "inputs": [],
   "outputs": [
@@ -1095,46 +1154,6 @@
  {
   "type": "function",
   "name": "wire",
-  "inputs": [
-   {
-    "name": "",
-    "type": "tuple",
-    "internalType": "struct PoolKey",
-    "components": [
-     {
-      "name": "currency0",
-      "type": "address",
-      "internalType": "Currency"
-     },
-     {
-      "name": "currency1",
-      "type": "address",
-      "internalType": "Currency"
-     },
-     {
-      "name": "fee",
-      "type": "uint24",
-      "internalType": "uint24"
-     },
-     {
-      "name": "tickSpacing",
-      "type": "int24",
-      "internalType": "int24"
-     },
-     {
-      "name": "hooks",
-      "type": "address",
-      "internalType": "contract IHooks"
-     }
-    ]
-   }
-  ],
-  "outputs": [],
-  "stateMutability": "pure"
- },
- {
-  "type": "function",
-  "name": "wireWithGraduation",
   "inputs": [
    {
     "name": "key",
@@ -1167,11 +1186,6 @@
       "internalType": "contract IHooks"
      }
     ]
-   },
-   {
-    "name": "principal",
-    "type": "uint256",
-    "internalType": "uint256"
    }
   ],
   "outputs": [],
@@ -1472,12 +1486,7 @@
  },
  {
   "type": "error",
-  "name": "FundingStarved",
-  "inputs": []
- },
- {
-  "type": "error",
-  "name": "GraduationPrincipalRequired",
+  "name": "InvalidInitialization",
   "inputs": []
  },
  {

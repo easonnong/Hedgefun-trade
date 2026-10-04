@@ -13,6 +13,10 @@ import {HedgeFunV2UpgradeableTreasury} from "../../src/v2/HedgeFunV2UpgradeableT
 abstract contract ReviewedTreasuryRegistry is IncomeKindCompatibility {
     error IncompatibleTreasuryRegistry();
 
+    /// @dev The kind-0 creation code the reviewed #25 registries were deployed with. Pinned: this source's own
+    ///      kind 0 moves whenever the shared treasury base does, and a registry keeps the code it was built with.
+    bytes32 internal constant REVIEWED_KIND_ZERO = 0x09fb34de0fb09901d28f6ccc1cd6a344471209deb9153d8a4801d48f7e47062e;
+
     function _reviewedRegistry(HedgeFunV2Factory factory) internal view returns (V2TreasuryDeployer registry) {
         _checkIncomeCompatibility(factory);
         registry = V2TreasuryDeployer(address(factory.treasuryDeployer()));
@@ -22,7 +26,11 @@ abstract contract ReviewedTreasuryRegistry is IncomeKindCompatibility {
         if (keccak256(code) != 0xb1b1adc4d2960d06e0eaa957fba812db587e4c8a701b342a027854b6425cacb7) {
             revert IncompatibleTreasuryRegistry();
         }
-        bytes32 trigger = keccak256(type(HedgeFunV2UpgradeableTreasury).creationCode);
+        // The reviewed deployment's kind 0, or this source's own for a registry deployed from it.
+        bytes32 trigger = registry.allInTriggerCodeHash();
+        if (trigger != REVIEWED_KIND_ZERO && trigger != keccak256(type(HedgeFunV2UpgradeableTreasury).creationCode)) {
+            revert IncompatibleTreasuryRegistry();
+        }
         _bindWord(code, 1335, trigger);
         _bindWord(code, 7163, trigger);
         _bindWord(code, 975, bytes32(uint256(uint160(address(controller)))));
