@@ -1,0 +1,426 @@
+{
+  "source_commit": "e9acecf693addcef5b180663bfdaa3988413e7fe",
+  "base_commit": "7a2a626ba0c3ab24f3679c5fc49560e6080f2e03",
+  "pr": "https://github.com/0xHedgeHood/Hedgefun-trade/pull/26",
+  "scope": "Upgradeable schema-3 strategy/rebalance/continuous profile, publication guard and read-only configuration adapter. Not the complete treasury product consolidation.",
+  "toolchain": {
+    "forge": "forge Version: 1.5.0-v1.5.0\nCommit SHA: 1c57854462289b2e71ee7654cd6666217ed86ffd\nBuild Timestamp: 2025-11-24T06:07:42.598695000Z (1763964462)\nBuild Profile: maxperf",
+    "solc": "0.8.26"
+  },
+  "offline": {
+    "suites": 121,
+    "passed": 1073,
+    "failed": 0,
+    "skipped": 44,
+    "log": "offline.log"
+  },
+  "python": {
+    "tests": 93,
+    "tools": 70,
+    "new_profile_tests": 17
+  },
+  "campaigns": [
+    {
+      "seed": "0x2026100401",
+      "suites": 14,
+      "passed": 121,
+      "failed": 0,
+      "skipped": 0,
+      "log": "campaign-0x2026100401.log",
+      "fuzz": [
+        {
+          "test": "testFuzz_everyUnitStaysInALedger(uint96[5])",
+          "runs": 1024
+        },
+        {
+          "test": "testFuzz_upgradePreservesPreclaimedFeesAndPendingIncome(uint96,uint96,bool)",
+          "runs": 1024
+        },
+        {
+          "test": "testFuzz_upgradePreservesLedgerAfterPartialProfitSale(uint16,uint16)",
+          "runs": 1024
+        },
+        {
+          "test": "testFuzz_checkpointFrequencyPreservesAllocation(uint32,uint16,uint96,bool)",
+          "runs": 1024
+        },
+        {
+          "test": "testFuzz_upgradeAfterPartialFillPreservesAllRiskAndAccounting(uint16,uint16)",
+          "runs": 1024
+        },
+        {
+          "test": "testFuzz_claimTimingCannotRelabelPrincipal((uint8,uint16,uint96,uint96,uint96,bool,bool))",
+          "runs": 1024
+        },
+        {
+          "test": "testFuzz_failedInitializationCannotFallBackToLegacyWire(uint8)",
+          "runs": 1024
+        },
+        {
+          "test": "testFuzz_failedPrincipalTransferRollsBackInitialization(uint8)",
+          "runs": 1024
+        },
+        {
+          "test": "testFuzz_principalInitializationRequiresFactoryAndCannotRepeat(uint8)",
+          "runs": 1024
+        },
+        {
+          "test": "testFuzz_partialFillUsesIndependentDirectionalCapsAndActualReward(uint16,uint16,uint16,bool,bool)",
+          "runs": 1024
+        },
+        {
+          "test": "testFuzz_sameDateCapitalShrinkAndDonationNeverEraseConsumedTurnover(uint96)",
+          "runs": 1024
+        },
+        {
+          "test": "testFuzz_unboundedPolicyCannotBypassCoreInputOrDailyCaps(bool,uint16)",
+          "runs": 1024
+        },
+        {
+          "test": "testFuzz_claimTimingCannotRelabelPrincipal((uint8,uint16,uint96,uint96,uint96,bool,bool))",
+          "runs": 1024
+        },
+        {
+          "test": "testFuzz_failedInitializationCannotFallBackToLegacyWire(uint8)",
+          "runs": 1024
+        },
+        {
+          "test": "testFuzz_failedPrincipalTransferRollsBackInitialization(uint8)",
+          "runs": 1024
+        },
+        {
+          "test": "testFuzz_principalInitializationRequiresFactoryAndCannotRepeat(uint8)",
+          "runs": 1024
+        },
+        {
+          "test": "testFuzz_idleQueueAndRefillPreserveAccruedIncome(uint96,uint96,uint32)",
+          "runs": 1024
+        },
+        {
+          "test": "testFuzz_rewardFailureNeverLocksPrincipal(uint96,uint96,uint8)",
+          "runs": 1024
+        }
+      ],
+      "invariants": [
+        {
+          "test": "invariant_upgradeNeverResetsTradingStateOrCustody()",
+          "runs": 512,
+          "calls": 65536,
+          "reverts": 0
+        },
+        {
+          "test": "invariant_upgradedEngineKeepsTurnoverAndExecutionGuards()",
+          "runs": 512,
+          "calls": 65536,
+          "reverts": 0
+        },
+        {
+          "test": "invariant_dynamicCapsUseInputAssetsAndNeverRewriteHistoricalSpend()",
+          "runs": 512,
+          "calls": 65536,
+          "reverts": 0
+        },
+        {
+          "test": "invariant_inventoryAndNonceMatchActualSuccessfulFillsAcrossUpgrades()",
+          "runs": 512,
+          "calls": 65536,
+          "reverts": 0
+        },
+        {
+          "test": "invariant_principalAndRewardsAreBackedByIndependentTransfers()",
+          "runs": 512,
+          "calls": 65536,
+          "reverts": 0
+        }
+      ]
+    },
+    {
+      "seed": "0x2026100402",
+      "suites": 14,
+      "passed": 121,
+      "failed": 0,
+      "skipped": 0,
+      "log": "campaign-0x2026100402.log",
+      "fuzz": [
+        {
+          "test": "testFuzz_everyUnitStaysInALedger(uint96[5])",
+          "runs": 1024
+        },
+        {
+          "test": "testFuzz_checkpointFrequencyPreservesAllocation(uint32,uint16,uint96,bool)",
+          "runs": 1024
+        },
+        {
+          "test": "testFuzz_upgradePreservesPreclaimedFeesAndPendingIncome(uint96,uint96,bool)",
+          "runs": 1024
+        },
+        {
+          "test": "testFuzz_upgradePreservesLedgerAfterPartialProfitSale(uint16,uint16)",
+          "runs": 1024
+        },
+        {
+          "test": "testFuzz_upgradeAfterPartialFillPreservesAllRiskAndAccounting(uint16,uint16)",
+          "runs": 1024
+        },
+        {
+          "test": "testFuzz_claimTimingCannotRelabelPrincipal((uint8,uint16,uint96,uint96,uint96,bool,bool))",
+          "runs": 1024
+        },
+        {
+          "test": "testFuzz_failedInitializationCannotFallBackToLegacyWire(uint8)",
+          "runs": 1024
+        },
+        {
+          "test": "testFuzz_failedPrincipalTransferRollsBackInitialization(uint8)",
+          "runs": 1024
+        },
+        {
+          "test": "testFuzz_principalInitializationRequiresFactoryAndCannotRepeat(uint8)",
+          "runs": 1024
+        },
+        {
+          "test": "testFuzz_partialFillUsesIndependentDirectionalCapsAndActualReward(uint16,uint16,uint16,bool,bool)",
+          "runs": 1024
+        },
+        {
+          "test": "testFuzz_sameDateCapitalShrinkAndDonationNeverEraseConsumedTurnover(uint96)",
+          "runs": 1024
+        },
+        {
+          "test": "testFuzz_unboundedPolicyCannotBypassCoreInputOrDailyCaps(bool,uint16)",
+          "runs": 1024
+        },
+        {
+          "test": "testFuzz_claimTimingCannotRelabelPrincipal((uint8,uint16,uint96,uint96,uint96,bool,bool))",
+          "runs": 1024
+        },
+        {
+          "test": "testFuzz_failedInitializationCannotFallBackToLegacyWire(uint8)",
+          "runs": 1024
+        },
+        {
+          "test": "testFuzz_failedPrincipalTransferRollsBackInitialization(uint8)",
+          "runs": 1024
+        },
+        {
+          "test": "testFuzz_principalInitializationRequiresFactoryAndCannotRepeat(uint8)",
+          "runs": 1024
+        },
+        {
+          "test": "testFuzz_idleQueueAndRefillPreserveAccruedIncome(uint96,uint96,uint32)",
+          "runs": 1024
+        },
+        {
+          "test": "testFuzz_rewardFailureNeverLocksPrincipal(uint96,uint96,uint8)",
+          "runs": 1024
+        }
+      ],
+      "invariants": [
+        {
+          "test": "invariant_upgradeNeverResetsTradingStateOrCustody()",
+          "runs": 512,
+          "calls": 65536,
+          "reverts": 0
+        },
+        {
+          "test": "invariant_upgradedEngineKeepsTurnoverAndExecutionGuards()",
+          "runs": 512,
+          "calls": 65536,
+          "reverts": 0
+        },
+        {
+          "test": "invariant_dynamicCapsUseInputAssetsAndNeverRewriteHistoricalSpend()",
+          "runs": 512,
+          "calls": 65536,
+          "reverts": 0
+        },
+        {
+          "test": "invariant_inventoryAndNonceMatchActualSuccessfulFillsAcrossUpgrades()",
+          "runs": 512,
+          "calls": 65536,
+          "reverts": 0
+        },
+        {
+          "test": "invariant_principalAndRewardsAreBackedByIndependentTransfers()",
+          "runs": 512,
+          "calls": 65536,
+          "reverts": 0
+        }
+      ]
+    },
+    {
+      "seed": "0x2026100403",
+      "suites": 14,
+      "passed": 121,
+      "failed": 0,
+      "skipped": 0,
+      "log": "campaign-0x2026100403.log",
+      "fuzz": [
+        {
+          "test": "testFuzz_everyUnitStaysInALedger(uint96[5])",
+          "runs": 1024
+        },
+        {
+          "test": "testFuzz_upgradePreservesPreclaimedFeesAndPendingIncome(uint96,uint96,bool)",
+          "runs": 1024
+        },
+        {
+          "test": "testFuzz_upgradePreservesLedgerAfterPartialProfitSale(uint16,uint16)",
+          "runs": 1024
+        },
+        {
+          "test": "testFuzz_upgradeAfterPartialFillPreservesAllRiskAndAccounting(uint16,uint16)",
+          "runs": 1024
+        },
+        {
+          "test": "testFuzz_partialFillUsesIndependentDirectionalCapsAndActualReward(uint16,uint16,uint16,bool,bool)",
+          "runs": 1024
+        },
+        {
+          "test": "testFuzz_sameDateCapitalShrinkAndDonationNeverEraseConsumedTurnover(uint96)",
+          "runs": 1024
+        },
+        {
+          "test": "testFuzz_unboundedPolicyCannotBypassCoreInputOrDailyCaps(bool,uint16)",
+          "runs": 1024
+        },
+        {
+          "test": "testFuzz_claimTimingCannotRelabelPrincipal((uint8,uint16,uint96,uint96,uint96,bool,bool))",
+          "runs": 1024
+        },
+        {
+          "test": "testFuzz_failedInitializationCannotFallBackToLegacyWire(uint8)",
+          "runs": 1024
+        },
+        {
+          "test": "testFuzz_failedPrincipalTransferRollsBackInitialization(uint8)",
+          "runs": 1024
+        },
+        {
+          "test": "testFuzz_principalInitializationRequiresFactoryAndCannotRepeat(uint8)",
+          "runs": 1024
+        },
+        {
+          "test": "testFuzz_claimTimingCannotRelabelPrincipal((uint8,uint16,uint96,uint96,uint96,bool,bool))",
+          "runs": 1024
+        },
+        {
+          "test": "testFuzz_failedInitializationCannotFallBackToLegacyWire(uint8)",
+          "runs": 1024
+        },
+        {
+          "test": "testFuzz_failedPrincipalTransferRollsBackInitialization(uint8)",
+          "runs": 1024
+        },
+        {
+          "test": "testFuzz_principalInitializationRequiresFactoryAndCannotRepeat(uint8)",
+          "runs": 1024
+        },
+        {
+          "test": "testFuzz_checkpointFrequencyPreservesAllocation(uint32,uint16,uint96,bool)",
+          "runs": 1024
+        },
+        {
+          "test": "testFuzz_idleQueueAndRefillPreserveAccruedIncome(uint96,uint96,uint32)",
+          "runs": 1024
+        },
+        {
+          "test": "testFuzz_rewardFailureNeverLocksPrincipal(uint96,uint96,uint8)",
+          "runs": 1024
+        }
+      ],
+      "invariants": [
+        {
+          "test": "invariant_upgradeNeverResetsTradingStateOrCustody()",
+          "runs": 512,
+          "calls": 65536,
+          "reverts": 0
+        },
+        {
+          "test": "invariant_upgradedEngineKeepsTurnoverAndExecutionGuards()",
+          "runs": 512,
+          "calls": 65536,
+          "reverts": 0
+        },
+        {
+          "test": "invariant_dynamicCapsUseInputAssetsAndNeverRewriteHistoricalSpend()",
+          "runs": 512,
+          "calls": 65536,
+          "reverts": 0
+        },
+        {
+          "test": "invariant_inventoryAndNonceMatchActualSuccessfulFillsAcrossUpgrades()",
+          "runs": 512,
+          "calls": 65536,
+          "reverts": 0
+        },
+        {
+          "test": "invariant_principalAndRewardsAreBackedByIndependentTransfers()",
+          "runs": 512,
+          "calls": 65536,
+          "reverts": 0
+        }
+      ]
+    }
+  ],
+  "total_campaign_fuzz_cases": 55296,
+  "total_campaign_invariant_calls": 983040,
+  "independent_campaign": "independent/results.json",
+  "fork": {
+    "suites": 4,
+    "passed": 23,
+    "failed": 0,
+    "skipped": 0,
+    "log": "fork.log",
+    "chain_id": 46630,
+    "block": 128847511,
+    "public_transactions_sent": 0
+  },
+  "local_cli": "cli/summary.json",
+  "sizes": {
+    "logic_runtime_bytes": 24146,
+    "logic_runtime_headroom_bytes": 430,
+    "proxy_runtime_bytes": 1061,
+    "logic_creation_without_args_bytes": 31840,
+    "proxy_creation_without_args_bytes": 35408,
+    "migration_test_logic_runtime_bytes": 24419,
+    "constructor_argument_limits_tested": true
+  },
+  "source_sha256": {
+    ".github/workflows/contract-v2.yml": "08cb10a7fc3793decd1340f97298a9bc4259ddd12642669939a3eeebd9ada0aa",
+    "contractV2/script/RegisterV2TradablePercent.s.sol": "b01855b118ce1e2d3170b135dfaf8733df341b1c504ced0fb54b3378374d9f88",
+    "contractV2/script/helpers/ReviewedTreasuryRegistry.sol": "64ceb7a31372951371cbb26bb4159bc96dce8e7867f318d39940fdcd7297bcce",
+    "contractV2/src/v2/HedgeFunV2TradablePercentEngineTreasury.sol": "7d80627292bb1ecac8274c774bda6437eed1193ca70ceff0a124a6dedb93ab5c",
+    "contractV2/src/v2/strategy/TradablePercentEngineConfig.sol": "ceac13eb7e0608f4fe23f9180058318f6a8e9847a747f4918b3209eaeeaff1b6",
+    "contractV2/src/v2/strategy/V2TradablePercentRebalancePolicy.sol": "3c4a1a10e6dad946f4224a7fbdeafb29e2e6c540613c37b2600ca96f02ba345c",
+    "contractV2/test/TestnetV2TradablePercentFork.t.sol": "6d08256483db4c61d81bcb186b3c9d8a3f73b1980e4a4c0bc116d05d16733baf",
+    "contractV2/test/V2TradablePercentAudit.t.sol": "b9d19dc20df15e41e1ecd729fa4b5adb0c62663f6d942e8e397faccd5f3d6f11",
+    "contractV2/test/V2TradablePercentEngine.t.sol": "ab6fa6ee9b1e6e86921f517aeca378c0692b404122a5a8fa1427ee37ebbfed6b",
+    "contractV2/test/V2TradablePercentInvariant.t.sol": "0d08ccb2a1e08f95f3b4e0a1f69cb6b1af2e48a908b729834b0f0da62170c3c3",
+    "contractV2/test/V2TradablePercentRegistration.t.sol": "86ce75bbd34d8a567869dc2945b1e9f0f43e92ff4d417a4f629a704d16de9068",
+    "contractV2/tools/export_abi.py": "fe4111136784f68e391ea66faa2f75e530b4246e075c6c124d1f4b0aa002f62d",
+    "contractV2/tools/tests/test_treasury_profile_config.py": "6e1376e6689517fdf6ffc9160c9f2800a03ee46cc7114886c62946be45693c08",
+    "contractV2/tools/treasury_profile_config.py": "360bdbe7c29c39b39d35184286ff3efc19a0625559dcef8648be9ca5074b40f5"
+  },
+  "evidence_sha256": {
+    "abi-export.log": "14ebde78d8b3af135f450739c59cf05da2e4c307a86d895a62c56ea9719cf760",
+    "campaign-0x2026100401.log": "0a63b7d812fdc69f9b79136c8c4ac61b9bf40f4719318f7ab6214c6642b34116",
+    "campaign-0x2026100402.log": "ca31cc9ce516927a6a7062bf78b50c87f3ea226514132a4184e707693f5ff3df",
+    "campaign-0x2026100403.log": "a8387512e2c57be33e73ea11c831fd35a85d8bff5b7bf2177b0d2f7a4493ed7b",
+    "cli/cli-result.json": "b6716950709c5e1c374ea5e1f572b4a8592f7b35e79897e59e9673f3928c362a",
+    "cli/commands.log": "17b270f5d41471eb2106a47e7464f2b50b63c7fca55babf72caf423887749520",
+    "cli/registration.log": "f45601fc17134f28df55608fa8778160b1305caa6ce4b208247f051dd4020dcd",
+    "cli/selection-receipt.json": "b0358fbf4b02347be540829a6c1dd49b893cdf4ff512681b3a0c41235f514246",
+    "cli/summary.json": "e508ba3d6ffbf4160d051c1fe94fe6b327fef0a138c02abf3fb2d13ccc492e2b",
+    "fork.log": "01c9c6b3f5a5b51198bd15bca01b5455f1feba962bf821dcf16311ff495f8a5d",
+    "independent/results.json": "17639c882e2f04ef6b64694b7992982d1931631cb2b6f34aece4f1c4abfc21e5",
+    "independent/tradable-audit-0x2026100401.log": "2640f9f65f6814d364f205ae6abc30d5bb598a1c860205172c697cb81d4e91a0",
+    "independent/tradable-audit-0x2026100402.log": "a0e62c266467beb6cc0f146f9563e34238ef02576a6ac0ef8462a68d9e2dbdaa",
+    "independent/tradable-audit-0x2026100403.log": "79fc6d038d4a5f2a5a0c0eed8612e23190e0d67631d5568c2646552dbfec76e1",
+    "offline.log": "c748c82f5ee319b5d10f526ef578dc8aed4591c59ab14ed433c11142fe4d386b",
+    "python-tests.log": "64c728c2481389562699cd17cad9192f5bf9106a7b23877bf86335322ec72e73",
+    "python-tools.log": "58cb7f3a53ec92aa3b0d3b431d0dc2243dc16cba192f848df188daec0fc2a629",
+    "registration.log": "f1bcfcc6460d35daa6a02ba27b28f8225c545b2f81ac86d785585584eb1a0ed1",
+    "sizes.log": "189aee1f0196e8ce0079b98b2673a587a42883eaf8a5fcb4788a29d5f9f0fcb1"
+  }
+}

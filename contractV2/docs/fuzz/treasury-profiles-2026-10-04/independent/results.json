@@ -1,0 +1,122 @@
+{
+  "scope": "Independent schema-3 accounting, untrusted policy and stateful upgrade audit tests; local mocked venue/oracle with real deployment and graduation fixtures.",
+  "production_findings": [],
+  "runs": [
+    {
+      "seed": "0x2026100401",
+      "passed": 13,
+      "failed": 0,
+      "skipped": 0,
+      "fuzz": [
+        {
+          "test": "testFuzz_partialFillUsesIndependentDirectionalCapsAndActualReward",
+          "runs": 1024
+        },
+        {
+          "test": "testFuzz_sameDateCapitalShrinkAndDonationNeverEraseConsumedTurnover",
+          "runs": 1024
+        },
+        {
+          "test": "testFuzz_unboundedPolicyCannotBypassCoreInputOrDailyCaps",
+          "runs": 1024
+        }
+      ],
+      "invariants": [
+        {
+          "test": "invariant_dynamicCapsUseInputAssetsAndNeverRewriteHistoricalSpend",
+          "runs": 512,
+          "calls": 65536,
+          "reverts": 0
+        },
+        {
+          "test": "invariant_inventoryAndNonceMatchActualSuccessfulFillsAcrossUpgrades",
+          "runs": 512,
+          "calls": 65536,
+          "reverts": 0
+        }
+      ],
+      "log": "independent/tradable-audit-0x2026100401.log",
+      "log_sha256": "2640f9f65f6814d364f205ae6abc30d5bb598a1c860205172c697cb81d4e91a0"
+    },
+    {
+      "seed": "0x2026100402",
+      "passed": 13,
+      "failed": 0,
+      "skipped": 0,
+      "fuzz": [
+        {
+          "test": "testFuzz_partialFillUsesIndependentDirectionalCapsAndActualReward",
+          "runs": 1024
+        },
+        {
+          "test": "testFuzz_sameDateCapitalShrinkAndDonationNeverEraseConsumedTurnover",
+          "runs": 1024
+        },
+        {
+          "test": "testFuzz_unboundedPolicyCannotBypassCoreInputOrDailyCaps",
+          "runs": 1024
+        }
+      ],
+      "invariants": [
+        {
+          "test": "invariant_dynamicCapsUseInputAssetsAndNeverRewriteHistoricalSpend",
+          "runs": 512,
+          "calls": 65536,
+          "reverts": 0
+        },
+        {
+          "test": "invariant_inventoryAndNonceMatchActualSuccessfulFillsAcrossUpgrades",
+          "runs": 512,
+          "calls": 65536,
+          "reverts": 0
+        }
+      ],
+      "log": "independent/tradable-audit-0x2026100402.log",
+      "log_sha256": "a0e62c266467beb6cc0f146f9563e34238ef02576a6ac0ef8462a68d9e2dbdaa"
+    },
+    {
+      "seed": "0x2026100403",
+      "passed": 13,
+      "failed": 0,
+      "skipped": 0,
+      "fuzz": [
+        {
+          "test": "testFuzz_partialFillUsesIndependentDirectionalCapsAndActualReward",
+          "runs": 1024
+        },
+        {
+          "test": "testFuzz_sameDateCapitalShrinkAndDonationNeverEraseConsumedTurnover",
+          "runs": 1024
+        },
+        {
+          "test": "testFuzz_unboundedPolicyCannotBypassCoreInputOrDailyCaps",
+          "runs": 1024
+        }
+      ],
+      "invariants": [
+        {
+          "test": "invariant_dynamicCapsUseInputAssetsAndNeverRewriteHistoricalSpend",
+          "runs": 512,
+          "calls": 65536,
+          "reverts": 0
+        },
+        {
+          "test": "invariant_inventoryAndNonceMatchActualSuccessfulFillsAcrossUpgrades",
+          "runs": 512,
+          "calls": 65536,
+          "reverts": 0
+        }
+      ],
+      "log": "independent/tradable-audit-0x2026100403.log",
+      "log_sha256": "79fc6d038d4a5f2a5a0c0eed8612e23190e0d67631d5568c2646552dbfec76e1"
+    }
+  ],
+  "sha256": {
+    "contractV2/src/v2/HedgeFunV2TradablePercentEngineTreasury.sol": "7d80627292bb1ecac8274c774bda6437eed1193ca70ceff0a124a6dedb93ab5c",
+    "contractV2/src/v2/strategy/TradablePercentEngineConfig.sol": "ceac13eb7e0608f4fe23f9180058318f6a8e9847a747f4918b3209eaeeaff1b6",
+    "contractV2/src/v2/strategy/V2TradablePercentRebalancePolicy.sol": "3c4a1a10e6dad946f4224a7fbdeafb29e2e6c540613c37b2600ca96f02ba345c",
+    "contractV2/test/V2TradablePercentEngine.t.sol": "ab6fa6ee9b1e6e86921f517aeca378c0692b404122a5a8fa1427ee37ebbfed6b",
+    "contractV2/test/V2TradablePercentAudit.t.sol": "b9d19dc20df15e41e1ecd729fa4b5adb0c62663f6d942e8e397faccd5f3d6f11",
+    "contractV2/test/V2TradablePercentInvariant.t.sol": "0d08ccb2a1e08f95f3b4e0a1f69cb6b1af2e48a908b729834b0f0da62170c3c3"
+  }
+}

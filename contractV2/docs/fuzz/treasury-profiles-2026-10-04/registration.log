@@ -1,0 +1,47 @@
+Compiling 91 files with Solc 0.8.26
+Solc 0.8.26 finished in 9.98s
+Compiler run successful with warnings:
+Warning (3628): This contract has a payable fallback function, but no receive ether function. Consider adding a receive ether function.
+  --> src/v2/HedgeFunV2UpgradeableTreasury.sol:37:1:
+   |
+37 | contract HedgeFunV2UpgradeableTreasury is Proxy {
+   | ^ (Relevant source part starts here and spans across multiple lines).
+Note: The payable fallback function is defined here.
+  --> lib/openzeppelin-contracts/contracts/proxy/Proxy.sol:66:5:
+   |
+66 |     fallback() external payable virtual {
+   |     ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning (3628): This contract has a payable fallback function, but no receive ether function. Consider adding a receive ether function.
+   --> src/v2/HedgeFunV2TradablePercentEngineTreasury.sol:587:1:
+    |
+587 | contract HedgeFunV2TradablePercentEngineTreasury is Proxy {
+    | ^ (Relevant source part starts here and spans across multiple lines).
+Note: The payable fallback function is defined here.
+  --> lib/openzeppelin-contracts/contracts/proxy/Proxy.sol:66:5:
+   |
+66 |     fallback() external payable virtual {
+   |     ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning (3628): This contract has a payable fallback function, but no receive ether function. Consider adding a receive ether function.
+  --> src/v2/HedgeFunV2UpgradeableBuybackTreasury.sol:55:1:
+   |
+55 | contract HedgeFunV2UpgradeableBuybackTreasury is Proxy {
+   | ^ (Relevant source part starts here and spans across multiple lines).
+Note: The payable fallback function is defined here.
+  --> lib/openzeppelin-contracts/contracts/proxy/Proxy.sol:66:5:
+   |
+66 |     fallback() external payable virtual {
+   |     ^ (Relevant source part starts here and spans across multiple lines).
+
+
+Ran 6 tests for test/V2TradablePercentRegistration.t.sol:V2TradablePercentRegistrationTest
+[PASS] test_appendAndExactReadbackLeaveExistingKindUnchanged() (gas: 8923611)
+[PASS] test_invalidAuthorityOrMissingEvidenceRejectedBeforeRegistration() (gas: 359410)
+[PASS] test_matchingDelayGettersDoNotSubstituteForControllerCode() (gas: 236108)
+[PASS] test_publicRegistryNonceCannotRedirectFiveOperatorTransactions() (gas: 8695276)
+[PASS] test_readbackRejectsDisabledPolicyAndFalseEvidence() (gas: 9153537)
+[PASS] test_readbackRejectsReplacedKindChunksOrPolicyCode() (gas: 9123252)
+Suite result: ok. 6 passed; 0 failed; 0 skipped; finished in 113.10ms (24.12ms CPU time)
+
+Ran 1 test suite in 118.04ms (113.10ms CPU time): 6 tests passed, 0 failed, 0 skipped (6 total tests)

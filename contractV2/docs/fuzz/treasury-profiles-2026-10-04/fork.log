@@ -1,0 +1,126 @@
+No files changed, compilation skipped
+2026-10-04T18:44:59.998147Z  WARN evm::traces::external: etherscan config not found
+2026-10-04T18:45:00.340348Z  WARN foundry_fork_db::cache: Failed to read cache file err=Os { code: 2, kind: NotFound, message: "No such file or directory" } path="/Users/leo/.foundry/cache/rpc/46630/128847511"
+
+Ran 16 tests for test/TestnetV2IncomeKindsFork.t.sol:TestnetV2IncomeKindsForkTest
+[PASS] test_dividendKindOnDeployedFactory() (gas: 13531407)
+Logs:
+  income kinds fork block: 128847511
+
+[PASS] test_dividendKindOptionalBookFailureProtectsPrincipal() (gas: 12622363)
+Logs:
+  income kinds fork block: 128847511
+
+[PASS] test_dividendKindPreclaimedFeesRemainIncome() (gas: 12621784)
+Logs:
+  income kinds fork block: 128847511
+
+[PASS] test_splitKindOnDeployedFactory() (gas: 13857762)
+Logs:
+  income kinds fork block: 128847511
+
+[PASS] test_splitKindOptionalBookFailureProtectsPrincipal() (gas: 12640240)
+Logs:
+  income kinds fork block: 128847511
+
+[PASS] test_splitKindPreclaimedFeesRemainIncome() (gas: 12639925)
+Logs:
+  income kinds fork block: 128847511
+
+[PASS] test_strategy25KindOnDeployedFactory() (gas: 15464856)
+Logs:
+  income kinds fork block: 128847511
+
+[PASS] test_strategy25OptionalBookFailureProtectsPrincipal() (gas: 14280936)
+Logs:
+  income kinds fork block: 128847511
+
+[PASS] test_strategy25PreclaimedFeesRemainIncome() (gas: 14297035)
+Logs:
+  income kinds fork block: 128847511
+
+[PASS] test_strategy25StopLossOnDeployedVenue() (gas: 14941538)
+Logs:
+  income kinds fork block: 128847511
+
+[PASS] test_strategy25TakesProfitAndBuysTheDipOnDeployedVenue() (gas: 15617529)
+Logs:
+  income kinds fork block: 128847511
+
+[PASS] test_strategy50KindOnDeployedFactory() (gas: 15464793)
+Logs:
+  income kinds fork block: 128847511
+
+[PASS] test_strategy50OptionalBookFailureProtectsPrincipal() (gas: 14281260)
+Logs:
+  income kinds fork block: 128847511
+
+[PASS] test_strategy50PreclaimedFeesRemainIncome() (gas: 14297381)
+Logs:
+  income kinds fork block: 128847511
+
+[PASS] test_strategy50StopLossOnDeployedVenue() (gas: 14941637)
+Logs:
+  income kinds fork block: 128847511
+
+[PASS] test_strategy50TakesProfitAndBuysTheDipOnDeployedVenue() (gas: 15616990)
+Logs:
+  income kinds fork block: 128847511
+
+Suite result: ok. 16 passed; 0 failed; 0 skipped; finished in 50.21s (44.07s CPU time)
+2026-10-04T18:45:50.466069Z  WARN foundry_fork_db::cache: Failed to read cache file err=Os { code: 2, kind: NotFound, message: "No such file or directory" } path="/Users/leo/.foundry/cache/rpc/46630/128847511"
+
+Ran 2 tests for test/TestnetV2TradablePercentFork.t.sol:TestnetV2TradablePercentForkTest
+[PASS] test_launchGraduationTradableRebalanceAndUpgradePreserveInventoryAndLpThenExecuteAgain() (gas: 20336057)
+Logs:
+  tradable percent fork block: 128847511
+  proposed sell stock: 10158119864668922185
+  actual turnover USDG: 3639306440
+  upgraded fork treasury: 0x610bf763f460289adfcBb6b52de6EE89A4196c19
+  replacement implementation: 0x2e234DAe75C793f67A35089C9d99245E1C58470b
+  proposed sell stock: 16452991783470275496
+  actual turnover USDG: 5894125386
+  post-upgrade engine nonce: 2
+  post-upgrade engine USDG reserve: 9456843513
+
+[PASS] test_registrationAppendsSchemaThreeAndPreservesLegacyManifestsAndChunks() (gas: 17284986)
+Logs:
+  tradable percent fork block: 128847511
+
+Suite result: ok. 2 passed; 0 failed; 0 skipped; finished in 11.27s (7.54s CPU time)
+
+Ran 3 tests for test/TestnetV2TreasuryUpgradeFork.t.sol:TestnetV2TreasuryUpgradeForkTest
+[PASS] test_buybackUpgradePreservesRealBalancesAndLpThenBooksAndBuys() (gas: 15810141)
+Logs:
+  upgradeable kinds fork block: 128847511
+  upgraded fork treasury: 0x44F81BACd9c964627BF1D7eaBe674C0C54328A28
+  replacement implementation: 0xF62849F9A0B5Bf2913b396098F7c7019b51A820a
+  post-upgrade buyback stock spent: 1000000000000000000
+  post-upgrade FUN burned: 1569005241304956200841341
+
+[PASS] test_engineUpgradePreservesRealInventoryAndLpThenExecutesAgain() (gas: 19623193)
+Logs:
+  upgradeable kinds fork block: 128847511
+  upgraded fork treasury: 0xFc69Bdb3f921e2C30884EC3dFefC25dA4dad8867
+  replacement implementation: 0xF62849F9A0B5Bf2913b396098F7c7019b51A820a
+  post-upgrade engine nonce: 2
+  post-upgrade engine USDG reserve: 3967982665
+
+[PASS] test_registrationAppendsKindsAndPreservesLegacyManifestsAndChunks() (gas: 13813260)
+Logs:
+  upgradeable kinds fork block: 128847511
+
+Suite result: ok. 3 passed; 0 failed; 0 skipped; finished in 15.16s (13.75s CPU time)
+
+Ran 2 tests for test/V2IncomeKindCompatibility.t.sol:TestnetV2IncomeCompatibilityForkTest
+[PASS] test_fork_legacyFactoryRejectsBeforeRegistrationAndDuringReadback() (gas: 27148628)
+Logs:
+  compatibility fork block: 128847511
+
+[PASS] test_fork_reviewedFactoryAcceptsRegistrationAndReadback() (gas: 55020955)
+Logs:
+  compatibility fork block: 128847511
+
+Suite result: ok. 2 passed; 0 failed; 0 skipped; finished in 973.55ms (681.89ms CPU time)
+
+Ran 4 test suites in 77.62s (77.61s CPU time): 23 tests passed, 0 failed, 0 skipped (23 total tests)

@@ -1,0 +1,116 @@
+Compiling 2 files with Solc 0.8.26
+Solc 0.8.26 finished in 8.90s
+Compiler run successful with warnings:
+Warning (3628): This contract has a payable fallback function, but no receive ether function. Consider adding a receive ether function.
+  --> src/v2/HedgeFunV2UpgradeableTreasury.sol:37:1:
+   |
+37 | contract HedgeFunV2UpgradeableTreasury is Proxy {
+   | ^ (Relevant source part starts here and spans across multiple lines).
+Note: The payable fallback function is defined here.
+  --> lib/openzeppelin-contracts/contracts/proxy/Proxy.sol:66:5:
+   |
+66 |     fallback() external payable virtual {
+   |     ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning (3628): This contract has a payable fallback function, but no receive ether function. Consider adding a receive ether function.
+   --> src/v2/HedgeFunV2TradablePercentEngineTreasury.sol:587:1:
+    |
+587 | contract HedgeFunV2TradablePercentEngineTreasury is Proxy {
+    | ^ (Relevant source part starts here and spans across multiple lines).
+Note: The payable fallback function is defined here.
+  --> lib/openzeppelin-contracts/contracts/proxy/Proxy.sol:66:5:
+   |
+66 |     fallback() external payable virtual {
+   |     ^ (Relevant source part starts here and spans across multiple lines).
+
+
+Ran 10 tests for test/V2TradablePercentAudit.t.sol:V2TradablePercentAuditTest
+[PASS] testFuzz_partialFillUsesIndependentDirectionalCapsAndActualReward(uint16,uint16,uint16,bool,bool) (runs: 1024, μ: 13794296, ~: 13790429)
+[PASS] testFuzz_sameDateCapitalShrinkAndDonationNeverEraseConsumedTurnover(uint96) (runs: 1024, μ: 14004764, ~: 14004544)
+[PASS] testFuzz_unboundedPolicyCannotBypassCoreInputOrDailyCaps(bool,uint16) (runs: 1024, μ: 14086563, ~: 14090906)
+[PASS] test_lpDonationsAndCreditedBuybackCannotInflateAnyTradingCap() (gas: 13859841)
+[PASS] test_malformedDomainNonceActionAndWrongDirectionAreAtomicallyRejected() (gas: 55323257)
+[PASS] test_matureUpgradePreservesCurrentDateSpendBeforeAnyEpochRollover() (gas: 19132969)
+[PASS] test_minimumLotCannotRoundUpOneBasisPointCap() (gas: 13958487)
+[PASS] test_oracleFailureReportsNoCapacityAndCannotChangeSpentHistory() (gas: 13826470)
+[PASS] test_rewardFailureRevertsSwapAndPercentageLedger() (gas: 13792013)
+[PASS] test_unbookedDonationIsCountedOnceAndOnlyForItsInputAsset() (gas: 13605306)
+Suite result: ok. 10 passed; 0 failed; 0 skipped; finished in 2.63s (6.73s CPU time)
+
+Ran 3 tests for test/V2TradablePercentInvariant.t.sol:V2TradablePercentInvariantTest
+[PASS] invariant_dynamicCapsUseInputAssetsAndNeverRewriteHistoricalSpend() (runs: 512, calls: 65536, reverts: 0)
+
+╭-----------------------------+-----------------+-------+---------+----------╮
+| Contract                    | Selector        | Calls | Reverts | Discards |
++============================================================================+
+| TradablePercentAuditHandler | advanceCooldown | 4465  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | attemptExecute  | 4458  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | book            | 4396  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | cancelUpgrade   | 4384  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | changeMarket    | 4337  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | creditLpIncome  | 4404  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | donateCash      | 4393  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | donateStock     | 4391  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | finishUpgrade   | 4352  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | nextEpoch       | 4216  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | pauseOracle     | 4348  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | refreshFeeds    | 4357  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | scheduleUpgrade | 4371  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | shoveVenue      | 4343  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | staleOracle     | 4321  | 0       | 0        |
+╰-----------------------------+-----------------+-------+---------+----------╯
+
+[PASS] invariant_inventoryAndNonceMatchActualSuccessfulFillsAcrossUpgrades() (runs: 512, calls: 65536, reverts: 0)
+
+╭-----------------------------+-----------------+-------+---------+----------╮
+| Contract                    | Selector        | Calls | Reverts | Discards |
++============================================================================+
+| TradablePercentAuditHandler | advanceCooldown | 4465  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | attemptExecute  | 4458  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | book            | 4396  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | cancelUpgrade   | 4384  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | changeMarket    | 4337  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | creditLpIncome  | 4404  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | donateCash      | 4393  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | donateStock     | 4391  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | finishUpgrade   | 4352  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | nextEpoch       | 4216  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | pauseOracle     | 4348  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | refreshFeeds    | 4357  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | scheduleUpgrade | 4371  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | shoveVenue      | 4343  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | staleOracle     | 4321  | 0       | 0        |
+╰-----------------------------+-----------------+-------+---------+----------╯
+
+[PASS] test_handlerWitnessBuysSellsRejectsAndPreservesHistoryThroughUpgrade() (gas: 1632752)
+Suite result: ok. 3 passed; 0 failed; 0 skipped; finished in 7.61s (13.35s CPU time)
+
+Ran 2 test suites in 7.62s (10.24s CPU time): 13 tests passed, 0 failed, 0 skipped (13 total tests)

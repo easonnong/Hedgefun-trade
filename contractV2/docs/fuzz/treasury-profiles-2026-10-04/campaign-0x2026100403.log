@@ -1,0 +1,393 @@
+No files changed, compilation skipped
+
+Ran 7 tests for test/V2StakingRemainderBoundary.t.sol:V2StakingRemainderBoundaryTest
+[PASS] test_completedEpochCannotBeReplayedByEmptyPoolReentries() (gas: 3774942)
+[PASS] test_exactLifetimeLimitPaysAndPrincipalExitsAtOneWeiStake() (gas: 2470677)
+[PASS] test_fundingAboveLifetimeLimitCannotPoisonAnExistingStream() (gas: 2478420)
+[PASS] test_oldPersonalFractionsSurviveEmptyPoolWithoutPayingANewAccount() (gas: 2926016)
+[PASS] test_oneWeiStakeChangesCannotResetGlobalRemainder() (gas: 78869931)
+[PASS] test_oneWeiStakeSettlesTwoStreamsNearTheIndexRepresentableLimit() (gas: 2482212)
+[PASS] test_uint128SupplyDroppingToOneWeiPreservesPastAndFutureAllocation() (gas: 3234351)
+Suite result: ok. 7 passed; 0 failed; 0 skipped; finished in 141.31ms (141.07ms CPU time)
+
+Ran 6 tests for test/V2TradablePercentRegistration.t.sol:V2TradablePercentRegistrationTest
+[PASS] test_appendAndExactReadbackLeaveExistingKindUnchanged() (gas: 8923611)
+[PASS] test_invalidAuthorityOrMissingEvidenceRejectedBeforeRegistration() (gas: 359410)
+[PASS] test_matchingDelayGettersDoNotSubstituteForControllerCode() (gas: 236108)
+[PASS] test_publicRegistryNonceCannotRedirectFiveOperatorTransactions() (gas: 8695276)
+[PASS] test_readbackRejectsDisabledPolicyAndFalseEvidence() (gas: 9153537)
+[PASS] test_readbackRejectsReplacedKindChunksOrPolicyCode() (gas: 9123252)
+Suite result: ok. 6 passed; 0 failed; 0 skipped; finished in 146.21ms (7.18ms CPU time)
+
+Ran 5 tests for test/V2UpgradeableKindRegistration.t.sol:V2UpgradeableKindRegistrationTest
+[PASS] test_existingImmutableKindsArePreservedAndNewIdsAreReturned() (gas: 23412837)
+[PASS] test_freshRegistryUsesUpgradeableKindsOneAndTwo() (gas: 13095650)
+[PASS] test_publicRegistryNonceCannotSubstituteOperatorChunks() (gas: 13138128)
+[PASS] test_readbackRejectsWrongKindFamilyAndCode() (gas: 13133107)
+[PASS] test_wrongOperatorRejectedBeforeAnyRegistration() (gas: 126445)
+Suite result: ok. 5 passed; 0 failed; 0 skipped; finished in 163.86ms (6.07ms CPU time)
+
+Ran 13 tests for test/V2IncomeGasRegression.t.sol:V2IncomeGasRegressionTest
+[PASS] testFuzz_everyUnitStaysInALedger(uint96[5]) (runs: 1024, μ: 758471, ~: 764293)
+[PASS] test_aRefusedStakingTransferNeverBlocksATakeProfit() (gas: 898644)
+[PASS] test_dipBuysStillOpenLots_andWaitForUnclassifiedIncome() (gas: 1341274)
+[PASS] test_executeCannotTurnUnclassifiedIncomeIntoPrincipal() (gas: 683233)
+[PASS] test_gasLimitedBookPreservesDividendShare() (gas: 62091184)
+[PASS] test_gasLimitedBookPreservesDividendShareWithActiveStaker() (gas: 63109021)
+[PASS] test_graduationPrincipalOpensTheStrategyLotAndIsNotIncome() (gas: 491524)
+[PASS] test_lpFeesAllFundTheBuyback() (gas: 549440)
+[PASS] test_principalBookedAfterAClosure_isStillExactlyThePrincipal() (gas: 7465987)
+[PASS] test_realisedProfitIsSplitBetweenStakersAndBuyback() (gas: 1023184)
+[PASS] test_stakersClaimTheirShareOfProfit() (gas: 1286596)
+[PASS] test_taxArrivalIsIncomeNeverALot_whoeverBooksIt() (gas: 624492)
+[PASS] test_wiringAndRatios() (gas: 6282813)
+Suite result: ok. 13 passed; 0 failed; 0 skipped; finished in 580.54ms (665.10ms CPU time)
+
+Ran 14 tests for test/V2BuybackTreasuryUpgrade.t.sol:V2BuybackTreasuryUpgradeTest
+[PASS] testFuzz_upgradePreservesPreclaimedFeesAndPendingIncome(uint96,uint96,bool) (runs: 1024, μ: 7410570, ~: 7413876)
+[PASS] test_buybackAndBurnRemainFunctionalAfterAnOrdinaryLogicUpgrade() (gas: 7809469)
+[PASS] test_codeMutationAndOwnershipHandoverInvalidatePendingUpgrade() (gas: 10147196)
+[PASS] test_consumedProposalAndStorageScribbleCannotChangeControllerPointer() (gas: 6308649)
+[PASS] test_dividendMigrationAppendsStorageAndUsesProxyAsIncomeSource() (gas: 10610658)
+[PASS] test_failedMigrationRollsBackStoragePointerAndProposalConsumption() (gas: 10139084)
+[PASS] test_failedOptionalGraduationBookStillCannotExposePrincipal() (gas: 3809357)
+[PASS] test_graduationAndIncomeKeepPrincipalProtectedThroughUpgrade() (gas: 10210948)
+[PASS] test_noticeOwnerCancelAndMigrationCommitmentCannotBeBypassed() (gas: 5089072)
+[PASS] test_proxyAndLogicFitRuntimeAndInitcodeLimits() (gas: 5055196)
+[PASS] test_proxyConstructorMatchesAllInitialStorageAndLocksInitialization() (gas: 151049)
+[PASS] test_replacementWithChangedAssetDecimalsIsRejectedEvenAtSameAddresses() (gas: 3446397)
+[PASS] test_upgradedTreasuryCannotWithdrawLockedLpPositions() (gas: 10041102)
+[PASS] test_wrongTokenParamsAndCrossKindImplementationsAreRejected() (gas: 15103410)
+Suite result: ok. 14 passed; 0 failed; 0 skipped; finished in 1.75s (1.62s CPU time)
+
+Ran 15 tests for test/V2EngineTreasuryUpgrade.t.sol:V2EngineTreasuryUpgradeTest
+[PASS] testFuzz_upgradePreservesLedgerAfterPartialProfitSale(uint16,uint16) (runs: 1024, μ: 9530646, ~: 9530749)
+[PASS] test_allBytecodeAndConstructorArgumentsFitEvmLimits() (gas: 5343706)
+[PASS] test_migrationAppendsDistributionStateUsesProxySourceAndCannotReplay() (gas: 9742037)
+[PASS] test_noticeCommitsMigrationDataAndCandidateRuntime() (gas: 5412516)
+[PASS] test_onlyOwnerCanScheduleOrCancelAndNoticeCannotBeSkipped() (gas: 5183604)
+[PASS] test_policyDelistingKeepsSameIdentityUpgradeableButBlocksNewLaunch() (gas: 9381318)
+[PASS] test_proxyInitializesParamsConfigAndUsesProxyDomain() (gas: 5221884)
+[PASS] test_realStakingMigrationBindsProxyAndFundsClaimsWithoutRemovingTrading() (gas: 10957538)
+[PASS] test_rejectedMigrationRollsBackPointerStateAndProposalConsumption() (gas: 9298855)
+[PASS] test_rejectsChangedStockDecimalsEvenWhenEveryAddressIsUnchanged() (gas: 5143629)
+[PASS] test_rejectsDifferentPolicyAndPolicyLimits() (gas: 15859143)
+[PASS] test_rejectsDifferentStorageFamily() (gas: 5168119)
+[PASS] test_rejectsDifferentTokenParamsAndEngineConfig() (gas: 15242711)
+[PASS] test_rejectsOtherProxyEvenWhenItsAssetsParamsAndPolicyMatch() (gas: 5141865)
+[PASS] test_upgradePreservesTradingStateAndCannotResetSameDayLimits() (gas: 10214124)
+Suite result: ok. 15 passed; 0 failed; 0 skipped; finished in 2.29s (2.15s CPU time)
+
+Ran 9 tests for test/V2TradablePercentEngine.t.sol:V2TradablePercentEngineTest
+[PASS] testFuzz_upgradeAfterPartialFillPreservesAllRiskAndAccounting(uint16,uint16) (runs: 1024, μ: 19133425, ~: 19133525)
+[PASS] test_changedRatioProxyOrDecimalsCannotUseOriginalUpgradeIdentity() (gas: 28876524)
+[PASS] test_delistingBlocksNewLaunchButAllowsCompatibleUpgrade() (gas: 18909983)
+[PASS] test_failedMigrationRollsBackPointerStateAndProposalThenCompatibleMigrationSucceeds() (gas: 19423785)
+[PASS] test_limitsUseCashAndStockSeparatelyAndIgnoreFixedChunk() (gas: 13965508)
+[PASS] test_proxyInitializationCommitmentAndConstructorBytecodeLimits() (gas: 18677252)
+[PASS] test_schemaThreeValidationRejectsReservedBitsAndInvalidPercentages() (gas: 171170)
+[PASS] test_upgradeEnforcesOwnerNoticeAndControllerOnlyEntrypoint() (gas: 18648491)
+[PASS] test_upgradePreservesSameDateUsageCustodyAndConfiguration() (gas: 19254824)
+Suite result: ok. 9 passed; 0 failed; 0 skipped; finished in 3.44s (3.31s CPU time)
+
+Ran 10 tests for test/V2TradablePercentAudit.t.sol:V2TradablePercentAuditTest
+[PASS] testFuzz_partialFillUsesIndependentDirectionalCapsAndActualReward(uint16,uint16,uint16,bool,bool) (runs: 1024, μ: 13794121, ~: 13790429)
+[PASS] testFuzz_sameDateCapitalShrinkAndDonationNeverEraseConsumedTurnover(uint96) (runs: 1024, μ: 14004799, ~: 14004544)
+[PASS] testFuzz_unboundedPolicyCannotBypassCoreInputOrDailyCaps(bool,uint16) (runs: 1024, μ: 14086531, ~: 14090906)
+[PASS] test_lpDonationsAndCreditedBuybackCannotInflateAnyTradingCap() (gas: 13859841)
+[PASS] test_malformedDomainNonceActionAndWrongDirectionAreAtomicallyRejected() (gas: 55323257)
+[PASS] test_matureUpgradePreservesCurrentDateSpendBeforeAnyEpochRollover() (gas: 19132969)
+[PASS] test_minimumLotCannotRoundUpOneBasisPointCap() (gas: 13958487)
+[PASS] test_oracleFailureReportsNoCapacityAndCannotChangeSpentHistory() (gas: 13826470)
+[PASS] test_rewardFailureRevertsSwapAndPercentageLedger() (gas: 13792013)
+[PASS] test_unbookedDonationIsCountedOnceAndOnlyForItsInputAsset() (gas: 13605306)
+Suite result: ok. 10 passed; 0 failed; 0 skipped; finished in 5.55s (11.22s CPU time)
+
+Ran 12 tests for test/V2IncomeGraduation.t.sol:V2IncomeGraduationTest
+[PASS] testFuzz_claimTimingCannotRelabelPrincipal((uint8,uint16,uint96,uint96,uint96,bool,bool)) (runs: 1024, μ: 13248355, ~: 12471819)
+[PASS] testFuzz_failedInitializationCannotFallBackToLegacyWire(uint8) (runs: 1024, μ: 12751645, ~: 12025346)
+[PASS] testFuzz_failedPrincipalTransferRollsBackInitialization(uint8) (runs: 1024, μ: 16665633, ~: 15880056)
+[PASS] testFuzz_principalInitializationRequiresFactoryAndCannotRepeat(uint8) (runs: 1024, μ: 12930463, ~: 12125456)
+[PASS] test_optionalBookFailureDividend() (gas: 12121444)
+[PASS] test_optionalBookFailureSplit() (gas: 12121987)
+[PASS] test_optionalBookFailureStrategy25() (gas: 14003610)
+[PASS] test_optionalBookFailureStrategy50() (gas: 14003885)
+[PASS] test_preclaimedFeesDividend() (gas: 12310325)
+[PASS] test_preclaimedFeesSplit() (gas: 12330482)
+[PASS] test_preclaimedFeesStrategy25() (gas: 14158642)
+[PASS] test_preclaimedFeesStrategy50() (gas: 14158587)
+Suite result: ok. 12 passed; 0 failed; 0 skipped; finished in 5.65s (12.14s CPU time)
+
+Ran 12 tests for test/V2IncomeGraduation.t.sol:V2IncomeGraduationSixDecimalsTest
+[PASS] testFuzz_claimTimingCannotRelabelPrincipal((uint8,uint16,uint96,uint96,uint96,bool,bool)) (runs: 1024, μ: 13226086, ~: 12470788)
+[PASS] testFuzz_failedInitializationCannotFallBackToLegacyWire(uint8) (runs: 1024, μ: 12785368, ~: 12024316)
+[PASS] testFuzz_failedPrincipalTransferRollsBackInitialization(uint8) (runs: 1024, μ: 16702179, ~: 15879044)
+[PASS] testFuzz_principalInitializationRequiresFactoryAndCannotRepeat(uint8) (runs: 1024, μ: 12967921, ~: 12124426)
+[PASS] test_optionalBookFailureDividend() (gas: 12120414)
+[PASS] test_optionalBookFailureSplit() (gas: 12120957)
+[PASS] test_optionalBookFailureStrategy25() (gas: 14002513)
+[PASS] test_optionalBookFailureStrategy50() (gas: 14002788)
+[PASS] test_preclaimedFeesDividend() (gas: 12309295)
+[PASS] test_preclaimedFeesSplit() (gas: 12329452)
+[PASS] test_preclaimedFeesStrategy25() (gas: 14157545)
+[PASS] test_preclaimedFeesStrategy50() (gas: 14157490)
+Suite result: ok. 12 passed; 0 failed; 0 skipped; finished in 6.65s (15.14s CPU time)
+
+Ran 3 tests for test/V2EngineTreasuryUpgradeInvariant.t.sol:V2EngineTreasuryUpgradeInvariantTest
+[PASS] invariant_upgradeNeverResetsTradingStateOrCustody() (runs: 512, calls: 65536, reverts: 0)
+
+╭-----------------------+---------------------+-------+---------+----------╮
+| Contract              | Selector            | Calls | Reverts | Discards |
++==========================================================================+
+| EngineUpgradeHandler  | cancel              | 4282  | 0       | 0        |
+|-----------------------+---------------------+-------+---------+----------|
+| EngineUpgradeHandler  | finishUpgrade       | 4257  | 0       | 0        |
+|-----------------------+---------------------+-------+---------+----------|
+| EngineUpgradeHandler  | schedule            | 4267  | 0       | 0        |
+|-----------------------+---------------------+-------+---------+----------|
+| StrategyEngineHandler | advanceCooldownEdge | 4658  | 0       | 0        |
+|-----------------------+---------------------+-------+---------+----------|
+| StrategyEngineHandler | advanceEpoch        | 4331  | 0       | 0        |
+|-----------------------+---------------------+-------+---------+----------|
+| StrategyEngineHandler | advanceLive         | 4278  | 0       | 0        |
+|-----------------------+---------------------+-------+---------+----------|
+| StrategyEngineHandler | attemptExecute      | 4402  | 0       | 0        |
+|-----------------------+---------------------+-------+---------+----------|
+| StrategyEngineHandler | book                | 4292  | 0       | 0        |
+|-----------------------+---------------------+-------+---------+----------|
+| StrategyEngineHandler | donateStock         | 4301  | 0       | 0        |
+|-----------------------+---------------------+-------+---------+----------|
+| StrategyEngineHandler | donateUsdg          | 4394  | 0       | 0        |
+|-----------------------+---------------------+-------+---------+----------|
+| StrategyEngineHandler | makeOracleStale     | 4387  | 0       | 0        |
+|-----------------------+---------------------+-------+---------+----------|
+| StrategyEngineHandler | refreshFeeds        | 4394  | 0       | 0        |
+|-----------------------+---------------------+-------+---------+----------|
+| StrategyEngineHandler | setMarket           | 4383  | 0       | 0        |
+|-----------------------+---------------------+-------+---------+----------|
+| StrategyEngineHandler | setOraclePaused     | 4477  | 0       | 0        |
+|-----------------------+---------------------+-------+---------+----------|
+| StrategyEngineHandler | shoveVenue          | 4433  | 0       | 0        |
+╰-----------------------+---------------------+-------+---------+----------╯
+
+[PASS] invariant_upgradedEngineKeepsTurnoverAndExecutionGuards() (runs: 512, calls: 65536, reverts: 0)
+
+╭-----------------------+---------------------+-------+---------+----------╮
+| Contract              | Selector            | Calls | Reverts | Discards |
++==========================================================================+
+| EngineUpgradeHandler  | cancel              | 4282  | 0       | 0        |
+|-----------------------+---------------------+-------+---------+----------|
+| EngineUpgradeHandler  | finishUpgrade       | 4257  | 0       | 0        |
+|-----------------------+---------------------+-------+---------+----------|
+| EngineUpgradeHandler  | schedule            | 4267  | 0       | 0        |
+|-----------------------+---------------------+-------+---------+----------|
+| StrategyEngineHandler | advanceCooldownEdge | 4658  | 0       | 0        |
+|-----------------------+---------------------+-------+---------+----------|
+| StrategyEngineHandler | advanceEpoch        | 4331  | 0       | 0        |
+|-----------------------+---------------------+-------+---------+----------|
+| StrategyEngineHandler | advanceLive         | 4278  | 0       | 0        |
+|-----------------------+---------------------+-------+---------+----------|
+| StrategyEngineHandler | attemptExecute      | 4402  | 0       | 0        |
+|-----------------------+---------------------+-------+---------+----------|
+| StrategyEngineHandler | book                | 4292  | 0       | 0        |
+|-----------------------+---------------------+-------+---------+----------|
+| StrategyEngineHandler | donateStock         | 4301  | 0       | 0        |
+|-----------------------+---------------------+-------+---------+----------|
+| StrategyEngineHandler | donateUsdg          | 4394  | 0       | 0        |
+|-----------------------+---------------------+-------+---------+----------|
+| StrategyEngineHandler | makeOracleStale     | 4387  | 0       | 0        |
+|-----------------------+---------------------+-------+---------+----------|
+| StrategyEngineHandler | refreshFeeds        | 4394  | 0       | 0        |
+|-----------------------+---------------------+-------+---------+----------|
+| StrategyEngineHandler | setMarket           | 4383  | 0       | 0        |
+|-----------------------+---------------------+-------+---------+----------|
+| StrategyEngineHandler | setOraclePaused     | 4477  | 0       | 0        |
+|-----------------------+---------------------+-------+---------+----------|
+| StrategyEngineHandler | shoveVenue          | 4433  | 0       | 0        |
+╰-----------------------+---------------------+-------+---------+----------╯
+
+[PASS] test_handlerActuallyTradesAndUpgradesRepeatedly() (gas: 1879630)
+Suite result: ok. 3 passed; 0 failed; 0 skipped; finished in 11.10s (16.18s CPU time)
+
+Ran 8 tests for test/V2StakingAllocationRegression.t.sol:V2StakingAllocationRegressionTest
+[PASS] testFuzz_checkpointFrequencyPreservesAllocation(uint32,uint16,uint96,bool) (runs: 1024, μ: 5449873, ~: 5317179)
+[PASS] test_eighteenDecimalEquivalentHasOnlyWeiScaleCheckpointError() (gas: 102393575)
+Logs:
+  reward decimals: 18
+  checkpoint interval seconds: 60
+  empty claim count: 10080
+  funded raw units: 10000000000000000
+  quiet paid raw units: 9999999999999999
+  frequent checkpoint paid raw units: 9999999999999999
+  additional unpaid raw units: 0
+  reward decimals: 18
+  checkpoint interval seconds: 300
+  empty claim count: 2016
+  funded raw units: 10000000000000000
+  quiet paid raw units: 9999999999999999
+  frequent checkpoint paid raw units: 9999999999999999
+  additional unpaid raw units: 0
+
+[PASS] test_joinAndExitOrderingMatchesHandCalculatedAllocation() (gas: 42439149)
+Logs:
+  join/exit reward decimals: 6
+  join/exit A additional unpaid raw units: 0
+  join/exit B additional unpaid raw units: 0
+  join/exit reward decimals: 18
+  join/exit A additional unpaid raw units: 0
+  join/exit B additional unpaid raw units: 0
+
+[PASS] test_nonStakerClaimsPreserveSixDecimalAllocationEvery300Seconds() (gas: 20246795)
+Logs:
+  reward decimals: 6
+  checkpoint interval seconds: 300
+  empty claim count: 2016
+  funded raw units: 10000
+  quiet paid raw units: 9999
+  frequent checkpoint paid raw units: 9999
+  additional unpaid raw units: 0
+
+[PASS] test_nonStakerClaimsPreserveSixDecimalAllocationEvery60Seconds() (gas: 81275452)
+Logs:
+  reward decimals: 6
+  checkpoint interval seconds: 60
+  empty claim count: 10080
+  funded raw units: 10000
+  quiet paid raw units: 9999
+  frequent checkpoint paid raw units: 9999
+  additional unpaid raw units: 0
+
+[PASS] test_oneWeiStakeClaimsCannotDiscardOtherParticipantsAllocation() (gas: 20532847)
+Logs:
+  reward decimals: 6
+  checkpoint interval seconds: 300
+  empty claim count: 2016
+  funded raw units: 10000
+  quiet paid raw units: 9999
+  frequent checkpoint paid raw units: 9999
+  additional unpaid raw units: 0
+
+[PASS] test_repeatedFundingHasBoundedRawUnitErrorAtBothPrecisions() (gas: 55265624)
+Logs:
+  refill reward decimals: 6
+  refill additional unpaid raw units: 0
+  refill reward decimals: 18
+  refill additional unpaid raw units: 0
+
+[PASS] test_smallStakerFrequentClaimsPreservePersonalFractions() (gas: 226683526)
+Logs:
+  minority once-only payment raw units: 1260
+  minority minute-by-minute payment raw units: 1260
+  minority unpaid raw units: 0
+
+Suite result: ok. 8 passed; 0 failed; 0 skipped; finished in 11.25s (3.19s CPU time)
+
+Ran 3 tests for test/V2TradablePercentInvariant.t.sol:V2TradablePercentInvariantTest
+[PASS] invariant_dynamicCapsUseInputAssetsAndNeverRewriteHistoricalSpend() (runs: 512, calls: 65536, reverts: 0)
+
+╭-----------------------------+-----------------+-------+---------+----------╮
+| Contract                    | Selector        | Calls | Reverts | Discards |
++============================================================================+
+| TradablePercentAuditHandler | advanceCooldown | 4288  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | attemptExecute  | 4360  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | book            | 4400  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | cancelUpgrade   | 4332  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | changeMarket    | 4322  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | creditLpIncome  | 4362  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | donateCash      | 4496  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | donateStock     | 4335  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | finishUpgrade   | 4421  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | nextEpoch       | 4420  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | pauseOracle     | 4446  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | refreshFeeds    | 4377  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | scheduleUpgrade | 4215  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | shoveVenue      | 4392  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | staleOracle     | 4370  | 0       | 0        |
+╰-----------------------------+-----------------+-------+---------+----------╯
+
+[PASS] invariant_inventoryAndNonceMatchActualSuccessfulFillsAcrossUpgrades() (runs: 512, calls: 65536, reverts: 0)
+
+╭-----------------------------+-----------------+-------+---------+----------╮
+| Contract                    | Selector        | Calls | Reverts | Discards |
++============================================================================+
+| TradablePercentAuditHandler | advanceCooldown | 4288  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | attemptExecute  | 4360  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | book            | 4400  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | cancelUpgrade   | 4332  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | changeMarket    | 4322  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | creditLpIncome  | 4362  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | donateCash      | 4496  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | donateStock     | 4335  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | finishUpgrade   | 4421  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | nextEpoch       | 4420  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | pauseOracle     | 4446  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | refreshFeeds    | 4377  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | scheduleUpgrade | 4215  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | shoveVenue      | 4392  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | staleOracle     | 4370  | 0       | 0        |
+╰-----------------------------+-----------------+-------+---------+----------╯
+
+[PASS] test_handlerWitnessBuysSellsRejectsAndPreservesHistoryThroughUpgrade() (gas: 1632752)
+Suite result: ok. 3 passed; 0 failed; 0 skipped; finished in 13.47s (21.05s CPU time)
+
+Ran 4 tests for test/V2StakingIncomeInvariant.t.sol:V2StakingIncomeInvariantTest
+[PASS] invariant_principalAndRewardsAreBackedByIndependentTransfers() (runs: 512, calls: 65536, reverts: 0)
+
+╭----------------------+----------------------------+-------+---------+----------╮
+| Contract             | Selector                   | Calls | Reverts | Discards |
++================================================================================+
+| StakingIncomeHandler | advanceTime                | 6668  | 0       | 0        |
+|----------------------+----------------------------+-------+---------+----------|
+| StakingIncomeHandler | advanceToLockBoundary      | 6530  | 0       | 0        |
+|----------------------+----------------------------+-------+---------+----------|
+| StakingIncomeHandler | claim                      | 6521  | 0       | 0        |
+|----------------------+----------------------------+-------+---------+----------|
+| StakingIncomeHandler | donate                     | 6604  | 0       | 0        |
+|----------------------+----------------------------+-------+---------+----------|
+| StakingIncomeHandler | fund                       | 6466  | 0       | 0        |
+|----------------------+----------------------------+-------+---------+----------|
+| StakingIncomeHandler | principalTransferFailure   | 6602  | 0       | 0        |
+|----------------------+----------------------------+-------+---------+----------|
+| StakingIncomeHandler | rewardTransferFailure      | 6730  | 0       | 0        |
+|----------------------+----------------------------+-------+---------+----------|
+| StakingIncomeHandler | stake                      | 6418  | 0       | 0        |
+|----------------------+----------------------------+-------+---------+----------|
+| StakingIncomeHandler | withdraw                   | 6466  | 0       | 0        |
+|----------------------+----------------------------+-------+---------+----------|
+| StakingIncomeHandler | withdrawWithBlockedRewards | 6531  | 0       | 0        |
+╰----------------------+----------------------------+-------+---------+----------╯
+
+[PASS] testFuzz_idleQueueAndRefillPreserveAccruedIncome(uint96,uint96,uint32) (runs: 1024, μ: 1185037, ~: 1185283)
+[PASS] testFuzz_rewardFailureNeverLocksPrincipal(uint96,uint96,uint8) (runs: 1024, μ: 1093069, ~: 1080835)
+[PASS] test_handlerExercisesEveryFailureAndLockBoundary() (gas: 3105767)
+Suite result: ok. 4 passed; 0 failed; 0 skipped; finished in 21.79s (24.28s CPU time)
+
+Ran 14 test suites in 21.79s (83.96s CPU time): 121 tests passed, 0 failed, 0 skipped (121 total tests)
