@@ -4,7 +4,9 @@ The strategy engine separates a policy's decision from the treasury's authority.
 only one fixed-width intent: hold, buy stock, or sell stock, plus a nonce-bound next-state word. It cannot choose a
 pool, route, recipient, approval, callback, arbitrary calldata, or asset.
 
-`HedgeFunV2EngineTreasury` is the custody and risk boundary. On every execution it independently checks:
+`HedgeFunV2EngineTreasuryCore` is the shared custody and risk boundary. The legacy direct wrapper preserves the
+`HedgeFunV2EngineTreasury` ABI; new deployment scripts use `HedgeFunV2UpgradeableEngineTreasury` and a per-launch
+implementation under the same two-day controller as kind 0. On every execution the core independently checks:
 
 - the domain-separated launch config hash and current strategy nonce;
 - the registered policy runtime code hash, call gas, and exact 160-byte return size, with an undeclared action word
@@ -22,7 +24,14 @@ The creator commits to a fixed-width `EngineConfig` for its own `(symbol, creato
 appended to initcode, so changing it changes the CREATE2 treasury address and therefore the factory terms. Engine
 kinds and policy registrations are append-only. Disabling a policy prevents new predictions/launches but cannot
 rewrite an already deployed treasury: its policy identity is held in immutables, and its limits in a config struct
-the constructor writes once and nothing can set again.
+the constructor writes once in the direct deployment. The proxy initializes the same storage in construction.
+Upgrades must preserve that storage, including average cost, nonce, opaque policy state, cooldown and daily
+turnover; they do not reset the risk budget. An approved governance implementation can change behavior, so its
+complete source and storage migration still require review. The controller's identity hash is not a code audit.
+
+The proxy's initial policy must be enabled. Later compatible implementations retain the frozen policy identity
+and limits even if the registry disables new launches. Their policy-intent domain remains the same proxy address.
+See [treasury upgrades and deployment](./V2_BONDING_CURVE.md#treasury-upgrades-and-lp-isolation).
 
 ## The config and its floors
 

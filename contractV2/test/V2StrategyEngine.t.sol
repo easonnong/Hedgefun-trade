@@ -8,7 +8,7 @@ import {HedgeFunFactory} from "../src/HedgeFunFactory.sol";
 import {HedgeFunTreasuryBase} from "../src/HedgeFunTreasuryBase.sol";
 import {HedgeFunBondingCurve} from "../src/v2/HedgeFunBondingCurve.sol";
 import {HedgeFunV2BuybackTreasury} from "../src/v2/HedgeFunV2BuybackTreasury.sol";
-import {HedgeFunV2EngineTreasury} from "../src/v2/HedgeFunV2EngineTreasury.sol";
+import {HedgeFunV2EngineTreasury, HedgeFunV2EngineTreasuryCore} from "../src/v2/HedgeFunV2EngineTreasury.sol";
 import {HedgeFunV2Treasury} from "../src/v2/HedgeFunV2Treasury.sol";
 import {V2TreasuryDeployer} from "../src/v2/V2TreasuryDeployer.sol";
 import {
@@ -251,7 +251,7 @@ contract V2StrategyEngineTest is V2FactoryFixture {
             _launchTestPolicy(address(new RevertingStrategyPolicy()), keccak256("reverting-policy"), 20);
         uint256 stockBefore = stock.balanceOf(address(treasury));
         uint256 usdgBefore = usdg.balanceOf(address(treasury));
-        vm.expectRevert(HedgeFunV2EngineTreasury.PolicyFailure.selector);
+        vm.expectRevert(HedgeFunV2EngineTreasuryCore.PolicyFailure.selector);
         treasury.execute();
         assertEq(treasury.strategyNonce(), 0);
         assertEq(stock.balanceOf(address(treasury)), stockBefore);
@@ -261,7 +261,7 @@ contract V2StrategyEngineTest is V2FactoryFixture {
     function test_hugePolicyReturndataIsRejectedBeforeCopyOrStateChange() public {
         HedgeFunV2EngineTreasury treasury =
             _launchTestPolicy(address(new HugeReturnStrategyPolicy()), keccak256("huge-return-policy"), 21);
-        vm.expectRevert(HedgeFunV2EngineTreasury.BadPolicyReturn.selector);
+        vm.expectRevert(HedgeFunV2EngineTreasuryCore.BadPolicyReturn.selector);
         treasury.execute();
         assertEq(treasury.strategyNonce(), 0);
         assertEq(treasury.turnoverInEpoch(), 0);
@@ -274,9 +274,9 @@ contract V2StrategyEngineTest is V2FactoryFixture {
             _launchTestPolicy(address(new SpotRawActionStrategyPolicy()), keccak256("raw-action-policy"), 25);
         uint256 stockBefore = stock.balanceOf(address(treasury));
         uint256 usdgBefore = usdg.balanceOf(address(treasury));
-        vm.expectRevert(HedgeFunV2EngineTreasury.BadPolicyReturn.selector);
+        vm.expectRevert(HedgeFunV2EngineTreasuryCore.BadPolicyReturn.selector);
         treasury.execute();
-        vm.expectRevert(HedgeFunV2EngineTreasury.BadPolicyReturn.selector);
+        vm.expectRevert(HedgeFunV2EngineTreasuryCore.BadPolicyReturn.selector);
         treasury.preview();
         assertEq(treasury.strategyNonce(), 0);
         assertEq(treasury.lastStrategyAt(), 0);
@@ -289,12 +289,12 @@ contract V2StrategyEngineTest is V2FactoryFixture {
     function test_intentOfTheWrongLengthIsABadPolicyReturnEvenWhenItsWordsAreValid() public {
         HedgeFunV2EngineTreasury short_ =
             _launchTestPolicy(address(new WrongLengthIntentStrategyPolicy(159)), keccak256("short-intent-policy"), 26);
-        vm.expectRevert(HedgeFunV2EngineTreasury.BadPolicyReturn.selector);
+        vm.expectRevert(HedgeFunV2EngineTreasuryCore.BadPolicyReturn.selector);
         short_.execute();
         HedgeFunV2EngineTreasury long_ =
             _launchTestPolicy(address(new WrongLengthIntentStrategyPolicy(192)), keccak256("long-intent-policy"), 27);
         uint256 stockBefore = long_.bookedStock();
-        vm.expectRevert(HedgeFunV2EngineTreasury.BadPolicyReturn.selector);
+        vm.expectRevert(HedgeFunV2EngineTreasuryCore.BadPolicyReturn.selector);
         long_.execute();
         assertEq(long_.bookedStock(), stockBefore);
         assertEq(short_.strategyNonce() + long_.strategyNonce(), 0);
@@ -308,7 +308,7 @@ contract V2StrategyEngineTest is V2FactoryFixture {
     function test_staticcallTrapsPolicyStateWrites() public {
         StateWritingStrategyPolicy stateful = new StateWritingStrategyPolicy();
         HedgeFunV2EngineTreasury treasury = _launchTestPolicy(address(stateful), keccak256("state-writing-policy"), 22);
-        vm.expectRevert(HedgeFunV2EngineTreasury.PolicyFailure.selector);
+        vm.expectRevert(HedgeFunV2EngineTreasuryCore.PolicyFailure.selector);
         treasury.execute();
         assertEq(stateful.writes(), 0);
         assertEq(treasury.strategyNonce(), 0);

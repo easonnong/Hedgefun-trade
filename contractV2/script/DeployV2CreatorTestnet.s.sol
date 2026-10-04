@@ -3,8 +3,8 @@ pragma solidity ^0.8.24;
 
 import {DeployV2FeeUpgradeTestnet} from "./DeployV2FeeUpgradeTestnet.s.sol";
 import {V2InitCodeChunk} from "../src/v2/V2TreasuryDeployer.sol";
-import {HedgeFunV2BuybackTreasury} from "../src/v2/HedgeFunV2BuybackTreasury.sol";
-import {HedgeFunV2EngineTreasury} from "../src/v2/HedgeFunV2EngineTreasury.sol";
+import {HedgeFunV2UpgradeableBuybackTreasury} from "../src/v2/HedgeFunV2UpgradeableBuybackTreasury.sol";
+import {HedgeFunV2UpgradeableEngineTreasury} from "../src/v2/HedgeFunV2UpgradeableEngineTreasury.sol";
 import {V2RebalancePolicy} from "../src/v2/strategy/V2RebalancePolicy.sol";
 import {StrategyCapabilities} from "../src/v2/strategy/IStrategyPolicy.sol";
 
@@ -21,7 +21,7 @@ contract DeployV2CreatorTestnet is DeployV2FeeUpgradeTestnet {
     ///      must instead use the operator's nonce, so an intervening public helper call cannot occupy a chunk
     ///      address recorded during simulation. The ordinary default chunks are already atomic in its constructor.
     function _register(Deployment memory x) internal override {
-        (address a, address b) = _makeOperatorChunks(type(HedgeFunV2BuybackTreasury).creationCode);
+        (address a, address b) = _makeOperatorChunks(type(HedgeFunV2UpgradeableBuybackTreasury).creationCode);
         if (x.treasury.registerKind(a, b) != 1) revert BadBinding("buyback kind");
         x.policy = new V2RebalancePolicy();
         x.policyKey = x.treasury
@@ -32,7 +32,7 @@ contract DeployV2CreatorTestnet is DeployV2FeeUpgradeTestnet {
                 keccak256("hedgefun testnet 46630: V2RebalancePolicy dependencies (none audited for testnet)"),
                 keccak256("hedgefun testnet 46630: V2RebalancePolicy audit manifest (testnet placeholder)")
             );
-        (a, b) = _makeOperatorChunks(type(HedgeFunV2EngineTreasury).creationCode);
+        (a, b) = _makeOperatorChunks(type(HedgeFunV2UpgradeableEngineTreasury).creationCode);
         x.engineKind = x.treasury
             .registerEngineKind(
                 a,

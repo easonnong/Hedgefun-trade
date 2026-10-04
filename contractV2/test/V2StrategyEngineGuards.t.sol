@@ -11,7 +11,7 @@ import {HedgeFunFactory} from "../src/HedgeFunFactory.sol";
 import {HedgeFunTreasuryBase} from "../src/HedgeFunTreasuryBase.sol";
 import {PriceOracle} from "../src/PriceOracle.sol";
 import {HedgeFunBondingCurve} from "../src/v2/HedgeFunBondingCurve.sol";
-import {HedgeFunV2EngineTreasury} from "../src/v2/HedgeFunV2EngineTreasury.sol";
+import {HedgeFunV2EngineTreasury, HedgeFunV2EngineTreasuryCore} from "../src/v2/HedgeFunV2EngineTreasury.sol";
 import {HedgeFunV2Treasury} from "../src/v2/HedgeFunV2Treasury.sol";
 import {V2LiquidityVault} from "../src/v2/V2LiquidityVault.sol";
 import {BoundDeployer} from "../src/HedgeFunDeployers.sol";
@@ -247,9 +247,9 @@ contract V2StrategyEngineGuardsTest is V2FactoryFixture {
         (bool due,,) = t.preview();
         assertTrue(due, "control: overweight after graduation, a sell is due");
         vm.etch(address(honest), address(new HonestBuyPolicy()).code);
-        vm.expectRevert(HedgeFunV2EngineTreasury.PolicyUnavailable.selector);
+        vm.expectRevert(HedgeFunV2EngineTreasuryCore.PolicyUnavailable.selector);
         t.execute();
-        vm.expectRevert(HedgeFunV2EngineTreasury.PolicyUnavailable.selector);
+        vm.expectRevert(HedgeFunV2EngineTreasuryCore.PolicyUnavailable.selector);
         t.preview();
         assertEq(t.strategyNonce(), 0);
     }
@@ -259,7 +259,7 @@ contract V2StrategyEngineGuardsTest is V2FactoryFixture {
     function test_C3_gasBombIsBoundedByTheRegisteredGas() public {
         HedgeFunV2EngineTreasury t = _launchPolicy(address(new GasBombStrategyPolicy()), 100_000, "bomb");
         uint256 before = gasleft();
-        vm.expectRevert(HedgeFunV2EngineTreasury.PolicyFailure.selector);
+        vm.expectRevert(HedgeFunV2EngineTreasuryCore.PolicyFailure.selector);
         t.execute();
         uint256 used = before - gasleft();
         assertLt(used, 1_500_000, "policy gas must be bounded by the registered maxGas, not gas()");
@@ -272,7 +272,7 @@ contract V2StrategyEngineGuardsTest is V2FactoryFixture {
         assertEq(t.policyCapabilities(), StrategyCapabilities.SPOT_SELL);
         _setShare(t, 2500);
         uint256 usdgBefore = t.reserveUsdg();
-        vm.expectRevert(HedgeFunV2EngineTreasury.BadIntent.selector);
+        vm.expectRevert(HedgeFunV2EngineTreasuryCore.BadIntent.selector);
         t.execute();
         assertEq(t.reserveUsdg(), usdgBefore);
         assertEq(t.strategyNonce(), 0);
@@ -284,7 +284,7 @@ contract V2StrategyEngineGuardsTest is V2FactoryFixture {
         HedgeFunV2EngineTreasury t = _launchPolicy(address(new AlwaysSellPolicy()), 100_000, "alwayssell");
         _setShare(t, 5300); // target 50%, deadband 5% -> upper band 55%
         uint256 bookedBefore = t.bookedStock();
-        vm.expectRevert(HedgeFunV2EngineTreasury.BadIntent.selector);
+        vm.expectRevert(HedgeFunV2EngineTreasuryCore.BadIntent.selector);
         t.execute();
         assertEq(t.bookedStock(), bookedBefore);
         (bool due,,) = t.preview();
@@ -302,7 +302,7 @@ contract V2StrategyEngineGuardsTest is V2FactoryFixture {
     /// recorded that empty revert at 5aedceb, when the check sat after the decode and could never fire)
     function test_C6_outOfRangeActionWordIsRefusedByNameBeforeTheDecode() public {
         HedgeFunV2EngineTreasury t = _launchPolicy(address(new SpotRawActionStrategyPolicy()), 100_000, "raw");
-        vm.expectRevert(HedgeFunV2EngineTreasury.BadPolicyReturn.selector);
+        vm.expectRevert(HedgeFunV2EngineTreasuryCore.BadPolicyReturn.selector);
         t.execute();
         assertEq(t.strategyNonce(), 0);
     }
@@ -431,7 +431,7 @@ contract V2StrategyEngineGuardsTest is V2FactoryFixture {
                 factory.predict(q);
             }
             vm.prank(address(deployer));
-            vm.expectRevert(HedgeFunV2EngineTreasury.BadEngineConfig.selector);
+            vm.expectRevert(HedgeFunV2EngineTreasuryCore.BadEngineConfig.selector);
             new HedgeFunV2EngineTreasury(
                 address(usdg), address(stock), address(venue), address(oracle), TOKEN, address(pm), address(factory),
                 p, bad[i]

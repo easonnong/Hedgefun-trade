@@ -16,6 +16,8 @@ CONTRACTS = ['HedgeFunFactory', 'HedgeFunHook', 'HedgeFunV2Hook', 'HedgeFunTreas
              'HedgeFunV2AssetPercentEngineTreasury', 'V2FundAssetReader', 'V2AssetPercentRebalancePolicy',
              'HedgeFunV2BuybackTreasury', 'HedgeFunV2UpgradeableTreasury',
              'HedgeFunV2UpgradeableTreasuryLogic', 'V2TreasuryUpgradeController',
+             'HedgeFunV2UpgradeableBuybackTreasury', 'HedgeFunV2UpgradeableBuybackTreasuryLogic',
+             'HedgeFunV2UpgradeableEngineTreasury', 'HedgeFunV2UpgradeableEngineTreasuryLogic',
              'HedgeFunV2DividendTreasury', 'HedgeFunV2StrategyDividend25Treasury', 'V2StakingIncome']
 PLUMBING = {'unlockCallback', 'uniswapV3SwapCallback', 'afterSwap', 'beforeSwap', 'beforeInitialize', 'afterInitialize', 'beforeAddLiquidity', 'afterAddLiquidity',
             'beforeRemoveLiquidity', 'afterRemoveLiquidity', 'beforeDonate', 'afterDonate', 'payStock', 'settleStock', 'settleToken', 'bind', 'register', 'registerGraduated', 'graduateCurve', 'release', 'wire'}

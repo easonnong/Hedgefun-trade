@@ -1,0 +1,194 @@
+[
+ {
+  "type": "constructor",
+  "inputs": [
+   {
+    "name": "usdg_",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "stock_",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "v3Pool_",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "oracle_",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "token_",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "poolManager_",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "factory_",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "p",
+    "type": "tuple",
+    "internalType": "struct HedgeFunTreasuryBase.Params",
+    "components": [
+     {
+      "name": "tp1Bps",
+      "type": "uint32",
+      "internalType": "uint32"
+     },
+     {
+      "name": "tp2Bps",
+      "type": "uint32",
+      "internalType": "uint32"
+     },
+     {
+      "name": "dipBps",
+      "type": "uint16",
+      "internalType": "uint16"
+     },
+     {
+      "name": "stopBps",
+      "type": "uint16",
+      "internalType": "uint16"
+     },
+     {
+      "name": "lotBps",
+      "type": "uint16",
+      "internalType": "uint16"
+     },
+     {
+      "name": "bountyBps",
+      "type": "uint16",
+      "internalType": "uint16"
+     },
+     {
+      "name": "maxSlippageBps",
+      "type": "uint16",
+      "internalType": "uint16"
+     },
+     {
+      "name": "maxDeviationBps",
+      "type": "uint16",
+      "internalType": "uint16"
+     },
+     {
+      "name": "maxBuybackImpactBps",
+      "type": "uint16",
+      "internalType": "uint16"
+     },
+     {
+      "name": "buybackCooldown",
+      "type": "uint32",
+      "internalType": "uint32"
+     },
+     {
+      "name": "minLotUsdg",
+      "type": "uint256",
+      "internalType": "uint256"
+     },
+     {
+      "name": "buybackChunkUsdg",
+      "type": "uint256",
+      "internalType": "uint256"
+     },
+     {
+      "name": "sellChunkUsdg",
+      "type": "uint256",
+      "internalType": "uint256"
+     },
+     {
+      "name": "bandBpsPerHour",
+      "type": "uint16",
+      "internalType": "uint16"
+     }
+    ]
+   }
+  ],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "type": "fallback",
+  "stateMutability": "payable"
+ },
+ {
+  "type": "function",
+  "name": "applyUpgrade",
+  "inputs": [
+   {
+    "name": "data",
+    "type": "bytes",
+    "internalType": "bytes"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "type": "function",
+  "name": "implementation",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "type": "function",
+  "name": "initialImplementation",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "type": "function",
+  "name": "treasuryUpgradeController",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "contract V2TreasuryUpgradeController"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "type": "function",
+  "name": "upgradeConfigHash",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "type": "error",
+  "name": "NotUpgradeController",
+  "inputs": []
+ }
+]

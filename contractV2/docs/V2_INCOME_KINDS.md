@@ -14,7 +14,7 @@ CREATE2 address, and cannot be changed after launch.
 | 0 (default) | `HedgeFunV2UpgradeableTreasury` | take-profit / dip / stop | booked as a new lot | buy-back | buy-back |
 | strategy + 25% dividend | `HedgeFunV2StrategyDividend25Treasury` | the same rungs | 25% stakers, 75% buy-back | 25% stakers, 75% buy-back | buy-back |
 | strategy + 50% dividend | `HedgeFunV2StrategyDividend50Treasury` | the same rungs | 50% / 50% | 50% / 50% | buy-back |
-| buy-back | `HedgeFunV2BuybackTreasury` | none | buy-back | none | buy-back |
+| buy-back (new deployments) | `HedgeFunV2UpgradeableBuybackTreasury` | none | buy-back | none | buy-back |
 | dividend | `HedgeFunV2DividendTreasury` | none | 100% stakers | none | 100% stakers |
 | buy-back + dividend | `HedgeFunV2BuybackDividendTreasury` | none | 50% / 50% | none | 50% / 50% |
 
@@ -25,6 +25,11 @@ kind's code. A different ratio is a new kind, registered the same way.
 The four dividend kinds are still directly deployed immutable treasuries. They do not inherit kind 0's upgrade
 controller. Their staking pool fixes its income source at deployment, so using them behind a proxy requires a
 separate initialization and storage design; registering these kinds does not make them upgradeable.
+
+The ordinary buyback and spot-engine release choices now have separate upgradeable wrappers, alongside kind 0.
+They can receive a future compatible dividend implementation through their controller, with the original ledger
+preserved and the staking source bound to the proxy. This does not turn the four direct income kinds in this
+document into upgradeable deployments. See [the deployment and upgrade requirements](./V2_BONDING_CURVE.md#strategy-kinds).
 
 ## The strategy kinds
 

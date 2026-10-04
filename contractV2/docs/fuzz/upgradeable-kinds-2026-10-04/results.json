@@ -1,0 +1,212 @@
+{
+  "date": "2026-10-04",
+  "pr": "https://github.com/0xHedgeHood/Hedgefun-trade/pull/22",
+  "previous_head": "3d0ffa1afa843c927df2eb2b695310f1a796b432",
+  "scope": [
+    "Per-launch upgradeable buyback and spot-engine wrappers under the existing 48-hour controller",
+    "Frozen asset/config/policy and derived asset-unit identity; proxy-bound Engine intents",
+    "Fresh deploys use kind 1/2; existing registries append proxy families without changing existing pools",
+    "EOA-created registration chunks, compatibility preflight and exact readback",
+    "Future dividend migration prototypes retain treasury state and bind staking income to proxy; no production recurring distributor added"
+  ],
+  "toolchain": {
+    "forge": "1.5.0",
+    "solc": "0.8.26",
+    "optimizer_runs": 1,
+    "evm": "cancun"
+  },
+  "offline": {
+    "suites": 116,
+    "passed": 1045,
+    "failed": 0,
+    "skipped": 43
+  },
+  "python": {
+    "tests": 93,
+    "tools_tests": 53,
+    "failed": 0
+  },
+  "campaign": {
+    "runs_per_fuzz_test": 1024,
+    "invariant_depth": 128,
+    "invariant_calls_total": 589824,
+    "handler_reverts": 0,
+    "seeds": {
+      "0x2026100401": {
+        "suites": 10,
+        "passed": 93,
+        "failed": 0,
+        "skipped": 0,
+        "invariants": [
+          {
+            "name": "invariant_upgradeNeverResetsTradingStateOrCustody",
+            "runs": 512,
+            "calls": 65536,
+            "reverts": 0
+          },
+          {
+            "name": "invariant_upgradedEngineKeepsTurnoverAndExecutionGuards",
+            "runs": 512,
+            "calls": 65536,
+            "reverts": 0
+          },
+          {
+            "name": "invariant_principalAndRewardsAreBackedByIndependentTransfers",
+            "runs": 512,
+            "calls": 65536,
+            "reverts": 0
+          }
+        ]
+      },
+      "0x2026100402": {
+        "suites": 10,
+        "passed": 93,
+        "failed": 0,
+        "skipped": 0,
+        "invariants": [
+          {
+            "name": "invariant_upgradeNeverResetsTradingStateOrCustody",
+            "runs": 512,
+            "calls": 65536,
+            "reverts": 0
+          },
+          {
+            "name": "invariant_upgradedEngineKeepsTurnoverAndExecutionGuards",
+            "runs": 512,
+            "calls": 65536,
+            "reverts": 0
+          },
+          {
+            "name": "invariant_principalAndRewardsAreBackedByIndependentTransfers",
+            "runs": 512,
+            "calls": 65536,
+            "reverts": 0
+          }
+        ]
+      },
+      "0x2026100403": {
+        "suites": 10,
+        "passed": 93,
+        "failed": 0,
+        "skipped": 0,
+        "invariants": [
+          {
+            "name": "invariant_upgradeNeverResetsTradingStateOrCustody",
+            "runs": 512,
+            "calls": 65536,
+            "reverts": 0
+          },
+          {
+            "name": "invariant_upgradedEngineKeepsTurnoverAndExecutionGuards",
+            "runs": 512,
+            "calls": 65536,
+            "reverts": 0
+          },
+          {
+            "name": "invariant_principalAndRewardsAreBackedByIndependentTransfers",
+            "runs": 512,
+            "calls": 65536,
+            "reverts": 0
+          }
+        ]
+      }
+    }
+  },
+  "fork": {
+    "suites": 3,
+    "passed": 21,
+    "failed": 0,
+    "skipped": 0,
+    "chain_id": 46630,
+    "block": 128790592,
+    "factory": "0xc9610d4A749b2A62a7327a0f40B59013D8fC415a",
+    "mode": "In-memory, read-only RPC; no private keys or broadcasts",
+    "observed_old_kind_count": 3,
+    "new_buyback_kind": 3,
+    "new_engine_kind": 4
+  },
+  "storage": {
+    "engine_direct_vs_proxy_fields": 32,
+    "equal_recursive_layout": true,
+    "runtime_fork_slots_compared_per_treasury": 96
+  },
+  "runtime_bytes": {
+    "buyback_proxy": 1061,
+    "buyback_logic": 15845,
+    "engine_proxy": 1061,
+    "engine_logic": 23566,
+    "engine_staking_migration_test_prototype": 24218,
+    "unchanged_kind0_logic": 24460
+  },
+  "creation_bytes_excluding_arguments": {
+    "buyback_proxy": 23678,
+    "buyback_logic": 20981,
+    "engine_proxy": 34895,
+    "engine_logic": 31327
+  },
+  "independent_agents": {
+    "buyback_tests_passed": 14,
+    "upgrade_fork_tests_passed": 3,
+    "upgrade_fork_block": 128788371,
+    "engine_tests_passed_per_seed": 18,
+    "engine_seeds": [
+      "0x2026100401",
+      "0x2026100402",
+      "0x2026100403"
+    ],
+    "scope": "Focused implementation review, regression and real-state fork tests; not comprehensive audit sign-off"
+  },
+  "limitations": [
+    "No deployment or registration broadcast; existing immutable kind 1/2 pools remain immutable",
+    "The four optional income kinds remain direct immutable deployments",
+    "Production continuous dividend implementations and frontend integration remain separate work",
+    "Compatibility identities do not replace source and storage-migration audit; controller owner is a governance trust boundary",
+    "Code-size headroom is finite: Engine logic has 1010 runtime bytes; unchanged kind0 logic has 116",
+    "Passing bounded tests is not proof of absence of vulnerabilities"
+  ],
+  "commands": {
+    "offline": "forge test --root contractV2 --offline -vv",
+    "sizes": "forge build --root contractV2 --offline --sizes",
+    "campaign": "FOUNDRY_FUZZ_RUNS=1024 FOUNDRY_INVARIANT_RUNS=512 FOUNDRY_INVARIANT_DEPTH=128 FOUNDRY_INVARIANT_FAIL_ON_REVERT=true forge test --root contractV2 --offline --fuzz-seed <seed> --mc '^V2IncomeGraduation.*Test$|^V2StakingIncomeInvariantTest$|^V2StakingAllocationRegressionTest$|^V2StakingRemainderBoundaryTest$|^V2IncomeGasRegressionTest$|^V2BuybackTreasuryUpgradeTest$|^V2EngineTreasuryUpgradeTest$|^V2EngineTreasuryUpgradeInvariantTest$|^V2UpgradeableKindRegistrationTest$' -vv",
+    "fork": "INCOME_KINDS_FORK=true INCOME_COMPAT_FORK=true UPGRADEABLE_KINDS_FORK=true INCOME_KINDS_FORK_BLOCK=<fresh-block> INCOME_COMPAT_FORK_BLOCK=<same-block> UPGRADEABLE_KINDS_FORK_BLOCK=<same-block> forge test --root contractV2 --threads 1 --mc '^TestnetV2IncomeKindsForkTest$|^TestnetV2IncomeCompatibilityForkTest$|^TestnetV2TreasuryUpgradeForkTest$' -vv; select fresh block after compiling because public state is pruned"
+  },
+  "source_sha256": {
+    ".github/workflows/contract-v2.yml": "15afb95ae1b163536daa93393ddfa624ed0937bb2500d35b8d4e3e5e73ae6cd9",
+    "contractV2/script/DeployV2CreatorTestnet.s.sol": "6d28e247c8d580b4ec850694b381a56a439e7845891cdbd04ab840c12d5cc2e8",
+    "contractV2/script/DeployV2FeeUpgradeTestnet.s.sol": "d7046d54caf2bf9ce4963a9e9599b3d5726bce1869b8e6c2449afe27922cdf6a",
+    "contractV2/script/DeployV2Testnet.s.sol": "f390b90478221f2980a5c8869b727fedbe5cb95a1a0766f1e434235dbc8c9420",
+    "contractV2/script/RegisterV2UpgradeableKinds.s.sol": "de0833af8c9a828fbc859319f9d4afc2bd104ea07d2ac7fa7dff21ad529ef0f9",
+    "contractV2/script/TestnetV2KeeperReward.s.sol": "df9bc0c967340e69d0ca06445d47e3c9ff9befefdaca6f2758fc85e3dfde861a",
+    "contractV2/src/v2/HedgeFunV2EngineTreasury.sol": "cb3345a05cf0247fc2a36c3d66a8b2bf602ecf6c493509112ade4886539ae37a",
+    "contractV2/src/v2/HedgeFunV2UpgradeableBuybackTreasury.sol": "f273e070df0c552427e801f908838086142541ff1d0b0da767e45f160feeb4b6",
+    "contractV2/src/v2/HedgeFunV2UpgradeableEngineTreasury.sol": "23394c2fc618b98c3adec16a30448a61d58ab9d8e50106e4b94a4d0816b695d4",
+    "contractV2/test/DeployV2CreatorTestnet.t.sol": "efc18ea0cb57634b82d1be9c863cc73424d03af6258f54e4e8aecfdf16b25728",
+    "contractV2/test/TestnetV2TreasuryUpgradeFork.t.sol": "401a5c997b479ded1175590560ae0322d42efd7e671c105f78d961da9caf874e",
+    "contractV2/test/V2BuybackTreasuryUpgrade.t.sol": "a411d3f75ab6331d1825881906960d095e596020ee0365e0aae0a5fc33c5c26a",
+    "contractV2/test/V2EngineCostInvariant.t.sol": "0837272e141a669fd2253d3c843bb5b47dcbcb5545187bf60a083d74ff66f112",
+    "contractV2/test/V2EngineKeeperReward.t.sol": "341be149d62894128f7aaaa1cd4684236c607a92462b2d12a66a6bba9a074599",
+    "contractV2/test/V2EngineTreasuryUpgrade.t.sol": "f89617ea57b623e258c445adf70bb25251620afafa9bee8a926ea26a22ad7bcd",
+    "contractV2/test/V2EngineTreasuryUpgradeInvariant.t.sol": "7896fee3b9b1b06d88a0589a35a63e9bea083dbff74959798339b2754028f7e6",
+    "contractV2/test/V2StrategyEngine.t.sol": "5053b34433bee13ed1aad7a2b677d976d9e9cfdb45b56dc50f988f774b07f80e",
+    "contractV2/test/V2StrategyEngineConfig.t.sol": "3b3f88e104522158d7889132abdbe0f604c4473bbf633412aa3998be0bb7d65b",
+    "contractV2/test/V2StrategyEngineGains.t.sol": "6e432a75852cabe1ff6e0e989856af66e124e71bc4792d7dd56d83696a00a51e",
+    "contractV2/test/V2StrategyEngineGuards.t.sol": "16ba2330ef8b6b8d72197bdf50046f8d5d2b1e6622fe5ec24abb750fd020a03a",
+    "contractV2/test/V2StrategyEngineInvariant.t.sol": "939a24983ea7d33a4a35dd3c916524b254216a13cf37abba9f2983bea80be112",
+    "contractV2/test/V2UpgradeableKindRegistration.t.sol": "b6454f86f46fb3db64373ba7bb2b162f353fde0177cc1567dfe16ca7be9fd6cf",
+    "contractV2/tools/export_abi.py": "af14ddcb61c782dc7db6c0029207bd42114d0d6557628aa2777caf553b86123f",
+    "contractV2/tools/verify_fresh_creator_deployment.py": "27fea50bf079be2121e3803b48623ca3e3a8ebe914ad193c756f091bdd078067"
+  },
+  "log_sha256": {
+    "offline.log": "b1ecebc3fe9e56649d1610c9960de3dcaaadb5042da9b1d2ddec594779b302f4",
+    "sizes.log": "027c1db4aebaa3b2ea280f5284496312d5b21119f39a2cd77b7e6f49e5a6ae30",
+    "fork.log": "8b46fbe98c42ec0920638741793166ec5440541853805111850c302d4a64f9fc",
+    "python-tests.log": "84b9f3ff279f310c6d145b68f30353c2f0e9dc7c5de82e5e044be8c3df563cc1",
+    "python-tools.log": "71d1dda58f05b0a15e8c08dbcfdd56360b906d712bf56461407982db63c6ffe3",
+    "agent-buyback.log": "aea8d6094d996cd2bb9ac48fa62352dbbc4abcac4301ec14c538061c654b7b1f",
+    "agent-upgrade-fork.log": "762149b4803f4644b499a9d3e789586539d825cdf88bb7572719135043fb9b1d",
+    "engine-storage-layout.json": "d65dd00c4bb885e35a636ac0db71457943ad91c9d2605a3a382188901ebaae0a",
+    "0x2026100401.log": "1fc9c032151a708aeaadd634075d5caa83494908254e4271ea8f22736dd59013",
+    "0x2026100402.log": "895817be4abbd4c6779db78ac157e4cbb06524825e472508b63c06654ec430ef",
+    "0x2026100403.log": "909472e08239de74696b43bc42351c420d81710434338687d65c620e6b15a703"
+  }
+}

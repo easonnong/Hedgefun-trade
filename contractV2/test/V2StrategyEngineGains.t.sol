@@ -7,7 +7,7 @@ import {HedgeFunFactory} from "../src/HedgeFunFactory.sol";
 import {HedgeFunTreasuryBase} from "../src/HedgeFunTreasuryBase.sol";
 import {PriceOracle} from "../src/PriceOracle.sol";
 import {HedgeFunBondingCurve} from "../src/v2/HedgeFunBondingCurve.sol";
-import {HedgeFunV2EngineTreasury} from "../src/v2/HedgeFunV2EngineTreasury.sol";
+import {HedgeFunV2EngineTreasury, HedgeFunV2EngineTreasuryCore} from "../src/v2/HedgeFunV2EngineTreasury.sol";
 import {V2TreasuryDeployer} from "../src/v2/V2TreasuryDeployer.sol";
 import {EngineConfig, StrategyCapabilities} from "../src/v2/strategy/IStrategyPolicy.sol";
 import {V2RebalancePolicy} from "../src/v2/strategy/V2RebalancePolicy.sol";
@@ -301,7 +301,7 @@ contract V2StrategyEngineGainsTest is V2FactoryFixture {
         uint256 sale = planned - plannedPayout;
         uint256 booked = t.bookedStock();
         uint256 balance = stock.balanceOf(address(t));
-        (bool ok,) = address(t).call(abi.encodeCall(HedgeFunV2EngineTreasury.execute, ()));
+        (bool ok,) = address(t).call(abi.encodeCall(HedgeFunV2EngineTreasuryCore.execute, ()));
         if (!ok) {
             // a fill under the minimum lot reverts atomically
             assertEq(t.bookedStock(), booked);

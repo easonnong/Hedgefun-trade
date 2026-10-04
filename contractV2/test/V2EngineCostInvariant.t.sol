@@ -3,7 +3,7 @@ pragma solidity ^0.8.24;
 
 import {Test} from "forge-std/Test.sol";
 import {Math} from "@openzeppelin/contracts/utils/math/Math.sol";
-import {HedgeFunV2EngineTreasury} from "../src/v2/HedgeFunV2EngineTreasury.sol";
+import {HedgeFunV2EngineTreasury, HedgeFunV2EngineTreasuryCore} from "../src/v2/HedgeFunV2EngineTreasury.sol";
 import {HedgeFunV2Treasury} from "../src/v2/HedgeFunV2Treasury.sol";
 import {EngineConfig, StrategyAction} from "../src/v2/strategy/IStrategyPolicy.sol";
 import {EngineAccountingVenue} from "./V2StrategyEngineAccounting.t.sol";
@@ -122,7 +122,7 @@ contract EngineCostHandler is Test {
         (, uint256 price) = treasury.health();
         uint256 pending = _pending();
         bytes32 beforeDigest = _stateDigest();
-        (bool ok, bytes memory data) = address(treasury).call(abi.encodeCall(HedgeFunV2EngineTreasury.book, ()));
+        (bool ok, bytes memory data) = address(treasury).call(abi.encodeCall(HedgeFunV2EngineTreasuryCore.book, ()));
         if (!ok || !abi.decode(data, (bool))) {
             if (_stateDigest() != beforeDigest) violation = true;
             return;
@@ -145,7 +145,7 @@ contract EngineCostHandler is Test {
         _checkGhost();
         Before memory before_ = _before();
         bytes32 beforeDigest = _stateDigest();
-        (bool ok, bytes memory data) = address(treasury).call(abi.encodeCall(HedgeFunV2EngineTreasury.execute, ()));
+        (bool ok, bytes memory data) = address(treasury).call(abi.encodeCall(HedgeFunV2EngineTreasuryCore.execute, ()));
         if (!ok) {
             ++failedExecutions;
             if (_stateDigest() != beforeDigest) violation = true;

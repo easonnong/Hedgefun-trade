@@ -46,8 +46,9 @@ and is enough to review a pull request.
 
 ## The one thing to internalise
 
-**Identify the deployment version before describing its permissions.** New default V2 kind-0 treasuries
-use a proxy with owner-scheduled upgrades after a 48-hour delay. The controller binds implementation,
+**Identify the deployment version before describing its permissions.** New default V2 kind-0 treasuries and the
+new buyback/Engine proxy kinds use owner-scheduled upgrades after a 48-hour delay. Fresh scripts register these
+as kinds 0/1/2; older registries require appended IDs and existing immutable pools do not change. The controller binds implementation,
 configuration, migration data and factory ownership epoch; new implementations remain a governance trust
 boundary. The LP vault is separately immutable and has no liquidity-removal path. See
 [V2_BONDING_CURVE.md](./V2_BONDING_CURVE.md) for the current graduation and upgrade design.

@@ -1,0 +1,55 @@
+Compiling 3 files with Solc 0.8.26
+Solc 0.8.26 finished in 7.23s
+Compiler run successful with warnings:
+Warning (3628): This contract has a payable fallback function, but no receive ether function. Consider adding a receive ether function.
+  --> src/v2/HedgeFunV2UpgradeableTreasury.sol:37:1:
+   |
+37 | contract HedgeFunV2UpgradeableTreasury is Proxy {
+   | ^ (Relevant source part starts here and spans across multiple lines).
+Note: The payable fallback function is defined here.
+  --> lib/openzeppelin-contracts/contracts/proxy/Proxy.sol:66:5:
+   |
+66 |     fallback() external payable virtual {
+   |     ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning (3628): This contract has a payable fallback function, but no receive ether function. Consider adding a receive ether function.
+  --> src/v2/HedgeFunV2UpgradeableBuybackTreasury.sol:55:1:
+   |
+55 | contract HedgeFunV2UpgradeableBuybackTreasury is Proxy {
+   | ^ (Relevant source part starts here and spans across multiple lines).
+Note: The payable fallback function is defined here.
+  --> lib/openzeppelin-contracts/contracts/proxy/Proxy.sol:66:5:
+   |
+66 |     fallback() external payable virtual {
+   |     ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning (3628): This contract has a payable fallback function, but no receive ether function. Consider adding a receive ether function.
+  --> src/v2/HedgeFunV2UpgradeableEngineTreasury.sol:40:1:
+   |
+40 | contract HedgeFunV2UpgradeableEngineTreasury is Proxy {
+   | ^ (Relevant source part starts here and spans across multiple lines).
+Note: The payable fallback function is defined here.
+  --> lib/openzeppelin-contracts/contracts/proxy/Proxy.sol:66:5:
+   |
+66 |     fallback() external payable virtual {
+   |     ^ (Relevant source part starts here and spans across multiple lines).
+
+
+Ran 14 tests for test/V2BuybackTreasuryUpgrade.t.sol:V2BuybackTreasuryUpgradeTest
+[PASS] testFuzz_upgradePreservesPreclaimedFeesAndPendingIncome(uint96,uint96,bool) (runs: 256, μ: 7410408, ~: 7408340)
+[PASS] test_buybackAndBurnRemainFunctionalAfterAnOrdinaryLogicUpgrade() (gas: 7809469)
+[PASS] test_codeMutationAndOwnershipHandoverInvalidatePendingUpgrade() (gas: 10147196)
+[PASS] test_consumedProposalAndStorageScribbleCannotChangeControllerPointer() (gas: 6308649)
+[PASS] test_dividendMigrationAppendsStorageAndUsesProxyAsIncomeSource() (gas: 10610658)
+[PASS] test_failedMigrationRollsBackStoragePointerAndProposalConsumption() (gas: 10139084)
+[PASS] test_failedOptionalGraduationBookStillCannotExposePrincipal() (gas: 3809357)
+[PASS] test_graduationAndIncomeKeepPrincipalProtectedThroughUpgrade() (gas: 10210948)
+[PASS] test_noticeOwnerCancelAndMigrationCommitmentCannotBeBypassed() (gas: 5089072)
+[PASS] test_proxyAndLogicFitRuntimeAndInitcodeLimits() (gas: 5055196)
+[PASS] test_proxyConstructorMatchesAllInitialStorageAndLocksInitialization() (gas: 151049)
+[PASS] test_replacementWithChangedAssetDecimalsIsRejectedEvenAtSameAddresses() (gas: 3446397)
+[PASS] test_upgradedTreasuryCannotWithdrawLockedLpPositions() (gas: 10041102)
+[PASS] test_wrongTokenParamsAndCrossKindImplementationsAreRejected() (gas: 15103410)
+Suite result: ok. 14 passed; 0 failed; 0 skipped; finished in 361.89ms (278.30ms CPU time)
+
+Ran 1 test suite in 362.81ms (361.89ms CPU time): 14 tests passed, 0 failed, 0 skipped (14 total tests)

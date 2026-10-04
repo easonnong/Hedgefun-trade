@@ -1,0 +1,62 @@
+Compiling 3 files with Solc 0.8.26
+Solc 0.8.26 finished in 6.35s
+Compiler run successful with warnings:
+Warning (3628): This contract has a payable fallback function, but no receive ether function. Consider adding a receive ether function.
+  --> src/v2/HedgeFunV2UpgradeableTreasury.sol:37:1:
+   |
+37 | contract HedgeFunV2UpgradeableTreasury is Proxy {
+   | ^ (Relevant source part starts here and spans across multiple lines).
+Note: The payable fallback function is defined here.
+  --> lib/openzeppelin-contracts/contracts/proxy/Proxy.sol:66:5:
+   |
+66 |     fallback() external payable virtual {
+   |     ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning (3628): This contract has a payable fallback function, but no receive ether function. Consider adding a receive ether function.
+  --> src/v2/HedgeFunV2UpgradeableBuybackTreasury.sol:55:1:
+   |
+55 | contract HedgeFunV2UpgradeableBuybackTreasury is Proxy {
+   | ^ (Relevant source part starts here and spans across multiple lines).
+Note: The payable fallback function is defined here.
+  --> lib/openzeppelin-contracts/contracts/proxy/Proxy.sol:66:5:
+   |
+66 |     fallback() external payable virtual {
+   |     ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning (3628): This contract has a payable fallback function, but no receive ether function. Consider adding a receive ether function.
+  --> src/v2/HedgeFunV2UpgradeableEngineTreasury.sol:55:1:
+   |
+55 | contract HedgeFunV2UpgradeableEngineTreasury is Proxy {
+   | ^ (Relevant source part starts here and spans across multiple lines).
+Note: The payable fallback function is defined here.
+  --> lib/openzeppelin-contracts/contracts/proxy/Proxy.sol:66:5:
+   |
+66 |     fallback() external payable virtual {
+   |     ^ (Relevant source part starts here and spans across multiple lines).
+
+2026-10-04T15:49:54.237373Z  WARN foundry_fork_db::cache: Failed to read cache file err=Os { code: 2, kind: NotFound, message: "No such file or directory" } path="/Users/leo/.foundry/cache/rpc/46630/128788371"
+
+Ran 3 tests for test/TestnetV2TreasuryUpgradeFork.t.sol:TestnetV2TreasuryUpgradeForkTest
+[PASS] test_buybackUpgradePreservesRealBalancesAndLpThenBooksAndBuys() (gas: 15810141)
+Logs:
+  upgradeable kinds fork block: 128788371
+  upgraded fork treasury: 0x44F81BACd9c964627BF1D7eaBe674C0C54328A28
+  replacement implementation: 0xF62849F9A0B5Bf2913b396098F7c7019b51A820a
+  post-upgrade buyback stock spent: 1000000000000000000
+  post-upgrade FUN burned: 1569005241304956200841341
+
+[PASS] test_engineUpgradePreservesRealInventoryAndLpThenExecutesAgain() (gas: 19623193)
+Logs:
+  upgradeable kinds fork block: 128788371
+  upgraded fork treasury: 0xFc69Bdb3f921e2C30884EC3dFefC25dA4dad8867
+  replacement implementation: 0xF62849F9A0B5Bf2913b396098F7c7019b51A820a
+  post-upgrade engine nonce: 2
+  post-upgrade engine USDG reserve: 3967982665
+
+[PASS] test_registrationAppendsKindsAndPreservesLegacyManifestsAndChunks() (gas: 13813260)
+Logs:
+  upgradeable kinds fork block: 128788371
+
+Suite result: ok. 3 passed; 0 failed; 0 skipped; finished in 19.57s (24.65s CPU time)
+
+Ran 1 test suite in 19.57s (19.57s CPU time): 3 tests passed, 0 failed, 0 skipped (3 total tests)
