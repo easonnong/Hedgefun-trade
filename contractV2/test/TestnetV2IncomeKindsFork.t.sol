@@ -11,6 +11,7 @@ import {HedgeFunBondingCurve} from "../src/v2/HedgeFunBondingCurve.sol";
 import {HedgeFunV2Factory} from "../src/v2/HedgeFunV2Factory.sol";
 import {HedgeFunV2TradeRouter as Router} from "../src/v2/HedgeFunV2TradeRouter.sol";
 import {HedgeFunV2IncomeTreasury} from "../src/v2/HedgeFunV2IncomeTreasury.sol";
+import {HedgeFunV2StrategyIncomeTreasury} from "../src/v2/HedgeFunV2StrategyIncomeTreasury.sol";
 import {V2StakingIncome} from "../src/v2/V2StakingIncome.sol";
 import {V2LiquidityVault} from "../src/v2/V2LiquidityVault.sol";
 import {V2TreasuryDeployer} from "../src/v2/V2TreasuryDeployer.sol";
@@ -31,6 +32,7 @@ contract TestnetV2IncomeKindsForkTest is Test {
     Router router;
     IERC20 stock;
     IERC20 usdg;
+    RegisterV2IncomeKinds.Kinds kinds;
     uint8 dividendKind;
     uint8 splitKind;
     address creator = makeAddr("income kinds fork creator");
@@ -48,13 +50,55 @@ contract TestnetV2IncomeKindsForkTest is Test {
         (,,, address listed,) = factory.strategies(0); // a stock this factory has already launched on
         stock = IERC20(listed);
         uint256 before = registry.kindCount();
-        (dividendKind, splitKind) = new RegisterV2IncomeKinds().register(factory.owner(), factory);
-        assertEq(registry.kindCount(), before + 2, "appended, nothing replaced");
+        kinds = new RegisterV2IncomeKinds().register(factory.owner(), factory);
+        (dividendKind, splitKind) = (kinds.dividend, kinds.split);
+        assertEq(registry.kindCount(), before + 4, "appended, nothing replaced");
         router = new Router(factory);
     }
 
     function test_dividendKindOnDeployedFactory() public { _lifecycle(dividendKind, 10000); }
     function test_splitKindOnDeployedFactory() public { _lifecycle(splitKind, 5000); }
+    function test_strategy25KindOnDeployedFactory() public { _strategyLifecycle(kinds.strategy25, 2500); }
+    function test_strategy50KindOnDeployedFactory() public { _strategyLifecycle(kinds.strategy50, 5000); }
+
+    /// The deployed registry, factory, hook and vault accept a strategy kind: it launches, graduates, records its
+    /// principal, splits the tax share and sends LP fees to the buy-back. Whether the principal's lot opens at
+    /// graduation depends on the testnet stock market being open at the fork block, so both outcomes are checked.
+    function _strategyLifecycle(uint8 kind, uint256 bps) private {
+        _launch(kind);
+        HedgeFunV2StrategyIncomeTreasury s = HedgeFunV2StrategyIncomeTreasury(address(treasury));
+        assertEq(s.stakingBps(), bps);
+        vm.startPrank(creator);
+        stock.approve(address(curve), type(uint256).max);
+        curve.buy(type(uint256).max, 1, creator, block.timestamp);
+        stock.approve(address(router), type(uint256).max);
+        token.approve(address(router), type(uint256).max);
+        uint8 stage = router.GRADUATED();
+        router.buy(Router.TradeParams(id, address(stock), 1e18, 1e18, 1, block.timestamp, stage, false), new Router.Hop[](0));
+        router.sell(Router.TradeParams(id, address(stock), 5_000_000e18, 0, 1, block.timestamp, stage, false),
+            new Router.Hop[](0));
+        vm.stopPrank();
+        uint256 principal = s.principalStock();
+        assertGt(principal, 0);
+        assertEq(s.buybackStock(), 0);
+        bool lotOpen = s.lotCount() == 1;
+        assertEq(s.bookedStock(), lotOpen ? principal : 0);
+
+        (PoolKey memory key,) = factory.graduationConfig(id);
+        curve.claimFees(address(s));
+        HedgeFunHook(address(factory.hook())).sweep(key.toId());
+        uint256 tax = stock.balanceOf(address(s)) - principal;
+        assertGt(tax, 0);
+        s.book();
+        assertEq(staking.totalFunded(), tax * bps / 10000);
+        assertEq(s.buybackStock(), tax - staking.totalFunded());
+        assertLe(s.lotCount(), 1, "tax never opens a lot");
+        uint256 budget = s.buybackStock();
+        (uint256 lpStock,) = V2LiquidityVault(s.liquidityVault()).collectFees();
+        assertGt(lpStock, 0);
+        assertEq(s.buybackStock(), budget + lpStock, "LP fees all fund the buy-back");
+        assertEq(stock.balanceOf(address(s)), principal + s.buybackStock(), "principal untouched");
+    }
 
     uint256 id;
     HedgeFunBondingCurve curve;

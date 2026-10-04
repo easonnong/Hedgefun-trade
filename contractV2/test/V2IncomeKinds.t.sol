@@ -10,6 +10,7 @@ import {HedgeFunBondingCurve} from "../src/v2/HedgeFunBondingCurve.sol";
 import {HedgeFunV2Treasury} from "../src/v2/HedgeFunV2Treasury.sol";
 import {HedgeFunV2TradeRouter as Router} from "../src/v2/HedgeFunV2TradeRouter.sol";
 import {HedgeFunV2IncomeTreasury} from "../src/v2/HedgeFunV2IncomeTreasury.sol";
+import {HedgeFunV2StrategyIncomeTreasury} from "../src/v2/HedgeFunV2StrategyIncomeTreasury.sol";
 import {V2StakingIncome} from "../src/v2/V2StakingIncome.sol";
 import {V2LiquidityVault} from "../src/v2/V2LiquidityVault.sol";
 import {V2TreasuryDeployer} from "../src/v2/V2TreasuryDeployer.sol";
@@ -24,6 +25,7 @@ contract V2IncomeKindsTest is V2FactoryFixture {
     V2TreasuryDeployer internal deployer;
     Router internal router;
     RegisterV2IncomeKinds internal script;
+    RegisterV2IncomeKinds.Kinds internal kinds;
     uint8 internal dividendKind;
     uint8 internal splitKind;
     uint96 internal nonce;
@@ -44,9 +46,12 @@ contract V2IncomeKindsTest is V2FactoryFixture {
         router = new Router(factory);
         // the operator script is how an existing factory gets these kinds; the fixture is that factory
         script = new RegisterV2IncomeKinds();
-        (dividendKind, splitKind) = script.register(owner, factory);
-        assertEq(dividendKind, 1);
-        assertEq(splitKind, 2);
+        kinds = script.register(owner, factory);
+        (dividendKind, splitKind) = (kinds.dividend, kinds.split);
+        assertEq(kinds.strategy25, 1);
+        assertEq(kinds.strategy50, 2);
+        assertEq(dividendKind, 3);
+        assertEq(splitKind, 4);
         stock.approve(address(router), type(uint256).max);
     }
 
@@ -310,11 +315,59 @@ contract V2IncomeKindsTest is V2FactoryFixture {
     }
 
     function test_registrationReadbackRejectsOtherKinds() public {
-        script.check(deployer, dividendKind, splitKind);
-        vm.expectRevert(abi.encodeWithSelector(RegisterV2IncomeKinds.ReadbackFailed.selector, "kind ids"));
-        script.check(deployer, 0, splitKind);
-        vm.expectRevert(abi.encodeWithSelector(RegisterV2IncomeKinds.ReadbackFailed.selector, "dividend kind code"));
-        script.check(deployer, splitKind, dividendKind);
+        script.check(deployer, kinds);
+        RegisterV2IncomeKinds.Kinds memory wrong = kinds;
+        wrong.dividend = 0;
+        vm.expectRevert(abi.encodeWithSelector(RegisterV2IncomeKinds.ReadbackFailed.selector, "dividend kind"));
+        script.check(deployer, wrong);
+        wrong = kinds;
+        (wrong.strategy25, wrong.strategy50) = (kinds.strategy50, kinds.strategy25);
+        vm.expectRevert(abi.encodeWithSelector(RegisterV2IncomeKinds.ReadbackFailed.selector, "strategy 25 kind"));
+        script.check(deployer, wrong);
+    }
+
+    /// The strategy kinds through the real factory, curve, hook and vault. Their rungs are covered against a real
+    /// stock venue in V2StrategyIncome.t.sol.
+    function test_strategyDividendKindThroughTheFactory() public {
+        HedgeFunFactory.Request memory q = _request();
+        q.nonce = ++nonce;
+        deployer.setStrategyKind(q.symbol, q.nonce, kinds.strategy25);
+        (,, bytes32 terms) = factory.predict(q);
+        uint256 id = factory.launch(q, terms);
+        HedgeFunBondingCurve curve = HedgeFunBondingCurve(factory.curves(id));
+        (, address t_,,,) = factory.strategies(id);
+        HedgeFunV2StrategyIncomeTreasury t = HedgeFunV2StrategyIncomeTreasury(t_);
+        V2StakingIncome pool = t.staking();
+        assertEq(t.stakingBps(), 2500);
+        assertEq(pool.incomeSource(), t_);
+        stock.approve(address(curve), type(uint256).max);
+        IERC20(curve.token()).approve(address(router), type(uint256).max);
+        vm.warp(curve.launchedAt() + curve.snipeSeconds());
+        _graduateV2(curve);
+        uint256 principal = t.principalStock();
+        assertGt(principal, 0);
+        assertEq(t.lotCount(), 1, "the graduation share runs the stock strategy");
+        assertEq(t.bookedStock(), principal);
+        assertEq(t.buybackStock(), 0);
+
+        (PoolKey memory key,) = factory.graduationConfig(id);
+        uint8 stage = router.GRADUATED();
+        router.sell(Router.TradeParams(id, address(stock), 10_000e18, 0, 1, block.timestamp, stage, false), new Router.Hop[](0));
+        hook.sweep(key.toId());
+        uint256 tax = t.unbookedStock();
+        assertGt(tax, 0);
+        assertTrue(t.book());
+        assertEq(t.lotCount(), 1, "tax is income, not a second lot");
+        assertEq(pool.totalFunded(), tax * 2500 / 10000);
+        assertEq(t.buybackStock(), tax - pool.totalFunded());
+
+        router.buy(Router.TradeParams(id, address(stock), 20e18, 20e18, 1, block.timestamp, stage, false), new Router.Hop[](0));
+        uint256 budget = t.buybackStock();
+        (uint256 lpFee,) = V2LiquidityVault(t.liquidityVault()).collectFees();
+        assertGt(lpFee, 0);
+        assertEq(t.buybackStock(), budget + lpFee, "LP fees all fund the buy-back");
+        assertEq(pool.totalFunded(), tax * 2500 / 10000);
+        assertEq(stock.balanceOf(t_), t.bookedStock() + t.buybackStock());
     }
 
     function test_kindZeroIsUnaffected() public {
