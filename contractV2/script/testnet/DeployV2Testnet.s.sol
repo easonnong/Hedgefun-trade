@@ -368,7 +368,7 @@ contract DeployV2Testnet is Script {
         string memory o = "testnet";
         vm.serializeUint(o, "chainId", CHAIN_ID);
         vm.serializeBool(o, "broadcast", live);
-        vm.serializeString(o, "featureVersion", "v2-two-sided-stock-fees-v1");
+        vm.serializeString(o, "featureVersion", "v2-two-sided-stock-fees-v2");
         // Launch requests remain bounded creator choices; these are the selected UI defaults, not immutable rates.
         vm.serializeUint(o, "recommendedTaxBps", 100);
         vm.serializeUint(o, "recommendedCreatorBps", 1000);

@@ -50,7 +50,7 @@ contract HedgeFunV2TradeRouter is IUnlockCallback, ReentrancyGuard {
         uint256 minFinalOut;    // absolute minimum received after all swaps and taxes, never prorated
         uint256 deadline;
         uint8 expectedStage;    // checked at entry; an Active buy may atomically graduate
-        bool allowPartialFill; // allows stock refund on buy or strategy-token refund on sell
+        bool allowPartialFill; // allows stock refund on a curve buy or strategy-token refund on a sell; a V4 buy fills or reverts
     }
     struct Strategy { address token; address treasury; address stock; address curve; }
     struct V3Callback { address pool; address token; uint256 maximum; bool zeroForOne; }

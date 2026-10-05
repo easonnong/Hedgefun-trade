@@ -11,9 +11,13 @@ import {BalanceDelta} from "v4-core/src/types/BalanceDelta.sol";
 import {SwapParams} from "v4-core/src/types/PoolOperation.sol";
 import {StateLibrary} from "v4-core/src/libraries/StateLibrary.sol";
 import {TickMath} from "v4-core/src/libraries/TickMath.sol";
+import {CustomRevert} from "v4-core/src/libraries/CustomRevert.sol";
+import {Hooks} from "v4-core/src/libraries/Hooks.sol";
+import {IHooks} from "v4-core/src/interfaces/IHooks.sol";
 import {HedgeFunFactory} from "../src/HedgeFunFactory.sol";
 import {HedgeFunToken} from "../src/HedgeFunToken.sol";
 import {HedgeFunHook} from "../src/hooks/HedgeFunHook.sol";
+import {HedgeFunV2Hook} from "../src/hooks/HedgeFunV2Hook.sol";
 import {HedgeFunBondingCurve} from "../src/v2/HedgeFunBondingCurve.sol";
 import {V2FactoryFixture} from "./utils/V2FactoryFixture.sol";
 
@@ -165,12 +169,13 @@ abstract contract V2TwoSidedFeesBase is V2FactoryFixture {
         bool zeroForOne = !tokenIsCurrency0();
         uint160 limit = zeroForOne ? spot - spot / 10_000 : spot + spot / 10_000;
         SwapParams memory params = SwapParams({zeroForOne: zeroForOne, amountSpecified: -int256(40e18), sqrtPriceLimitX96: limit});
-        vm.expectRevert();
+        vm.expectRevert(abi.encodeWithSelector(CustomRevert.WrappedError.selector, address(hook), IHooks.afterSwap.selector,
+            abi.encodeWithSelector(HedgeFunV2Hook.PartialFillRefused.selector), abi.encodeWithSelector(Hooks.HookCallFailed.selector)));
         swapRouter.swap(key, params, PoolSwapTest.TestSettings({takeClaims: false, settleUsingBurn: false}), "");
         (uint256 at, uint256 ast) = hook.accrued(pid);
         assertEq(at + ast, 0);
         assertEq(_stockClaim(), 0);
-        // the same limit, reached exactly or not at all, is no obstacle
+        // the same limit is no obstacle to a buy that fills before reaching it
         params.amountSpecified = -int256(1e12);
         swapRouter.swap(key, params, PoolSwapTest.TestSettings({takeClaims: false, settleUsingBurn: false}), "");
         (, ast) = hook.accrued(pid);

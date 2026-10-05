@@ -76,7 +76,7 @@ contract DeployV2CreatorTestnetTest is Test {
         tool.writeDryCandidate();
         string memory json = vm.readFile("deploy/testnet-v2-creator.dryrun.json");
         assertEq(vm.parseJsonUint(json, ".plannedTransactionCount"), 40);
-        assertEq(vm.parseJsonString(json, ".featureVersion"), "v2-creator-selected-stock-fees-v1");
+        assertEq(vm.parseJsonString(json, ".featureVersion"), "v2-creator-selected-stock-fees-v2");
         assertFalse(vm.parseJsonBool(json, ".broadcast"));
         assertFalse(vm.parseJsonBool(json, ".broadcastRequested"));
     }

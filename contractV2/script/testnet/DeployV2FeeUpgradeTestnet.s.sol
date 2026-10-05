@@ -441,8 +441,10 @@ contract DeployV2FeeUpgradeTestnet is Script {
         console2.log("unverified candidate", path);
     }
 
+    /// @dev `-v2` from the version-3 hook on: a book of this family that says `-v1` has the hook whose buy fee
+    ///      waits for `convertFees`, and the tools written for it must not accept one that does not.
     function _featureVersion() internal pure virtual returns (string memory) {
-        return "v2-two-sided-stock-fees-v1";
+        return "v2-two-sided-stock-fees-v2";
     }
 
     /// @dev A fresh test operator can own only the new core. Reused venue ownership,

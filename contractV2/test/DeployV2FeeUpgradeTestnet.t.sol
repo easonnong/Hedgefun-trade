@@ -415,7 +415,7 @@ contract DeployV2FeeUpgradeTestnetTest is Test {
         string memory json = vm.readFile("deploy/testnet-v2-fees.dryrun.json");
         assertFalse(vm.parseJsonBool(json, ".broadcast"));
         assertFalse(vm.parseJsonBool(json, ".broadcastRequested"));
-        assertEq(vm.parseJsonString(json, ".featureVersion"), "v2-two-sided-stock-fees-v1");
+        assertEq(vm.parseJsonString(json, ".featureVersion"), "v2-two-sided-stock-fees-v2");
         assertEq(vm.parseJsonUint(json, ".plannedTransactionCount"), 38);
         assertEq(vm.parseJsonUint(json, ".recommendedTaxBps"), 100);
         assertEq(vm.parseJsonUint(json, ".recommendedCreatorBps"), 1000);

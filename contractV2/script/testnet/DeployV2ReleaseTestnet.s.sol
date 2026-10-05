@@ -20,7 +20,7 @@ contract DeployV2ReleaseTestnet is DeployV2CreatorTestnet {
     }
 
     function _featureVersion() internal pure override returns (string memory) {
-        return "v2-release-candidate-v1";
+        return "v2-release-candidate-v2";
     }
 
     function _candidatePath(bool requested) internal pure override returns (string memory) {

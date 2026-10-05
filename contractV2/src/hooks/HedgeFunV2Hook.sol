@@ -25,8 +25,10 @@ import {HedgeFunMath} from "../libraries/HedgeFunMath.sol";
 ///      stop early as before.
 ///
 ///      A graduated pool has no launch window (`registerGraduatedWithVault` refuses one), so its buy rate is the
-///      flat tax and `beforeSwap` and `afterSwap` agree on the amount without carrying it between them. Only
-///      `1 - rate` of the payment meets the pool, as on an exact-output buy at the flat rate.
+///      flat tax and `beforeSwap` and `afterSwap` agree on the amount without carrying it between them: both read
+///      only what registration fixed. Only `1 - rate` of the payment meets the pool, as on an exact-output buy at
+///      the flat rate, so the pool's own LP fee is charged on that net amount too. The fee is
+///      `floor(paid * rate)`: a payment under `10000 / rate` raw stock units pays none and is not held to a fill.
 ///
 ///      A pool registered without a vault keeps the base hook's rules, token-denominated burn included. The
 ///      address carries the base flags and BEFORE_SWAP | BEFORE_SWAP_RETURNS_DELTA: 0x28CC.
@@ -60,7 +62,8 @@ contract HedgeFunV2Hook is HedgeFunHook {
         // The claim joins every other pool's claims on this stock; `accruedStock` is what keeps it this pool's.
         poolManager.mint(address(this), Currency.wrap(p.stock).toId(), tax);
         p.accruedStock += uint128(tax);
-        emit Taxed(id, false, false, paid, tax, p.taxBps);
+        // As on an exact-output buy: `moved` is the stock that meets the pool, and the buyer pays `moved + tax`.
+        emit Taxed(id, false, false, paid - tax, tax, p.taxBps);
         return (IHooks.beforeSwap.selector, toBeforeSwapDelta(int128(int256(tax)), 0), 0);
     }
 
