@@ -137,7 +137,9 @@ contract TestnetV2IncomeCompatibilityForkTest is Test {
         vm.skip(!vm.envOr("INCOME_COMPAT_FORK", false), "set INCOME_COMPAT_FORK=true");
         uint256 atBlock = vm.envUint("INCOME_COMPAT_FORK_BLOCK");
         emit log_named_uint("compatibility fork block", atBlock);
-        vm.createSelectFork("https://rpc.testnet.chain.robinhood.com", atBlock);
+        vm.createSelectFork(
+            vm.envOr("INCOME_COMPAT_FORK_RPC", string("https://rpc.testnet.chain.robinhood.com")), atBlock
+        );
         assertEq(block.chainid, 46630);
     }
 

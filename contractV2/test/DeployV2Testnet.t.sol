@@ -74,6 +74,9 @@ contract DeployV2TestnetTest is Test {
         assertTrue(x.factory.publicLaunch());
         assertEq(x.hook.version(), 2);
         assertEq(x.factory.getDefaults().sweepTipBps, 0);
+        assertEq(x.factory.getDefaults().maxCreatorBps, 1000);
+        assertEq(uint8(x.factory.getDefaults().launchFeeCurrency), uint8(HedgeFunFactory.FeeCurrency.Native));
+        assertEq(x.factory.getDefaults().launchFeeAmount, 0.0005 ether);
         assertEq(x.treasury.kindCount(), 3);
         assertEq(x.lines.length, 4);
         for (uint256 i; i < x.lines.length; i++) {
@@ -102,7 +105,6 @@ contract DeployV2TestnetTest is Test {
     function _verifyReferenceGraduation(uint256 i) private {
         DeployV2Testnet.Line memory l = x.lines[i];
         vm.startPrank(operator);
-        x.usdg.mint(alice, 25e6);
         l.stock.mint(alice, 10_000e18);
         vm.stopPrank();
         HedgeFunFactory.Request memory q;
@@ -118,12 +120,12 @@ contract DeployV2TestnetTest is Test {
         q.dipBps = 500;
         q.stopBps = 0;
         q.lotBps = 2000;
-        q.maxFee = 25e6;
+        q.maxFee = 0.0005 ether;
         q.expectedOpenPriceE18 = l.openPriceE18;
+        vm.deal(alice, 0.0005 ether);
         vm.startPrank(alice);
-        x.usdg.approve(address(x.factory), 25e6);
         (,, bytes32 terms) = x.factory.predict(q);
-        uint256 id = x.factory.launch(q, terms);
+        uint256 id = x.factory.launch{value: 0.0005 ether}(q, terms);
         HedgeFunBondingCurve curve = HedgeFunBondingCurve(x.factory.curves(id));
         l.stock.approve(address(curve), type(uint256).max);
         vm.warp(block.timestamp + 4); // equal base fee; no opening surcharge or opening burn
@@ -275,10 +277,10 @@ contract DeployV2TestnetTest is Test {
         q.lotBps = 2000;
         q.maxFee = type(uint256).max;
         q.expectedOpenPriceE18 = l.openPriceE18;
+        vm.deal(alice, 0.0005 ether);
         vm.startPrank(alice);
-        x.usdg.approve(address(x.factory), type(uint256).max);
         (,, bytes32 terms) = x.factory.predict(q);
-        uint256 id = x.factory.launch(q, terms);
+        uint256 id = x.factory.launch{value: 0.0005 ether}(q, terms);
         (address token, address treasury,,,) = x.factory.strategies(id);
         HedgeFunBondingCurve curve = HedgeFunBondingCurve(x.factory.curves(id));
         assertEq(uint256(curve.status()), uint256(HedgeFunBondingCurve.Status.Active));
