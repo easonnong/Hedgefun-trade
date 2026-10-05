@@ -1,5 +1,8 @@
 # V2 launch rehearsal
 
+> The current, ordered release procedure for both chains is [V2_RELEASE_RUNBOOK.md](./V2_RELEASE_RUNBOOK.md).
+> This document is the rehearsal's background and the listing check's recorded runs.
+
 The current scripts deploy `HedgeFunV2Hook` for [two-sided fee income](./V2_TWO_SIDED_FEES.md).
 The recorded September 27–28 runs below predate that change; their simulated addresses and gas estimates are
 historical evidence. Repeat the rehearsal with the exact new release commit and addresses before deployment.
