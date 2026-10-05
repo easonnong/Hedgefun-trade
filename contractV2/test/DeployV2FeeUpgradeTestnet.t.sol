@@ -17,6 +17,7 @@ import {HedgeFunV2Treasury} from "../src/v2/HedgeFunV2Treasury.sol";
 import {DeployV2Testnet} from "../script/testnet/DeployV2Testnet.s.sol";
 import {DeployV2FeeUpgradeTestnet} from "../script/testnet/DeployV2FeeUpgradeTestnet.s.sol";
 import {DeployV2FreshCreatorTestnet} from "../script/testnet/DeployV2FreshCreatorTestnet.s.sol";
+import {DeployV2ReleaseTestnet} from "../script/testnet/DeployV2ReleaseTestnet.s.sol";
 import {IV3Pool} from "../script/testnet/TestnetMarket.sol";
 import {MockToken} from "./mocks/Mocks.sol";
 
@@ -86,6 +87,26 @@ contract FeeUpgradeOperatorInvoker {
 
     function run(DeployV2FeeUpgradeTestnet s) external {
         s.run();
+    }
+}
+
+contract ReleaseFixtureHarness is DeployV2ReleaseTestnet {
+    Venue private fixture;
+    Seed[] private inventory;
+
+    constructor(Venue memory v, Seed[] memory s) {
+        fixture = v;
+        for (uint256 i; i < s.length; ++i) {
+            inventory.push(s[i]);
+        }
+    }
+
+    function _venue() internal view override returns (Venue memory) {
+        return fixture;
+    }
+
+    function _seeds() internal view override returns (Seed[] memory) {
+        return inventory;
     }
 }
 
@@ -216,6 +237,41 @@ contract DeployV2FeeUpgradeTestnetTest is Test {
             );
         }
         return keccak256(data);
+    }
+
+    /// The release candidate is deployed by the current deployer wallet, which owns only what it deploys.
+    function test_releaseDeployerOwnsOnlyTheNewCoreAndTheVenueIsUntouched() public {
+        DeployV2FeeUpgradeTestnet.Seed[] memory seeds = new DeployV2FeeUpgradeTestnet.Seed[](8);
+        for (uint256 i; i < base.lines.length; ++i) {
+            DeployV2Testnet.Line memory l = base.lines[i];
+            seeds[i] =
+                DeployV2FeeUpgradeTestnet.Seed(l.symbol, address(l.stock), address(l.feed), address(l.oracle), l.pool);
+        }
+        ReleaseFixtureHarness release = new ReleaseFixtureHarness(
+            DeployV2FeeUpgradeTestnet.Venue(
+                base.factory, base.treasury, base.market, base.usdg, base.usdgFeed, base.calendar, base.v3Factory
+            ),
+            seeds
+        );
+        address signer = release.deploymentOperator();
+        assertEq(signer, 0x36437b878415EdA1a24186CF79AFffBc9ecEd298);
+        bytes32 beforeState = _venueState();
+        vm.etch(signer, type(FeeUpgradeOperatorInvoker).runtimeCode);
+        DeployV2FeeUpgradeTestnet.Deployment memory d = FeeUpgradeOperatorInvoker(payable(signer)).deploy(release);
+        assertEq(d.factory.owner(), signer);
+        assertEq(d.factory.protocol(), OPERATOR);
+        assertEq(d.treasury.upgradeController().owner(), signer);
+        assertEq(d.treasury.kindCount(), 3);
+        assertTrue(d.factory.publicLaunch());
+        assertEq(d.factory.getDefaults().launchFeeAmount, 0.0005 ether);
+        assertEq(d.factory.getDefaults().maxCreatorBps, 1000);
+        assertEq(release.plannedTransactionCount(), 40);
+        assertEq(_venueState(), beforeState);
+        assertEq(base.factory.owner(), OPERATOR);
+        assertEq(base.market.owner(), OPERATOR);
+        // any other wallet is refused before anything is sent
+        vm.expectRevert(abi.encodeWithSelector(DeployV2FeeUpgradeTestnet.NotOperator.selector, address(this)));
+        release.deploy(0);
     }
 
     function test_freshSignerOwnsOnlyNewCreatorCore() public {
