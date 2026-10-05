@@ -22,7 +22,7 @@ library V2MainnetDefaults {
         d.sweepTipBps = 0;
         d.snipeBps = 9900;
         d.snipeSeconds = 3;
-        d.bountyBps = 50;
+        d.bountyBps = 10; // 0.1%: too little to pay an outside keeper for a take-profit, so the keeper is run in-house
         d.maxSlippageBps = 100;
         d.maxDeviationBps = 50;
         d.maxBuybackImpactBps = 300;
