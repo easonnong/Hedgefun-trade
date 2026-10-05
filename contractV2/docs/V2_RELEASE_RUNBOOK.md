@@ -15,8 +15,9 @@ runs), [TESTNET_V2.md](./TESTNET_V2.md) (the testnet venue and its test doubles)
 | Sale share | **79.31%** of supply sold on the curve, fixed when the curve deployer is constructed; `setCurveConfig` refuses any other; the creator chooses only the opening window | `CurveDeployer.DEFAULT_SALE_BPS`, `V2MainnetDefaults.SALE_BPS` |
 | LP share of a raise | **70%** to the locked pool, 30% to the treasury, by default; owner may set per stock for future launches | `V2TreasuryDeployer.DEFAULT_LP_BPS`, `setLpBps` |
 | Pool LP fee | **0.20%**, owner-settable 0.0001%–0.30% for future launches, frozen per pool | `Defaults.lpFee` |
-| Tax | 1%–15%, the creator's; protocol 20% of it, creator up to 10%, treasury the rest | `Defaults` |
+| Tax | 1%–15%, the creator's; protocol **30%** of it, creator up to 10%, treasury the rest | `Defaults.protocolBps` |
 | Keeper reward | **0.1%** | `Defaults.bountyBps` |
+| Buy-back interval | **10 seconds** between buy-backs; the price bound is the token pool's 600-second mean, not the interval | `Defaults.buybackCooldown` |
 | Launch fee | 0.0005 ETH, native | `Defaults.launchFeeCurrency/Amount` |
 | Engine cooldown floor | 60 seconds (kinds 2 and 3) | `SpotEngineConfig`, `TradablePercentEngineConfig` |
 | Strategy kinds | 0 ordinary lots, 1 buy-back, 2 spot engine (schema 1), 3 rebalance (schema 3), 4 percentage buy-back, 5 cycle; all owner-upgradeable through the two-day controller | registry |
@@ -44,7 +45,7 @@ Chain 46630, RPC `https://rpc.testnet.chain.robinhood.com`, deployer `0x36437b87
    (kind 3 and the schema-3 policy), `RegisterV2PercentBuyback` (kind 4), `RegisterV2UpgradeableCycle` (kind 5), in
    that order so the ids come out as on the previous release. Run each one's `Verify*` afterwards. These scripts pin
    the reviewed registry template and refuse a registry built from other source.
-4. **Keeper reward**: read `getDefaults().bountyBps`; if it is not 10, `SetV2KeeperReward` with
+4. **Keeper reward**: the base venue's `bountyBps` is 50 and the deployment does not change it, so this step is needed. Read `getDefaults().bountyBps`; if it is not 10, `SetV2KeeperReward` with
    `KEEPER_REWARD_BPS=10 EXPECTED_CHAIN_ID=46630` and the defaults hash it asks for, then `VerifyV2KeeperReward`.
 5. **Calibrate the listings**: the deployment copies the base venue's opening prices (about a $10,000 opening FDV,
    a $38,000 raise). `CalibrateV2Listings` brings each stock to the release rule. `plan()` first, read-only, with
