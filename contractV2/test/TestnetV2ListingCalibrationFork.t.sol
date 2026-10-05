@@ -10,6 +10,8 @@ import {PriceOracle} from "../src/PriceOracle.sol";
 import {CalibrateV2Listings} from "../script/testnet/CalibrateV2Listings.s.sol";
 import {DeployV2Testnet} from "../script/testnet/DeployV2Testnet.s.sol";
 import {TestnetMarket} from "../script/testnet/TestnetMarket.sol";
+import {TestStock} from "../script/testnet/TestnetAssets.sol";
+import {TradingCalendar} from "../src/TradingCalendar.sol";
 
 contract ListingCalibrationInvoker {
     function run(CalibrateV2Listings script) external { script.run(); }
@@ -55,8 +57,10 @@ contract TestnetV2ListingCalibrationForkTest is Test {
         script = new CalibrateV2Listings();
         address operator = factory.owner();
 
+        _openTheMarket();
         _putBackTheInheritedSettings(operator);
         CalibrateV2Listings.Calibration[] memory p = script.planFor(factory, market);
+        _assertThePlanNeedsALivePriceAndNamesItsMarket(p);
         bytes32 defaultsBefore = keccak256(abi.encode(factory.getDefaults()));
         bytes32[] memory untouchedBefore = new bytes32[](p.length);
         HedgeFunFactory.Request memory stale = _request(p[0].stock, 0);
@@ -75,6 +79,9 @@ contract TestnetV2ListingCalibrationForkTest is Test {
         vm.expectRevert(bytes("plan changed"));
         ListingCalibrationInvoker(operator).run(script);
         vm.setEnv("EXPECTED_PLAN_HASH", vm.toString(keccak256(abi.encode(p))));
+        vm.expectRevert(bytes("plan changed"));   // the rows alone are not the hash: it names where they apply
+        ListingCalibrationInvoker(operator).run(script);
+        vm.setEnv("EXPECTED_PLAN_HASH", vm.toString(script.planHash(factory, market, p)));
         ListingCalibrationInvoker(operator).run(script);
 
         assertEq(keccak256(abi.encode(factory.getDefaults())), defaultsBefore, "defaults changed");
@@ -88,12 +95,39 @@ contract TestnetV2ListingCalibrationForkTest is Test {
             _assertDefaultLaunchGraduatesAtTheReference(p[i].stock, i + 1);
         }
 
+        // A second run of the reviewed-again plan sends nothing.
+        vm.setEnv("EXPECTED_PLAN_HASH", vm.toString(script.planHash(factory, market, again)));
+        vm.recordLogs();
+        ListingCalibrationInvoker(operator).run(script);
+        assertEq(vm.getRecordedLogs().length, 0, "a calibrated core is left alone");
+
         // A quote read before the calibration no longer launches.
         (,, bytes32 staleTerms) = factory.predict(stale);
         vm.deal(stale.creator, stale.maxFee);
         vm.prank(stale.creator);
-        vm.expectRevert();
+        vm.expectRevert(HedgeFunFactory.Restated.selector);
         factory.launch{value: stale.maxFee}(stale, staleTerms);
+    }
+
+    /// The fork may be taken on a weekend; the calendar's owner opens the session, as for a test session on chain.
+    function _openTheMarket() private {
+        (address stock,,,,,) = market.lines(market.pools(0));
+        (address oracle,,,) = factory.listings(stock);
+        TradingCalendar calendar = TradingCalendar(address(PriceOracle(oracle).calendar()));
+        if (!calendar.isClosed(block.timestamp)) return;
+        vm.prank(calendar.owner());
+        calendar.setOverride(calendar.tradingDate(block.timestamp), 2);
+    }
+
+    function _assertThePlanNeedsALivePriceAndNamesItsMarket(CalibrateV2Listings.Calibration[] memory p) private {
+        assertTrue(script.planHash(factory, market, p) != script.planHash(factory, TestnetMarket(address(0xdead)), p));
+        TestStock stock = TestStock(p[0].stock);
+        vm.prank(stock.owner());
+        stock.setOraclePaused(true);
+        vm.expectRevert(bytes("no live oracle price"));
+        script.planFor(factory, market);
+        vm.prank(stock.owner());
+        stock.setOraclePaused(false);
     }
 
     /// What a core that reuses the test market starts with: opening prices chosen for a 44% sale and an even
