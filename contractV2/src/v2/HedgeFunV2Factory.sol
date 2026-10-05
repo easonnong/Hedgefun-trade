@@ -19,7 +19,7 @@ import {HedgeFunBondingCurve} from "./HedgeFunBondingCurve.sol";
 contract HedgeFunV2Factory is HedgeFunFactory {
     using SafeERC20 for IERC20;
 
-    /// @notice Also the creator's registry of per-launch curve choices (`setCurveConfig`): raise size and opening window.
+    /// @notice Fixes the sale share of every launch, and is the creator's registry of the opening window (`setCurveConfig`).
     CurveDeployer public immutable curveDeployer;
     mapping(uint256 => address) public curves;
     mapping(address => uint256) private _curveIds;
@@ -75,8 +75,8 @@ contract HedgeFunV2Factory is HedgeFunFactory {
     }
 
     /// @dev The ONE place a curve's parameters are assembled; `predictCurve`, `_terms` (so `predict` and `_preflight`)
-    ///      and `_openAndSeed` all call it. `saleBps` and `snipeSeconds` are the creator's registration for this
-    ///      launch's salt, else the defaults (`CurveDeployer.curveConfig`).
+    ///      and `_openAndSeed` all call it. `saleBps` is the curve deployer's fixed share; `snipeSeconds` is the
+    ///      creator's registration for this launch's salt, else the default (`CurveDeployer.curveConfig`).
     function _curveInit(Request memory q, address token, address treasury, Defaults memory d)
         private view returns (HedgeFunBondingCurve.Init memory p)
     {

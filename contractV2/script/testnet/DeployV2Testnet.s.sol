@@ -56,8 +56,8 @@ contract DeployV2Testnet is Script {
     uint256 internal constant MAX_STOCK_AGE = 26 hours;
     uint256 internal constant MAX_USDG_AGE = 26 hours;
     /// Each pool's position spans about half to double the opening price, and holds this much tUSDG on its USDG side:
-    /// roughly 500,000 tUSDG per 1% move, so the default 7931 raise (~8,205 USDG) moves it a few bps and a creator's
-    /// 9000 stays inside the 50 bps gate. The market mints the other side.
+    /// roughly 500,000 tUSDG per 1% move, so the fixed 7931 raise (~8,205 USDG) moves it a few
+    /// bps. The market mints the other side.
     int24 internal constant RANGE_TICKS = 6960;
     uint256 internal constant USDG_SIDE = 30_000_000e6;
     uint16 internal constant CARDINALITY = 720;                 // PoolTrader needs TWAP_WINDOW + RING_MARGIN = 660

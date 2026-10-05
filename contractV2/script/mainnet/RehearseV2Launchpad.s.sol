@@ -76,8 +76,8 @@ contract RehearseV2Launchpad is V2MainnetCore {
         console2.log("V2 trade router", address(x.router));
         console2.log("V2 native router", address(x.nativeRouter));
         console2.log("lp fee", d.lpFee);
-        // Raise size and opening window are each creator's choice (CurveDeployer.setCurveConfig), not the owner's.
-                console2.log("fixed saleBps", x.curve.DEFAULT_SALE_BPS());
+        // The sale share is the curve deployer's, fixed at construction; the opening window is each creator's.
+        console2.log("fixed saleBps, for EXPECTED_SALE_BPS once reviewed", x.curve.DEFAULT_SALE_BPS());
         console2.log("creator snipeSeconds max", x.curve.MAX_SNIPE_SECONDS());
         console2.log("default snipeSeconds (no registration)", d.snipeSeconds);
         console2.log("public launch", x.factory.publicLaunch());
@@ -122,8 +122,15 @@ contract RehearseV2Launchpad is V2MainnetCore {
         bytes32 salt = keccak256(abi.encode("REHEARSE", creator, uint96(1)));
         (uint16 sale, uint8 window) = curve.curveConfig(salt, defaultSnipeSeconds);
         if (sale != 7931 || window != defaultSnipeSeconds) revert ReadbackFailed("curve default");
-        vm.prank(creator);
-        try curve.setCurveConfig("REHEARSE", 1, 6000, 60) { revert ReadbackFailed("sale share was a choice"); } catch {}
+        uint16[6] memory other = [uint16(1000), 6000, 7930, 7932, 8000, 9000];
+        for (uint256 i; i < other.length; ++i) {
+            vm.prank(creator);
+            try curve.setCurveConfig("REHEARSE", 1, other[i], 60) {
+                revert ReadbackFailed("sale share was a choice");
+            } catch (bytes memory reason) {
+                if (bytes4(reason) != CurveDeployer.BadCurveConfig.selector) revert ReadbackFailed("sale share refusal");
+            }
+        }
         vm.prank(creator);
         curve.setCurveConfig("REHEARSE", 1, 7931, 60);
         (sale, window) = curve.curveConfig(salt, defaultSnipeSeconds);

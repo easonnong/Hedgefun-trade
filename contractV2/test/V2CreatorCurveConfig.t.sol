@@ -9,6 +9,10 @@ import {HedgeFunBondingCurve} from "../src/v2/HedgeFunBondingCurve.sol";
 import {V2TreasuryDeployer} from "../src/v2/V2TreasuryDeployer.sol";
 import {V2FactoryFixture} from "./utils/V2FactoryFixture.sol";
 
+contract CurveDeployerBuilder {
+    function build(uint16 saleBps) external returns (CurveDeployer) { return new CurveDeployer(saleBps); }
+}
+
 /// The share of supply a launch sells on its curve is fixed when the curve deployer is constructed: 7931 on a
 /// release. A creator chooses only the opening window (`snipeSeconds`) of their own launch, registered on the curve
 /// deployer for the factory salt (symbol, creator, nonce). These pin: no registration, owner or later transaction
@@ -71,18 +75,40 @@ contract V2CreatorCurveConfigTest is V2FactoryFixture {
     function test_aDeployerIsBuiltWithOneShareInsideTheCurvesBounds() public {
         assertEq(registry.MIN_SALE_BPS(), 1000);
         assertEq(registry.MAX_SALE_BPS(), 9000);
+        // Built by another contract: an expected revert on a `new` in the test itself can end the test there.
+        CurveDeployerBuilder builder = new CurveDeployerBuilder();
         uint16[4] memory bad = [uint16(999), 9001, 0, 10_000];
         for (uint256 i; i < bad.length; ++i) {
             vm.expectRevert(CurveDeployer.BadCurveConfig.selector);
-            new CurveDeployer(bad[i]);
+            builder.build(bad[i]);
         }
         uint16[3] memory good = [uint16(1000), 8000, 9000];
+        uint256 accepted;
         for (uint256 i; i < good.length; ++i) {
-            CurveDeployer d = new CurveDeployer(good[i]);
+            CurveDeployer d = builder.build(good[i]);
             assertEq(d.DEFAULT_SALE_BPS(), good[i]);
             d.setCurveConfig("V2", 0, good[i], 3);
             vm.expectRevert(CurveDeployer.BadCurveConfig.selector);
             d.setCurveConfig("V2", 0, SALE, 3);
+            ++accepted;
+        }
+        assertEq(accepted, 3, "every case ran");
+    }
+
+    /// The curve's edge shares and the release's, end to end on the default 70% LP share: launch, buy out,
+    /// graduate, in both currency orderings.
+    function test_edgeSharesGraduateOnTheDefaultLpShare() public {
+        uint16[3] memory shares = [uint16(1000), SALE, 9000];
+        for (uint256 i; i < shares.length; ++i) {
+            creatorSaleBps = shares[i];
+            _setUpV2(18);
+            assertEq(factory.curveDeployer().DEFAULT_SALE_BPS(), shares[i]);
+            assertEq(V2TreasuryDeployer(address(factory.treasuryDeployer())).lpBps(address(stock)), 7000);
+            for (uint256 side; side < 2; ++side) {
+                (, HedgeFunBondingCurve curve,) = _launchV2(side == 0);
+                _graduateV2(curve);
+                assertEq(uint256(curve.status()), uint256(HedgeFunBondingCurve.Status.Graduated));
+            }
         }
     }
 

@@ -155,6 +155,8 @@ could never graduate. AMD's pool can deliver its 146.70 AMD with 3% to spare, bu
 
 **Superseded for the raise size on 2026-10-05.** The sale share is fixed when the curve deployer is constructed,
 `V2MainnetDefaults.SALE_BPS` = 7931, and no registration can choose another; the default LP share of a raise is 70%.
+The defaults hash does not cover the sale share, so `DeployV2MainnetCore` and `VerifyV2MainnetCore` take it again as
+`EXPECTED_SALE_BPS`, and the readback they share fails on a curve deployer that carries another.
 A creator still chooses the opening window. The rehearsal reads both back: it fails if a registration with another
 sale share is accepted. What follows records the earlier decision and applies to cores deployed under it.
 

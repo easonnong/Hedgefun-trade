@@ -159,10 +159,12 @@ def verify_infrastructure(reader, factory, registry, controller, keccak=cast):
         raise ValueError("graduation module is not bound to factory")
     curve_chunk = address_word(reader.words(curve, "curveChunk()")[0])
     vault_chunk = address_word(reader.words(curve, "vaultChunk()")[0])
+    sale_bps = reader.words(curve, "DEFAULT_SALE_BPS()")[0]
     verify_runtime(reader, curve, "CurveDeployer",
-        {0x0952: int(curve, 16), 0x0d05: int(curve, 16), 0x014d: int(curve_chunk, 16),
-         0x1175: int(curve_chunk, 16), 0x01c4: int(vault_chunk, 16), 0x08b7: int(vault_chunk, 16)},
-        "0xdc029369e5848c68a2587b5ea648ca5332feca7243a82720529d2824a1767a64", keccak)
+        {0x0983: int(curve, 16), 0x0d36: int(curve, 16), 0x014d: int(curve_chunk, 16),
+         0x11c4: int(curve_chunk, 16), 0x01e2: int(vault_chunk, 16), 0x08e8: int(vault_chunk, 16),
+         0x01bb: sale_bps, 0x04b6: sale_bps, 0x118f: sale_bps},
+        "0xd39e4b9e8ad667584dbdd2d4a414bd012dd30b47c4c21ada6cdd1bb3ad061935", keccak)
     if (keccak("keccak", reader.code(curve_chunk)).lower()
             != "0xf9300a4b32d609e484af5bb208cc46000f4e83f6b57bc7f19f0b5c22f2a43f3c"
             or keccak("keccak", reader.code(vault_chunk)).lower()
@@ -171,7 +173,7 @@ def verify_infrastructure(reader, factory, registry, controller, keccak=cast):
     trigger = kind_zero(reader, registry, keccak)
     verify_runtime(reader, registry, "V2TreasuryDeployer",
         {1335: trigger, 7163: trigger, 975: int(controller, 16)},
-        "0xb1b1adc4d2960d06e0eaa957fba812db587e4c8a701b342a027854b6425cacb7", keccak)
+        "0xb9d94aa23f1f7bc8abc31384d3dfb82a666a859a64f35982a15e4b7284c9c72c", keccak)
     verify_runtime(reader, controller, "V2TreasuryUpgradeController", {1856: int(registry, 16)},
         "0x6506bf8c847967c042988fa140a0673ffc0e8338e300850707a0d06f670bc930", keccak)
 
