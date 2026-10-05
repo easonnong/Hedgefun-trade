@@ -16,7 +16,7 @@ proxy implementation names are deployment details resolved from a verified addre
 |---|---|---|
 | Buyback treasury | No stock strategy; buy FUN from eligible income | Existing #22 upgradeable implementation retained; percentage buyback remains pending |
 | Strategy treasury / Price / Single round | Manage the current round, finish exiting, then stop opening new positions | Pending state machine; not an alias for the existing lot strategy |
-| Strategy treasury / Price / Cycle | Manage a round and re-enter under explicit price/cooldown rules | Pending integration with the current price implementation |
+| Strategy treasury / Price / Cycle | Manage a round and re-enter under explicit price/cooldown rules | The existing cycle rule is available as an upgradeable kind, `HedgeFunV2UpgradeableCycleTreasury`, with the percentage buy-back; see [STRATEGY_PARAMETERS.md](./STRATEGY_PARAMETERS.md). The single/cycle product switch itself is still pending |
 | Strategy treasury / Rebalance / Continuous | Correct the tradable stock/USDG allocation towards its target | Upgradeable, schema 3; this follow-up needs a new registration or compatible upgrade |
 
 The existing ordinary lot strategy already permits dip re-entry. The old Cycle implementation additionally
@@ -181,8 +181,9 @@ frontend integration must perform equivalent checks and revalidate when the conn
    completion and re-entry. Ordinary dip buys cannot silently reopen a completed single round.
 2. Integrate recovery after both real take-profit and stop fills. The current All-in override does not call the
    old Cycle sale hook, so simply changing inheritance would lose recovery-after-profit behavior.
-3. Implement percentage buyback and the price strategy's percentage/day budgets with reviewed module/layout
-   boundaries. Current code-size headroom is limited; do not temporarily rewrite `_params` around delegatecalls.
+3. Implement percentage buyback for the buyback and rebalance treasuries, and the price strategy's
+   percentage/day budgets, with reviewed module/layout boundaries. The ordinary stock strategy has it as its own
+   kind, `HedgeFunV2PercentBuybackTreasury`: see [STRATEGY_PARAMETERS.md](./STRATEGY_PARAMETERS.md). Current code-size headroom is limited; do not temporarily rewrite `_params` around delegatecalls.
 4. Replace frontend kind choices with verified product profiles; retain legacy pool read/trade compatibility.
 5. Complete full product E2E, audit the complete release, then publish and verify testnet registration/deployment.
 

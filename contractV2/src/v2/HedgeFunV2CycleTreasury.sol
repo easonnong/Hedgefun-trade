@@ -8,7 +8,9 @@ import {HedgeFunMath} from "../libraries/HedgeFunMath.sol";
 ///         registerKind launch path: dipBps is also the rise above the sale needed for recovery.
 ///         Stops and profits keep their priority, ordinary dip rungs keep their existing behavior, and
 ///         the recovery entry closes only after a real, minimum-sized buy succeeds.
-contract HedgeFunV2CycleTreasury is HedgeFunV2Treasury {
+/// @dev The rule and its storage, without the two convenience views: the upgradeable logic is this core, and has
+///      no bytes to spare for them. `reentrySaleAt != 0` is "a recovery entry is open".
+abstract contract HedgeFunV2CycleTreasuryCore is HedgeFunV2Treasury {
     /// @notice Oracle reference price of the qualifying live sale; zero after the entry is consumed/cancelled.
     uint256 public reentrySalePrice;
     /// @notice Time of that sale, whose recovery cooldown is 600 seconds.
@@ -36,16 +38,8 @@ contract HedgeFunV2CycleTreasury is HedgeFunV2Treasury {
         Params memory p
     ) HedgeFunV2Treasury(usdg_, stock_, v3Pool_, oracle_, token_, poolManager_, factory_, p) {}
 
-    /// @notice Whether one upward recovery entry remains open. Ordinary dip rungs do not require it.
-    function reentryPending() public view returns (bool) {
+    function _reentryPending() internal view returns (bool) {
         return reentrySaleAt != 0;
-    }
-
-    /// @notice Reports the recovery price/time gate only. execute() also checks venue health, sale priority,
-    ///         cash and lot capacity; keepers must simulate execute() before submitting a transaction.
-    function recoveryDue() external view returns (bool) {
-        (bool live, uint256 p) = _oracle.tryPrice();
-        return _recoveryDue(p, live);
     }
 
     function _afterStockSale(uint256 p, uint256 sold, uint256 received) internal override {
@@ -54,7 +48,7 @@ contract HedgeFunV2CycleTreasury is HedgeFunV2Treasury {
         (bool valid,, uint256 updatedAt) = _oracle.lastPriceAt();
         // A scheduled-closure TP may use the bounded pool price. It must not create a live-feed recovery signal.
         if (!live || !valid) {
-            bool pending = reentryPending();
+            bool pending = _reentryPending();
             _clearReentry();
             if (pending) emit RecoveryCancelled();
             return;
@@ -72,7 +66,7 @@ contract HedgeFunV2CycleTreasury is HedgeFunV2Treasury {
 
     function _recoveryDue(uint256 p, bool live) internal view returns (bool) {
         if (
-            !live || !reentryPending() || block.timestamp - reentrySaleAt < STOP_REENTRY_COOLDOWN
+            !live || !_reentryPending() || block.timestamp - reentrySaleAt < STOP_REENTRY_COOLDOWN
                 || !HedgeFunMath.reached(p, reentrySalePrice, _params.dipBps)
         ) return false;
         // A sub-minimum later stop renews recovery's wait without refreshing its qualifying sale anchor.
@@ -109,7 +103,7 @@ contract HedgeFunV2CycleTreasury is HedgeFunV2Treasury {
             action = Action.BuyRecovery;
         }
         _buyWithReserve(p, maxSpend);
-        bool pending = reentryPending();
+        bool pending = _reentryPending();
         _clearReentry();
         if (pending) emit RecoveryConsumed(action == Action.BuyRecovery);
     }
@@ -120,5 +114,24 @@ contract HedgeFunV2CycleTreasury is HedgeFunV2Treasury {
         delete reentryStockUpdatedAt;
         delete _recoveryStopAt;
         delete _recoveryStopStockUpdatedAt;
+    }
+}
+
+/// @notice The fixed V2 lot rules plus one recovery buy after an actual sale, deployed directly (not upgradeable).
+contract HedgeFunV2CycleTreasury is HedgeFunV2CycleTreasuryCore {
+    constructor(address usdg_, address stock_, address v3Pool_, address oracle_, address token_,
+        address poolManager_, address factory_, Params memory p)
+        HedgeFunV2CycleTreasuryCore(usdg_, stock_, v3Pool_, oracle_, token_, poolManager_, factory_, p) {}
+
+    /// @notice Whether one upward recovery entry remains open. Ordinary dip rungs do not require it.
+    function reentryPending() public view returns (bool) {
+        return _reentryPending();
+    }
+
+    /// @notice Reports the recovery price/time gate only. execute() also checks venue health, sale priority,
+    ///         cash and lot capacity; keepers must simulate execute() before submitting a transaction.
+    function recoveryDue() external view returns (bool) {
+        (bool live, uint256 p) = _oracle.tryPrice();
+        return _recoveryDue(p, live);
     }
 }
