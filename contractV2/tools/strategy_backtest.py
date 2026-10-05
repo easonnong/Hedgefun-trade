@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
-"""Replay the kind-0 lot rule on a price series and count what the treasury would do.
+"""Replay the treasury rules on a price series and count what each would do.
 
-A model of the rule in HedgeFunTreasuryBase / HedgeFunV2Treasury / HedgeFunV2AllInTreasury, not the contracts:
+Three rules: the ordinary lot rule (kind 0), the cycle rule (the lot rule plus a recovery buy after a sale) and
+the percentage rebalance (schema 3, with realised-net-income accounting). Models of the rules, not the contracts:
 one keeper visit per price, repeating execute() until nothing is due, then buy-backs as the cooldown allows.
 It was checked against the contracts for three price paths, two on a fork and one for the cycle treasury in
 the repository's own fixture (tools/tests/test_strategy_backtest.py).
@@ -15,13 +16,20 @@ import csv
 from dataclasses import dataclass, field
 from pathlib import Path
 
-DATA = Path(__file__).resolve().parents[1] / "data" / "tsla-hourly-2023-11_2026-10.csv"
+DATA_DIR = Path(__file__).resolve().parents[1] / "data" / "backtest"
+DATA = DATA_DIR / "hourly" / "TSLA.csv"
 MAX_LOTS = 128
+TICKERS = ("TSLA", "ORCL", "COIN", "CRWV", "MSTR", "NVDA", "AMD", "PLTR", "MU", "SNDK")
 
 
 def load(path=DATA):
     with open(path) as f:
         return [(int(r["timestamp"]), float(r["close"])) for r in csv.DictReader(f)]
+
+
+def series_of(ticker, source="hourly"):
+    """`hourly`: closes including extended hours. `feed`: every print of the stock's mainnet Chainlink feed."""
+    return load(DATA_DIR / source / f"{ticker}.csv")
 
 
 @dataclass
@@ -166,6 +174,151 @@ def run(series, capital, tp1, tp2, dip, buy_share, costs=None, cycle=False):
     }
 
 
+@dataclass
+class Rebalance:
+    """The percentage rebalance treasury: hold `target` of the tradable value in stock, trade back to it outside
+    the band, at most a quarter of the cash or stock per action, and reserve `payout` of a sale's realised net
+    gain for the buy-back after earlier realised losses are recovered."""
+    target: float
+    band: float
+    payout: float
+    costs: Costs = field(default_factory=Costs)
+    buy_bps: float = 0.25
+    sell_bps: float = 0.25
+    daily_buy: float = 1.0
+    daily_sell: float = 1.0
+    stock: float = 0.0
+    cash: float = 0.0
+    avg_cost: float = 0.0
+    buyback_stock: float = 0.0
+    loss: float = 0.0
+    day: int = -1
+    basis: float = 0.0
+    bought: float = 0.0
+    sold: float = 0.0
+    sells: int = 0
+    buys: int = 0
+    cost_usd: float = 0.0
+
+    def execute(self, p, day):
+        c = self.costs
+        value = self.stock * p
+        total = value + self.cash
+        if total <= 0:
+            return False
+        if day != self.day:                               # the day's first action pins the basis of its budgets
+            basis, bought, sold = total, 0.0, 0.0
+        else:
+            basis, bought, sold = self.basis, self.bought, self.sold
+        if value > total * (self.target + self.band):
+            remaining = basis * self.daily_sell - sold
+            if remaining <= 0:
+                return False
+            offered = min((value - total * self.target) / p, self.stock * self.sell_bps, remaining / p)
+            if offered * p < c.min_lot:
+                return False
+            cost = self.avg_cost
+            withheld = (offered * (1 - cost / p) if p > cost else 0.0) * self.payout
+            sale = offered - withheld
+            out = sale * p * (1 - c.pool_fee - c.slippage)
+            net = out * (1 - c.keeper)
+            principal = sale * cost
+            reserve = 0.0
+            if net < principal:
+                self.loss += principal - net
+            elif net - principal <= self.loss:
+                self.loss -= net - principal
+            else:
+                eligible, self.loss = net - principal - self.loss, 0.0
+                if withheld and p > cost and self.payout:
+                    reserve = min(withheld, eligible / (p - (p - cost) * self.payout) * self.payout)
+            moved = sale + reserve
+            if moved * p < c.min_lot:
+                return False
+            self.cost_usd += sale * p - net
+            self.stock -= moved
+            self.buyback_stock += reserve
+            self.cash += net
+            sold += moved * p
+            self.sells += 1
+        elif value < total * (self.target - self.band):
+            remaining = basis * self.daily_buy - bought
+            if remaining <= 0:
+                return False
+            offered = min(total * self.target - value, self.cash * self.buy_bps, remaining, self.cash)
+            if offered < c.min_lot:
+                return False
+            retained = offered / p * (1 - c.pool_fee - c.slippage) * (1 - c.keeper)
+            self.cost_usd += offered - retained * p
+            self.avg_cost = (self.stock * self.avg_cost + offered) / (self.stock + retained)
+            self.stock += retained
+            self.cash -= offered
+            bought += offered
+            self.buys += 1
+        else:
+            return False
+        self.day, self.basis, self.bought, self.sold = day, basis, bought, sold
+        return True
+
+    def nav(self, p):
+        return (self.stock + self.buyback_stock) * p + self.cash
+
+
+def run_rebalance(series, capital, target, band, payout, costs=None):
+    first, last = series[0][1], series[-1][1]
+    r = Rebalance(target, band, payout, costs or Costs(), stock=capital / first, avg_cost=first)
+    bought_back, days = 0.0, set()
+    for when, p in series[1:]:
+        for _ in range(6):                                # the cooldown is ten minutes
+            if not r.execute(p, when // 86400):
+                break
+        if r.buyback_stock > 0:
+            bought_back += r.buyback_stock * p
+            days.add(when // 86400)
+            r.buyback_stock = 0.0
+    nav = r.nav(last)
+    return {"actions": r.sells + r.buys, "buyback_days": len(days), "buyback_pct": bought_back / capital * 100,
+            "total_pct": ((nav + bought_back) / capital - 1) * 100, "nav_pct": (nav / capital - 1) * 100,
+            "cost_usd": r.cost_usd, "treasury": r}
+
+
+LOW = dict(pool_fee=0.0005, keeper=0.0010)
+MATRIX = [  # label, runner -> (actions, bought back % of capital, NAV + buy-backs %)
+    ("ordinary 3/6/3", lambda s, c: _lot(s, c, (0.03, 0.06, 0.03, 0.50), False)),
+    ("ordinary 1/2/1", lambda s, c: _lot(s, c, (0.01, 0.02, 0.01, 0.50), False)),
+    ("cycle 3/6/3", lambda s, c: _lot(s, c, (0.03, 0.06, 0.03, 0.50), True)),
+    ("cycle 5/10/5", lambda s, c: _lot(s, c, (0.05, 0.10, 0.05, 0.20), True)),
+    ("rebalance 70%", lambda s, c: _reb(s, c, 0.70)),
+    ("rebalance 90%", lambda s, c: _reb(s, c, 0.90)),
+]
+
+
+def _lot(series, capital, rule, cycle):
+    x = run(series, capital, *rule, costs=Costs(**LOW), cycle=cycle)
+    return x["sells"] + x["dip_buys"] + x["recovery_buys"], x["buyback_pct"], x["total_pct"]
+
+
+def _reb(series, capital, target):
+    x = run_rebalance(series, capital, target, 0.01, 1.0, costs=Costs(**LOW))
+    return x["actions"], x["buyback_pct"], x["total_pct"]
+
+
+def matrix(source, capital):
+    print(f"### every rule on every stock, {source} series, pool fee 0.05%, keeper 0.1%\n")
+    print("Each cell: bought back as a share of capital / NAV + buy-backs / actions.\n")
+    print("| stock | days | stock change | " + " | ".join(label for label, _ in MATRIX) + " |")
+    print("|---|---:|---:|" + "---:|" * len(MATRIX))
+    for ticker in TICKERS:
+        s = series_of(ticker, source)
+        days = len({when // 86400 for when, _ in s})
+        cells = []
+        for _, runner in MATRIX:
+            actions, bought_back, total = runner(s, capital)
+            cells.append(f"{bought_back:.0f}% / {total:+.0f}% / {actions}")
+        print(f"| {ticker} | {days} | {(s[-1][1] / s[0][1] - 1) * 100:+.0f}% | " + " | ".join(cells) + " |")
+    print()
+
+
 RULES = [  # tp1, tp2, dip, share of cash per buy
     (0.05, 0.10, 0.05, 0.20), (0.03, 0.06, 0.03, 0.50), (0.02, 0.04, 0.02, 0.50),
     (0.01, 0.02, 0.01, 0.50), (0.005, 0.01, 0.005, 0.50),
@@ -181,7 +334,12 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--data", default=str(DATA))
     parser.add_argument("--capital", type=float, default=18_000)
+    parser.add_argument("--matrix", action="store_true", help="every rule on every stock, both series")
     args = parser.parse_args()
+    if args.matrix:
+        matrix("hourly", args.capital)
+        matrix("feed", args.capital)
+        return
     series = load(args.data)
     days = len({when // 86400 for when, _ in series})
     print(f"{len(series)} prices over {days} trading days, stock {(series[-1][1] / series[0][1] - 1) * 100:+.1f}%, "

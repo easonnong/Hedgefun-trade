@@ -101,6 +101,27 @@ CYCLE = [
     (118.0, 0, 3, 0.3060818, 64.215885, 0.110061356, 115.0),
     (112.0, 0, 3, 0.3060818, 64.215885, 0.110061356, 115.0)]
 
+# The percentage rebalance treasury with realised-net-income accounting (target 70%, band 5%, 25% per action,
+# 100% of the pinned basis per direction a day, half of a net gain to the buy-back), in the repository's
+# V2TradablePercentEngineFixture: 95.831319478 stock booked at 100, a flat venue with a 0.3% fee, then one new
+# trading day per step. Per step: price, actions, stock, cash, buy-back stock, unrecovered loss.
+REBALANCE = [
+    (100.0, 2, 66.948011338506524893, 2865.267492, 0.0, 23.063322),
+    (100.0, 0, 66.948011338506524893, 2865.267492, 0.0, 23.063322),
+    (130.0, 1, 62.410835910644420443, 3396.436565, 0.418370826086956521, 0.0),
+    (130.0, 0, 62.410835910644420443, 3396.436565, 0.418370826086956521, 0.0),
+    (90.0, 1, 70.042881544755531554, 2704.023539, 0.418370826086956521, 0.0),
+    (90.0, 0, 70.042881544755531554, 2704.023539, 0.418370826086956521, 0.0),
+    (70.0, 1, 76.022123900755531554, 2282.107575, 0.418370826086956521, 0.0),
+    (70.0, 0, 76.022123900755531554, 2282.107575, 0.418370826086956521, 0.0),
+    (110.0, 1, 67.771063883712863297, 3131.656544, 0.884092466319206558, 0.0),
+    (150.0, 1, 62.076966737963731730, 3831.359918, 1.875953094461112723, 0.0),
+    (150.0, 0, 62.076966737963731730, 3831.359918, 1.875953094461112723, 0.0),
+    (120.0, 0, 62.076966737963731730, 3831.359918, 1.875953094461112723, 0.0),
+    (80.0, 1, 73.954362071776231730, 2873.519939, 1.875953094461112723, 0.0),
+    (140.0, 1, 66.166869338020853162, 3781.649231, 3.124595308108225785, 0.0),
+]
+
 
 class ModelAgainstTheContracts(unittest.TestCase):
     def replay(self, slippage, fork=None, rule=(0.05, 0.10, 0.05, 0.20), keeper=0.005):
@@ -156,6 +177,19 @@ class ModelAgainstTheContracts(unittest.TestCase):
                 self.assertAlmostEqual(t.buyback_stock, bought_back, delta=bought_back * 1e-4)
         self.assertGreater(t.recovery_buys, 0, "the path exercises a recovery buy")
 
+    def test_the_rebalance_treasury_matches_step_by_step(self):
+        r = TOOL.Rebalance(0.70, 0.05, 0.5, TOOL.Costs(slippage=0.0), stock=95.831319478008699857, avg_cost=100.0)
+        for day, (price, actions, stock, cash, bought_back, loss) in enumerate(REBALANCE):
+            n = 0
+            while n < 6 and r.execute(price, day):
+                n += 1
+            with self.subTest(day=day, price=price):
+                self.assertEqual(n, actions)
+                self.assertAlmostEqual(r.stock, stock, delta=stock * 1e-6)
+                self.assertAlmostEqual(r.cash, cash, delta=cash * 1e-6)
+                self.assertAlmostEqual(r.buyback_stock, bought_back, delta=bought_back * 1e-6 + 1e-12)
+                self.assertAlmostEqual(r.loss, loss, delta=loss * 1e-6 + 1e-9)
+
 
 class RuleProperties(unittest.TestCase):
     def series(self, prices):
@@ -178,10 +212,23 @@ class RuleProperties(unittest.TestCase):
         self.assertAlmostEqual(fixed["buyback_usd"], share["buyback_usd"], places=6)
         self.assertGreater(share["buybacks"], 3 * fixed["buybacks"])
 
-    def test_the_shipped_price_file_loads(self):
-        series = TOOL.load()
-        self.assertGreater(len(series), 10_000)
-        self.assertTrue(all(b[0] > a[0] and b[1] > 0 for a, b in zip(series, series[1:])))
+    def test_the_shipped_price_files_load(self):
+        self.assertGreater(len(TOOL.load()), 10_000)
+        for source in ("hourly", "feed"):
+            for ticker in TOOL.TICKERS:
+                with self.subTest(source=source, ticker=ticker):
+                    series = TOOL.series_of(ticker, source)
+                    self.assertGreater(len(series), 1_000)
+                    # a feed can print twice in one second; never backwards
+                    self.assertTrue(all(b[0] >= a[0] and b[1] > 0 for a, b in zip(series, series[1:])))
+                    # no print is on another scale: nothing moves a hundredfold between two prints
+                    self.assertTrue(all(0.5 < b[1] / a[1] < 2 for a, b in zip(series, series[1:])))
+
+    def test_a_rebalance_sale_under_cost_reserves_nothing_and_carries_the_loss(self):
+        r = TOOL.Rebalance(0.5, 0.01, 1.0, TOOL.Costs(), stock=100.0, avg_cost=100.0)
+        self.assertTrue(r.execute(90.0, 0))
+        self.assertEqual(r.buyback_stock, 0.0)
+        self.assertGreater(r.loss, 0.0)
 
 
 if __name__ == "__main__":

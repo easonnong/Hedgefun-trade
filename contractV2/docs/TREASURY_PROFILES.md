@@ -15,7 +15,7 @@ proxy implementation names are deployment details resolved from a verified addre
 |---|---|---|
 | Buyback treasury | No stock strategy; buy FUN from eligible income | Existing #22 upgradeable implementation retained; percentage buyback remains pending |
 | Strategy treasury / Price / Single round | Manage the current round, finish exiting, then stop opening new positions | Pending state machine; not an alias for the existing lot strategy |
-| Strategy treasury / Price / Cycle | Manage a round and re-enter under explicit price/cooldown rules | Pending integration with the current price implementation |
+| Strategy treasury / Price / Cycle | Manage a round and re-enter under explicit price/cooldown rules | The existing cycle rule is available as an upgradeable kind, `HedgeFunV2UpgradeableCycleTreasury`, with the percentage buy-back; see [STRATEGY_PARAMETERS.md](./STRATEGY_PARAMETERS.md). The single/cycle product switch itself is still pending |
 | Strategy treasury / Rebalance / Continuous | Correct the tradable stock/USDG allocation towards its target | Implemented here, upgradeable, schema 3; not deployed |
 
 The existing ordinary lot strategy already permits dip re-entry. The old Cycle implementation additionally
