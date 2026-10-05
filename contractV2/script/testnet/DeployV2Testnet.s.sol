@@ -288,7 +288,7 @@ contract DeployV2Testnet is Script {
         d.maxSlippageBps = 100;
         d.maxDeviationBps = 50;
         d.maxBuybackImpactBps = 300;
-        d.buybackCooldown = 60;
+        d.buybackCooldown = 10;
         d.minLotUsdg = 5e6;
         d.buybackChunkUsdg = 500e6;
         d.sellChunkUsdg = 2_000e6;

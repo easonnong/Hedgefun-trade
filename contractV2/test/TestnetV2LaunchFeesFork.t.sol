@@ -38,11 +38,13 @@ contract TestnetV2LaunchFeesForkTest is Test {
         HedgeFunFactory.Defaults memory after_ = FACTORY.getDefaults();
         assertEq(after_.lpFee, 2000);
         assertEq(after_.protocolBps, 3000);
+        assertEq(after_.buybackCooldown, 10);
         assertEq(after_.maxCreatorBps, 1000);
         assertEq(uint8(after_.launchFeeCurrency), 1);
         assertEq(after_.launchFeeAmount, FEE);
         after_.lpFee = before_.lpFee;
         after_.protocolBps = before_.protocolBps;
+        after_.buybackCooldown = before_.buybackCooldown;
         after_.maxCreatorBps = before_.maxCreatorBps;
         after_.launchFeeCurrency = before_.launchFeeCurrency;
         after_.launchFeeAmount = before_.launchFeeAmount;

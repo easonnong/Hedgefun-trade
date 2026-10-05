@@ -36,7 +36,7 @@ library V2MainnetDefaults {
         d.maxSlippageBps = 100;
         d.maxDeviationBps = 50;
         d.maxBuybackImpactBps = 300;
-        d.buybackCooldown = 60;
+        d.buybackCooldown = 10; // seconds between buy-backs; the price bound is the pool's own 600-second mean, not this
         d.minLotUsdg = 5e6;
         d.buybackChunkUsdg = 500e6;
         d.sellChunkUsdg = 2_000e6;
