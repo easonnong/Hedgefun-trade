@@ -38,7 +38,7 @@ contract DeployV2FeeUpgradeTestnet is Script {
     address public constant V3_FACTORY = 0x0b0a96D7EB396E7471998889C4803dD0F529Eb01;
     address public constant MARKET = 0xc1AF2f52980F8A7AA4E90A8E30D5c3FaF0375f21;
     string public constant BASE_BOOK_SHA256 = "1b0d19f7e5e36ec19df5c3d8b879d95510dbe70527724602686d95411d04b67e";
-    uint160 public constant HOOK_FLAGS = 0x2844;
+    uint160 public constant HOOK_FLAGS = 0x28CC;
     uint256 public constant PLANNED_TRANSACTIONS = 38;
     string internal constant OUT = "deploy/testnet-v2-fees.candidate.json";
     string internal constant OUT_DRY = "deploy/testnet-v2-fees.dryrun.json";
@@ -352,7 +352,7 @@ contract DeployV2FeeUpgradeTestnet is Script {
                 || x.factory.strategyCount() != 0 || address(x.factory.poolManager()) != PM
                 || address(x.factory.v3Factory()) != address(x.venue.v3Factory)
                 || x.factory.usdg() != address(x.venue.usdg) || x.hook.factory() != address(x.factory)
-                || x.hook.version() != 2 || x.treasury.factory() != address(x.factory)
+                || x.hook.version() != 3 || x.treasury.factory() != address(x.factory)
                 || x.token.factory() != address(x.factory) || x.curve.factory() != address(x.factory)
                 || address(x.router.factory()) != address(x.factory)
                 || address(x.nativeRouter.router()) != address(x.router)

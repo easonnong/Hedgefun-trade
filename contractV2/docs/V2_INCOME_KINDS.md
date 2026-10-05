@@ -154,8 +154,9 @@ also preserves division remainders and bounds lifetime funding.
   accepted and ignored.
 - The dividend is paid in the stock token. Its USD value moves with the stock, and a stock token that pauses or
   blocks transfers pauses the dividend with it.
-- Token-side tax from V4 buys still has to be converted by the factory owner (`convertFees`) before the hook can
-  pay it out. Until then it is not income.
+- Tax from V4 buys is taken in the stock by the version-3 hook and paid out by the same permissionless `sweep`
+  as a sale's. On a core deployed with the version-2 hook it is still token-side and waits for the factory
+  owner's `convertFees`; until then it is not income.
 - Staked tokens are still in `totalSupply`. A dividend kind burns nothing; only the buy-back share burns.
 
 ## Keeper actions

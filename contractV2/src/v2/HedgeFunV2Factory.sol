@@ -40,7 +40,7 @@ contract HedgeFunV2Factory is HedgeFunFactory {
         HedgeFunFactory(owner_, poolManager_, v3Factory_, usdg_, protocol_, treasuryDeployer_, tokenDeployer_, hook_, d)
     {
         if (curveDeployer_.code.length == 0 || V2TreasuryDeployer(treasuryDeployer_).version() != 2
-            || HedgeFunV2Hook(hook_).version() != 2) revert BadRequest();
+            || HedgeFunV2Hook(hook_).version() != 3) revert BadRequest();
         curveDeployer = CurveDeployer(curveDeployer_);
         curveDeployer.bind();
     }

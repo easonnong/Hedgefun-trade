@@ -316,7 +316,7 @@ contract DeployV2FeeUpgradeTestnetTest is Test {
         assertNotEq(address(x.curve), address(base.curve));
         assertNotEq(address(x.token), address(base.token));
         assertNotEq(address(x.hook), address(base.hook));
-        assertEq(x.hook.version(), 2);
+        assertEq(x.hook.version(), 3);
         assertEq(x.hook.factory(), address(x.factory));
         assertEq(x.treasury.factory(), address(x.factory));
         assertEq(x.curve.factory(), address(x.factory));
@@ -498,9 +498,7 @@ contract DeployV2FeeUpgradeTestnetTest is Test {
         _claimCurve(curve, IERC20(address(l.stock)), treasury);
         assertEq(curve.totalFees(), 0);
         assertEq(l.stock.balanceOf(address(curve)), 0);
-        _frozenAndSellSplit(id, IERC20(address(l.stock)), treasury);
-        (PoolId pid, uint256 stockOut) = _convert(id, token);
-        _assertConvertedSplit(pid, IERC20(address(l.stock)), treasury, stockOut);
+        _frozenAndStockSplit(id, token, IERC20(address(l.stock)), treasury);
     }
 
     function _claimCurve(HedgeFunBondingCurve curve, IERC20 stock, address recipient) private {
@@ -513,7 +511,7 @@ contract DeployV2FeeUpgradeTestnetTest is Test {
         assertEq(stock.balanceOf(recipient), before);
     }
 
-    function _frozenAndSellSplit(uint256 id, IERC20 stock, address treasury) private {
+    function _frozenAndStockSplit(uint256 id, address token, IERC20 stock, address treasury) private {
         (PoolKey memory key,) = x.factory.graduationConfig(id);
         PoolId pid = key.toId();
         HedgeFunHook.Rates memory rates = x.hook.rates(pid);
@@ -524,30 +522,13 @@ contract DeployV2FeeUpgradeTestnetTest is Test {
         assertEq(rates.snipeBps, 0);
         assertEq(rates.spikeBps, 0);
         (uint256 tokenFees, uint256 stockFees) = x.hook.accrued(pid);
-        assertGt(tokenFees, 0);
+        assertEq(tokenFees, 0, "the V4 buy's fee is stock, like the sale's");
         assertGt(stockFees, 0);
-        _assertConvertedSplit(pid, stock, treasury, stockFees);
-        assertEq(x.hook.pendingTokenFees(pid), tokenFees);
+        assertEq(IPoolManager(PM).balanceOf(address(x.hook), uint256(uint160(token))), 0);
+        _assertStockSplit(pid, stock, treasury, stockFees);
     }
 
-    function _convert(uint256 id, address token) private returns (PoolId pid, uint256 stockOut) {
-        (PoolKey memory key,) = x.factory.graduationConfig(id);
-        pid = key.toId();
-        x.hook.sweep(pid);
-        uint256 pending = x.hook.pendingTokenFees(pid);
-        assertGt(pending, 0);
-        (uint160 spot,,,) = IPoolManager(PM).getSlot0(pid);
-        uint160 limit = Currency.unwrap(key.currency0) == token
-            ? uint160(uint256(spot) * 9950 / 10_000)
-            : uint160(uint256(spot) * 10050 / 10_000);
-        vm.prank(OPERATOR);
-        uint256 consumed;
-        (consumed, stockOut) = x.hook.convertFees(key, pending, 1, limit, block.timestamp);
-        assertEq(consumed, pending);
-        assertEq(x.hook.pendingTokenFees(pid), 0);
-    }
-
-    function _assertConvertedSplit(PoolId pid, IERC20 stock, address treasury, uint256 stockOut) private {
+    function _assertStockSplit(PoolId pid, IERC20 stock, address treasury, uint256 stockOut) private {
         uint256 before = stock.balanceOf(OPERATOR);
         uint256 creatorBefore = stock.balanceOf(alice);
         uint256 treasuryBefore = stock.balanceOf(treasury);

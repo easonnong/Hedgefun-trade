@@ -197,11 +197,9 @@ contract V2AdversarialTradingTest is V2FactoryFixture {
 
     function _sweep() private {
         (uint256 taxTokens,) = hook.accrued(key.toId());
-        uint256 pendingBefore = hook.pendingTokenFees(key.toId());
+        assertEq(taxTokens, 0, "a V2 pool takes every fee in stock");
         uint256 supplyBefore = token.totalSupply();
         hook.sweep(key.toId());
-        assertEq(hook.pendingTokenFees(key.toId()), pendingBefore + taxTokens,
-            "base buy fees remain token claims until a separate conversion");
         assertEq(token.totalSupply(), supplyBefore, "a V2 sweep cannot burn the basic buy fee");
         _assertConservation();
     }

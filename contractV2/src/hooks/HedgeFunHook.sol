@@ -172,9 +172,12 @@ contract HedgeFunHook is IHooks, IUnlockCallback {
 
     constructor(IPoolManager pm) {
         if (address(pm) == address(0)) revert BadConfig();
-        if (uint160(address(this)) & Hooks.ALL_HOOK_MASK != FLAGS) revert BadConfig();
+        if (uint160(address(this)) & Hooks.ALL_HOOK_MASK != _flags()) revert BadConfig();
         poolManager = pm;
     }
+
+    /// @dev what the address must carry. `HedgeFunV2Hook` adds the two flags its `beforeSwap` needs.
+    function _flags() internal pure virtual returns (uint160) { return FLAGS; }
 
     // ------------------------------------------------------------------------------------------------ the factory only
     /// @notice claim this hook. `HedgeFunFactory` does it from its own constructor, so a hook somebody else has
@@ -353,7 +356,7 @@ contract HedgeFunHook is IHooks, IUnlockCallback {
     ///      arrives in the stock (the input) and is split like a sell's rather than burned. An exact-output SELL is
     ///      refused always, and an exact-output buy is refused while the launch window holds the buy rate above the
     ///      flat tax (`ExactOutputRefused`); the body says why.
-    function _tax(PoolId id, Pool storage p, address sender, PoolKey calldata key, SwapParams calldata params, BalanceDelta swapDelta) internal returns (int128) {
+    function _tax(PoolId id, Pool storage p, address sender, PoolKey calldata key, SwapParams calldata params, BalanceDelta swapDelta) internal virtual returns (int128) {
         bool unspecifiedIsCurrency1 = params.zeroForOne == (params.amountSpecified < 0);
         Currency c = unspecifiedIsCurrency1 ? key.currency1 : key.currency0;
         uint256 moved;
@@ -758,7 +761,7 @@ contract HedgeFunHook is IHooks, IUnlockCallback {
     function afterAddLiquidity(address, PoolKey calldata, ModifyLiquidityParams calldata, BalanceDelta, BalanceDelta, bytes calldata) external pure override returns (bytes4, BalanceDelta) { revert HookNotImplemented(); }
     function beforeRemoveLiquidity(address, PoolKey calldata, ModifyLiquidityParams calldata, bytes calldata) external pure override returns (bytes4) { revert HookNotImplemented(); }
     function afterRemoveLiquidity(address, PoolKey calldata, ModifyLiquidityParams calldata, BalanceDelta, BalanceDelta, bytes calldata) external pure override returns (bytes4, BalanceDelta) { revert HookNotImplemented(); }
-    function beforeSwap(address, PoolKey calldata, SwapParams calldata, bytes calldata) external pure override returns (bytes4, BeforeSwapDelta, uint24) { revert HookNotImplemented(); }
+    function beforeSwap(address, PoolKey calldata, SwapParams calldata, bytes calldata) external virtual override returns (bytes4, BeforeSwapDelta, uint24) { revert HookNotImplemented(); }
     function beforeDonate(address, PoolKey calldata, uint256, uint256, bytes calldata) external pure override returns (bytes4) { revert HookNotImplemented(); }
     function afterDonate(address, PoolKey calldata, uint256, uint256, bytes calldata) external pure override returns (bytes4) { revert HookNotImplemented(); }
 }

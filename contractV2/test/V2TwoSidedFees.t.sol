@@ -17,8 +17,8 @@ import {HedgeFunHook} from "../src/hooks/HedgeFunHook.sol";
 import {HedgeFunBondingCurve} from "../src/v2/HedgeFunBondingCurve.sol";
 import {V2FactoryFixture} from "./utils/V2FactoryFixture.sol";
 
-/// Production factory, curve, hook and PoolManager, in both currency orderings. Buy-token claims are
-/// deliberately distinguished from converted stock claims and paid stock throughout these tests.
+/// Production factory, curve, hook and PoolManager, in both currency orderings. Every V4 fee is a stock claim
+/// from the moment it is taken; these tests distinguish the claim from paid stock throughout.
 abstract contract V2TwoSidedFeesBase is V2FactoryFixture {
     using PoolIdLibrary for PoolKey;
     using StateLibrary for IPoolManager;
@@ -56,18 +56,12 @@ abstract contract V2TwoSidedFeesBase is V2FactoryFixture {
             PoolSwapTest.TestSettings({takeClaims: false, settleUsingBurn: false}), "");
     }
 
-    function _limit(uint256 sqrtMoveBps) internal view returns (uint160) {
-        (uint160 spot,,,) = pm.getSlot0(pid);
-        return tokenIsCurrency0()
-            ? uint160(uint256(spot) * (10_000 - sqrtMoveBps) / 10_000)
-            : uint160(uint256(spot) * (10_000 + sqrtMoveBps) / 10_000);
+    function _stockOf(BalanceDelta delta) internal pure returns (int256) {
+        return tokenIsCurrency0() ? delta.amount1() : delta.amount0();
     }
 
-    function _convert(uint256 amount, uint256 minOut, uint160 limit)
-        internal returns (uint256 spent, uint256 received)
-    {
-        vm.prank(owner);
-        return hook.convertFees(key, amount, minOut, limit, block.timestamp);
+    function _tokenOf(BalanceDelta delta) internal pure returns (int256) {
+        return tokenIsCurrency0() ? delta.amount0() : delta.amount1();
     }
 
     function _tokenClaim() internal view returns (uint256) {
@@ -108,52 +102,96 @@ abstract contract V2TwoSidedFeesBase is V2FactoryFixture {
         assertEq(curve.totalFees(), 0);
     }
 
-    function testV4BuyInventoryIsNotBurnedOrReportedAsStockIncome() public {
+    function testV4ExactInputBuyIsTaxedInStockBeforeTheSwap() public {
         uint256 supply = token.totalSupply();
-        _swap(false, -int256(1e18));
+        uint256 payerBefore = stock.balanceOf(address(this));
+        BalanceDelta delta = _swap(false, -int256(1e18));
+        assertEq(payerBefore - stock.balanceOf(address(this)), 1e18, "the buyer pays what they specified");
+        assertEq(_stockOf(delta), -int256(1e18));
+        assertGt(_tokenOf(delta), 0);
         (uint256 accruedToken, uint256 accruedStock) = hook.accrued(pid);
-        assertGt(accruedToken, 0);
-        assertEq(accruedToken, _tokenClaim());
-        assertEq(accruedStock, 0);
-        assertEq(hook.pendingTokenFees(pid), 0, "claims are not yet physical token inventory");
-        uint256 protocolBefore = stock.balanceOf(protocol);
-        hook.sweep(pid);
-        assertEq(hook.pendingTokenFees(pid), accruedToken);
-        assertEq(token.balanceOf(address(hook)), 0);
-        assertEq(_tokenClaim(), accruedToken);
-        assertEq(_stockClaim(), 0);
-        assertEq(stock.balanceOf(protocol), protocolBefore);
-        assertEq(token.totalSupply(), supply, "the 3% basic buy fee must survive for conversion");
-        hook.sweep(pid);
-        assertEq(hook.pendingTokenFees(pid), accruedToken, "a repeated sweep cannot duplicate inventory");
+        assertEq(accruedToken, 0, "no fee is ever held in the token");
+        assertEq(accruedStock, 0.03e18, "3% of the payment");
+        assertEq(_tokenClaim(), 0);
+        assertEq(_stockClaim(), accruedStock);
+        assertEq(token.totalSupply(), supply, "the basic buy fee burns nothing");
     }
 
-    function testV4BuyConvertsOnceThenPaysExactTwentyTenSeventy() public {
+    function testV4BuyFeeIsPaidByAnyonesSweepWithNoOwnerStep() public {
         _swap(false, -int256(1e18));
-        (uint256 taxed,) = hook.accrued(pid);
-        uint256 supply = token.totalSupply();
+        (, uint256 stockFee) = hook.accrued(pid);
         uint256 p = stock.balanceOf(protocol);
         uint256 c = stock.balanceOf(address(this));
         uint256 t = stock.balanceOf(curve.treasury());
-        (uint256 actualIn, uint256 stockOut) = _convert(taxed, 1, _limit(50));
-        assertEq(actualIn, taxed);
-        assertGt(stockOut, 0);
-        assertEq(token.balanceOf(address(hook)), 0);
-        assertEq(hook.pendingTokenFees(pid), 0);
-        assertEq(_stockClaim(), stockOut);
-        (, uint256 accruedStock) = hook.accrued(pid);
-        assertEq(accruedStock, stockOut);
-        assertEq(stock.balanceOf(protocol), p, "conversion has produced claims, not yet paid cash");
-        assertEq(token.totalSupply(), supply);
+        vm.prank(address(0xBEEF));
         hook.sweep(pid);
-        _assertSplit(stockOut, p, c, t);
+        _assertSplit(stockFee, p, c, t);
         assertEq(_stockClaim(), 0);
         (uint256 at, uint256 ast) = hook.accrued(pid);
         assertEq(at + ast, 0);
         assertEq(hook.owedProtocol(pid) + hook.owedCreator(pid) + hook.owedTreasury(pid), 0);
     }
 
-    function testV4SellPaysExactTwentyTenSeventyWithoutConversion() public {
+    /// Only the payment net of the fee meets the pool, exactly as on an exact-output buy of the same tokens.
+    function testExactInputAndExactOutputBuysCostTheSame() public {
+        uint256 snapshot = vm.snapshotState();
+        BalanceDelta exactIn = _swap(false, -int256(1e18));
+        uint256 tokensOut = uint256(_tokenOf(exactIn));
+        (, uint256 feeIn) = hook.accrued(pid);
+        vm.revertToState(snapshot);
+        BalanceDelta exactOut = _swap(false, int256(tokensOut));
+        (, uint256 feeOut) = hook.accrued(pid);
+        assertEq(uint256(_tokenOf(exactOut)), tokensOut);
+        assertApproxEqAbs(uint256(-_stockOf(exactOut)), 1e18, 1e6, "the same total payment");
+        assertApproxEqAbs(feeOut, feeIn, 1e6, "the same fee");
+    }
+
+    function testFuzz_exactInputBuyFeeIsExactlyTheRateOfThePayment(uint256 paid) public {
+        paid = bound(paid, 1, 20e18);
+        uint256 supply = token.totalSupply();
+        BalanceDelta delta = _swap(false, -int256(paid));
+        assertEq(_stockOf(delta), -int256(paid));
+        (uint256 accruedToken, uint256 accruedStock) = hook.accrued(pid);
+        assertEq(accruedToken, 0);
+        assertEq(accruedStock, paid * 300 / 10_000);
+        assertEq(_tokenClaim(), 0);
+        assertEq(_stockClaim(), accruedStock);
+        assertEq(token.totalSupply(), supply);
+    }
+
+    /// A buy that would stop at its price limit has already paid the fee on stock it never traded: refused.
+    function testBuyThatStopsAtItsPriceLimitIsRefused() public {
+        (uint160 spot,,,) = pm.getSlot0(pid);
+        bool zeroForOne = !tokenIsCurrency0();
+        uint160 limit = zeroForOne ? spot - spot / 10_000 : spot + spot / 10_000;
+        SwapParams memory params = SwapParams({zeroForOne: zeroForOne, amountSpecified: -int256(40e18), sqrtPriceLimitX96: limit});
+        vm.expectRevert();
+        swapRouter.swap(key, params, PoolSwapTest.TestSettings({takeClaims: false, settleUsingBurn: false}), "");
+        (uint256 at, uint256 ast) = hook.accrued(pid);
+        assertEq(at + ast, 0);
+        assertEq(_stockClaim(), 0);
+        // the same limit, reached exactly or not at all, is no obstacle
+        params.amountSpecified = -int256(1e12);
+        swapRouter.swap(key, params, PoolSwapTest.TestSettings({takeClaims: false, settleUsingBurn: false}), "");
+        (, ast) = hook.accrued(pid);
+        assertEq(ast, 1e12 * 300 / 10_000);
+    }
+
+    /// A sell is taxed after the swap on the stock that actually moved, so it may still stop early.
+    function testSellThatStopsAtItsPriceLimitIsTaxedOnWhatMoved() public {
+        (uint160 spot,,,) = pm.getSlot0(pid);
+        bool zeroForOne = tokenIsCurrency0();
+        uint160 limit = zeroForOne ? spot - spot / 10_000 : spot + spot / 10_000;
+        uint256 offered = token.balanceOf(address(this));
+        BalanceDelta delta = swapRouter.swap(key, SwapParams({zeroForOne: zeroForOne, amountSpecified: -int256(offered),
+            sqrtPriceLimitX96: limit}), PoolSwapTest.TestSettings({takeClaims: false, settleUsingBurn: false}), "");
+        assertLt(uint256(-_tokenOf(delta)), offered, "stopped early");
+        (uint256 at, uint256 stockFee) = hook.accrued(pid);
+        assertEq(at, 0);
+        assertEq(stockFee, (uint256(_stockOf(delta)) + stockFee) * 300 / 10_000);
+    }
+
+    function testV4SellPaysExactTwentyTenSeventy() public {
         _swap(true, -int256(100e18));
         (uint256 at, uint256 stockFee) = hook.accrued(pid);
         assertEq(at, 0);
@@ -163,7 +201,6 @@ abstract contract V2TwoSidedFeesBase is V2FactoryFixture {
         uint256 t = stock.balanceOf(curve.treasury());
         hook.sweep(pid);
         _assertSplit(stockFee, p, c, t);
-        assertEq(hook.pendingTokenFees(pid), 0);
         assertEq(_stockClaim(), 0);
     }
 
@@ -179,209 +216,102 @@ abstract contract V2TwoSidedFeesBase is V2FactoryFixture {
         _assertSplit(stockFee, p, c, t);
     }
 
-    function testOnlyFactoryOwnerCanConvertAndCallbackCannotBeSpoofed() public {
-        _swap(false, -int256(1e18));
-        (uint256 taxed,) = hook.accrued(pid);
-        uint160 limit = _limit(50);
-        vm.expectRevert();
-        hook.convertFees(key, taxed, 1, limit, block.timestamp);
-        vm.expectRevert(HedgeFunHook.NotPoolManager.selector);
-        hook.unlockCallback(abi.encode(key, taxed));
-        vm.prank(address(pm));
-        vm.expectRevert();
-        hook.unlockCallback(abi.encode(key, taxed));
-        (uint256 remaining,) = hook.accrued(pid);
-        assertEq(remaining, taxed);
-        assertEq(hook.pendingTokenFees(pid), 0);
-    }
-
-    function testDeadlineMinimumOutputAndPoolIdentityFailClosed() public {
-        _swap(false, -int256(1e18));
-        (uint256 taxed,) = hook.accrued(pid);
-        uint160 limit = _limit(50);
-        vm.startPrank(owner);
-        vm.expectRevert();
-        hook.convertFees(key, taxed, 1, limit, block.timestamp - 1);
-        vm.expectRevert();
-        hook.convertFees(key, taxed, 0, limit, block.timestamp);
-        vm.expectRevert();
-        hook.convertFees(key, taxed, type(uint256).max, limit, block.timestamp);
-        PoolKey memory wrong = key;
-        wrong.fee += 1;
-        vm.expectRevert();
-        hook.convertFees(wrong, taxed, 1, limit, block.timestamp);
-        vm.stopPrank();
-        (uint256 remaining, uint256 cash) = hook.accrued(pid);
-        assertEq(remaining, taxed);
-        assertEq(cash, 0);
-        assertEq(hook.pendingTokenFees(pid), 0, "failed conversion also rolls back materialization");
-    }
-
-    function testConversionRejectsLimitsBeyondHalfPercentSqrtMovement() public {
-        _swap(false, -int256(1e18));
-        (uint256 taxed,) = hook.accrued(pid);
-        uint160 tooFar = _limit(51);
-        (uint160 spot,,,) = pm.getSlot0(pid);
-        uint160 wrongDirection = tokenIsCurrency0() ? spot + 1 : spot - 1;
-        vm.startPrank(owner);
-        vm.expectRevert();
-        hook.convertFees(key, taxed, 1, tooFar, block.timestamp);
-        vm.expectRevert();
-        hook.convertFees(key, taxed, 1, wrongDirection, block.timestamp);
-        vm.stopPrank();
-        (uint256 remaining,) = hook.accrued(pid);
-        assertEq(remaining, taxed);
-        _convert(taxed, 1, _limit(50));
-    }
-
-    function testPartialFillLeavesInventoryAndCanBeRetried() public {
-        _swap(false, -int256(40e18));
-        (uint256 taxed,) = hook.accrued(pid);
-        uint256 supply = token.totalSupply();
+    function testBuysAndSellsAccrueOneStockLedgerAndNoTokenLedger() public {
+        _swap(false, -int256(2e18));
+        (, uint256 afterBuy) = hook.accrued(pid);
+        _swap(true, -int256(100e18));
+        _swap(false, int256(50e18));
+        (uint256 at, uint256 stockFees) = hook.accrued(pid);
+        assertEq(at, 0);
+        assertGt(stockFees, afterBuy);
+        assertEq(_stockClaim(), stockFees);
+        assertEq(_tokenClaim(), 0);
         uint256 p = stock.balanceOf(protocol);
         uint256 c = stock.balanceOf(address(this));
         uint256 t = stock.balanceOf(curve.treasury());
-        (uint256 actualIn, uint256 stockOut) = _convert(taxed, 1, _limit(1));
-        assertGt(actualIn, 0);
-        assertLt(actualIn, taxed);
-        assertGt(stockOut, 0);
-        assertEq(hook.pendingTokenFees(pid), taxed - actualIn);
-        assertEq(token.balanceOf(address(hook)), 0);
-        assertEq(_tokenClaim(), taxed - actualIn);
-        uint256 converted = stockOut;
-        for (uint256 i; i < 10 && hook.pendingTokenFees(pid) != 0; ++i) {
-            uint256 remaining = hook.pendingTokenFees(pid);
-            (uint256 used, uint256 out) = _convert(remaining, 1, _limit(50));
-            assertGt(used, 0);
-            assertEq(hook.pendingTokenFees(pid), remaining - used);
-            converted += out;
-        }
-        assertEq(hook.pendingTokenFees(pid), 0);
-        assertEq(stock.balanceOf(protocol) - p + stock.balanceOf(address(this)) - c
-            + stock.balanceOf(curve.treasury()) - t + _stockClaim(), converted,
-            "each retry first distributes the previous batch, preserving the total");
-        assertEq(token.balanceOf(address(hook)), 0);
-        assertEq(token.totalSupply(), supply);
         hook.sweep(pid);
-        // Floors apply independently to each converted batch, within one raw wei per batch.
-        assertApproxEqAbs(stock.balanceOf(protocol) - p, converted * 2000 / 10_000, 11);
-        assertApproxEqAbs(stock.balanceOf(address(this)) - c, converted * 1000 / 10_000, 11);
-        assertEq(stock.balanceOf(protocol) - p + stock.balanceOf(address(this)) - c
-            + stock.balanceOf(curve.treasury()) - t, converted);
+        _assertSplit(stockFees, p, c, t);
+    }
+
+    function testOnlyThePoolManagerCallsBeforeSwap() public {
+        SwapParams memory params = SwapParams({zeroForOne: !tokenIsCurrency0(), amountSpecified: -int256(1e18),
+            sqrtPriceLimitX96: 0});
+        vm.expectRevert(HedgeFunHook.NotPoolManager.selector);
+        hook.beforeSwap(address(this), key, params, "");
+        PoolKey memory wrong = key;
+        wrong.fee += 1;
+        vm.prank(address(pm));
+        vm.expectRevert(HedgeFunHook.WrongPool.selector);
+        hook.beforeSwap(address(this), wrong, params, "");
+        (uint256 at, uint256 ast) = hook.accrued(pid);
+        assertEq(at + ast, 0);
     }
 
     function testRejectedStockPayoutPreservesRoleCreditAndRetryDoesNotDoubleSplit() public {
         _swap(false, -int256(1e18));
-        (uint256 taxed,) = hook.accrued(pid);
-        (, uint256 stockOut) = _convert(taxed, 1, _limit(50));
+        (, uint256 stockFee) = hook.accrued(pid);
         stock.blockRecipient(protocol);
         uint256 c = stock.balanceOf(address(this));
         uint256 t = stock.balanceOf(curve.treasury());
         hook.sweep(pid);
-        uint256 cut = stockOut * 2000 / 10_000;
+        uint256 cut = stockFee * 2000 / 10_000;
         assertEq(hook.owedProtocol(pid), cut);
         assertEq(stock.balanceOf(protocol), 0);
-        assertEq(stock.balanceOf(address(this)) - c, stockOut * 1000 / 10_000);
-        assertEq(stock.balanceOf(curve.treasury()) - t, stockOut - cut - stockOut * 1000 / 10_000);
+        assertEq(stock.balanceOf(address(this)) - c, stockFee * 1000 / 10_000);
+        assertEq(stock.balanceOf(curve.treasury()) - t, stockFee - cut - stockFee * 1000 / 10_000);
         hook.sweep(pid);
         assertEq(hook.owedProtocol(pid), cut);
-        assertEq(stock.balanceOf(address(this)) - c, stockOut * 1000 / 10_000);
+        assertEq(stock.balanceOf(address(this)) - c, stockFee * 1000 / 10_000);
         stock.blockRecipient(address(0));
         hook.sweep(pid);
         assertEq(stock.balanceOf(protocol), cut);
         assertEq(hook.owedProtocol(pid), 0);
     }
 
-    function testConverterIsObservedForPoolHistoryButNotTaxedAgain() public {
-        _swap(false, -int256(1e18));
-        (uint256 taxed,) = hook.accrued(pid);
-        uint256 before = hook.observationCountOf(pid);
-        vm.warp(block.timestamp + 1);
-        (, uint256 stockOut) = _convert(taxed, 1, _limit(50));
-        assertEq(hook.observationCountOf(pid), before + 1);
-        (, uint256 cash) = hook.accrued(pid);
-        assertEq(cash, stockOut, "conversion produces stock, without adding another 3% tax");
-        assertEq(hook.pendingTokenFees(pid), 0);
-    }
-
-    function testConversionCannotSpendDonatedTokens() public {
-        _swap(false, -int256(1e18));
-        (uint256 taxed,) = hook.accrued(pid);
-        token.transfer(address(hook), 123e18);
-        (uint256 used,) = _convert(type(uint256).max, 1, _limit(50));
-        assertEq(used, taxed);
-        assertEq(token.balanceOf(address(hook)), 123e18);
-        assertEq(hook.pendingTokenFees(pid), 0);
-        assertEq(_tokenClaim(), 0);
-    }
-
     function testTwoPoolsOnSameStockKeepTheirFeesSeparate() public {
         _swap(false, -int256(1e18));
-        (uint256 firstTax,) = hook.accrued(pid);
-        hook.sweep(pid);
+        (, uint256 firstFee) = hook.accrued(pid);
         nextNonce = lastNonce + 1;
         (, HedgeFunBondingCurve secondCurve, PoolKey memory secondKey) = _launchV2(tokenIsCurrency0());
         _graduateV2(secondCurve);
         PoolId secondId = secondKey.toId();
-        swapRouter.swap(secondKey, SwapParams({zeroForOne: !tokenIsCurrency0(), amountSpecified: -int256(1e18),
+        swapRouter.swap(secondKey, SwapParams({zeroForOne: !tokenIsCurrency0(), amountSpecified: -int256(2e18),
             sqrtPriceLimitX96: tokenIsCurrency0() ? TickMath.MAX_SQRT_PRICE - 1 : TickMath.MIN_SQRT_PRICE + 1}),
             PoolSwapTest.TestSettings({takeClaims: false, settleUsingBurn: false}), "");
-        (uint256 secondTax,) = hook.accrued(secondId);
+        (, uint256 secondFee) = hook.accrued(secondId);
+        assertEq(firstFee, 0.03e18);
+        assertEq(secondFee, 0.06e18);
+        assertEq(_stockClaim(), firstFee + secondFee, "one currency, two pools' claims");
+        uint256 firstTreasury = stock.balanceOf(curve.treasury());
         hook.sweep(secondId);
-        assertGt(secondTax, 0);
-        assertEq(hook.pendingTokenFees(pid), firstTax);
-        assertEq(hook.pendingTokenFees(secondId), secondTax);
-        (, uint256 stockOut) = _convert(firstTax, 1, _limit(50));
-        assertEq(hook.pendingTokenFees(secondId), secondTax);
-        assertEq(pm.balanceOf(address(hook), uint256(uint160(secondCurve.token()))), secondTax);
+        assertEq(_stockClaim(), firstFee, "pool 2 redeems its own claims and no more");
+        assertEq(stock.balanceOf(curve.treasury()), firstTreasury);
+        (, uint256 stillFirst) = hook.accrued(pid);
+        assertEq(stillFirst, firstFee);
         uint256 p = stock.balanceOf(protocol);
-        hook.sweep(secondId);
-        assertEq(stock.balanceOf(protocol), p, "pool 2 cannot redeem pool 1's shared-stock claims");
-        assertEq(_stockClaim(), stockOut);
-        (, uint256 secondCash) = hook.accrued(secondId);
-        assertEq(secondCash, 0);
+        uint256 c = stock.balanceOf(address(this));
+        hook.sweep(pid);
+        _assertSplit(firstFee, p, c, firstTreasury);
+        assertEq(_stockClaim(), 0);
     }
 
-    function testStockRedemptionFailureDoesNotStrandPendingBuyClaims() public {
+    function testStockRedemptionFailureKeepsTheBuyFeeForALaterSweep() public {
         _swap(false, -int256(1e18));
         _swap(true, -int256(100e18));
-        (uint256 taxed, uint256 oldStockFees) = hook.accrued(pid);
-        assertGt(taxed, 0);
-        assertGt(oldStockFees, 0);
+        (uint256 at, uint256 stockFees) = hook.accrued(pid);
+        assertEq(at, 0);
         stock.blockRecipient(address(hook));
         hook.sweep(pid);
-        (uint256 tokenAccrued, uint256 stockAccrued) = hook.accrued(pid);
-        assertEq(tokenAccrued, 0);
-        assertEq(stockAccrued, oldStockFees);
-        assertEq(hook.pendingTokenFees(pid), taxed);
-        assertEq(_tokenClaim(), taxed);
-        (, uint256 stockOut) = _convert(taxed, 1, _limit(50));
-        assertEq(hook.pendingTokenFees(pid), 0);
-        assertEq(_stockClaim(), oldStockFees + stockOut);
+        (, uint256 stillAccrued) = hook.accrued(pid);
+        assertEq(stillAccrued, stockFees);
+        assertEq(_stockClaim(), stockFees);
         stock.blockRecipient(address(0));
         uint256 p = stock.balanceOf(protocol);
         uint256 c = stock.balanceOf(address(this));
         uint256 t = stock.balanceOf(curve.treasury());
         hook.sweep(pid);
-        _assertSplit(oldStockFees + stockOut, p, c, t);
+        _assertSplit(stockFees, p, c, t);
         assertEq(_stockClaim(), 0);
-    }
-
-    function testFactoryOwnershipTransferChangesConverterAuthorization() public {
-        _swap(false, -int256(1e18));
-        (uint256 taxed,) = hook.accrued(pid);
-        address successor = address(0xA0B0C0);
-        vm.prank(owner);
-        factory.transferOwnership(successor);
-        vm.prank(successor);
-        factory.acceptOwnership();
-        uint160 limit = _limit(50);
-        vm.prank(owner);
-        vm.expectRevert(HedgeFunHook.NotOwner.selector);
-        hook.convertFees(key, taxed, 1, limit, block.timestamp);
-        vm.prank(successor);
-        (uint256 used,) = hook.convertFees(key, taxed, 1, limit, block.timestamp);
-        assertEq(used, taxed);
     }
 }
 

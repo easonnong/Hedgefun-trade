@@ -46,6 +46,10 @@ contract HedgeFunMathTest is Test {
         assertEq(Hooks.BEFORE_INITIALIZE_FLAG | Hooks.BEFORE_ADD_LIQUIDITY_FLAG | Hooks.AFTER_SWAP_FLAG | Hooks.AFTER_SWAP_RETURNS_DELTA_FLAG, 0x2844);
     }
 
+    function test_theV2HookAddsTheTwoBeforeSwapFlags() public pure {
+        assertEq(0x2844 | Hooks.BEFORE_SWAP_FLAG | Hooks.BEFORE_SWAP_RETURNS_DELTA_FLAG, 0x28CC);
+    }
+
     function legacyReached(uint256 p, uint256 cost, uint16 rate) external pure returns (bool) {
         // Keep the uint16 intermediate exactly as it was before PR #44.
         return !(p * 1e4 < cost * (1e4 + rate));
