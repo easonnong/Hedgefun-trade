@@ -56,8 +56,18 @@ and a dip waits for `book()`. A keeper calls `book()` before `execute()`.
 If the stock token refuses the transfer to the staking pool, that share stays in the buy-back budget. A
 take-profit is never blocked by the dividend. The funding is not attempted with less than `FUND_GAS_FLOOR`
 (500,000) gas left: a `book()` or `execute()` that reaches the split with less reverts `FundingStarved`, so a
-caller cannot pick a gas limit that fails the funding and leaves the stakers' share in the buy-back. Send these
-calls with ordinary headroom; unused gas is not charged.
+caller cannot pick a gas limit that fails the funding and leaves the stakers' share in the buy-back. Unused gas
+is not charged, but the limit has to be there: a keeper that sets its gas limit from a simulation's `gasUsed`
+plus a small margin will revert `FundingStarved` on every call that reaches the split. Give `book()` and
+`execute()` on these two kinds at least 600,000 gas more than the simulation used.
+
+Graduation is the one place this is not an error. The factory calls `book()` inside a `try` and ignores a
+failure, so a graduating transaction that reaches the split without the floor still succeeds, with
+`GraduationCapitalSplit(..., booked = false)`: the principal lot is not opened and the income is not split until
+someone calls `book()`. A node's gas estimate looks for the lowest limit at which the transaction succeeds, and
+here that can be one at which the inner `book()` fails. Nothing is lost or misrouted, and any later `book()`
+with enough gas completes it. Whoever sends the buy that graduates one of these kinds should add the same
+600,000 to the estimate, and a keeper should treat `booked = false` as a call to make.
 
 The staking pool's `totalFunded` and its `IncomeFunded` event are the record of what was paid; the treasury keeps
 no second counter. Run `forge build --sizes` on the candidate commit to check the limited runtime headroom.

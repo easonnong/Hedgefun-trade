@@ -48,7 +48,7 @@ and is enough to review a pull request.
 
 Product consolidation is tracked in [TREASURY_PROFILES.md](./TREASURY_PROFILES.md): named product choices,
 the implemented schema-3 tradable-capital percentages, and explicit price/cycle/buyback/frontend follow-ups.
-The recommended rungs for the ordinary stock strategy, the keeper reward and the percentage buy-back kind, with
+The recommended rule and rungs for the stock strategies, the keeper reward and the percentage buy-back kind, with
 the backtest behind them, are in [STRATEGY_PARAMETERS.md](./STRATEGY_PARAMETERS.md).
 
 **Identify the deployment version before describing its permissions.** New default V2 kind-0 treasuries and the

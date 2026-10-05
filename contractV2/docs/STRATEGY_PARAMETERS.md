@@ -77,9 +77,11 @@ the contracts themselves would have read.
 
 Over three and a half months the picture is the other way round for the rebalance rule: it reserved almost nothing,
 because it only ever sells the slice above its target and its buy-backs build with the trend. The lot rules paid
-from the first take-profit. The cycle rule matched or beat the ordinary one on the stocks that rose and equalled it
-elsewhere; where the stock only fell (ORCL, CRWV) neither lot rule acted at all and the rebalance rule lost less
-for the cash it held.
+from the first take-profit. Between the two lot rules at 3% / 6% / 3% this window does not pick a winner: the
+cycle rule bought back more on MSTR, AMD and PLTR, the ordinary rule bought back more or ended higher on COIN,
+TSLA and MU, and the two were equal on the other four. Where the stock only fell (ORCL, CRWV) neither lot rule
+acted at all and the rebalance rule lost less for the cash it held. The case for the cycle rule rests on the
+three-year table above, whose stocks were picked for being volatile and mostly rose several-fold.
 
 ## The ordinary rule's rungs, on TSLA
 
@@ -141,28 +143,59 @@ scheduler suite it inherits, runs against the new logic in both asset orders.
   (2.1% with a 1% limit and a 0.05% pool). 3% / 6% / 3% is launchable; 1% / 2% / 1% is not.
 - `reentryPending()` and `recoveryDue()` are not in it. `reentrySaleAt != 0` is the first; a keeper simulates
   `execute()` for the second.
-- **The logic's runtime is 24,548 bytes, 28 under the limit.** To get there the proxy's parameters are written as
+- **The logic's runtime is 24,532 bytes, 44 under the limit.** To get there the proxy's parameters are written as
   five raw storage words that the proxy's constructor packs, in place of a struct copy in the logic (about 550
   bytes), and the two views above were left in the directly deployed contract only. A fuzz test deploys the proxy
   with every parameter at arbitrary values and compares all of them. Anything added to this logic has to take
   something out.
 - `script/RegisterV2UpgradeableCycle.s.sol` appends the kind in three operator transactions, behind the
   reviewed-registry guard. The registry applies its stop check to it as to every kind that is not kind 0.
+- The registry checks a creator's rungs by name only for kind 0. For this kind, rungs under the floor above (or
+  any other parameter its constructor refuses) still get an address and terms from `predict`, and the launch
+  then reverts `TreasuryDeployFailed`. A front end has to apply the floor itself before quoting.
+
+### What the recovery entry does to the rest of the rule
+
+Three properties of the rule as it is written. They are tested behaviour, not defects, and they are not what
+"buys once more, up to the listing's chunk" suggests on its own.
+
+- **The recovery buy moves the dip ladder up.** Every buy, the recovery buy included, sets the price the next dip
+  is measured from. The chunk caps the recovery buy; it does not cap the dip that follows. With 3% / 6% / 3%,
+  half the cash per buy, a 2,000 USDG chunk and 100,000 USDG in reserve after a take-profit at 106.00: the
+  recovery buy fires at 109.18 and spends 2,000; a pull-back to 105.90 is then an ordinary dip, 3% under 109.18,
+  and spends half of the remaining 98,000. One failed 3% break-out puts about half the reserve back into stock
+  just under the price it was sold at. The ordinary rule would have waited for 102.82.
+- **The recovery anchor does not expire.** It is the price of the last live-market sale of at least `minLotUsdg`.
+  It stays until the next buy of either kind consumes it, a closed-market sale cancels it, or another such sale
+  replaces it. A later stop under `minLotUsdg` renews the wait but does not replace the anchor, so a recovery can
+  fire at a price unrelated to the most recent sale.
+- **A closed-market sale of at least `minLotUsdg` cancels a pending entry.** On a treasury with a band, a
+  take-profit at the pool's price during a scheduled closure clears the anchor a live sale set. If the stock then
+  opens higher there is no recovery entry, and the next buy is a dip under that closed-market sale.
 
 The directly deployed `HedgeFunV2CycleTreasury` is still not registered anywhere and is not upgradeable.
 
 ## The keeper reward
 
 `bountyBps` is a factory default, frozen into each treasury at launch. `SetV2KeeperReward` changes it for future
-launches in one owner transaction, sends every other default back unchanged and requires that nothing else moved.
-A launch quoted before the change has to be quoted again.
+launches in one owner transaction. `setDefaults` replaces the whole struct, so the script sends every other
+default back as it read it, and it refuses to build the transaction unless the factory's defaults hash to
+`EXPECTED_DEFAULTS_HASH`, the snapshot that was reviewed. That check is the simulation's: a `setDefaults` that
+lands between the simulation and the broadcast is still overwritten, so do not run this beside another owner
+operation, and run `VerifyV2KeeperReward` against the confirmed chain afterwards. A launch quoted before the
+change has to be quoted again.
 
 At 0.1% a take-profit's reward is cents: a 2,000 USDG sale at a 3% gain carries about 0.06 USDG. Nobody outside
 will call `execute()` for that, so a lower reward means running the keeper.
 
 ```sh
-export OPERATOR=<owner> V2_FACTORY=<factory> KEEPER_REWARD_BPS=10
+export OPERATOR=<owner> V2_FACTORY=<factory> KEEPER_REWARD_BPS=10 EXPECTED_CHAIN_ID=<chain id>
+# keccak256(abi.encode(factory.getDefaults())) of the defaults that were read and reviewed
+export EXPECTED_DEFAULTS_HASH=<hash>
 forge script script/SetV2KeeperReward.s.sol:SetV2KeeperReward --rpc-url "$RPC_URL" --sender "$OPERATOR"
+# after the transaction is confirmed, with the hash the run above logged
+export EXPECTED_DEFAULTS_HASH_AFTER=<hash>
+forge script script/SetV2KeeperReward.s.sol:VerifyV2KeeperReward --rpc-url "$RPC_URL"
 ```
 
 ## The percentage buy-back
@@ -197,7 +230,7 @@ Two ways to get it:
 - **A live kind-0 treasury**: `HedgeFunV2PercentBuybackTreasuryLogic` keeps kind 0's storage and identity, so the
   owner can schedule it through the upgrade controller for that treasury, with the two-day notice.
 
-The logic's runtime is 24,536 bytes, 40 under the limit. The hook it overrides, `_buybackChunk` in
+The logic's runtime is 24,520 bytes, 56 under the limit. The hook it overrides, `_buybackChunk` in
 `HedgeFunTreasuryBase`, added 10 bytes to every treasury. Kind 0's creation code therefore differs from the one
 the deployed registries were built with; `ReviewedTreasuryRegistry` and `tools/treasury_profile_config.py` now
 accept a registry whose kind 0 is either that reviewed code, by its pinned hash, or this source's own.
@@ -212,8 +245,10 @@ accept a registry whose kind 0 is either that reviewed code, by its pinned hash,
   schema-3 treasury with realised-net-income accounting, fourteen steps (same actions; stock, cash, reserve and
   loss carry within one part in ten million). On the first fork path the buy-backs came to 9 calls where the
   model counts 5, because the token pool's impact cap fills a call short; the model's buy-back counts are low.
-- The rebalance model follows the accounting proposed in #31 (separate daily budgets, net income after costs and
-  recovered losses). If that does not merge as it stands, its rows here describe a rule this branch does not have.
+- The rebalance model follows the schema-3 treasury's accounting as merged from #31 (separate daily budgets, net
+  income after costs and recovered losses).
+- The ten-stock tables use one cost setting, a 0.05% pool fee and a 0.1% keeper reward. Chain 46630's TSLA listing
+  charges 0.3% and 0.5% today. Only the TSLA tables are repeated at those costs.
 - The ten stocks were picked for being volatile, and in these three years most of them rose several-fold. A
   sample like that flatters every rule that stays invested. It says which rule copes with a trend; it says
   nothing about a bear market, where all three follow the stock down.

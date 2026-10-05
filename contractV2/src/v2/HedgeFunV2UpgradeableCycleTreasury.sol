@@ -24,7 +24,7 @@ import {V2TreasuryUpgradeController} from "./V2TreasuryUpgradeController.sol";
 ///
 /// The rungs keep the legacy floor: `tp1Bps` and `dipBps` at least twice the listing's slippage limit plus pool fee.
 ///
-/// The runtime is 28 bytes under EIP-170. That is why the proxy's parameters are initialised as five raw storage
+/// The runtime is 44 bytes under EIP-170. That is why the proxy's parameters are initialised as five raw storage
 /// words, which the proxy's constructor packs, and not by a struct copy in this contract: the copy alone is some
 /// 550 bytes of runtime. Anything added here has to take something out.
 contract HedgeFunV2UpgradeableCycleTreasuryLogic is HedgeFunV2CycleTreasuryCore {
