@@ -18,8 +18,10 @@ import {V2TreasuryUpgradeController} from "../src/v2/V2TreasuryUpgradeController
 import {RegisterV2UpgradeableCycle} from "../script/RegisterV2UpgradeableCycle.s.sol";
 import {ReviewedTreasuryRegistry} from "../script/helpers/ReviewedTreasuryRegistry.sol";
 
-/// Every test written for `HedgeFunV2CycleTreasury`, and every scheduler test it inherits, against the upgradeable
-/// logic: the same rule, on real concentrated-liquidity fills, in both asset orders.
+/// The cycle rule's tests, and the scheduler tests they inherit, against the upgradeable logic deployed directly:
+/// the same rule, on real concentrated-liquidity fills, in both asset orders. Thirteen of the inherited scheduler
+/// tests deploy a plain `HedgeFunV2Treasury` of their own and so say nothing about this kind; the rest run the
+/// logic's code over the logic's own storage. `V2UpgradeableCycleThroughProxyBase` runs them through the proxy.
 abstract contract V2UpgradeableCycleRuleBase is V2CycleBase {
     /// @dev the directly deployed contract with the same constructor arguments, so the same immutables
     HedgeFunV2CycleTreasury private twin;
@@ -50,6 +52,49 @@ contract V2UpgradeableCycleRuleStock0Test is V2UpgradeableCycleRuleBase {
 }
 
 contract V2UpgradeableCycleRuleStock1Test is V2UpgradeableCycleRuleBase {
+    function stockIsCurrency0() internal pure override returns (bool) { return false; }
+}
+
+/// The same suite with every call made THROUGH the proxy, which is how a launched treasury is reached: the rule
+/// runs by delegatecall over the proxy's storage, on the parameters the proxy's constructor packed as raw words,
+/// with the reentrancy status the proxy never initialised, and the stock pool's swap callback arrives at the
+/// proxy's fallback. Take-profit, stop, dip and recovery all execute this way.
+abstract contract V2UpgradeableCycleThroughProxyBase is V2CycleBase {
+    HedgeFunV2CycleTreasury private twin;
+    V2TreasuryUpgradeController private proxyController;
+
+    /// @dev the proxy asks its deployer, in place of the registry, for the controller
+    function upgradeController() external view returns (V2TreasuryUpgradeController) { return proxyController; }
+
+    function _deployCycle(HedgeFunTreasuryBase.Params memory p) internal override {
+        if (address(proxyController) == address(0)) proxyController = new V2TreasuryUpgradeController();
+        HedgeFunV2UpgradeableCycleTreasury proxy = new HedgeFunV2UpgradeableCycleTreasury(
+            address(usdg), address(stock), address(mirror), address(oracle), address(token), address(pm), address(this), p);
+        assertEq(proxy.implementation(), proxy.initialImplementation());
+        cycle = HedgeFunV2CycleTreasury(address(proxy));
+        twin = new HedgeFunV2CycleTreasury(
+            address(usdg), address(stock), address(mirror), address(oracle), address(token), address(pm), address(this), p);
+        treasury = cycle;
+        cycle.wire(_tokenKey());
+    }
+
+    function _pending() internal view override returns (bool) { return cycle.reentrySaleAt() != 0; }
+
+    /// @dev As in `V2UpgradeableCycleRuleBase`: the direct contract's view, for this one read, over the storage
+    ///      the proxy holds.
+    function _due() internal override returns (bool due) {
+        bytes memory proxyCode = address(cycle).code;
+        vm.etch(address(cycle), address(twin).code);
+        due = cycle.recoveryDue();
+        vm.etch(address(cycle), proxyCode);
+    }
+}
+
+contract V2UpgradeableCycleThroughProxyStock0Test is V2UpgradeableCycleThroughProxyBase {
+    function stockIsCurrency0() internal pure override returns (bool) { return true; }
+}
+
+contract V2UpgradeableCycleThroughProxyStock1Test is V2UpgradeableCycleThroughProxyBase {
     function stockIsCurrency0() internal pure override returns (bool) { return false; }
 }
 

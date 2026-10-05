@@ -108,6 +108,7 @@ contract V2TradablePercentAuditTest is V2TradablePercentEngineFixture {
             abi.encode(
                 trading,
                 custody,
+                _budgetDigest(t),
                 t.totalStockReceived(),
                 t.lastGoodPrice(),
                 t.lastGoodPriceAt(),
@@ -117,6 +118,26 @@ contract V2TradablePercentAuditTest is V2TradablePercentEngineFixture {
                 t.engineConfig()
             )
         );
+    }
+
+    /// @dev The directional budget and the loss carry live in their own storage namespace.
+    function _budgetDigest(HedgeFunV2TradablePercentEngineTreasuryCore t) private view returns (bytes32) {
+        (uint64 epoch, uint256 basis, uint256 buyCap, uint256 sellCap, uint256 bought, uint256 sold) = t.dailyRiskLimits();
+        return keccak256(abi.encode(epoch, basis, buyCap, sellCap, bought, sold, t.unrecoveredLossUsdg()));
+    }
+
+    /// @dev `riskLimits` adds the two directions together. This is the traded direction's own daily cap: a policy
+    ///      that could spend both budgets one way would pass against the sum.
+    function _directionCap(HedgeFunV2TradablePercentEngineTreasuryCore t, bool buy, uint256 dailyBps)
+        private
+        view
+        returns (uint256 cap)
+    {
+        (, uint256 basis, uint256 buyCap, uint256 sellCap,,) = t.dailyRiskLimits();
+        cap = buy ? buyCap : sellCap;
+        assertEq(cap, Math.mulDiv(basis, dailyBps, 10_000));
+        (,,,, uint256 daily,,,) = t.riskLimits();
+        assertEq(daily, buyCap + sellCap);
     }
 
     function testFuzz_partialFillUsesIndependentDirectionalCapsAndActualReward(
@@ -192,9 +213,10 @@ contract V2TradablePercentAuditTest is V2TradablePercentEngineFixture {
         t.creditLiquidityFee(900_000e18);
         assertEq(t.buybackStock(), 900_000e18);
         assertEq(keccak256(abi.encode(_auditRisk(t))), keccak256(abi.encode(before_)));
+        uint256 sellCap = _directionCap(t, false, 5000);
         t.execute();
         assertEq(t.buybackStock(), 900_000e18, "strategy must not spend reserved LP income");
-        assertLe(t.turnoverInEpoch(), before_.daily);
+        assertLe(t.turnoverInEpoch(), sellCap, "a sale is held to the sell direction's own cap");
     }
 
     function test_unbookedDonationIsCountedOnceAndOnlyForItsInputAsset() public {
@@ -339,19 +361,20 @@ contract V2TradablePercentAuditTest is V2TradablePercentEngineFixture {
         if (buy) usdg.mint(address(t), 100_000e6);
         uint256 held = t.bookedStock();
         uint256 cash = t.reserveUsdg();
-        AuditRisk memory r = _auditRisk(t);
+        uint256 cap = _directionCap(t, buy, 500);
         (bool due, StrategyAction action, uint256 offered) = t.preview();
         assertTrue(due);
         assertEq(uint256(action), uint256(buy ? StrategyAction.BuyStock : StrategyAction.SellStock));
         if (buy) {
             assertLe(offered, Math.mulDiv(cash, bps, 10_000));
-            assertLe(offered, r.remaining);
+            assertLe(offered, cap);
         } else {
             assertLe(offered, Math.mulDiv(held, bps, 10_000));
-            assertLe(Math.mulDiv(offered, 100e18, SCALE), r.remaining);
+            assertLe(Math.mulDiv(offered, 100e18, SCALE), cap);
         }
         t.execute();
-        assertLe(t.turnoverInEpoch(), r.daily);
+        assertLe(t.turnoverInEpoch(), cap);
+        assertGt(t.turnoverInEpoch(), cap / 2, "the daily cap, not the action cap, is what bound this action");
         if (buy) assertLe(cash - t.reserveUsdg(), Math.mulDiv(cash, bps, 10_000));
         else assertLe(held - t.bookedStock(), Math.mulDiv(held, bps, 10_000));
     }
