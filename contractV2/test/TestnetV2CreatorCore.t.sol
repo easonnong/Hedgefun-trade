@@ -3,8 +3,8 @@ pragma solidity ^0.8.24;
 
 import {Test} from "forge-std/Test.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import {DeployV2CreatorTestnet} from "../script/DeployV2CreatorTestnet.s.sol";
-import {DeployV2FeeUpgradeTestnet} from "../script/DeployV2FeeUpgradeTestnet.s.sol";
+import {DeployV2CreatorTestnet} from "../script/testnet/DeployV2CreatorTestnet.s.sol";
+import {DeployV2FeeUpgradeTestnet} from "../script/testnet/DeployV2FeeUpgradeTestnet.s.sol";
 import {HedgeFunFactory} from "../src/HedgeFunFactory.sol";
 import {HedgeFunV2Factory} from "../src/v2/HedgeFunV2Factory.sol";
 import {HedgeFunV2Treasury} from "../src/v2/HedgeFunV2Treasury.sol";

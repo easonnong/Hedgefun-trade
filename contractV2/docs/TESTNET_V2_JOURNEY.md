@@ -42,7 +42,7 @@ The deployment itself was checked independently against 72 canonical receipts, c
 
 ## Rehearsal and signing
 
-The journey script `script/TestnetV2Journey.s.sol` pins this deployment's addresses and refuses another chain or sender. It holds no key. A phase runs as a read-only simulation unless a user supplies a testnet-only encrypted keystore with `--broadcast`. The fork test below rehearses the full lifecycle without sending transactions:
+The journey script `script/testnet/TestnetV2Journey.s.sol` pins this deployment's addresses and refuses another chain or sender. It holds no key. A phase runs as a read-only simulation unless a user supplies a testnet-only encrypted keystore with `--broadcast`. The fork test below rehearses the full lifecycle without sending transactions:
 
 ```sh
 RUN_TESTNET_FORK=true forge test --match-contract TestnetV2JourneyForkTest --fork-url https://rpc.testnet.chain.robinhood.com -vv

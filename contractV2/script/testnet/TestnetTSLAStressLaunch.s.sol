@@ -3,9 +3,9 @@ pragma solidity ^0.8.24;
 
 import {Script, console2} from "forge-std/Script.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import {HedgeFunFactory} from "../src/HedgeFunFactory.sol";
-import {HedgeFunV2Factory} from "../src/v2/HedgeFunV2Factory.sol";
-import {CurveDeployer} from "../src/v2/CurveDeployer.sol";
+import {HedgeFunFactory} from "../../src/HedgeFunFactory.sol";
+import {HedgeFunV2Factory} from "../../src/v2/HedgeFunV2Factory.sol";
+import {CurveDeployer} from "../../src/v2/CurveDeployer.sol";
 
 /// @dev Creates one isolated Robinhood testnet TSLA strategy. The broadcast signer is an
 /// encrypted testnet keystore supplied to forge, never an environment or CLI private key.

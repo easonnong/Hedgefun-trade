@@ -1,5 +1,5 @@
 {
- "_": "Planned V2 listing set: the eighteen stocks listed on the V1 factory, with the V2 parameters of script/RehearseV2Launchpad.s.sol and the gates and sell chunks those V1 listings use today. The default input of tools/v2_launch_check.py until a V2 factory exists; once it does, run the check with --factory and this file supplies only the list of stocks. Every per-stock field carries a source tag, defined in `sources`. `fee` is informational: the check reads the fee tier from the pool itself.",
+ "_": "Planned V2 listing set: the eighteen stocks listed on the V1 factory, with the V2 parameters of script/mainnet/RehearseV2Launchpad.s.sol and the gates and sell chunks those V1 listings use today. The default input of tools/v2_launch_check.py until a V2 factory exists; once it does, run the check with --factory and this file supplies only the list of stocks. Every per-stock field carries a source tag, defined in `sources`. `fee` is informational: the check reads the fee tier from the pool itself.",
  "chainId": 4663,
  "v1Factory": "0x58F6Ced8d02cD2567f1458801440Bc4eb67fA961",
  "readAt": {
@@ -11,7 +11,7 @@
   "v1.listings": "HedgeFunFactory(v1Factory).listings(stock) -> (oracle, v3Pool, openPriceE18, enabled) at readAt.block; matches docs/ADDRESSES.md. openPriceE18 is the V1 '$10k opening FDV' at 2026-09-22/24 prices, fixed in stock units; V2 reuses it (round 3's probes did the same).",
   "v1.listingGates": "HedgeFunFactory(v1Factory).listingGates(stock) at readAt.block, a non-zero value the listing set itself.",
   "v1.defaults": "HedgeFunFactory(v1Factory).getDefaults() at readAt.block, applied as HedgeFunFactory._gates does: the (maxDeviationBps, maxSlippageBps) pair falls back as a pair when the listing's maxSlippageBps is 0 (50 / 100); the chunk falls back on its own when 0 (2,000 USDG). The rehearsal's candidate defaults are the same numbers.",
-  "rehearsal": "script/RehearseV2Launchpad.s.sol _defaults(): supply = 1_000_000_000e18.",
+  "rehearsal": "script/mainnet/RehearseV2Launchpad.s.sol _defaults(): supply = 1_000_000_000e18.",
   "v2.default": "CurveDeployer.DEFAULT_SALE_BPS = 4400: the raise every V2 launch gets when its creator registers no saleBps (CurveDeployer.setCurveConfig). The owner sets no per-stock value. At 4400 the live launch check passed 15 of 18 stocks at block 75,085,620 (docs/V2_DEPLOYMENT_REHEARSAL.md). Until 2026-09-28 the source default was HedgeFunV2Factory.DEFAULT_SALE_BPS = 8000.",
   "creator": "A creator's proposed saleBps for one launch (1000..9000, CurveDeployer.setCurveConfig), put on a stock's own entry or given as --sale-bps. The verdict for it is advisory: shown to the creator as a warning, never refused on chain."
  },

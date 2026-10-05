@@ -6,22 +6,22 @@ import {VmSafe} from "forge-std/Vm.sol";
 import {Math} from "@openzeppelin/contracts/utils/math/Math.sol";
 import {IPoolManager} from "v4-core/src/interfaces/IPoolManager.sol";
 import {TickMath} from "v4-core/src/libraries/TickMath.sol";
-import {HedgeFunFactory, TokenDeployer} from "../src/HedgeFunFactory.sol";
-import {HedgeFunV2Hook} from "../src/hooks/HedgeFunV2Hook.sol";
-import {HedgeFunV2Factory} from "../src/v2/HedgeFunV2Factory.sol";
-import {V2TreasuryDeployer} from "../src/v2/V2TreasuryDeployer.sol";
-import {HedgeFunV2UpgradeableBuybackTreasury} from "../src/v2/HedgeFunV2UpgradeableBuybackTreasury.sol";
-import {HedgeFunV2UpgradeableEngineTreasury} from "../src/v2/HedgeFunV2UpgradeableEngineTreasury.sol";
-import {V2RebalancePolicy} from "../src/v2/strategy/V2RebalancePolicy.sol";
-import {StrategyCapabilities} from "../src/v2/strategy/IStrategyPolicy.sol";
-import {CurveDeployer} from "../src/v2/CurveDeployer.sol";
-import {HedgeFunV2TradeRouter} from "../src/v2/HedgeFunV2TradeRouter.sol";
-import {HedgeFunV2NativeRouter, IWrappedNative} from "../src/v2/HedgeFunV2NativeRouter.sol";
-import {PriceOracle} from "../src/PriceOracle.sol";
-import {TradingCalendar} from "../src/TradingCalendar.sol";
-import {TestUsdg, TestStock, TestFeed} from "./testnet/TestnetAssets.sol";
-import {TestnetMarket, IV3Factory, IV3Pool} from "./testnet/TestnetMarket.sol";
-import {V2LaunchFeeDefaults} from "./testnet/V2LaunchFeeDefaults.sol";
+import {HedgeFunFactory, TokenDeployer} from "../../src/HedgeFunFactory.sol";
+import {HedgeFunV2Hook} from "../../src/hooks/HedgeFunV2Hook.sol";
+import {HedgeFunV2Factory} from "../../src/v2/HedgeFunV2Factory.sol";
+import {V2TreasuryDeployer} from "../../src/v2/V2TreasuryDeployer.sol";
+import {HedgeFunV2UpgradeableBuybackTreasury} from "../../src/v2/HedgeFunV2UpgradeableBuybackTreasury.sol";
+import {HedgeFunV2UpgradeableEngineTreasury} from "../../src/v2/HedgeFunV2UpgradeableEngineTreasury.sol";
+import {V2RebalancePolicy} from "../../src/v2/strategy/V2RebalancePolicy.sol";
+import {StrategyCapabilities} from "../../src/v2/strategy/IStrategyPolicy.sol";
+import {CurveDeployer} from "../../src/v2/CurveDeployer.sol";
+import {HedgeFunV2TradeRouter} from "../../src/v2/HedgeFunV2TradeRouter.sol";
+import {HedgeFunV2NativeRouter, IWrappedNative} from "../../src/v2/HedgeFunV2NativeRouter.sol";
+import {PriceOracle} from "../../src/PriceOracle.sol";
+import {TradingCalendar} from "../../src/TradingCalendar.sol";
+import {TestUsdg, TestStock, TestFeed} from "./TestnetAssets.sol";
+import {TestnetMarket, IV3Factory, IV3Pool} from "./TestnetMarket.sol";
+import {V2LaunchFeeDefaults} from "./V2LaunchFeeDefaults.sol";
 
 /// @notice The whole Hedgefun V2 launchpad on the PUBLIC Robinhood Chain testnet (chain 46630), with test doubles
 ///         for everything the testnet lacks: a Uniswap V3 factory (from the vendored bytecode, byte-identical to
@@ -31,7 +31,7 @@ import {V2LaunchFeeDefaults} from "./testnet/V2LaunchFeeDefaults.sol";
 /// @dev Refuses every chain but 46630. The operator's EOA is the broadcaster, factory owner and (by default) protocol
 ///      recipient: there is no Safe on this deployment and nothing on it has value. See docs/TESTNET_V2.md.
 ///
-///      OPERATOR=0x.. forge script script/DeployV2Testnet.s.sol:DeployV2Testnet \
+///      OPERATOR=0x.. forge script script/testnet/DeployV2Testnet.s.sol:DeployV2Testnet \
 ///        --rpc-url https://rpc.testnet.chain.robinhood.com --sender $OPERATOR            # dry run
 ///      ... --account <keystore> --broadcast --slow                                        # the operator's deployment
 contract DeployV2Testnet is Script {

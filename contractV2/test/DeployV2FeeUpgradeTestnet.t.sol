@@ -14,9 +14,9 @@ import {HedgeFunBondingCurve} from "../src/v2/HedgeFunBondingCurve.sol";
 import {HedgeFunHook} from "../src/hooks/HedgeFunHook.sol";
 import {HedgeFunV2TradeRouter} from "../src/v2/HedgeFunV2TradeRouter.sol";
 import {HedgeFunV2Treasury} from "../src/v2/HedgeFunV2Treasury.sol";
-import {DeployV2Testnet} from "../script/DeployV2Testnet.s.sol";
-import {DeployV2FeeUpgradeTestnet} from "../script/DeployV2FeeUpgradeTestnet.s.sol";
-import {DeployV2FreshCreatorTestnet} from "../script/DeployV2FreshCreatorTestnet.s.sol";
+import {DeployV2Testnet} from "../script/testnet/DeployV2Testnet.s.sol";
+import {DeployV2FeeUpgradeTestnet} from "../script/testnet/DeployV2FeeUpgradeTestnet.s.sol";
+import {DeployV2FreshCreatorTestnet} from "../script/testnet/DeployV2FreshCreatorTestnet.s.sol";
 import {IV3Pool} from "../script/testnet/TestnetMarket.sol";
 import {MockToken} from "./mocks/Mocks.sol";
 

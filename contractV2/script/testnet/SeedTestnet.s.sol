@@ -2,10 +2,10 @@
 pragma solidity ^0.8.24;
 
 import {Script, console2} from "forge-std/Script.sol";
-import {PriceOracle} from "../src/PriceOracle.sol";
-import {TestUsdg, TestStock} from "./testnet/TestnetAssets.sol";
-import {TestnetMarket, IV3Pool} from "./testnet/TestnetMarket.sol";
-import {HedgeFunV2Factory} from "../src/v2/HedgeFunV2Factory.sol";
+import {PriceOracle} from "../../src/PriceOracle.sol";
+import {TestUsdg, TestStock} from "./TestnetAssets.sol";
+import {TestnetMarket, IV3Pool} from "./TestnetMarket.sol";
+import {HedgeFunV2Factory} from "../../src/v2/HedgeFunV2Factory.sol";
 
 /// @notice Funds team wallets on the Hedgefun V2 testnet deployment (chain 46630) with test assets, and makes each
 ///         stock's pool ready for treasuries. Reads the address book `DeployV2Testnet` wrote. Operator only: the
@@ -20,7 +20,7 @@ import {HedgeFunV2Factory} from "../src/v2/HedgeFunV2Factory.sol";
 /// 100,000) and SEED_STOCK_USD dollars of each test stock at its feed price (default 25,000). Test ETH for gas comes
 /// from the public faucet, never from here.
 ///
-///   OPERATOR=0x.. TEAM=0x..,0x.. forge script script/SeedTestnet.s.sol:SeedTestnet \
+///   OPERATOR=0x.. TEAM=0x..,0x.. forge script script/testnet/SeedTestnet.s.sol:SeedTestnet \
 ///     --rpc-url https://rpc.testnet.chain.robinhood.com --sender $OPERATOR [--account <keystore> --broadcast]
 contract SeedTestnet is Script {
     uint256 internal constant CHAIN_ID = 46630;

@@ -85,7 +85,7 @@ python3 tools/tsla_stress_replay.py local
 - `deploy/tsla-stress-local.json`: explicitly labelled local fork evidence.
 - `deploy/tsla-stress-wallets.json`: public test addresses only.
 - `test/V2TSLAStress.t.sol`: deterministic economic and failure cases.
-- `script/TestnetTSLAStressLaunch.s.sol`: guarded creation of a **new** test
+- `script/testnet/TestnetTSLAStressLaunch.s.sol`: guarded creation of a **new** test
   strategy, requiring a fresh nonce and matching testnet creator signer.
 
 The `audit` command is read-only against the public RPC. Historical balances

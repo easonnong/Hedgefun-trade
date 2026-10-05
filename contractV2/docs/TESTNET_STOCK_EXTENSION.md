@@ -5,7 +5,7 @@
 > document does not establish that those contracts or these four extra pools are deployed now. Before any
 > use, verify live addresses, roles, listings, chain state and available signer separately.
 
-`script/AddV2TestnetStocks.s.sol` extends the existing opening-tax-whitelist deployment on chain **46630**.
+`script/testnet/AddV2TestnetStocks.s.sol` extends the existing opening-tax-whitelist deployment on chain **46630**.
 Its historical targets are fixed in source: factory `0x3E95976E2425e63cb2A8d48BBce8976F55627019`, market
 `0xc1AF2f52980F8A7AA4E90A8E30D5c3FaF0375f21`, and operator `0x75Cee941B0eF3A83feA0397BbF903C12c1D7e96D`.
 The script verifies the existing factory/market/tUSDG/feed/calendar/V3Factory/treasury-deployer bindings before
@@ -41,7 +41,7 @@ or private key. A dry run needs only the public sender address:
 
 ```sh
 forge test --match-contract AddV2TestnetStocksTest
-GIT_COMMIT=$(git rev-parse HEAD) forge script script/AddV2TestnetStocks.s.sol:AddV2TestnetStocks \
+GIT_COMMIT=$(git rev-parse HEAD) forge script script/testnet/AddV2TestnetStocks.s.sol:AddV2TestnetStocks \
   --rpc-url https://rpc.testnet.chain.robinhood.com \
   --sender 0x75Cee941B0eF3A83feA0397BbF903C12c1D7e96D
 ```
@@ -73,7 +73,7 @@ At least one second after the pools' last write, invoke the separate script entr
 addresses from the verified transaction list (their order does not matter):
 
 ```sh
-forge script script/AddV2TestnetStocks.s.sol:AddV2TestnetStocks \
+forge script script/testnet/AddV2TestnetStocks.s.sol:AddV2TestnetStocks \
   --sig 'poke(address[4])' '[<MSFT pool>,<AMZN pool>,<GOOGL pool>,<META pool>]' \
   --rpc-url https://rpc.testnet.chain.robinhood.com \
   --sender 0x75Cee941B0eF3A83feA0397BbF903C12c1D7e96D

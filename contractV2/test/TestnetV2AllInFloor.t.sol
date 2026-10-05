@@ -2,7 +2,7 @@
 pragma solidity ^0.8.24;
 
 import {Test} from "forge-std/Test.sol";
-import {TestnetV2AllInFloor} from "../script/TestnetV2AllInFloor.s.sol";
+import {TestnetV2AllInFloor} from "../script/testnet/TestnetV2AllInFloor.s.sol";
 import {V2CreatorParams} from "../src/v2/strategy/V2CreatorParams.sol";
 import {V2TreasuryDeployer} from "../src/v2/V2TreasuryDeployer.sol";
 import {HedgeFunV2Factory} from "../src/v2/HedgeFunV2Factory.sol";

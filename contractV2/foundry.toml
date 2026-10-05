@@ -1,5 +1,5 @@
 [profile.default]
-# The testnet deployment (script/DeployV2Testnet.s.sol) reads the vendored Uniswap V3 factory bytecode and writes its
+# The testnet deployment (script/testnet/DeployV2Testnet.s.sol) reads the vendored Uniswap V3 factory bytecode and writes its
 # address book; SeedTestnet reads that book. Nothing else touches the filesystem.
 fs_permissions = [
   { access = "read", path = "./data" },
@@ -16,6 +16,8 @@ fs_permissions = [
   { access = "read-write", path = "./deploy/testnet-v2-creator.dryrun.json" },
   { access = "read-write", path = "./deploy/testnet-v2-fresh-creator.candidate.json" },
   { access = "read-write", path = "./deploy/testnet-v2-fresh-creator.dryrun.json" },
+  { access = "read-write", path = "./deploy/mainnet-v2-core.candidate.json" },
+  { access = "read-write", path = "./deploy/mainnet-v2-core.dryrun.json" },
   { access = "read", path = "./deploy/testnet-v2-fees.json" },
 ]
 src = "src"

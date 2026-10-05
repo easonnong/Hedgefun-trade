@@ -5,13 +5,13 @@ import {Script, console2} from "forge-std/Script.sol";
 import {Vm} from "forge-std/Vm.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {IERC20Metadata} from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
-import {HedgeFunFactory} from "../src/HedgeFunFactory.sol";
-import {HedgeFunV2Factory} from "../src/v2/HedgeFunV2Factory.sol";
-import {HedgeFunV2Treasury} from "../src/v2/HedgeFunV2Treasury.sol";
-import {HedgeFunV2AllInTreasury} from "../src/v2/HedgeFunV2AllInTreasury.sol";
-import {HedgeFunBondingCurve} from "../src/v2/HedgeFunBondingCurve.sol";
-import {V2TreasuryDeployer, V2InitCodeChunk} from "../src/v2/V2TreasuryDeployer.sol";
-import {V2CreatorParams} from "../src/v2/strategy/V2CreatorParams.sol";
+import {HedgeFunFactory} from "../../src/HedgeFunFactory.sol";
+import {HedgeFunV2Factory} from "../../src/v2/HedgeFunV2Factory.sol";
+import {HedgeFunV2Treasury} from "../../src/v2/HedgeFunV2Treasury.sol";
+import {HedgeFunV2AllInTreasury} from "../../src/v2/HedgeFunV2AllInTreasury.sol";
+import {HedgeFunBondingCurve} from "../../src/v2/HedgeFunBondingCurve.sol";
+import {V2TreasuryDeployer, V2InitCodeChunk} from "../../src/v2/V2TreasuryDeployer.sol";
+import {V2CreatorParams} from "../../src/v2/strategy/V2CreatorParams.sol";
 
 /// @notice Optional ordinary strategy append on the existing testnet fee core, with creator-selected TP/dip.
 /// @dev No keys or password paths. Forge is a simulation unless an operator supplies --broadcast.

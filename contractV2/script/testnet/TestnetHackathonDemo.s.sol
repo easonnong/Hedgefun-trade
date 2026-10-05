@@ -5,14 +5,14 @@ import {Script, console2} from "forge-std/Script.sol";
 import {Math} from "@openzeppelin/contracts/utils/math/Math.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {TickMath} from "v4-core/src/libraries/TickMath.sol";
-import {PriceOracle} from "../src/PriceOracle.sol";
-import {HedgeFunFactory} from "../src/HedgeFunFactory.sol";
-import {HedgeFunV2Factory} from "../src/v2/HedgeFunV2Factory.sol";
-import {HedgeFunBondingCurve} from "../src/v2/HedgeFunBondingCurve.sol";
-import {HedgeFunV2Treasury} from "../src/v2/HedgeFunV2Treasury.sol";
-import {TestStock, TestFeed} from "./testnet/TestnetAssets.sol";
-import {TestnetMarket, IV3Factory, IV3Pool} from "./testnet/TestnetMarket.sol";
-import {DemoBallot} from "../src/demo/DemoBallot.sol";
+import {PriceOracle} from "../../src/PriceOracle.sol";
+import {HedgeFunFactory} from "../../src/HedgeFunFactory.sol";
+import {HedgeFunV2Factory} from "../../src/v2/HedgeFunV2Factory.sol";
+import {HedgeFunBondingCurve} from "../../src/v2/HedgeFunBondingCurve.sol";
+import {HedgeFunV2Treasury} from "../../src/v2/HedgeFunV2Treasury.sol";
+import {TestStock, TestFeed} from "./TestnetAssets.sol";
+import {TestnetMarket, IV3Factory, IV3Pool} from "./TestnetMarket.sol";
+import {DemoBallot} from "../../src/demo/DemoBallot.sol";
 
 interface IDemoV3History {
     function observe(uint32[] calldata secondsAgos) external view returns (int56[] memory, uint160[] memory);

@@ -14,7 +14,7 @@ import {HedgeFunBondingCurve} from "../src/v2/HedgeFunBondingCurve.sol";
 import {HedgeFunV2TradeRouter} from "../src/v2/HedgeFunV2TradeRouter.sol";
 import {HedgeFunV2Treasury} from "../src/v2/HedgeFunV2Treasury.sol";
 import {V2LiquidityVault} from "../src/v2/V2LiquidityVault.sol";
-import {DeployV2Testnet} from "../script/DeployV2Testnet.s.sol";
+import {DeployV2Testnet} from "../script/testnet/DeployV2Testnet.s.sol";
 import {TestnetMarket, IV3Pool} from "../script/testnet/TestnetMarket.sol";
 import {TestStock, TestFeed, TestUsdg, Drip, TestnetRoles} from "../script/testnet/TestnetAssets.sol";
 import {PoolManager} from "v4-core/src/PoolManager.sol";

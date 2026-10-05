@@ -235,7 +235,7 @@ def audit(args):
     return {"schema": "v2-all-in-trigger-floor-readback-v1", "chainId": 46630, "broadcast": True, "verified": True,
             "sourceCommit": source, "contractSourceCommit": source,
             "toolFilesSha256": {p: hashlib.sha256((root / p).read_bytes()).hexdigest() for p in
-                                ["script/TestnetV2AllInFloor.s.sol", "tools/audit_v2_all_in_floor.py", "tools/audit_v2_keeper_reward.py"]},
+                                ["script/testnet/TestnetV2AllInFloor.s.sol", "tools/audit_v2_all_in_floor.py", "tools/audit_v2_keeper_reward.py"]},
             "blockNumber": pin, "blockHash": block_hash, "factory": factory, "registry": registry,
             "beforeBlockNumber": before, "beforeBlockHash": before_hash,
             "kind": 4, "family": "lots", "creationCodeHash": NEW_HASH, "kinds": kinds, "coreRuntimeHashes": core_hashes,

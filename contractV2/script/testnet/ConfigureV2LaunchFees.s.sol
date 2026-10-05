@@ -2,9 +2,9 @@
 pragma solidity ^0.8.24;
 
 import {Script} from "forge-std/Script.sol";
-import {HedgeFunFactory} from "../src/HedgeFunFactory.sol";
-import {HedgeFunV2Factory} from "../src/v2/HedgeFunV2Factory.sol";
-import {V2LaunchFeeDefaults} from "./testnet/V2LaunchFeeDefaults.sol";
+import {HedgeFunFactory} from "../../src/HedgeFunFactory.sol";
+import {HedgeFunV2Factory} from "../../src/v2/HedgeFunV2Factory.sol";
+import {V2LaunchFeeDefaults} from "./V2LaunchFeeDefaults.sol";
 
 /// @notice Update future-launch fees on a reviewed V2 testnet factory; no redeployment or implementation upgrade.
 /// @dev EXPECTED_DEFAULTS_HASH pins the complete snapshot reviewed before broadcast. Re-read immediately before

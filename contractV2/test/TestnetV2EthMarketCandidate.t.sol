@@ -2,7 +2,7 @@
 pragma solidity ^0.8.24;
 
 import {Test} from "forge-std/Test.sol";
-import {TestnetV2EthMarket} from "../script/TestnetV2EthMarket.s.sol";
+import {TestnetV2EthMarket} from "../script/testnet/TestnetV2EthMarket.s.sol";
 import {TestnetCryptoCalendar, TestnetCryptoOracle} from "../script/testnet/TestnetCryptoOracle.sol";
 import {TestnetNativeMarket} from "../script/testnet/TestnetNativeMarket.sol";
 import {TestFeed} from "../script/testnet/TestnetAssets.sol";

@@ -6,7 +6,7 @@ import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {HedgeFunFactory} from "../src/HedgeFunFactory.sol";
 import {HedgeFunV2Factory} from "../src/v2/HedgeFunV2Factory.sol";
 import {HedgeFunBondingCurve} from "../src/v2/HedgeFunBondingCurve.sol";
-import {ConfigureV2LaunchFees} from "../script/ConfigureV2LaunchFees.s.sol";
+import {ConfigureV2LaunchFees} from "../script/testnet/ConfigureV2LaunchFees.s.sol";
 
 contract LaunchFeeOperatorInvoker {
     function run(ConfigureV2LaunchFees script) external { script.run(); }

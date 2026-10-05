@@ -55,7 +55,7 @@ The launch-fee fork is now a required CI scenario, alongside the existing 23 inc
 Do not rebroadcast the recorded transaction. For a different reviewed testnet factory, read and review all 22 defaults, record `keccak256(abi.encode(defaults))`, then dry-run with explicit `V2_FACTORY`, `OPERATOR`, and `EXPECTED_DEFAULTS_HASH`:
 
 ```sh
-forge script script/ConfigureV2LaunchFees.s.sol:ConfigureV2LaunchFees \
+forge script script/testnet/ConfigureV2LaunchFees.s.sol:ConfigureV2LaunchFees \
   --rpc-url https://rpc.testnet.chain.robinhood.com --sender "$OPERATOR"
 ```
 

@@ -7,12 +7,12 @@ import {Math} from "@openzeppelin/contracts/utils/math/Math.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {TickMath} from "v4-core/src/libraries/TickMath.sol";
 import {SqrtPriceMath} from "v4-core/src/libraries/SqrtPriceMath.sol";
-import {HedgeFunV2Factory} from "../src/v2/HedgeFunV2Factory.sol";
-import {V2TreasuryDeployer} from "../src/v2/V2TreasuryDeployer.sol";
-import {HedgeFunV2TradeRouter} from "../src/v2/HedgeFunV2TradeRouter.sol";
-import {HedgeFunV2NativeRouter, IWrappedNative} from "../src/v2/HedgeFunV2NativeRouter.sol";
-import {IV3Factory, IV3Pool} from "./testnet/TestnetMarket.sol";
-import {TestnetEthBridgeLiquidity} from "./testnet/TestnetEthBridgeLiquidity.sol";
+import {HedgeFunV2Factory} from "../../src/v2/HedgeFunV2Factory.sol";
+import {V2TreasuryDeployer} from "../../src/v2/V2TreasuryDeployer.sol";
+import {HedgeFunV2TradeRouter} from "../../src/v2/HedgeFunV2TradeRouter.sol";
+import {HedgeFunV2NativeRouter, IWrappedNative} from "../../src/v2/HedgeFunV2NativeRouter.sol";
+import {IV3Factory, IV3Pool} from "./TestnetMarket.sol";
+import {TestnetEthBridgeLiquidity} from "./TestnetEthBridgeLiquidity.sol";
 
 interface IBridgeV3Position {
     function positions(bytes32 key) external view returns (uint128 liquidity, uint256, uint256, uint128, uint128);
