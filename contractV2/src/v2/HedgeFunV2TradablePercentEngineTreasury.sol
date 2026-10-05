@@ -109,6 +109,9 @@ abstract contract HedgeFunV2TradablePercentEngineTreasuryCore is HedgeFunV2Treas
         uint256 actualOutput;
         uint256 turnover;
         uint256 keeperReward;
+        /// what the action filled, in USDG: for a sale, the stock swapped plus the stock withheld alongside it,
+        /// before income accounting decides how much of the withheld stock is reserved
+        uint256 filled;
     }
 
     error BadEngineConfig();
@@ -315,7 +318,9 @@ abstract contract HedgeFunV2TradablePercentEngineTreasuryCore is HedgeFunV2Treas
         // action would let a thin or deliberately positioned venue advance the nonce and renew the cooldown while
         // barely consuming the daily budget. The check must use the actual fill and must happen before any strategy
         // state is committed; reverting here rolls the swap and its transfers back atomically.
-        if (result.turnover < _params.minLotUsdg) revert NotDue();
+        // It measures the FILL, not `turnover`: a sale's turnover is what left inventory, and loss recovery can
+        // keep all of the withheld stock in inventory. A complete fill is not dust because none of it was reserved.
+        if (result.filled < _params.minLotUsdg) revert NotDue();
         if (result.turnover > limits.remainingDaily) revert BadIntent();
         DailyBudget storage b = _dailyBudget();
         if (b.epoch != limits.epoch || b.capital == 0) {
@@ -407,6 +412,7 @@ abstract contract HedgeFunV2TradablePercentEngineTreasuryCore is HedgeFunV2Treas
             gain = Math.mulDiv(gain, result.actualInput, sale);
             toBuyback = Math.mulDiv(toBuyback, result.actualInput, sale);
         }
+        result.filled = _ruleValue(result.actualInput + toBuyback, price);
         toBuyback = _accountIncome(result, price, toBuyback);
         uint256 moved = result.actualInput + toBuyback;
         bookedStock -= moved;
@@ -448,7 +454,7 @@ abstract contract HedgeFunV2TradablePercentEngineTreasuryCore is HedgeFunV2Treas
         // create phantom inventory; pricing it at gross output would understate cost and manufacture later gains.
         _addCost(retainedStock, result.actualInput * _SCALE);
         bookedStock += retainedStock;
-        result.turnover = result.actualInput;
+        result.turnover = result.filled = result.actualInput;
         result.action = Action.RebalanceBuy;
     }
 

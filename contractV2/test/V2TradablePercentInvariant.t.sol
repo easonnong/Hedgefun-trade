@@ -54,6 +54,7 @@ contract TradablePercentAuditHandler is Test {
         uint256 cash;
         uint256 buyback;
         uint256 price;
+        uint256 cost;
         uint256 capital;
         uint256 keeperStock;
         uint256 keeperCash;
@@ -175,6 +176,7 @@ contract TradablePercentAuditHandler is Test {
         s.inventory = s.stockBalance - s.buyback;
         s.cash = treasury.reserveUsdg();
         (, s.price) = treasury.health();
+        s.cost = treasury.avgCost();
         s.capital = Math.mulDiv(s.inventory, s.price, SCALE) + s.cash;
         s.keeperStock = stock.balanceOf(address(this));
         s.keeperCash = usdg.balanceOf(address(this));
@@ -223,7 +225,15 @@ contract TradablePercentAuditHandler is Test {
         if (action == HedgeFunV2Treasury.Action.RebalanceBuy) ghostBought += consumed;
         else ghostSold += consumed;
         dailyAtLastSuccess = Math.mulDiv(ghostDailyBasis, 5000, 10_000);
-        if (consumed < 5e6) _fail(128);
+        // What has to be a lot is the FILL. For a buy that is the cash spent. For a sale it is the stock swapped
+        // plus the marked gain withheld beside it, and what leaves inventory can be less than that: loss recovery
+        // and costs keep withheld stock in inventory. The swapped part alone is never under a lot less the largest
+        // share a sale withholds, `payoutBps` of the gain over average cost.
+        uint256 lot = 5e6;
+        if (action == HedgeFunV2Treasury.Action.RebalanceSell && s.price > s.cost) {
+            lot -= Math.mulDiv(Math.mulDiv(lot, s.price - s.cost, s.price), treasury.payoutBps(), 10_000) + 4;
+        }
+        if (consumed < lot) _fail(128);
         if (directionalInputAtLastSuccess > directionalCapAtLastSuccess) _fail(256);
         if (ghostBought > dailyAtLastSuccess || ghostSold > dailyAtLastSuccess) _fail(512);
         if (treasury.turnoverInEpoch() != ghostUsed) _fail(1024);
