@@ -82,6 +82,12 @@ marked gain rather than classifying the whole retained amount as free profit. Ro
 When net sale cash is below sold cost, the difference adds to the loss ledger and the reserve is zero.
 Any withheld stock that is not eligible remains booked strategy inventory.
 
+The minimum size is checked on the fill, A plus the stock withheld beside it, both scaled by a short fill. It is
+not checked on what finally leaves inventory, A + B. With a loss still to recover B is zero, so a complete fill
+whose swapped part alone is under `minLotUsdg` would otherwise be refused as dust, on every attempt, for as long
+as the loss stood; and the loss could not be recovered because no sale could execute. Such a sale now executes,
+charges A to the sell budget and applies its gain to the loss. `preview()` reports the same sale as due.
+
 The tests independently compare the reserved stock's value against the configured fraction of actual net
 portfolio gain; they also cover partial fills, tiny marked gains erased by fees, losses carried into later dates,
 subsequent recovery, and ledger preservation through the real upgrade controller.

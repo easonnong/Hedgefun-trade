@@ -4,6 +4,8 @@ pragma solidity ^0.8.24;
 import {Math} from "@openzeppelin/contracts/utils/math/Math.sol";
 import {HedgeFunV2TradablePercentEngineTreasuryCore as Treasury} from "../src/v2/HedgeFunV2TradablePercentEngineTreasury.sol";
 import {V2TradablePercentEngineFixture} from "./V2TradablePercentEngine.t.sol";
+import {StrategyAction} from "../src/v2/strategy/IStrategyPolicy.sol";
+import {HedgeFunTreasuryBase} from "../src/HedgeFunTreasuryBase.sol";
 
 contract V2RealizedIncomeTest is V2TradablePercentEngineFixture {
     function test_markedGainBelowFeesAndRewardDoesNotFundBuyback() public {
@@ -50,6 +52,49 @@ contract V2RealizedIncomeTest is V2TradablePercentEngineFixture {
         vm.stopPrank();
         assertEq(t.buybackStock(), 1e18, "earned LP fee is an independent income source");
         assertEq(t.unrecoveredLossUsdg(), loss);
+    }
+
+    /// A sale withholds its marked gain in stock and swaps the rest. With a loss still to recover, none of the
+    /// withheld stock is reserved, so only the swapped part leaves inventory. That part can be under a lot while
+    /// the whole offer is over one: the fill is complete, and it must not be refused as dust.
+    function test_lossCarryDoesNotStallASaleThePreviewReportsDue() public {
+        Treasury t = _launchPercent(5304, 2500, 1, 10_000, 10_000); // 0.01% of the stock per sale, all gain paid out
+        _price(1000e18); // ten times cost: nine tenths of an offer is marked gain
+        uint256 carry = 40e6;
+        vm.store(address(t), _lossSlot(), bytes32(carry));
+        assertEq(t.unrecoveredLossUsdg(), carry, "the test writes the loss carry where the treasury reads it");
+
+        (bool due, StrategyAction action, uint256 offered) = t.preview();
+        assertTrue(due);
+        assertEq(uint256(action), uint256(StrategyAction.SellStock));
+        uint256 lot = t.params().minLotUsdg;
+        assertGe(Math.mulDiv(offered, 1000e18, 1e30), lot, "the offer is a full lot");
+        assertLt(Math.mulDiv(offered, 100e18, 1e30), lot, "the part that is swapped is under a lot");
+
+        uint256 held = t.bookedStock();
+        t.execute();
+        uint256 moved = held - t.bookedStock();
+        assertGt(moved, 0);
+        assertLt(moved, offered, "the withheld stock stays in inventory while the loss is recovered");
+        assertEq(t.buybackStock(), 0, "nothing is reserved before the loss is recovered");
+        assertLt(t.unrecoveredLossUsdg(), carry, "the sale's gain went to the loss");
+        assertEq(t.bookedStock(), stock.balanceOf(address(t)));
+    }
+
+    /// The same offer filled a tenth: that is the dust fill the minimum is there for, loss carry or not.
+    function test_dustFillIsStillRefusedWithALossCarry() public {
+        Treasury t = _launchPercent(5305, 2500, 1, 10_000, 10_000);
+        _price(1000e18);
+        vm.store(address(t), _lossSlot(), bytes32(uint256(40e6)));
+        venue.setFillBps(1000);
+        (bool due,,) = t.preview();
+        assertTrue(due);
+        vm.expectRevert(HedgeFunTreasuryBase.NotDue.selector);
+        t.execute();
+    }
+
+    function _lossSlot() private pure returns (bytes32) {
+        return bytes32(uint256(keccak256("hedgefun.v2.tradable-percent.directional-budget.v1")) + 4);
     }
 
     function testFuzz_reservedIncomeCannotExceedNetRealizedPayout(uint16 rawPayout, uint16 rawFill, uint256 rawPrice) public {

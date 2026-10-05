@@ -14,7 +14,7 @@ import {
     HedgeFunV2PercentBuybackTreasury, HedgeFunV2PercentBuybackTreasuryLogic
 } from "../src/v2/HedgeFunV2PercentBuybackTreasury.sol";
 import {RegisterV2PercentBuyback} from "../script/RegisterV2PercentBuyback.s.sol";
-import {SetV2KeeperReward} from "../script/SetV2KeeperReward.s.sol";
+import {SetV2KeeperReward, VerifyV2KeeperReward} from "../script/SetV2KeeperReward.s.sol";
 import {ReviewedTreasuryRegistry} from "../script/helpers/ReviewedTreasuryRegistry.sol";
 import {MisleadingDelayController} from "./V2TradablePercentRegistration.t.sol";
 
@@ -196,15 +196,49 @@ contract V2PercentBuybackTest is V2FactoryFixture {
         assertEq(live.params().bountyBps, 50);
         SetV2KeeperReward setter = new SetV2KeeperReward();
         bytes32 others = _defaultsWithoutReward();
-        (uint16 before, uint16 afterwards) = setter.set(owner, factory, 10);
+        bytes32 reviewed = keccak256(abi.encode(factory.getDefaults()));
+        (uint16 before, uint16 afterwards, bytes32 nextHash) = setter.set(owner, factory, 10, reviewed);
         assertEq(before, 50);
         assertEq(afterwards, 10);
         assertEq(factory.getDefaults().bountyBps, 10);
         assertEq(_defaultsWithoutReward(), others, "no other default moved");
+        assertEq(keccak256(abi.encode(factory.getDefaults())), nextHash);
+        new VerifyV2KeeperReward().check(factory, 10, nextHash);
         assertEq(live.params().bountyBps, 50, "a live treasury keeps the reward it launched with");
         assertEq(_graduated(percentKind).params().bountyBps, 10, "a new launch takes the new one");
         vm.expectRevert(SetV2KeeperReward.BadBinding.selector);
-        setter.set(address(0xBAD), factory, 5);
+        setter.set(address(0xBAD), factory, 5, nextHash);
+    }
+
+    /// `setDefaults` replaces the whole struct. A change built from a snapshot that is no longer the factory's
+    /// would write the old values of every other default back, so it is refused before anything is sent.
+    function test_keeperRewardRefusesASnapshotTheFactoryNoLongerHas() public {
+        SetV2KeeperReward setter = new SetV2KeeperReward();
+        bytes32 reviewed = keccak256(abi.encode(factory.getDefaults()));
+        HedgeFunFactory.Defaults memory moved = factory.getDefaults();
+        moved.maxCreatorBps = 1000;
+        vm.prank(owner);
+        factory.setDefaults(moved);
+
+        vm.expectRevert(SetV2KeeperReward.DefaultsChanged.selector);
+        setter.set(owner, factory, 10, reviewed);
+        assertEq(factory.getDefaults().bountyBps, 50);
+        assertEq(factory.getDefaults().maxCreatorBps, 1000, "the other owner change is still there");
+
+        (,, bytes32 nextHash) = setter.set(owner, factory, 10, keccak256(abi.encode(moved)));
+        assertEq(factory.getDefaults().maxCreatorBps, 1000);
+        VerifyV2KeeperReward verifier = new VerifyV2KeeperReward();
+        verifier.check(factory, 10, nextHash);
+
+        // what the verifier is for: a competing change that landed after the simulation
+        moved = factory.getDefaults();
+        moved.maxCreatorBps = 3000;
+        vm.prank(owner);
+        factory.setDefaults(moved);
+        vm.expectRevert(VerifyV2KeeperReward.BadReadback.selector);
+        verifier.check(factory, 10, nextHash);
+        vm.expectRevert(VerifyV2KeeperReward.BadReadback.selector);
+        verifier.check(factory, 50, keccak256(abi.encode(moved)));
     }
 
     function _defaultsWithoutReward() private view returns (bytes32) {

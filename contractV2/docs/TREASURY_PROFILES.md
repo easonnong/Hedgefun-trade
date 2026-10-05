@@ -77,6 +77,10 @@ code, domain, nonce, direction and capability, and clips the proposed action aga
   The legacy `sellChunkUsdg` no longer clips schema-3 stock strategy execution; the 25% ceiling on each
   action percentage is the protocol's bound in its place, and scales with the treasury. A small percentage on a small
   treasury cannot be inflated to the minimum lot: it waits instead.
+- **Minimum size:** what has to reach `minLotUsdg` is the fill. For a buy that is the cash spent. For a sale it is
+  the stock swapped plus the marked gain withheld beside it. What a sale takes out of inventory, and charges to
+  the sell budget, can be less than a lot: while a realised loss is being recovered the withheld stock stays in
+  inventory. A short fill scales both parts, so a dust fill is still refused.
 
 Tradable stock includes booked inventory and bookable incoming stock once, excluding reserved `buybackStock`.
 Locked LP principal, parked vault assets, unclaimed LP fees and FUN's market value are excluded. All available
@@ -159,6 +163,13 @@ For example (illustrative values, not a production recommendation), save:
 
 The adapter also accepts the legacy `dailyPercent` field, exclusively instead of the two directional fields.
 New packed directional configs require this candidate's policy and kind; old policy bytecode rejects those words.
+Nothing enforces that pairing. A registry that holds both generations lets a creator select the new kind with the
+old policy key, or the old kind with the new one: the launch succeeds and the treasury either never trades (the
+policy refuses the words on every call) or runs the old logic without the action ceiling, band floor and
+directional budgets. On such a registry the owner should call `disablePolicy` for the old policy key once the new
+pair is registered, which closes the first case. The second cannot be closed on chain, because a kind cannot be
+disabled and the new policy has to stay enabled: a front end must offer only the matched pair. A registry deployed
+from this source and registered once does not have the problem.
 Existing proxies retain their original config/policy binding and use its one legacy percentage in both directions.
 
 After a registration has been verified, build the candidate and run the read-only adapter:

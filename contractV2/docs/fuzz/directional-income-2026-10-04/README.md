@@ -1,7 +1,14 @@
 # Directional quota / realized income evidence
 
-Candidate source commit: `f3aeaec` (full hash and source SHA-256s in `results.json`). Later commits export ABI and
-add this evidence/report; they do not change executable source. Foundry 1.5.0, solc 0.8.26, optimizer runs 1,
+**This evidence describes commit `f3aeaec`, not the tree it is merged into.** The merged tree also contains
+`79cf822` (the schema-3 band floor became one trade's cost, `poolFeeBps + bountyBps`, where this candidate used
+`2 * (maxSlippageBps + poolFeeBps + bountyBps)`), the percentage buy-back hook in `HedgeFunTreasuryBase`, and a
+later change to the schema-3 minimum-size check. Five of the sources hashed in `results.json` differ there, and
+the sizes below are this candidate's. The logs are kept as the record of what was run on this candidate; they
+are not evidence for the merged code, which needs its own run.
+
+Candidate source commit: `f3aeaec` (full hash and source SHA-256s in `results.json`). The commits after it on its
+own branch export ABI and add this evidence/report; they do not change executable source. Foundry 1.5.0, solc 0.8.26, optimizer runs 1,
 Cancun; repository foundry.toml settings unchanged. The code includes PR #28 hardening, PR #29 weekend sizing,
 and the reviewed-registry identity patch from PR #30. None of the commands broadcasts a public transaction.
 
