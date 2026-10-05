@@ -1,7 +1,13 @@
 [
  {
   "type": "constructor",
-  "inputs": [],
+  "inputs": [
+   {
+    "name": "saleBps_",
+    "type": "uint16",
+    "internalType": "uint16"
+   }
+  ],
   "stateMutability": "nonpayable"
  },
  {

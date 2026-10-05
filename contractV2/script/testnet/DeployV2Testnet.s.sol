@@ -47,7 +47,7 @@ contract DeployV2Testnet is Script {
     uint16 internal constant MAX_DEVIATION_BPS = 50;
     uint16 internal constant MAX_SLIPPAGE_BPS = 100;
     uint64 internal constant SELL_CHUNK_USDG = 2_000e6;
-    uint16 internal constant LP_BPS = 5000;                     // V2TreasuryDeployer.DEFAULT_LP_BPS, set explicitly
+    uint16 internal constant LP_BPS = 7000;                     // V2TreasuryDeployer.DEFAULT_LP_BPS, set explicitly
     /// New-deployment reference FDV with supply-preserving graduation, at the mock price and with no opening burn.
     /// The calibration uses the chosen sale fraction and unchanged post-graduation supply.
     uint256 public constant TARGET_GRADUATION_FDV_USD_E18 = 50_000e18;
@@ -236,7 +236,7 @@ contract DeployV2Testnet is Script {
     function _deployV2(Deployment memory x) internal {
         x.treasury = new V2TreasuryDeployer();
         x.token = new TokenDeployer();
-        x.curve = new CurveDeployer();
+        x.curve = new CurveDeployer(REFERENCE_SALE_BPS);
         (, address mined) = _hookAddress(x.hookSalt);
         x.hook = new HedgeFunV2Hook{salt: x.hookSalt}(IPoolManager(PM));
         if (address(x.hook) != mined || uint160(address(x.hook)) & 0x3FFF != HOOK_FLAGS) revert BadHook(mined, address(x.hook));

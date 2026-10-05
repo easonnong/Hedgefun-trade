@@ -204,7 +204,7 @@ contract V2LowFrequencyForkTest is Test, HookMiner {
         V2TreasuryDeployer deployer = new V2TreasuryDeployer();
         factory = new HedgeFunV2Factory(OWNER, address(PM), V3_FACTORY, USDG, PROTOCOL,
             address(deployer), address(new TokenDeployer()), address(_deployV2Hook(PM)),
-            address(new CurveDeployer()), _defaults(c));
+            address(new CurveDeployer(8000)), _defaults(c));
         // A fresh registry now defaults to the stricter wrapper. These historical
         // price paths remain compatibility tests of the original immutable core.
         bytes memory legacyCode = type(HedgeFunV2Treasury).creationCode;

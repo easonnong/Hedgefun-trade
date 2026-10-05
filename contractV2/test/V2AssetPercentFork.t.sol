@@ -97,7 +97,7 @@ contract V2AssetPercentForkTest is Test, HookMiner {
         price = oracle.price(); chunk = chunk_; tradeBps = trade_; dailyBps = daily_;
         HedgeFunV2Factory factory = new HedgeFunV2Factory(OWNER, address(PM), V3_FACTORY, USDG, address(0x5AFE),
             address(new V2TreasuryDeployer()), address(new TokenDeployer()), address(_deployV2Hook(PM)),
-            address(new CurveDeployer()), _defaults(chunk_));
+            address(new CurveDeployer(8000)), _defaults(chunk_));
         V2TreasuryDeployer deployer = V2TreasuryDeployer(address(factory.treasuryDeployer()));
         V2AssetPercentRebalancePolicy policy = new V2AssetPercentRebalancePolicy();
         (address a, address b) = deployer.makeChunks(type(HedgeFunV2AssetPercentEngineTreasury).creationCode);

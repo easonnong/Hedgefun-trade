@@ -70,7 +70,8 @@ contract V2LpDepthExperimentTest is V2FactoryFixture {
     }
 
     function _graduateWithEarlyBuyer(uint16 saleBps, uint16 lpBps) private returns (Run memory r) {
-        creatorSaleBps = saleBps; // the creator's choice, registered by `_launchV2` for its salt
+        // A sale share is a deployment's, fixed when its curve deployer is constructed: another share, another stack.
+        if (saleBps != factory.curveDeployer().DEFAULT_SALE_BPS()) { creatorSaleBps = saleBps; _setUpV2(18); }
         V2TreasuryDeployer treasuryDeployer = V2TreasuryDeployer(address(factory.treasuryDeployer()));
         vm.prank(owner);
         treasuryDeployer.setLpBps(address(stock), lpBps);

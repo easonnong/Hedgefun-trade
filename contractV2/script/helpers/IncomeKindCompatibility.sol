@@ -5,8 +5,11 @@ import {Script} from "forge-std/Script.sol";
 import {HedgeFunV2Factory} from "../../src/v2/HedgeFunV2Factory.sol";
 import {CurveDeployer} from "../../src/v2/CurveDeployer.sol";
 
-/// @dev Script-only release identity. These templates and immutable offsets are from the reviewed #25 build:
-/// 9be8cf48a723f1ab65412505e231f98b8fac450e, solc 0.8.26, Cancun, optimizer runs 1, no metadata hash.
+/// @dev Script-only release identity. The factory template, the curve and vault creation code and their immutable
+/// offsets are from the reviewed #25 build: 9be8cf48a723f1ab65412505e231f98b8fac450e, solc 0.8.26, Cancun,
+/// optimizer runs 1, no metadata hash. The curve deployer template is NOT that build: it is the one whose sale
+/// share is fixed at construction, compiled with the same settings, and the #25 review does not cover it. A core
+/// deployed from the #25 curve deployer is therefore refused here, as any other executable code is.
 /// Supports different deployment addresses, but deliberately refuses different executable code or compiler output.
 /// An operator-supplied hash or a selector appearing somewhere in bytecode is not evidence of compatibility.
 abstract contract IncomeKindCompatibility is Script {
@@ -15,7 +18,7 @@ abstract contract IncomeKindCompatibility is Script {
     bytes32 internal constant FACTORY_TEMPLATE =
         0x89c15b5927042e7ad12d61494556be1e3ad27e2f277ea6a2928d853dd15e850d;
     bytes32 internal constant CURVE_DEPLOYER_TEMPLATE =
-        0xdc029369e5848c68a2587b5ea648ca5332feca7243a82720529d2824a1767a64;
+        0xd39e4b9e8ad667584dbdd2d4a414bd012dd30b47c4c21ada6cdd1bb3ad061935;
     bytes32 internal constant CURVE_CREATION =
         0xf9300a4b32d609e484af5bb208cc46000f4e83f6b57bc7f19f0b5c22f2a43f3c;
     bytes32 internal constant VAULT_CREATION =
@@ -55,15 +58,20 @@ abstract contract IncomeKindCompatibility is Script {
         if (keccak256(code) != CURVE_DEPLOYER_TEMPLATE)
             revert IncompatibleIncomeDeployment("graduation module build template");
         // SELF is private and must be this exact deployment, independently of what its public getters return.
-        _bind(code, hex"09520d05", address(curve));
-        _bind(code, hex"014d1175", curve.curveChunk());
-        _bind(code, hex"01c408b7", curve.vaultChunk());
+        _bind(code, hex"09830d36", address(curve));
+        _bind(code, hex"014d11c4", curve.curveChunk());
+        _bind(code, hex"01e208e8", curve.vaultChunk());
+        // The fixed sale share is an immutable too: whatever this deployment was constructed with, bound exactly.
+        _bindWord(code, hex"01bb04b6118f", bytes32(uint256(curve.DEFAULT_SALE_BPS())));
     }
 
     /// @dev Packed big-endian uint16 offsets into the zero-immutable runtime template. Refuse stale or duplicate
     /// offsets rather than overwriting executable bytes. The pinned template hash fixes the entire instruction body.
     function _bind(bytes memory code, bytes memory offsets, address value) private pure {
-        bytes32 word = bytes32(uint256(uint160(value)));
+        _bindWord(code, offsets, bytes32(uint256(uint160(value))));
+    }
+
+    function _bindWord(bytes memory code, bytes memory offsets, bytes32 word) private pure {
         for (uint256 i; i < offsets.length; i += 2) {
             uint256 offset = (uint256(uint8(offsets[i])) << 8) | uint256(uint8(offsets[i + 1]));
             if (offset == 0 || offset + 32 > code.length || code[offset - 1] != bytes1(0x7f))

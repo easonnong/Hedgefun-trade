@@ -7,7 +7,9 @@ import {V2TreasuryDeployer} from "../../src/v2/V2TreasuryDeployer.sol";
 import {V2TreasuryUpgradeController} from "../../src/v2/V2TreasuryUpgradeController.sol";
 import {HedgeFunV2UpgradeableTreasury} from "../../src/v2/HedgeFunV2UpgradeableTreasury.sol";
 
-/// @dev Exact reviewed #25 registry/controller runtimes, with every immutable bound.
+/// @dev Exact registry/controller runtimes, with every immutable bound. The controller is the reviewed #25
+/// runtime. The registry is that runtime with `DEFAULT_LP_BPS` 7000 in place of 5000: one constant, the same
+/// immutable offsets, and not itself covered by the #25 review. A #25 registry is therefore refused here.
 /// Getter values alone do not prove that a controller enforces a delay. Different
 /// compiler/runtime builds need a separately reviewed template update.
 abstract contract ReviewedTreasuryRegistry is IncomeKindCompatibility {
@@ -23,7 +25,7 @@ abstract contract ReviewedTreasuryRegistry is IncomeKindCompatibility {
         if (registry.factory() != address(factory)) revert IncompatibleTreasuryRegistry();
         V2TreasuryUpgradeController controller = registry.upgradeController();
         bytes memory code = vm.getDeployedCode("V2TreasuryDeployer.sol:V2TreasuryDeployer");
-        if (keccak256(code) != 0xb1b1adc4d2960d06e0eaa957fba812db587e4c8a701b342a027854b6425cacb7) {
+        if (keccak256(code) != 0xb9d94aa23f1f7bc8abc31384d3dfb82a666a859a64f35982a15e4b7284c9c72c) {
             revert IncompatibleTreasuryRegistry();
         }
         // The reviewed deployment's kind 0, or this source's own for a registry deployed from it.

@@ -132,7 +132,7 @@ contract BondingCurveTest is Test {
         assertEq(token.balanceOf(address(curve)), curve.tokenReserve());
     }
     function testDeployerPredictAndAuthorization() public {
-        CurveDeployer d = new CurveDeployer(); d.bind();
+        CurveDeployer d = new CurveDeployer(7931); d.bind();
         bytes memory args = abi.encode(_init()); bytes32 salt = bytes32(uint256(77));
         address predicted = d.predict(salt, args);
         vm.prank(creator); vm.expectRevert(); d.deploy(salt, args);

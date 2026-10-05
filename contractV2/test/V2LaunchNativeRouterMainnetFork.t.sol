@@ -148,7 +148,7 @@ contract V2LaunchNativeRouterMainnetForkTest is Test, HookMiner {
             address(new V2TreasuryDeployer()),
             address(new TokenDeployer()),
             address(hook),
-            address(new CurveDeployer()),
+            address(new CurveDeployer(8000)),
             _defaults()
         );
         vm.startPrank(OWNER);

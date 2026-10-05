@@ -53,7 +53,7 @@ contract V2CurveDeployerTest is V2FactoryFixture {
         HedgeFunBondingCurve.Init memory p = HedgeFunBondingCurve.Init({
             factory: address(factory), token: curve.token(), stock: curve.stock(), treasury: curve.treasury(),
             protocol: curve.protocol(), creator: curve.creator(), supply: curve.initialSupply(),
-            virtualStock: curve.virtualStock(), saleBps: 7931, taxBps: curve.taxBps(),
+            virtualStock: curve.virtualStock(), saleBps: factory.curveDeployer().DEFAULT_SALE_BPS(), taxBps: curve.taxBps(),
             protocolBps: curve.protocolBps(), creatorBps: curve.creatorBps(), snipeBps: curve.snipeBps(),
             snipeSeconds: curve.snipeSeconds(), openingTaxExemptions: new address[](0)
         });
@@ -110,7 +110,7 @@ contract V2CurveDeployerTest is V2FactoryFixture {
     /// Binding is first-caller-wins, as for every `BoundDeployer`: a deployer someone else claimed fails the factory
     /// constructor loudly, before anything is live, and the Safe deploys a fresh one.
     function test_frontRunBindFailsTheFactoryConstructor() public {
-        CurveDeployer d = new CurveDeployer();
+        CurveDeployer d = new CurveDeployer(7931);
         assertEq(d.factory(), address(0));
         assertEq(keccak256(d.curveChunk().code), keccak256(type(HedgeFunBondingCurve).creationCode));
         vm.prank(stranger);

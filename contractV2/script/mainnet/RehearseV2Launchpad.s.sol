@@ -77,8 +77,7 @@ contract RehearseV2Launchpad is V2MainnetCore {
         console2.log("V2 native router", address(x.nativeRouter));
         console2.log("lp fee", d.lpFee);
         // Raise size and opening window are each creator's choice (CurveDeployer.setCurveConfig), not the owner's.
-        console2.log("creator saleBps range", x.curve.MIN_SALE_BPS(), x.curve.MAX_SALE_BPS());
-        console2.log("default saleBps (no registration)", x.curve.DEFAULT_SALE_BPS());
+                console2.log("fixed saleBps", x.curve.DEFAULT_SALE_BPS());
         console2.log("creator snipeSeconds max", x.curve.MAX_SNIPE_SECONDS());
         console2.log("default snipeSeconds (no registration)", d.snipeSeconds);
         console2.log("public launch", x.factory.publicLaunch());
@@ -113,8 +112,8 @@ contract RehearseV2Launchpad is V2MainnetCore {
         b = address(new V2InitCodeChunk(right));
     }
 
-    /// @dev The creator's registry: the curve constructor's own sale bounds and nothing tighter, the 7931 default,
-    ///      the 180-second window cap, and a registration keyed by the factory's salt (symbol, creator, nonce).
+    /// @dev The creator's registry: the fixed 7931 sale, which no registration can move, the 180-second window
+    ///      cap, and a registration keyed by the factory's salt (symbol, creator, nonce).
     ///      The registration is simulated from a throwaway address and discarded with everything else.
     function _readBackCurveChoices(CurveDeployer curve, uint8 defaultSnipeSeconds) internal {
         if (curve.MIN_SALE_BPS() != 1000 || curve.MAX_SALE_BPS() != 9000 || curve.DEFAULT_SALE_BPS() != 7931
@@ -124,8 +123,10 @@ contract RehearseV2Launchpad is V2MainnetCore {
         (uint16 sale, uint8 window) = curve.curveConfig(salt, defaultSnipeSeconds);
         if (sale != 7931 || window != defaultSnipeSeconds) revert ReadbackFailed("curve default");
         vm.prank(creator);
-        curve.setCurveConfig("REHEARSE", 1, 6000, 60);
+        try curve.setCurveConfig("REHEARSE", 1, 6000, 60) { revert ReadbackFailed("sale share was a choice"); } catch {}
+        vm.prank(creator);
+        curve.setCurveConfig("REHEARSE", 1, 7931, 60);
         (sale, window) = curve.curveConfig(salt, defaultSnipeSeconds);
-        if (sale != 6000 || window != 60) revert ReadbackFailed("curve choice");
+        if (sale != 7931 || window != 60) revert ReadbackFailed("curve window");
     }
 }

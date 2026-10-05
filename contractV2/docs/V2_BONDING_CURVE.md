@@ -53,7 +53,8 @@ Let initial supply be `S`, virtual stock be `V`, and accounted token inventory b
 - `V = ceil(openPriceE18 * S / 1e18)`; opening price uses raw stock units per token unit, scaled by 1e18.
 - Fixed product `K = S * V`; effective stock `Y = ceil(K / T)`; real reserve `R = Y - V`.
 - Minimum inventory `Tmin = floor(S * (10000 - saleBps) / 10000)`.
-- `saleBps` is the creator's choice for their own launch, 1000 through 9000, and 7931 when they register none
+- `saleBps` is the curve deployer's fixed sale share, 7931 on a release. On a core deployed before 2026-10-05 it
+  is the creator's choice for their own launch, 1000 through 9000, and 7931 when they register none
   ([below](#raise-size-and-opening-window-the-creators-choice)).
 - Terminal effective stock `Yg = ceil(K / Tmin)`; net stock graduation target `Rg = Yg - V`, which is
   `ceil(V * saleBps / (10000 - saleBps))` whenever `S * (10000 - saleBps)` divides by 10,000.
@@ -67,8 +68,8 @@ transfers do not move quotes, reserve accounting or graduation progress. Virtual
 Graduation initializes V4 at the terminal curve price `Yg / Tmin`, rounded to its sqrt-price representation.
 Only the **real** stock reserve `Rg` is capital: `floor(Rg * lpBps / 10000)` is the V4 stock budget and the balance
 goes to the strategy treasury. `lpBps` is per stock in `V2TreasuryDeployer` (`setLpBps`, factory owner, 10–100%, default
-50%), is part of a launch's `terms`, and is frozen per treasury at launch (`lpBpsOfTreasury`); neither the factory nor
-the curve deployer has the bytes for it. The worked example below uses the 50% default. The vault refunds unused **stock** budget to the factory, which forwards it to the treasury.
+70%; 50% on a registry deployed before 2026-10-05), is part of a launch's `terms`, and is frozen per treasury at launch (`lpBpsOfTreasury`); neither the factory nor
+the curve deployer has the bytes for it. The worked example below uses 50%. The vault refunds unused **stock** budget to the factory, which forwards it to the treasury.
 At the terminal price, approximately `Tmin * floor(Rg / 2) / Yg` tokens enter the full-range LP. The remaining
 tokens seed a second, single-sided position on the token-only side of spot in the same pool (`salt = 1`). The
 nearest range boundary is the next usable tick above spot for token0, or the usable tick at/below spot for token1.
@@ -124,6 +125,15 @@ This is trading friction rather than ordering protection: the [market scenarios]
 still produce profitable sandwiches at seconds 1 and 2 when a victim accepts wide slippage.
 
 ## Raise size and opening window: the creator's choice
+
+**2026-10-05: the raise size is no longer a choice.** A `CurveDeployer` is constructed with one sale share,
+readable as `DEFAULT_SALE_BPS`, and `setCurveConfig` reverts `BadCurveConfig` for any other `saleBps`: no creator,
+owner or later transaction can move it. Deployments pass 7931. A stock's raise is then set by its listing alone,
+`Rg = V * 7931 / 2069` of the opening valuation `V`, as on the launchpads this one is compared with. The creator
+still chooses the opening window, and the `saleBps` argument stays in the call so a front end written for the choice
+keeps working when it passes `DEFAULT_SALE_BPS`. The default LP share of the raise is 70% from the same date. The
+rest of this section, where it speaks of choosing `saleBps`, describes cores deployed before that date, which are
+immutable and keep the choice.
 
 Each V2 creator chooses two things for their own launch, before `predict`, on the curve deployer:
 

@@ -25,6 +25,7 @@ contract V2TSLAStressTest is V2FactoryFixture {
     uint256 private id;
 
     function setUp() public {
+        creatorSaleBps = 4400; // the sale share this replay was written against; a deployment's, fixed at construction
         _setUpV2(18);
         router = new Router(HedgeFunFactory(address(factory)));
         for (uint256 i; i < wallets.length; ++i) {

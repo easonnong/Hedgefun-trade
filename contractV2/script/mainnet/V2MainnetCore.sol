@@ -105,7 +105,7 @@ abstract contract V2MainnetCore is Script {
         x.hookSalt = salt;
         x.treasury = new V2TreasuryDeployer();
         x.token = new TokenDeployer();
-        x.curve = new CurveDeployer();
+        x.curve = new CurveDeployer(V2MainnetDefaults.SALE_BPS);
         x.hook = new HedgeFunV2Hook{salt: salt}(IPoolManager(PM));
         if (address(x.hook) != mined || uint160(address(x.hook)) & 0x3FFF != HOOK_FLAGS) {
             revert BadHook(mined, address(x.hook));

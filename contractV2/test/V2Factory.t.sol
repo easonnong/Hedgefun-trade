@@ -45,7 +45,7 @@ contract V2FactoryTest is V2FactoryFixture, IUnlockCallback {
         assertEq(HedgeFunTreasuryBase(curve.treasury()).hook(), address(hook));
         uint256 pmStock = stock.balanceOf(address(pm));
         uint256 pmToken = IERC20(curve.token()).balanceOf(address(pm));
-        assertApproxEqAbs(pmStock, targetStock / 2, 2, "half real stock principal seeds V4 except rounding dust");
+        assertApproxEqAbs(pmStock, targetStock * 7000 / 10_000, 2, "the default 70% of real stock principal seeds V4 except rounding dust");
         address vault = hook.liquidityVaultOf(key.toId());
         assertEq(pmToken + IERC20(curve.token()).balanceOf(vault), remaining,
             "all unsold tokens enter locked LP or its rounding residue");
@@ -87,7 +87,7 @@ contract V2FactoryTest is V2FactoryFixture, IUnlockCallback {
         factory.list(address(stock), address(oracle), address(stockPool), openPrice * 2, false);
         vm.stopPrank();
         // The creator re-registering the launched salt's curve choices reaches no deployed curve either.
-        factory.curveDeployer().setCurveConfig(_request().symbol, lastNonce, 9000, 180);
+        factory.curveDeployer().setCurveConfig(_request().symbol, lastNonce, 8000, 180);
         _graduateV2(curve);
         (PoolKey memory actualKey, HedgeFunHook.Rates memory actualRates) = factory.graduationConfig(id);
         assertEq(keccak256(abi.encode(actualKey, actualRates)), frozen);
@@ -138,7 +138,7 @@ contract V2FactoryTest is V2FactoryFixture, IUnlockCallback {
     function test_quoteBecomesStaleWhenCurveTermsChange() public {
         HedgeFunFactory.Request memory q = _request();
         (,, bytes32 terms) = factory.predict(q);
-        factory.curveDeployer().setCurveConfig(q.symbol, q.nonce, 9000, 3);
+        factory.curveDeployer().setCurveConfig(q.symbol, q.nonce, 8000, 60);
         vm.expectRevert(HedgeFunFactory.Restated.selector);
         factory.launch(q, terms);
     }
@@ -203,7 +203,7 @@ contract V2FactoryTest is V2FactoryFixture, IUnlockCallback {
         (uint256 finalPayment,,) = curve.quoteBuyFor(type(uint256).max, address(this));
         uint256 finalFee = Math.mulDiv(finalPayment, curve.taxBps(), 10000);
         _graduateV2(curve);
-        assertApproxEqAbs(stock.balanceOf(address(pm)), principal / 2, 2);
+        assertApproxEqAbs(stock.balanceOf(address(pm)), principal * 7000 / 10_000, 2);
         assertEq(stock.balanceOf(address(factory)), 11e18);
         assertEq(stock.balanceOf(address(curve)), fees + finalFee + 7e18);
         assertEq(curve.totalFees(), fees + finalFee);

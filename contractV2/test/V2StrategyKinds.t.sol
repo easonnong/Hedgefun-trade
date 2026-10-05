@@ -114,8 +114,9 @@ contract V2LpShareTest is V2FactoryFixture {
         deployer = V2TreasuryDeployer(address(factory.treasuryDeployer()));
     }
 
-    function test_defaultIsHalfAndOnlyTheOwnerMovesItWithinBounds() public {
-        assertEq(deployer.lpBps(address(stock)), 5000);
+    function test_defaultIsSeventyPercentAndOnlyTheOwnerMovesItWithinBounds() public {
+        assertEq(deployer.DEFAULT_LP_BPS(), 7000);
+        assertEq(deployer.lpBps(address(stock)), 7000);
         vm.expectRevert(V2TreasuryDeployer.NotOwner.selector);
         deployer.setLpBps(address(stock), 7500);
         vm.startPrank(owner);

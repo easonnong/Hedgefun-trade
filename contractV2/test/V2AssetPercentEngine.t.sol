@@ -43,6 +43,8 @@ abstract contract V2AssetPercentEngineFixture is V2StrategyEngineAccountingFixtu
         percentPolicyKey = deployer.registerPolicy(address(percentPolicy), 150_000, 160,
             keccak256("asset-percent-deps-v1"), keccak256("asset-percent-audit-v1"));
         percentKind = deployer.registerEngineKind(a, b, 1, 2, 3);
+        // These suites' budgets and thresholds were written against an even split of the raise; they keep it.
+        deployer.setLpBps(address(stock), 5000);
         vm.stopPrank();
     }
 

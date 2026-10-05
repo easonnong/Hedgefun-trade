@@ -126,7 +126,7 @@ contract StrategyForkTestV2LiveVenue is Test, HookMiner {
             console2.log("V2 live kind-1 test min lot USDG raw:", defaults.minLotUsdg);
         }
         factory = new HedgeFunV2Factory(OWNER, address(PM), V3_FACTORY, USDG, PROTOCOL,
-            address(new V2TreasuryDeployer()), address(new TokenDeployer()), address(hook), address(new CurveDeployer()), defaults);
+            address(new V2TreasuryDeployer()), address(new TokenDeployer()), address(hook), address(new CurveDeployer(8000)), defaults);
         V2TreasuryDeployer treasuryDeployer = V2TreasuryDeployer(address(factory.treasuryDeployer()));
         if (strategyKind == 1) {
             (address a, address b) = treasuryDeployer.makeChunks(type(HedgeFunV2BuybackTreasury).creationCode);
