@@ -25,6 +25,7 @@ import {V2LiquidityVault} from "../src/v2/V2LiquidityVault.sol";
 import {EngineConfig} from "../src/v2/strategy/IStrategyPolicy.sol";
 import {RegisterV2TradablePercent} from "../script/RegisterV2TradablePercent.s.sol";
 import {TestnetMarket} from "../script/testnet/TestnetMarket.sol";
+import {TestnetForkVenue} from "./utils/TestnetForkVenue.sol";
 import {PriceOracle} from "../src/PriceOracle.sol";
 
 /// Real deployed #25 factory/registry/stock venue, with all changes confined to an
@@ -79,10 +80,11 @@ contract TestnetV2TradablePercentForkTest is Test {
         registry = V2TreasuryDeployer(address(factory.treasuryDeployer()));
         controller = registry.upgradeController();
         usdg = IERC20(factory.usdg());
-        (,,, address listed,) = factory.strategies(0);
+        market = TestnetMarket(vm.envOr("TESTNET_MARKET", address(0xc1AF2f52980F8A7AA4E90A8E30D5c3FaF0375f21)));
+        // From the venue, not from `strategies(0)`: a freshly deployed factory has no strategy yet.
+        address listed = TestnetForkVenue.listedStock(factory, market);
         stock = IERC20(listed);
         (oracle, venue,,) = factory.listings(listed);
-        market = TestnetMarket(vm.envOr("TESTNET_MARKET", address(0xc1AF2f52980F8A7AA4E90A8E30D5c3FaF0375f21)));
         // The registry is append-only and this runs at a floating block: whatever is registered there now is
         // the baseline, and must still be there, unchanged, after this registration.
         firstNewKind = uint8(registry.kindCount());
