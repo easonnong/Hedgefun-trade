@@ -11,6 +11,7 @@ import {ReentrancyGuard} from "@openzeppelin/contracts/utils/ReentrancyGuard.sol
 ///      Only that source may fund rewards, with a real transfer of a different asset than the staked one.
 ///      This contract enforces funding and time-weighted allocation; what counts as income is the source's rule.
 ///      Rewards stream over `duration`; stakes cannot enter and exit in a single funding transaction.
+///      A funding that arrives while a stream is running does not restart it: see `_schedule`.
 ///      No administrator can withdraw principal, rewards or donations. Fractions carry across checkpoints.
 ///      Rewards funded while nothing is staked are queued and start streaming with the first stake.
 contract V2StakingIncome is ReentrancyGuard {
@@ -144,8 +145,9 @@ contract V2StakingIncome is ReentrancyGuard {
         emit Withdrawn(msg.sender, to, amount);
     }
 
-    /// @notice Newly funded rewards and any unvested remainder stream for a fresh duration.
-    /// @dev The source controls funding timing; repeated funding can extend the stream, never claw back accrued rewards.
+    /// @notice Newly funded rewards join the running stream; see `_schedule` for how long the two then take.
+    /// @dev The source controls funding timing, and anyone can make the source fund a wei. Funding never claws
+    ///      back accrued rewards, and a small one cannot hold back a large one that is already streaming.
     function fund(uint256 amount) external nonReentrant {
         if (msg.sender != incomeSource) revert NotIncomeSource();
         if (amount == 0) revert InvalidAmount();
@@ -153,7 +155,7 @@ contract V2StakingIncome is ReentrancyGuard {
         _update(address(0));
         _pullExact(rewardToken, msg.sender, amount);
         totalFunded += amount;
-        _schedule(amount * RATE_SCALE + queuedRewardsScaled + _remaining());
+        _schedule(amount * RATE_SCALE + queuedRewardsScaled);
         emit IncomeFunded(amount, queuedRewardsScaled, rewardRateScaled, periodFinish);
     }
 
@@ -172,8 +174,17 @@ contract V2StakingIncome is ReentrancyGuard {
         return block.timestamp < periodFinish ? (periodFinish - block.timestamp) * rewardRateScaled : 0;
     }
 
-    /// @dev budget, rate and queue are reward-token raw units scaled by RATE_SCALE.
-    function _schedule(uint256 budget) private {
+    /// @dev `fresh` is what has no schedule yet; it, the rate and the queue are raw reward units times RATE_SCALE.
+    ///
+    ///      What is already streaming keeps the time it had left and what is new gets a full `duration`; the
+    ///      stream then runs for the mean of the two, weighted by amount. Restarting a full `duration` over
+    ///      everything on each funding would let a one-wei funding, which anyone can cause, push the whole
+    ///      remainder out again: repeated, the stream never ends and pays out on an exponential, not a line.
+    ///      Here a funding moves the end only by its own share of the total. The mean rounds down, so the end is
+    ///      never earlier than it was, never later than a full `duration`, and dust does not move it at all.
+    function _schedule(uint256 fresh) private {
+        uint256 left = _remaining();
+        uint256 budget = fresh + left;
         lastUpdate = block.timestamp;
         if (totalStaked == 0 || budget < duration) {
             queuedRewardsScaled = budget;
@@ -181,9 +192,10 @@ contract V2StakingIncome is ReentrancyGuard {
             periodFinish = block.timestamp;
             return;
         }
-        rewardRateScaled = budget / duration;
-        queuedRewardsScaled = budget % duration;
-        periodFinish = block.timestamp + duration;
+        uint256 span = left == 0 ? duration : (left * (periodFinish - block.timestamp) + fresh * duration) / budget;
+        rewardRateScaled = budget / span;
+        queuedRewardsScaled = budget % span;
+        periodFinish = block.timestamp + span;
     }
 
     function _update(address account) private {

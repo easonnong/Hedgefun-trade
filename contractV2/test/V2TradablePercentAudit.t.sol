@@ -108,6 +108,7 @@ contract V2TradablePercentAuditTest is V2TradablePercentEngineFixture {
             abi.encode(
                 trading,
                 custody,
+                _budgetDigest(t),
                 t.totalStockReceived(),
                 t.lastGoodPrice(),
                 t.lastGoodPriceAt(),
@@ -119,6 +120,26 @@ contract V2TradablePercentAuditTest is V2TradablePercentEngineFixture {
         );
     }
 
+    /// @dev The directional budget and the loss carry live in their own storage namespace.
+    function _budgetDigest(HedgeFunV2TradablePercentEngineTreasuryCore t) private view returns (bytes32) {
+        (uint64 epoch, uint256 basis, uint256 buyCap, uint256 sellCap, uint256 bought, uint256 sold) = t.dailyRiskLimits();
+        return keccak256(abi.encode(epoch, basis, buyCap, sellCap, bought, sold, t.unrecoveredLossUsdg()));
+    }
+
+    /// @dev `riskLimits` adds the two directions together. This is the traded direction's own daily cap: a policy
+    ///      that could spend both budgets one way would pass against the sum.
+    function _directionCap(HedgeFunV2TradablePercentEngineTreasuryCore t, bool buy, uint256 dailyBps)
+        private
+        view
+        returns (uint256 cap)
+    {
+        (, uint256 basis, uint256 buyCap, uint256 sellCap,,) = t.dailyRiskLimits();
+        cap = buy ? buyCap : sellCap;
+        assertEq(cap, Math.mulDiv(basis, dailyBps, 10_000));
+        (,,,, uint256 daily,,,) = t.riskLimits();
+        assertEq(daily, buyCap + sellCap);
+    }
+
     function testFuzz_partialFillUsesIndependentDirectionalCapsAndActualReward(
         uint16 rawBuy,
         uint16 rawSell,
@@ -126,8 +147,8 @@ contract V2TradablePercentAuditTest is V2TradablePercentEngineFixture {
         bool buy,
         bool payout
     ) public {
-        uint256 buyBps = bound(rawBuy, 1000, 3000);
-        uint256 sellBps = bound(rawSell, 1000, 3000);
+        uint256 buyBps = bound(rawBuy, 1000, 2500);
+        uint256 sellBps = bound(rawSell, 1000, 2500);
         uint16 fill = uint16(bound(rawFill, 1000, 9999));
         // A deliberately tiny legacy cap must not silently clip the new percentage action.
         vm.prank(owner);
@@ -181,7 +202,7 @@ contract V2TradablePercentAuditTest is V2TradablePercentEngineFixture {
     }
 
     function test_lpDonationsAndCreditedBuybackCannotInflateAnyTradingCap() public {
-        HedgeFunV2TradablePercentEngineTreasuryCore t = _launchPercent(3102, 2300, 3700, 5000, 0);
+        HedgeFunV2TradablePercentEngineTreasuryCore t = _launchPercent(3102, 2300, 1700, 5000, 0);
         AuditRisk memory before_ = _auditRisk(t);
         stock.mint(t.liquidityVault(), 1_000_000e18);
         usdg.mint(t.liquidityVault(), 1_000_000e6);
@@ -192,18 +213,19 @@ contract V2TradablePercentAuditTest is V2TradablePercentEngineFixture {
         t.creditLiquidityFee(900_000e18);
         assertEq(t.buybackStock(), 900_000e18);
         assertEq(keccak256(abi.encode(_auditRisk(t))), keccak256(abi.encode(before_)));
+        uint256 sellCap = _directionCap(t, false, 5000);
         t.execute();
         assertEq(t.buybackStock(), 900_000e18, "strategy must not spend reserved LP income");
-        assertLe(t.turnoverInEpoch(), before_.daily);
+        assertLe(t.turnoverInEpoch(), sellCap, "a sale is held to the sell direction's own cap");
     }
 
     function test_unbookedDonationIsCountedOnceAndOnlyForItsInputAsset() public {
-        HedgeFunV2TradablePercentEngineTreasuryCore t = _launchPercent(3103, 2000, 3000, 5000, 0);
+        HedgeFunV2TradablePercentEngineTreasuryCore t = _launchPercent(3103, 2000, 2500, 5000, 0);
         AuditRisk memory before_ = _auditRisk(t);
         stock.mint(address(t), 17e18 + 11);
         AuditRisk memory donated = _auditRisk(t);
         assertEq(donated.buy, before_.buy);
-        assertEq(donated.sell, Math.mulDiv(t.bookedStock() + 17e18 + 11, 3000, 10_000));
+        assertEq(donated.sell, Math.mulDiv(t.bookedStock() + 17e18 + 11, 2500, 10_000));
         assertEq(donated.capital, Math.mulDiv(t.bookedStock() + 17e18 + 11, 100e18, SCALE));
         assertTrue(t.book());
         assertFalse(t.book());
@@ -217,6 +239,7 @@ contract V2TradablePercentAuditTest is V2TradablePercentEngineFixture {
 
     function testFuzz_sameDateCapitalShrinkAndDonationNeverEraseConsumedTurnover(uint96 rawCash) public {
         HedgeFunV2TradablePercentEngineTreasuryCore t = _launchPercent(3104, 2000, 1000, 1000, 0);
+        AuditRisk memory initial = _auditRisk(t);
         t.execute();
         _advance(600);
         uint256 used = t.turnoverInEpoch();
@@ -224,17 +247,14 @@ contract V2TradablePercentAuditTest is V2TradablePercentEngineFixture {
         assertGt(used, 0);
         _price(1e18);
         AuditRisk memory reduced = _auditRisk(t);
-        assertLt(reduced.daily, used);
-        assertEq(reduced.remaining, 0);
-        bytes32 digestBefore = _auditDigest(t);
-        vm.expectRevert(HedgeFunTreasuryBase.NotDue.selector);
-        t.execute();
-        assertEq(_auditDigest(t), digestBefore);
+        assertEq(reduced.daily, initial.daily, "falling NAV cannot shrink the pinned daily budgets");
+        assertEq(reduced.used, used);
+        assertGt(reduced.remaining, 0, "a sale cannot consume the independent dip budget");
         usdg.mint(address(t), used * 30 + bound(rawCash, 0, 100_000e6));
         AuditRisk memory grown = _auditRisk(t);
         assertEq(grown.epoch, epoch);
         assertEq(grown.used, used);
-        assertEq(grown.remaining, grown.daily - used);
+        assertEq(grown.daily, initial.daily, "new capital cannot reopen today's budget");
         t.execute();
         assertGt(t.turnoverInEpoch(), used);
         assertLe(t.turnoverInEpoch(), grown.daily);
@@ -341,19 +361,20 @@ contract V2TradablePercentAuditTest is V2TradablePercentEngineFixture {
         if (buy) usdg.mint(address(t), 100_000e6);
         uint256 held = t.bookedStock();
         uint256 cash = t.reserveUsdg();
-        AuditRisk memory r = _auditRisk(t);
+        uint256 cap = _directionCap(t, buy, 500);
         (bool due, StrategyAction action, uint256 offered) = t.preview();
         assertTrue(due);
         assertEq(uint256(action), uint256(buy ? StrategyAction.BuyStock : StrategyAction.SellStock));
         if (buy) {
             assertLe(offered, Math.mulDiv(cash, bps, 10_000));
-            assertLe(offered, r.remaining);
+            assertLe(offered, cap);
         } else {
             assertLe(offered, Math.mulDiv(held, bps, 10_000));
-            assertLe(Math.mulDiv(offered, 100e18, SCALE), r.remaining);
+            assertLe(Math.mulDiv(offered, 100e18, SCALE), cap);
         }
         t.execute();
-        assertLe(t.turnoverInEpoch(), r.daily);
+        assertLe(t.turnoverInEpoch(), cap);
+        assertGt(t.turnoverInEpoch(), cap / 2, "the daily cap, not the action cap, is what bound this action");
         if (buy) assertLe(cash - t.reserveUsdg(), Math.mulDiv(cash, bps, 10_000));
         else assertLe(held - t.bookedStock(), Math.mulDiv(held, bps, 10_000));
     }

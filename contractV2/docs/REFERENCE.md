@@ -1052,7 +1052,7 @@ Kind is `view`/`pure` for a function, or `constant`/`immutable`/`storage` for th
 | `BUYBACK_TWAP_WINDOW() → (uint32)` | `0xb43c9fbf` | constant | this contract | the window the buy-back prices itself over. |
 | `MAX_BAND_BPS_PER_HOUR() → (uint256)` | `0x35e84029` | constant | this contract | — |
 | `MAX_BOUNTY_BPS() → (uint256)` | `0xe5a4ffc5` | constant | this contract | — |
-| `MAX_SIZING_AGE() → (uint256)` | `0xea3cb6df` | constant | this contract | how stale a cached price may be and still SIZE a buy-back chunk. |
+| `MAX_SIZING_AGE() → (uint256)` | `0xea3cb6df` | constant | this contract | Legacy sizing-cache limit; V2 buyback sizing uses guarded pool TWAP instead. |
 | `MAX_SLIPPAGE_BPS() → (uint256)` | `0xe229cd76` | constant | this contract | — |
 | `POOL_ONLY_SALE_INTERVAL() → (uint256)` | `0x2980616f` | constant | this contract | — |
 | `bookedStock() → (uint256)` | `0x4e10427e` | storage | this contract | held in lots |
@@ -1123,7 +1123,7 @@ Every custom error this contract's ABI carries, including those that bubble up f
 | `MAX_BAND_BPS_PER_HOUR` | `uint256` | public | `Limits.MAX_BAND_BPS_PER_HOUR` | — |
 | `MAX_BOUNTY_BPS` | `uint256` | public | `Limits.MAX_BOUNTY_BPS` | — |
 | `MAX_DRIFT_BPS` | `uint256` | internal | `9000` | however long since the last buy-back, its price limit never drifts further than this from the anchor |
-| `MAX_SIZING_AGE` | `uint256` | public | `5 days` = 432,000 | how stale a cached price may be and still SIZE a buy-back chunk. |
+| `MAX_SIZING_AGE` | `uint256` | public | `5 days` = 432,000 | Legacy sizing-cache limit; V2 buyback sizing uses guarded pool TWAP instead. |
 | `MAX_SLIPPAGE_BPS` | `uint256` | public | `Limits.MAX_SLIPPAGE_BPS` | — |
 | `POOL_ONLY_SALE_INTERVAL` | `uint256` | public | `1 hours` = 3,600 | — |
 
@@ -1211,7 +1211,7 @@ The tables above carry the first sentence only. The complete comment for every m
 
 - **`MAX_SIZING_AGE()`**
 
-  how stale a cached price may be and still SIZE a buy-back chunk. Long enough for a holiday weekend, short enough that a feed which has genuinely stopped takes the buy-back down with it.
+  Legacy sizing-cache limit; V2 buyback sizing uses guarded pool TWAP instead. Long enough for a holiday weekend, short enough that a feed which has genuinely stopped takes the buy-back down with it.
 
 - **`book()`**
 
@@ -1356,7 +1356,7 @@ Kind is `view`/`pure` for a function, or `constant`/`immutable`/`storage` for th
 | `MAX_BAND_BPS() → (uint256)` | `0x58e9ea7c` | constant | this contract | The widest the band may ever get, however stale the feed. |
 | `MAX_BAND_BPS_PER_HOUR() → (uint256)` | `0x35e84029` | constant | `HedgeFunTreasuryBase` | — |
 | `MAX_BOUNTY_BPS() → (uint256)` | `0xe5a4ffc5` | constant | `HedgeFunTreasuryBase` | — |
-| `MAX_SIZING_AGE() → (uint256)` | `0xea3cb6df` | constant | `HedgeFunTreasuryBase` | how stale a cached price may be and still SIZE a buy-back chunk. |
+| `MAX_SIZING_AGE() → (uint256)` | `0xea3cb6df` | constant | `HedgeFunTreasuryBase` | Legacy sizing-cache limit; V2 buyback sizing uses guarded pool TWAP instead. |
 | `MAX_SLIPPAGE_BPS() → (uint256)` | `0xe229cd76` | constant | `HedgeFunTreasuryBase` | — |
 | `POOL_ONLY_SALE_INTERVAL() → (uint256)` | `0x2980616f` | constant | `HedgeFunTreasuryBase` | — |
 | `TWAP_WINDOW() → (uint32)` | `0xe2c1d1d1` | constant | `PoolTrader` | — |
@@ -2886,7 +2886,7 @@ Kind is `view`/`pure` for a function, or `constant`/`immutable`/`storage` for th
 | `MAX_BAND_BPS() → (uint256)` | `0x58e9ea7c` | constant | `HedgeFunTreasury` | The widest the band may ever get, however stale the feed. |
 | `MAX_BAND_BPS_PER_HOUR() → (uint256)` | `0x35e84029` | constant | `HedgeFunTreasuryBase` | — |
 | `MAX_BOUNTY_BPS() → (uint256)` | `0xe5a4ffc5` | constant | `HedgeFunTreasuryBase` | — |
-| `MAX_SIZING_AGE() → (uint256)` | `0xea3cb6df` | constant | `HedgeFunTreasuryBase` | how stale a cached price may be and still SIZE a buy-back chunk. |
+| `MAX_SIZING_AGE() → (uint256)` | `0xea3cb6df` | constant | `HedgeFunTreasuryBase` | Legacy sizing-cache limit; V2 buyback sizing uses guarded pool TWAP instead. |
 | `MAX_SLIPPAGE_BPS() → (uint256)` | `0xe229cd76` | constant | `HedgeFunTreasuryBase` | — |
 | `MAX_STRATEGY_LOTS() → (uint256)` | `0xe3f85fc6` | constant | `HedgeFunV2Treasury` | — |
 | `POOL_ONLY_SALE_INTERVAL() → (uint256)` | `0x2980616f` | constant | `HedgeFunTreasuryBase` | — |
@@ -3109,7 +3109,7 @@ Kind is `view`/`pure` for a function, or `constant`/`immutable`/`storage` for th
 | `MAX_BAND_BPS() → (uint256)` | `0x58e9ea7c` | constant | `HedgeFunTreasury` | The widest the band may ever get, however stale the feed. |
 | `MAX_BAND_BPS_PER_HOUR() → (uint256)` | `0x35e84029` | constant | `HedgeFunTreasuryBase` | — |
 | `MAX_BOUNTY_BPS() → (uint256)` | `0xe5a4ffc5` | constant | `HedgeFunTreasuryBase` | — |
-| `MAX_SIZING_AGE() → (uint256)` | `0xea3cb6df` | constant | `HedgeFunTreasuryBase` | how stale a cached price may be and still SIZE a buy-back chunk. |
+| `MAX_SIZING_AGE() → (uint256)` | `0xea3cb6df` | constant | `HedgeFunTreasuryBase` | Legacy sizing-cache limit; V2 buyback sizing uses guarded pool TWAP instead. |
 | `MAX_SLIPPAGE_BPS() → (uint256)` | `0xe229cd76` | constant | `HedgeFunTreasuryBase` | — |
 | `MAX_STRATEGY_LOTS() → (uint256)` | `0xe3f85fc6` | constant | this contract | — |
 | `POOL_ONLY_SALE_INTERVAL() → (uint256)` | `0x2980616f` | constant | `HedgeFunTreasuryBase` | — |
@@ -3301,7 +3301,7 @@ Kind is `view`/`pure` for a function, or `constant`/`immutable`/`storage` for th
 | `MAX_BAND_BPS() → (uint256)` | `0x58e9ea7c` | constant | `HedgeFunTreasury` | The widest the band may ever get, however stale the feed. |
 | `MAX_BAND_BPS_PER_HOUR() → (uint256)` | `0x35e84029` | constant | `HedgeFunTreasuryBase` | — |
 | `MAX_BOUNTY_BPS() → (uint256)` | `0xe5a4ffc5` | constant | `HedgeFunTreasuryBase` | — |
-| `MAX_SIZING_AGE() → (uint256)` | `0xea3cb6df` | constant | `HedgeFunTreasuryBase` | how stale a cached price may be and still SIZE a buy-back chunk. |
+| `MAX_SIZING_AGE() → (uint256)` | `0xea3cb6df` | constant | `HedgeFunTreasuryBase` | Legacy sizing-cache limit; V2 buyback sizing uses guarded pool TWAP instead. |
 | `MAX_SLIPPAGE_BPS() → (uint256)` | `0xe229cd76` | constant | `HedgeFunTreasuryBase` | — |
 | `MAX_STRATEGY_LOTS() → (uint256)` | `0xe3f85fc6` | constant | `HedgeFunV2Treasury` | — |
 | `POOL_ONLY_SALE_INTERVAL() → (uint256)` | `0x2980616f` | constant | `HedgeFunTreasuryBase` | — |
@@ -3467,7 +3467,7 @@ Kind is `view`/`pure` for a function, or `constant`/`immutable`/`storage` for th
 | `MAX_BAND_BPS() → (uint256)` | `0x58e9ea7c` | constant | `HedgeFunTreasury` | The widest the band may ever get, however stale the feed. |
 | `MAX_BAND_BPS_PER_HOUR() → (uint256)` | `0x35e84029` | constant | `HedgeFunTreasuryBase` | — |
 | `MAX_BOUNTY_BPS() → (uint256)` | `0xe5a4ffc5` | constant | `HedgeFunTreasuryBase` | — |
-| `MAX_SIZING_AGE() → (uint256)` | `0xea3cb6df` | constant | `HedgeFunTreasuryBase` | how stale a cached price may be and still SIZE a buy-back chunk. |
+| `MAX_SIZING_AGE() → (uint256)` | `0xea3cb6df` | constant | `HedgeFunTreasuryBase` | Legacy sizing-cache limit; V2 buyback sizing uses guarded pool TWAP instead. |
 | `MAX_SLIPPAGE_BPS() → (uint256)` | `0xe229cd76` | constant | `HedgeFunTreasuryBase` | — |
 | `MAX_STRATEGY_LOTS() → (uint256)` | `0xe3f85fc6` | constant | `HedgeFunV2Treasury` | — |
 | `POOL_ONLY_SALE_INTERVAL() → (uint256)` | `0x2980616f` | constant | `HedgeFunTreasuryBase` | — |
@@ -3631,7 +3631,7 @@ Kind is `view`/`pure` for a function, or `constant`/`immutable`/`storage` for th
 | `MAX_BAND_BPS_PER_HOUR() → (uint256)` | `0x35e84029` | constant | `HedgeFunTreasuryBase` | — |
 | `MAX_BOUNTY_BPS() → (uint256)` | `0xe5a4ffc5` | constant | `HedgeFunTreasuryBase` | — |
 | `MAX_POLICY_GAS() → (uint256)` | `0x4b8f3e0b` | constant | this contract | — |
-| `MAX_SIZING_AGE() → (uint256)` | `0xea3cb6df` | constant | `HedgeFunTreasuryBase` | how stale a cached price may be and still SIZE a buy-back chunk. |
+| `MAX_SIZING_AGE() → (uint256)` | `0xea3cb6df` | constant | `HedgeFunTreasuryBase` | Legacy sizing-cache limit; V2 buyback sizing uses guarded pool TWAP instead. |
 | `MAX_SLIPPAGE_BPS() → (uint256)` | `0xe229cd76` | constant | `HedgeFunTreasuryBase` | — |
 | `MAX_STRATEGY_LOTS() → (uint256)` | `0xe3f85fc6` | constant | `HedgeFunV2Treasury` | — |
 | `POOL_ONLY_SALE_INTERVAL() → (uint256)` | `0x2980616f` | constant | `HedgeFunTreasuryBase` | — |
@@ -3928,7 +3928,7 @@ Kind is `view`/`pure` for a function, or `constant`/`immutable`/`storage` for th
 | `MAX_BAND_BPS_PER_HOUR() → (uint256)` | `0x35e84029` | constant | `HedgeFunTreasuryBase` | — |
 | `MAX_BOUNTY_BPS() → (uint256)` | `0xe5a4ffc5` | constant | `HedgeFunTreasuryBase` | — |
 | `MAX_POLICY_GAS() → (uint256)` | `0x4b8f3e0b` | constant | this contract | — |
-| `MAX_SIZING_AGE() → (uint256)` | `0xea3cb6df` | constant | `HedgeFunTreasuryBase` | how stale a cached price may be and still SIZE a buy-back chunk. |
+| `MAX_SIZING_AGE() → (uint256)` | `0xea3cb6df` | constant | `HedgeFunTreasuryBase` | Legacy sizing-cache limit; V2 buyback sizing uses guarded pool TWAP instead. |
 | `MAX_SLIPPAGE_BPS() → (uint256)` | `0xe229cd76` | constant | `HedgeFunTreasuryBase` | — |
 | `MAX_STRATEGY_LOTS() → (uint256)` | `0xe3f85fc6` | constant | `HedgeFunV2Treasury` | — |
 | `POOL_ONLY_SALE_INTERVAL() → (uint256)` | `0x2980616f` | constant | `HedgeFunTreasuryBase` | — |

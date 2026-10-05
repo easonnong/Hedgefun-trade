@@ -172,6 +172,7 @@ abstract contract V2TradablePercentEngineFixture is V2StrategyEngineAccountingFi
                 t.turnoverInEpoch(),
                 t.configHash(),
                 t.avgCost(),
+                t.unrecoveredLossUsdg(),
                 t.engineConfig()
             )
         );
@@ -270,7 +271,7 @@ contract V2TradablePercentEngineTest is V2TradablePercentEngineFixture {
         assertEq(initial.buy, 0);
         assertEq(initial.sell, t.bookedStock() / 10);
         assertEq(initial.capital, Math.mulDiv(t.bookedStock(), PRICE, 1e30));
-        assertEq(initial.daily, initial.capital / 2);
+        assertEq(initial.daily, (initial.capital / 2) * 2, "aggregate of the two directional budgets");
         (bool due, StrategyAction action, uint256 offered) = t.preview();
         assertTrue(due);
         assertEq(uint256(action), uint256(StrategyAction.SellStock));
@@ -285,7 +286,7 @@ contract V2TradablePercentEngineTest is V2TradablePercentEngineFixture {
         (due, action, offered) = t.preview();
         assertTrue(due);
         assertEq(uint256(action), uint256(StrategyAction.BuyStock));
-        assertEq(offered, cash.buy);
+        assertEq(offered, initial.capital / 2, "new cash cannot enlarge today's pinned buy budget");
         assertGt(offered, 2000e6, "large capital no longer hits a fixed 2000 cap");
         uint256 beforeCash = t.reserveUsdg();
         t.execute();
@@ -412,6 +413,37 @@ contract V2TradablePercentEngineTest is V2TradablePercentEngineFixture {
         assertEq(t.strategyNonce(), nonce + 1);
     }
 
+    /// The words a creator registers are theirs; what the treasury accepts is not. No listing chunk bounds a
+    /// schema-3 action, so a band under one trade's cost, or an action over a quarter, is refused at launch.
+    function test_launchRefusesBandInsideFrictionAndActionsOverAQuarter() public {
+        HedgeFunTreasuryBase.Params memory p = _launchPercent(2020, 2500, 2500, 10_000, 0).params();
+        uint256 floor = 30 + p.bountyBps;                           // the venue's 0.3% fee and the keeper reward
+        assertEq(floor, 80);
+        _expectUndeployable(2021, floor - 1, 2000, 2000);
+        _expectUndeployable(2022, 0, 2000, 2000);
+        _expectUndeployable(2023, 500, 2501, 2000);
+        _expectUndeployable(2024, 500, 2000, 10_000);
+        // exactly on both limits
+        EngineConfig memory c = _percentConfig(2500, 2500, 10_000, 0);
+        c.words[0] = bytes32(uint256(7000) | floor << 16 | uint256(600) << 32);
+        HedgeFunFactory.Request memory q = _request();
+        q.nonce = 2025;
+        deployer.setEngineConfig(q.symbol, q.nonce, percentKind, c);
+        (,, bytes32 terms) = factory.predict(q);
+        factory.launch(q, terms);
+    }
+
+    function _expectUndeployable(uint96 nonce, uint256 band, uint256 buy, uint256 sell) private {
+        EngineConfig memory c = _percentConfig(buy, sell, 5000, 0);
+        c.words[0] = bytes32(uint256(7000) | band << 16 | uint256(600) << 32);
+        HedgeFunFactory.Request memory q = _request();
+        q.nonce = nonce;
+        deployer.setEngineConfig(q.symbol, q.nonce, percentKind, c);
+        (,, bytes32 terms) = factory.predict(q);
+        vm.expectRevert(V2TreasuryDeployer.TreasuryDeployFailed.selector);
+        factory.launch(q, terms);
+    }
+
     function test_schemaThreeValidationRejectsReservedBitsAndInvalidPercentages() public {
         TradablePercentConfigHarness h = new TradablePercentConfigHarness();
         EngineConfig memory c = _percentConfig(2000, 1000, 500, 0);
@@ -422,6 +454,12 @@ contract V2TradablePercentEngineTest is V2TradablePercentEngineFixture {
         assertFalse(h.valid(c.words));
         c = _percentConfig(10001, 1000, 5000, 0);
         assertFalse(h.valid(c.words));
+        c = _percentConfig(2500, 2500, 10_000, 0);
+        assertTrue(h.valid(c.words), "a quarter per action is the ceiling, and daily may still be everything");
+        c = _percentConfig(2501, 1000, 5000, 0);
+        assertFalse(h.valid(c.words), "one action may not take more than a quarter of the cash");
+        c = _percentConfig(2000, 2501, 5000, 0);
+        assertFalse(h.valid(c.words), "one action may not take more than a quarter of the stock");
         c = _percentConfig(2000, 0, 5000, 0);
         assertFalse(h.valid(c.words));
         c = _percentConfig(2000, 10001, 5000, 0);

@@ -1,0 +1,59 @@
+Ran 1 test for test/V2DirectionalLpComparison.t.sol:V2DirectionalLpComparisonTest
+[PASS] test_compare50And70PercentLpAtEqualOrderflow() (gas: 39357640)
+Logs:
+  LP share bps: 5000
+  LP stock value USDG raw: 9583131947
+  treasury principal USDG raw: 9583131947
+  base liquidity: 2804031940795254212435
+  surplus liquidity: 4272983228175574220698
+  buy input USDG raw: 100000000
+  buy FUN received: 840262106963810223566
+  buy ending price / graduation 1e18: 1009951971477848725
+  buy input USDG raw: 1000000000
+  buy FUN received: 8102652857397536930734
+  buy ending price / graduation 1e18: 1085894748544477605
+  buy input USDG raw: 5000000000
+  buy FUN received: 34978309061693695917297
+  buy ending price / graduation 1e18: 1456722256937910871
+  sell FUN input: 1000000000000000000000
+  sell output USDG raw: 113902634
+  sell ending price / graduation 1e18: 976132539008327928
+  sell FUN input: 10000000000000000000000
+  sell output USDG raw: 1027953690
+  sell ending price / graduation 1e18: 795038845120865800
+  sell FUN input: 50000000000000000000000
+  sell output USDG raw: 3585713267
+  sell ending price / graduation 1e18: 386947776774468032
+  earned LP fees USDG raw: 30000000
+  buyback spent USDG raw: 30000000
+  buyback burned FUN raw: 127495068980235760577
+  buyback price increase bps: 17
+  LP share bps: 7000
+  LP stock value USDG raw: 13416384726
+  treasury principal USDG raw: 5749879168
+  base liquidity: 3925644717113355897421
+  surplus liquidity: 3149807157824742197064
+  buy input USDG raw: 100000000
+  buy FUN received: 840634947968015477827
+  buy ending price / graduation 1e18: 1009509519520361055
+  buy input USDG raw: 1000000000
+  buy FUN received: 8106094848378734649361
+  buy ending price / graduation 1e18: 1085453041136688294
+  buy input USDG raw: 5000000000
+  buy FUN received: 34991128769778673371470
+  buy ending price / graduation 1e18: 1456298577072770326
+  sell FUN input: 1000000000000000000000
+  sell output USDG raw: 114294691
+  sell ending price / graduation 1e18: 982863869691104981
+  sell FUN input: 10000000000000000000000
+  sell output USDG raw: 1060792959
+  sell ending price / graduation 1e18: 846647255980513340
+  sell FUN input: 50000000000000000000000
+  sell output USDG raw: 4019791915
+  sell ending price / graduation 1e18: 486304607459048178
+  earned LP fees USDG raw: 30000000
+  buyback spent USDG raw: 30000000
+  buyback burned FUN raw: 127518494723825020788
+  buyback price increase bps: 17
+
+Suite result: ok. 1 passed; 0 failed; 0 skipped; finished in 108.37ms (7.99ms CPU time)

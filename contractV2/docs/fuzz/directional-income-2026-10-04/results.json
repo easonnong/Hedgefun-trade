@@ -1,0 +1,104 @@
+{
+  "source_commit": "f3aeaec95a09abe307dfb669ec14b0d73d55557a",
+  "scope": "Schema-3 directional daily quota, LP comparison, net realized strategy-income reserve; integrates PR28 and PR29 and reuses PR30 registry identity fix. No public transactions.",
+  "offline": {
+    "passed": 1115,
+    "failed": 0,
+    "skipped": 46,
+    "suites": 128
+  },
+  "python": {
+    "tools_passed": 72,
+    "tests_passed": 93
+  },
+  "fork": {
+    "chain_id": 46630,
+    "block": 128957524,
+    "passed": 25,
+    "failed": 0,
+    "skipped": 0,
+    "real_controller_upgrade": true,
+    "public_broadcast": false,
+    "pinned_basis_usdg_raw": 18183034557,
+    "prior_sells_usdg_raw": 8872817591,
+    "old_shared_dynamic_cap_after_fall_usdg_raw": 7193767130,
+    "actual_new_buy_usdg_raw": 1607938914
+  },
+  "sizes": {
+    "HedgeFunV2TradablePercentEngineTreasury": {
+      "runtime_bytes": 1061,
+      "creation_bytes_without_args": 43407
+    },
+    "HedgeFunV2TradablePercentEngineTreasuryLogic": {
+      "runtime_bytes": 24072,
+      "creation_bytes_without_args": 39839
+    },
+    "TradablePercentMigrationLogic": {
+      "runtime_bytes": 24354,
+      "creation_bytes_without_args": 40140
+    },
+    "V2TradablePercentPreview": {
+      "runtime_bytes": 7676,
+      "creation_bytes_without_args": 7807
+    },
+    "V2TreasuryDeployer": {
+      "runtime_bytes": 11488,
+      "creation_bytes_without_args": 49116
+    },
+    "HedgeFunV2UpgradeableTreasuryLogic": {
+      "runtime_bytes": 24444,
+      "creation_bytes_without_args": 30733
+    }
+  },
+  "source_sha256": {
+    "contractV2/script/helpers/ReviewedTreasuryRegistry.sol": "332ba7e5cd25f9d5ee4ab3dc53e79128b4ddf2377cb814e29fd54e703a90c7bd",
+    "contractV2/src/HedgeFunTreasury.sol": "a4677b80ae435244886c2bc908753516df73d5549e57223447f3de59ec1b90d9",
+    "contractV2/src/HedgeFunTreasuryBase.sol": "b1c555168a044667af9ae2891497e4f34dfa261b510f6935d9b7ac7496a8ac9e",
+    "contractV2/src/v2/HedgeFunV2TradablePercentEngineTreasury.sol": "7674289fafe7e5c5bb73a7aa97aab3886c5cf06cbb4700b9c411b15f41ee8827",
+    "contractV2/src/v2/HedgeFunV2Treasury.sol": "c318b786e1771930a459491f019da2137474f906eef8170cd5111387eeac303f",
+    "contractV2/src/v2/strategy/TradablePercentEngineConfig.sol": "e2e0c4c6a7c90a620e35ef1a8d477e068a3e326963ba0b6d7c89fbebf6f79d26",
+    "contractV2/src/v2/strategy/V2TradablePercentPreview.sol": "6b77a05a207ceacd95761e165b98f65ad29f94f3c5e06cb5869a9fbcf7181c5e",
+    "contractV2/test/TestnetV2DirectionalBudgetFork.t.sol": "0faa39a1760707e185c385ffdb8c01923a5536920d0cd09aab39842dfa5f6ca7",
+    "contractV2/test/TestnetV2TradablePercentFork.t.sol": "ee4028ba871966f68f4ffa6821b74556837dfac23d517e33f253b29670858fb2",
+    "contractV2/test/TestnetV2WeekendBuybackFork.t.sol": "1b506a0c5b421281cb8a9ad768ab95644d4c5358650647b68be495e4f3b4814e",
+    "contractV2/test/V2BuybackKind.t.sol": "dde05e6f8ab351433a0fe8673f3d24f96c6dd0027b57c9f36cdba8f8e1b3b177",
+    "contractV2/test/V2DirectionalDailyBudget.t.sol": "95c2b07de7251cbaf1971e5eb0689aa99925b64cd04263c808f074dd29f18cc8",
+    "contractV2/test/V2DirectionalLpComparison.t.sol": "6113408c9074c6331b7f08aee3dcf9134dadf50dbfc4af0331849757f3465363",
+    "contractV2/test/V2RealizedIncome.t.sol": "7aa114b4808af82275323205744589127e9b8d4b783fedf6dd6a15dd49a88cfa",
+    "contractV2/test/V2TradablePercentAudit.t.sol": "c2e5fb58a8f259cad21b24587efc5267b046b384138b192c4f2b55297b377b78",
+    "contractV2/test/V2TradablePercentEngine.t.sol": "a90e05279a8f6f6f9c696c1a04152ec61289660488d816470e94aeab07f953db",
+    "contractV2/test/V2TradablePercentInvariant.t.sol": "14e3a126489a22bee817d001340f3a75df9afd334027ab988749cbb507127e48",
+    "contractV2/tools/tests/test_treasury_profile_config.py": "2687a1481fdadba0b632664cdc3811fdbc5ae3261e02549304bff271fb8a8c99",
+    "contractV2/tools/treasury_profile_config.py": "04a8543b929be9958ae82a7bd36c74970cd1400d3d19e30a4d2b7c1ad37af408"
+  },
+  "limitations": [
+    "LP comparison mocks the stock/USDG venue and price; real V4 pool, curve, hook and router.",
+    "No live implementation upgrades or LP setting changes.",
+    "No pre-upgrade realized-loss backfill; this is not a NAV high-water mark.",
+    "Old unknown same-day turnover is charged to both directions until rollover.",
+    "Custom policies depending on the old msg.sender need compatibility review; supported policy is stateless."
+  ],
+  "fuzz": {
+    "runs": 1024,
+    "invariant_runs": 512,
+    "invariant_depth": 128,
+    "fail_on_revert": true,
+    "seeds": {
+      "0x2026100401": {
+        "passed": 48,
+        "failed": 0,
+        "skipped": 0
+      },
+      "0x2026100402": {
+        "passed": 48,
+        "failed": 0,
+        "skipped": 0
+      },
+      "0x2026100403": {
+        "passed": 48,
+        "failed": 0,
+        "skipped": 0
+      }
+    }
+  }
+}

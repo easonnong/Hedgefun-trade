@@ -1,0 +1,131 @@
+{
+ "fetched": "2026-10-05",
+ "hourlySource": "https://query1.finance.yahoo.com/v8/finance/chart/<TICKER>?interval=1h&range=730d&includePrePost=true",
+ "hourlyNormalisation": "closes only; a bar whose close is more than 8% from both neighbours is dropped",
+ "feedSource": "Chainlink aggregator proxies on Robinhood Chain mainnet (chain 4663), every round of the current phase via getRoundData",
+ "feedNormalisation": "the first rounds of each feed (2026-06-21 to 2026-06-23) carry answers 1e8 times the 8-decimal scale and are divided by 1e8; non-positive answers dropped",
+ "hourly": {
+  "TSLA": {
+   "rows": 12077,
+   "rawSha256": "30b30c3dadc41f36bc91a0aef88f0292633b0ac7625b2d37dceae89bd6f0a960",
+   "sha256": "a5bfa433f767e94daf44a5b0bc2c1993eacb858bf1d241c9a0deccc2c4f85f04"
+  },
+  "SNDK": {
+   "rows": 6227,
+   "rawSha256": "42cf36df58a62c6b614192ba4835ddafc62d5849b1dd29c35302206c0f542cae",
+   "sha256": "fcef283aa8180d3275beb26ba80813c8ab90e2ea084a56a32cef99b963d61bf5"
+  },
+  "PLTR": {
+   "rows": 12089,
+   "rawSha256": "c47d55dc65e761876461855b9e68f06dba6dd5bc68dccf32c8095296f257c887",
+   "sha256": "e6a4fc4e440a4387e1f83357fe7632f11e39bd9428ad4fd1c7ef2867ffdfe7e8"
+  },
+  "AMD": {
+   "rows": 12079,
+   "rawSha256": "fa279dfc91bdc84f0a0054b7630eeedb7ce2e1619f70bd43712a91ac941fe29c",
+   "sha256": "cbfbe43f60709f9ff4e6a2111a0e11c7eba218bc15865c038f233895f155245c"
+  },
+  "MU": {
+   "rows": 12079,
+   "rawSha256": "0304ddacb607a50c6e0a5a2c232114c9aa06c691d50663653f981047c4bd7622",
+   "sha256": "bcc4f19f0f84f775f8718d4c6316dc05145f5bd07685bafe9f21b9135207b630"
+  },
+  "ORCL": {
+   "rows": 12109,
+   "rawSha256": "9a4609314e9577e0f0c695c562e73f45d76d04f8299ca1f145b94f3b3e9aab1b",
+   "sha256": "a1dc237916e9ad32fd3718bec9fce9e1c09b458330568cc3b350f075e947a67b"
+  },
+  "NVDA": {
+   "rows": 12075,
+   "rawSha256": "f6dda4f163eb461ffbd52f95bad8a7711677146cfb58d0df4e2d5a2f380c0672",
+   "sha256": "507a6ea42fcdebc9b0229a387001b82608f6cc39fb1311e2e29b0a7d0ba68f82"
+  },
+  "MSTR": {
+   "rows": 12076,
+   "rawSha256": "2439defb3e801e0027387ce6caf5fe541a571459f924fbd7a41b4179b28f2cd6",
+   "sha256": "a90c768674891e8eb1a1270772f023a5784c72c28f24b12801435578b7c6bda4"
+  },
+  "COIN": {
+   "rows": 12081,
+   "rawSha256": "505bc224ba89db583d549198174293cc7b0d40298ad4e483a49dfde824d5d34a",
+   "sha256": "19ea0b5e0d841c72f5fa29b50e703464250932cc660d6d766e7f10519bed250d"
+  },
+  "CRWV": {
+   "rows": 6328,
+   "rawSha256": "33d09d673f9ad96d2801f1c6ad6f5e583990cc2de0882f51556ce763c00345ca",
+   "sha256": "d3c037749239411a08c1ded712522437b54b52e2ee08547ca81f366108ffa9c9"
+  }
+ },
+ "feed": {
+  "TSLA": {
+   "proxy": "0x4A1166a659A55625345e9515b32adECea5547C38",
+   "rows": 1448,
+   "first": 1782086444,
+   "last": 1791161051,
+   "sha256": "ef365b8bbd0211e4b0f730c08b40cce6cf633c813c70395ffcc8132708c01583"
+  },
+  "SNDK": {
+   "proxy": "0xfb133Fa4B7b385802B693a293606682Df47109A3",
+   "rows": 7454,
+   "first": 1782086444,
+   "last": 1791158420,
+   "sha256": "b687d3931c537da75dfe13e1e89266ed0d81d240a60535a05d1981c4ee787079"
+  },
+  "PLTR": {
+   "proxy": "0x820ABedFF239034956B7A9d2F0a331f9F075eB4c",
+   "rows": 2146,
+   "first": 1782086442,
+   "last": 1791158447,
+   "sha256": "9ba470ead408c1304f46a009aa3cef58e0bedc080e805f3ed030af0fdec38039"
+  },
+  "AMD": {
+   "proxy": "0x943A29E7ae51A4798823ca9eEd2ed533B2A22C72",
+   "rows": 3103,
+   "first": 1782086443,
+   "last": 1791163668,
+   "sha256": "27548df0ca77338c6253f34cd243bc742197c306f99abc505ab6ca40e26f6e90"
+  },
+  "MU": {
+   "proxy": "0x425EEFdCf05ed6526C3cE61Af99429A228a6d596",
+   "rows": 5178,
+   "first": 1782086443,
+   "last": 1791158424,
+   "sha256": "d1861b6db622e16cf9af14bfe3b656ba32e1905a2dc3d9b236fa8d4e27cff223"
+  },
+  "ORCL": {
+   "proxy": "0x0e6a64a2B58A6693a531E6c555f3A5d042eEA844",
+   "rows": 2322,
+   "first": 1782086443,
+   "last": 1791167737,
+   "sha256": "a02ffe4b1161a3a6bb6645e66b4862809d8763fb42c1c025b1392d0eda45b0b0"
+  },
+  "NVDA": {
+   "proxy": "0x379EC4f7C378F34a1B47E4F3cbeBCbAC3E8E9F15",
+   "rows": 1164,
+   "first": 1782086443,
+   "last": 1791164444,
+   "sha256": "c4ba1b29abdd822ef9c400396d6952e3f761a36538f7f9beef79658ead17016d"
+  },
+  "MSTR": {
+   "proxy": "0x396118bdFB181e6240E74D243F266B061c0edc3D",
+   "rows": 4581,
+   "first": 1782086443,
+   "last": 1791163902,
+   "sha256": "7b0419cacbced3d684f7a4176ecc1e3bf3e5680ed6251cf393deba99b1f19ecc"
+  },
+  "COIN": {
+   "proxy": "0xA3a468A452940B7D6b69991207B508c609a98Ef2",
+   "rows": 3305,
+   "first": 1782086443,
+   "last": 1791163899,
+   "sha256": "a7c0c275e56bb441733a6a328d684f34d24f50fa4c177647369940c83a15459e"
+  },
+  "CRWV": {
+   "proxy": "0xe1b3aABCAFAd1c94708dc1367dcfF8Aa4407487C",
+   "rows": 4643,
+   "first": 1782086444,
+   "last": 1791159107,
+   "sha256": "3a465f346df366e2a341791059b5ce769c732b7bc4e91da667e3d95780ded3d4"
+  }
+ }
+}

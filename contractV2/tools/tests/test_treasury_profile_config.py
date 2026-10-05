@@ -29,7 +29,7 @@ def fixture_cast(operation, *args):
 
 def profile():
     return {"mode": "strategy", "strategy": "rebalance", "execution": "continuous",
-            "targetPercent": "50", "bandPercent": "5", "buyPercent": "20", "sellPercent": "30",
+            "targetPercent": "50", "bandPercent": "5", "buyPercent": "20", "sellPercent": "25",
             "dailyPercent": "50", "profitToBuybackPercent": "25", "cooldownSeconds": 600}
 
 
@@ -38,9 +38,21 @@ class ProfileSerializationTest(unittest.TestCase):
         c = TOOL.engine_config(profile(), "0x" + "AB" * 32)
         self.assertEqual((c["schema"], c["engineVersion"], c["policyKey"]), (3, 1, "0x" + "ab" * 32))
         self.assertEqual(c["words"], ["0x" + "09c40000025801f41388".zfill(64),
-                                     "0x" + "0bb807d0".zfill(64), "0x" + "1388".zfill(64)])
+                                     "0x" + "09c407d0".zfill(64), "0x" + "1388".zfill(64)])
         self.assertEqual(int(c["words"][0], 16) >> 80, 0)
         self.assertEqual(int(c["words"][1], 16) >> 32, 0)
+
+    def test_directional_daily_limits_are_distinct_and_exclusive(self):
+        p = profile()
+        del p["dailyPercent"]
+        p.update(dailyBuyPercent="50", dailySellPercent="20")
+        c = TOOL.engine_config(p, "0x" + "01" * 32)
+        self.assertEqual(int(c["words"][2], 16), 5000 | 2000 << 16)
+        for bad in (dict(p, dailyPercent="50"), dict(p, dailyBuyPercent="0"),
+                    dict(p, dailySellPercent="0"), dict(p, dailySellPercent="100.01"),
+                    {k: v for k, v in p.items() if k != "dailySellPercent"}):
+            with self.subTest(bad=bad), self.assertRaises(ValueError):
+                TOOL.engine_config(bad, "0x" + "01" * 32)
 
     def test_decimal_strings_have_exact_basis_point_precision(self):
         for value, expected in (("0.01", 1), ("0.10", 10), ("19.99", 1999), ("100", 10000)):
@@ -52,14 +64,15 @@ class ProfileSerializationTest(unittest.TestCase):
 
     def test_input_asset_percentages_need_not_be_below_daily_percentage(self):
         p = profile()
-        p.update(buyPercent="100", sellPercent="100", dailyPercent="0.01")
+        p.update(buyPercent="25", sellPercent="25", dailyPercent="0.01")
         c = TOOL.engine_config(p, "0x" + "01" * 32)
-        self.assertEqual(int(c["words"][1], 16), 0x27102710)
+        self.assertEqual(int(c["words"][1], 16), 0x09c409c4)
         self.assertEqual(int(c["words"][2], 16), 1)
 
     def test_invalid_configuration_is_refused_before_any_readback(self):
         cases = (("targetPercent", "19.99"), ("targetPercent", "90.01"), ("bandPercent", "50"),
                  ("buyPercent", "0"), ("sellPercent", "0"), ("dailyPercent", "0"),
+                 ("buyPercent", "25.01"), ("sellPercent", "25.01"), ("sellPercent", "100"), ("bandPercent", "0"),
                  ("profitToBuybackPercent", "100.01"), ("cooldownSeconds", 599),
                  ("cooldownSeconds", 2**32), ("cooldownSeconds", True))
         for field, value in cases:
@@ -182,6 +195,16 @@ class RegistrationIdentityTest(unittest.TestCase):
         self.reader.responses[self.registry, "policyAuditManifestHash(bytes32)", (self.key,)] = [10]
         with self.assertRaisesRegex(ValueError, "does not commit"):
             self.verify()
+
+    def test_registry_kind_zero_is_the_reviewed_code_or_this_builds_own(self):
+        r = self.reader.responses
+        own = int(fixture_cast("keccak", self.template), 16)
+        for accepted in (TOOL.REVIEWED_KIND_ZERO, own):
+            r[self.registry, "allInTriggerCodeHash()", ()] = [accepted]
+            self.assertEqual(TOOL.kind_zero(self.reader, self.registry, fixture_cast), accepted)
+        r[self.registry, "allInTriggerCodeHash()", ()] = [own + 1]
+        with self.assertRaisesRegex(ValueError, "unreviewed kind-0"):
+            TOOL.kind_zero(self.reader, self.registry, fixture_cast)
 
     def test_numeric_kind_must_not_overflow_or_accept_boolean_alias(self):
         for kind in (0, 255, 256, -1, True, "4"):

@@ -1,0 +1,140 @@
+No files changed, compilation skipped
+2026-10-05T00:17:59.754411Z  WARN foundry_fork_db::cache: Failed to read cache file err=Os { code: 2, kind: NotFound, message: "No such file or directory" } path="/Users/leo/.foundry/cache/rpc/46630/128957524"
+
+Ran 2 tests for test/TestnetV2DirectionalBudgetFork.t.sol:TestnetV2DirectionalBudgetForkTest
+[PASS] test_forkLegacySameDayUseSurvivesRealControllerUpgrade() (gas: 980953)
+Logs:
+  fork block: 128957524
+
+[PASS] test_forkSameDayDipBudgetSurvivesPriorSales() (gas: 2557797)
+Logs:
+  fork block: 128957524
+  pinned basis USDG raw: 18183034557
+  prior sells USDG raw: 8872817591
+  old dynamic shared cap USDG raw: 7193767130
+  new dip buy actual USDG raw: 1607938914
+
+Suite result: ok. 2 passed; 0 failed; 0 skipped; finished in 14.61s (10.74s CPU time)
+2026-10-05T00:18:14.356464Z  WARN foundry_fork_db::cache: Failed to read cache file err=Os { code: 2, kind: NotFound, message: "No such file or directory" } path="/Users/leo/.foundry/cache/rpc/46630/128957524"
+
+Ran 16 tests for test/TestnetV2IncomeKindsFork.t.sol:TestnetV2IncomeKindsForkTest
+[PASS] test_dividendKindOnDeployedFactory() (gas: 13539062)
+Logs:
+  income kinds fork block: 128957524
+
+[PASS] test_dividendKindOptionalBookFailureProtectsPrincipal() (gas: 12629425)
+Logs:
+  income kinds fork block: 128957524
+
+[PASS] test_dividendKindPreclaimedFeesRemainIncome() (gas: 12628846)
+Logs:
+  income kinds fork block: 128957524
+
+[PASS] test_splitKindOnDeployedFactory() (gas: 13865943)
+Logs:
+  income kinds fork block: 128957524
+
+[PASS] test_splitKindOptionalBookFailureProtectsPrincipal() (gas: 12649604)
+Logs:
+  income kinds fork block: 128957524
+
+[PASS] test_splitKindPreclaimedFeesRemainIncome() (gas: 12649289)
+Logs:
+  income kinds fork block: 128957524
+
+[PASS] test_strategy25KindOnDeployedFactory() (gas: 15649864)
+Logs:
+  income kinds fork block: 128957524
+
+[PASS] test_strategy25OptionalBookFailureProtectsPrincipal() (gas: 14525551)
+Logs:
+  income kinds fork block: 128957524
+
+[PASS] test_strategy25PreclaimedFeesRemainIncome() (gas: 14526958)
+Logs:
+  income kinds fork block: 128957524
+
+[PASS] test_strategy25StopLossOnDeployedVenue() (gas: 14957551)
+Logs:
+  income kinds fork block: 128957524
+
+[PASS] test_strategy25TakesProfitAndBuysTheDipOnDeployedVenue() (gas: 15633744)
+Logs:
+  income kinds fork block: 128957524
+
+[PASS] test_strategy50KindOnDeployedFactory() (gas: 15650542)
+Logs:
+  income kinds fork block: 128957524
+
+[PASS] test_strategy50OptionalBookFailureProtectsPrincipal() (gas: 14528177)
+Logs:
+  income kinds fork block: 128957524
+
+[PASS] test_strategy50PreclaimedFeesRemainIncome() (gas: 14529606)
+Logs:
+  income kinds fork block: 128957524
+
+[PASS] test_strategy50StopLossOnDeployedVenue() (gas: 14959952)
+Logs:
+  income kinds fork block: 128957524
+
+[PASS] test_strategy50TakesProfitAndBuysTheDipOnDeployedVenue() (gas: 15635507)
+Logs:
+  income kinds fork block: 128957524
+
+Suite result: ok. 16 passed; 0 failed; 0 skipped; finished in 40.09s (35.60s CPU time)
+
+Ran 2 tests for test/TestnetV2TradablePercentFork.t.sol:TestnetV2TradablePercentForkTest
+[PASS] test_launchGraduationTradableRebalanceAndUpgradePreserveInventoryAndLpThenExecuteAgain() (gas: 24302621)
+Logs:
+  tradable percent fork block: 128957524
+  proposed sell stock: 10158119864668922185
+  actual turnover USDG: 3639306440
+  upgraded fork treasury: 0x1d6F0289173011de53Cf3C66ddae0A02157953fA
+  replacement implementation: 0x2e234DAe75C793f67A35089C9d99245E1C58470b
+  proposed sell stock: 16452991783470275496
+  actual turnover USDG: 5894125386
+  post-upgrade engine nonce: 2
+  post-upgrade engine USDG reserve: 9456843513
+
+[PASS] test_registrationAppendsSchemaThreeAndPreservesLegacyManifestsAndChunks() (gas: 19029176)
+Logs:
+  tradable percent fork block: 128957524
+
+Suite result: ok. 2 passed; 0 failed; 0 skipped; finished in 12.52s (7.31s CPU time)
+
+Ran 3 tests for test/TestnetV2TreasuryUpgradeFork.t.sol:TestnetV2TreasuryUpgradeForkTest
+[PASS] test_buybackUpgradePreservesRealBalancesAndLpThenBooksAndBuys() (gas: 15870407)
+Logs:
+  upgradeable kinds fork block: 128957524
+  upgraded fork treasury: 0xd75b5682C7e71122Bd3054c7D82d2c990ea2A47c
+  replacement implementation: 0xF62849F9A0B5Bf2913b396098F7c7019b51A820a
+  post-upgrade buyback stock spent: 1000000000000000000
+  post-upgrade FUN burned: 1569005241304956200841341
+
+[PASS] test_engineUpgradePreservesRealInventoryAndLpThenExecutesAgain() (gas: 19685688)
+Logs:
+  upgradeable kinds fork block: 128957524
+  upgraded fork treasury: 0x2aDBF58fD82D16d4a5e931A623f7Dd1a6d39dEF8
+  replacement implementation: 0xF62849F9A0B5Bf2913b396098F7c7019b51A820a
+  post-upgrade engine nonce: 2
+  post-upgrade engine USDG reserve: 3967982665
+
+[PASS] test_registrationAppendsKindsAndPreservesLegacyManifestsAndChunks() (gas: 20891207)
+Logs:
+  upgradeable kinds fork block: 128957524
+
+Suite result: ok. 3 passed; 0 failed; 0 skipped; finished in 13.99s (12.94s CPU time)
+
+Ran 2 tests for test/V2IncomeKindCompatibility.t.sol:TestnetV2IncomeCompatibilityForkTest
+[PASS] test_fork_legacyFactoryRejectsBeforeRegistrationAndDuringReadback() (gas: 27288835)
+Logs:
+  compatibility fork block: 128957524
+
+[PASS] test_fork_reviewedFactoryAcceptsRegistrationAndReadback() (gas: 55463673)
+Logs:
+  compatibility fork block: 128957524
+
+Suite result: ok. 2 passed; 0 failed; 0 skipped; finished in 1.02s (665.17ms CPU time)
+
+Ran 5 test suites in 82.24s (82.24s CPU time): 25 tests passed, 0 failed, 0 skipped (25 total tests)

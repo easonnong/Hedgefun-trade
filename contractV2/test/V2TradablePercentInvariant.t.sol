@@ -41,6 +41,9 @@ contract TradablePercentAuditHandler is Test {
     uint256 public lastSuccessAt;
     uint64 public ghostEpoch;
     uint256 public ghostUsed;
+    uint256 public ghostBought;
+    uint256 public ghostSold;
+    uint256 public ghostDailyBasis;
     uint256 public dailyAtLastSuccess;
     uint256 public directionalCapAtLastSuccess;
     uint256 public directionalInputAtLastSuccess;
@@ -51,6 +54,7 @@ contract TradablePercentAuditHandler is Test {
         uint256 cash;
         uint256 buyback;
         uint256 price;
+        uint256 cost;
         uint256 capital;
         uint256 keeperStock;
         uint256 keeperCash;
@@ -172,6 +176,7 @@ contract TradablePercentAuditHandler is Test {
         s.inventory = s.stockBalance - s.buyback;
         s.cash = treasury.reserveUsdg();
         (, s.price) = treasury.health();
+        s.cost = treasury.avgCost();
         s.capital = Math.mulDiv(s.inventory, s.price, SCALE) + s.cash;
         s.keeperStock = stock.balanceOf(address(this));
         s.keeperCash = usdg.balanceOf(address(this));
@@ -201,7 +206,7 @@ contract TradablePercentAuditHandler is Test {
             uint256 moved = s.stockBalance - stock.balanceOf(address(treasury)) + treasury.buybackStock() - s.buyback;
             consumed = Math.mulDiv(moved, s.price, SCALE);
             directionalInputAtLastSuccess = moved;
-            directionalCapAtLastSuccess = Math.mulDiv(s.inventory, 3000, 10_000);
+            directionalCapAtLastSuccess = Math.mulDiv(s.inventory, 2500, 10_000);
             uint256 gross = s.poolCash - usdg.balanceOf(address(venue));
             if (usdg.balanceOf(address(this)) - s.keeperCash != Math.mulDiv(gross, 50, 10_000)) _fail(16);
             if (treasury.bookedStock() != s.inventory - moved) _fail(32);
@@ -212,12 +217,25 @@ contract TradablePercentAuditHandler is Test {
         if (ghostEpoch != epoch) {
             ghostEpoch = epoch;
             ghostUsed = 0;
+            ghostBought = 0;
+            ghostSold = 0;
+            ghostDailyBasis = s.capital;
         }
         ghostUsed += consumed;
-        dailyAtLastSuccess = Math.mulDiv(s.capital, 5000, 10_000);
-        if (consumed < 5e6) _fail(128);
+        if (action == HedgeFunV2Treasury.Action.RebalanceBuy) ghostBought += consumed;
+        else ghostSold += consumed;
+        dailyAtLastSuccess = Math.mulDiv(ghostDailyBasis, 5000, 10_000);
+        // What has to be a lot is the FILL. For a buy that is the cash spent. For a sale it is the stock swapped
+        // plus the marked gain withheld beside it, and what leaves inventory can be less than that: loss recovery
+        // and costs keep withheld stock in inventory. The swapped part alone is never under a lot less the largest
+        // share a sale withholds, `payoutBps` of the gain over average cost.
+        uint256 lot = 5e6;
+        if (action == HedgeFunV2Treasury.Action.RebalanceSell && s.price > s.cost) {
+            lot -= Math.mulDiv(Math.mulDiv(lot, s.price - s.cost, s.price), treasury.payoutBps(), 10_000) + 4;
+        }
+        if (consumed < lot) _fail(128);
         if (directionalInputAtLastSuccess > directionalCapAtLastSuccess) _fail(256);
-        if (ghostUsed > dailyAtLastSuccess) _fail(512);
+        if (ghostBought > dailyAtLastSuccess || ghostSold > dailyAtLastSuccess) _fail(512);
         if (treasury.turnoverInEpoch() != ghostUsed) _fail(1024);
         if (treasury.turnoverEpoch() != epoch) _fail(2048);
         if (nonce != successes + 1 || treasury.strategyNonce() != nonce) _fail(4096);
@@ -237,14 +255,18 @@ contract TradablePercentAuditHandler is Test {
     }
 
     function _digest() private view returns (bytes32) {
+        (bool readOk, bytes memory daily) = address(treasury).staticcall(abi.encodeWithSignature("dailyRiskLimits()"));
+        require(readOk, "daily read");
         bytes32 execution = keccak256(
             abi.encode(
+                daily,
                 treasury.strategyNonce(),
                 treasury.lastStrategyAt(),
                 treasury.turnoverEpoch(),
                 treasury.turnoverInEpoch(),
                 treasury.policyState(),
                 treasury.avgCost(),
+                treasury.unrecoveredLossUsdg(),
                 treasury.bookedStock(),
                 treasury.buybackStock()
             )
@@ -283,7 +305,7 @@ contract V2TradablePercentInvariantTest is V2TradablePercentEngineFixture {
         super.setUp();
         vm.prank(owner);
         factory.setListingGates(address(stock), 50, 100, 5e6);
-        treasury = _launchPercent(3200, 2000, 3000, 5000, 5000);
+        treasury = _launchPercent(3200, 2000, 2500, 5000, 5000);
         HedgeFunV2TradablePercentEngineTreasuryLogic next = new HedgeFunV2TradablePercentEngineTreasuryLogic(
             address(usdg),
             address(stock),
@@ -333,7 +355,9 @@ contract V2TradablePercentInvariantTest is V2TradablePercentEngineFixture {
     function invariant_dynamicCapsUseInputAssetsAndNeverRewriteHistoricalSpend() public view {
         assertEq(handler.failureMask(), 0);
         assertLe(handler.directionalInputAtLastSuccess(), handler.directionalCapAtLastSuccess());
-        assertLe(handler.ghostUsed(), handler.dailyAtLastSuccess());
+        assertLe(handler.ghostBought(), handler.dailyAtLastSuccess());
+        assertLe(handler.ghostSold(), handler.dailyAtLastSuccess());
+        assertEq(handler.ghostUsed(), handler.ghostBought() + handler.ghostSold());
         assertEq(treasury.turnoverInEpoch(), handler.ghostUsed());
         assertEq(treasury.turnoverEpoch(), handler.ghostEpoch());
     }
