@@ -243,6 +243,7 @@ contract DeployV2MainnetCoreTest is Test {
 
     /// The mainnet defaults are their own explicit copy. They must still say what the release fee choices say.
     function test_releaseDefaultsAreTheReleaseFeeChoicesAndTheOnePercentBaseTax() public pure {
+        assertEq(V2MainnetDefaults.release().bountyBps, 10, "a 0.1% keeper reward");
         HedgeFunFactory.Defaults memory d = V2MainnetDefaults.release();
         assertEq(
             keccak256(abi.encode(V2LaunchFeeDefaults.applyTo(V2MainnetDefaults.release()))), keccak256(abi.encode(d))
