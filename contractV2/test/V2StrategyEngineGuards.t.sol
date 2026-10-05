@@ -101,7 +101,7 @@ contract AlwaysSellPolicy is IStrategyPolicy {
 /// C-2, which the lane left without a proof because no engine fixture ran a band launch through a closure.
 ///
 /// C1 now uses a wrong-nonce policy that proposes a real amount: the lane's 1-wei version passed with the nonce check
-/// deleted, because the minimum-lot gate refused it first. Configs follow the structural floors (cooldown >= 600 s, deadband >= 2 x friction, target in 20..90%,
+/// deleted, because the minimum-lot gate refused it first. Configs follow the structural floors as first set (cooldown >= 600 s, now 60, deadband >= 2 x friction, target in 20..90%,
 /// daily <= 24 x per action); the lane wrote them against a 60 s cooldown.
 contract V2StrategyEngineGuardsTest is V2FactoryFixture {
     using PoolIdLibrary for PoolKey;
@@ -343,6 +343,26 @@ contract V2StrategyEngineGuardsTest is V2FactoryFixture {
         assertEq(t.turnoverInEpoch(), 100e6, "the new epoch starts its turnover from zero");
     }
 
+    /// The floor is the least a creator may choose: at 60 seconds an engine acts again a minute later, and not a
+    /// second sooner.
+    function test_aSixtySecondCooldownActsAgainAfterAMinute() public {
+        bytes32 key = _register(address(new AlwaysSellPolicy()), 100_000, "minute");
+        HedgeFunV2EngineTreasury t = _launch(_config(key, 5000, 500, 60, 100e6, 500e6), _request());
+        vm.warp((block.timestamp / 1 days + 1) * 1 days + 1 hours); // well inside one UTC day
+        _refreshFeeds();
+        t.execute();
+        uint256 first = block.timestamp;
+        assertEq(t.turnoverInEpoch(), 100e6);
+        vm.warp(first + 59);
+        _refreshFeeds();
+        vm.expectRevert(HedgeFunTreasuryBase.Cooldown.selector);
+        t.execute();
+        vm.warp(first + 60);
+        _refreshFeeds();
+        t.execute();
+        assertEq(t.turnoverInEpoch(), 200e6, "a second action one minute after the first");
+    }
+
     // ------------------------------------------------------------------------------------------------ D01-D03
     /// catches D01/D02/D03: registry writes are factory-owner only
     function test_C9_registryWritesAreOwnerOnly() public {
@@ -411,7 +431,7 @@ contract V2StrategyEngineGuardsTest is V2FactoryFixture {
             _config(key, 5000, 500, COOLDOWN, uint256(1) << 128, uint256(1) << 129), // maxTrade > sellChunkUsdg
             _config(key, 5000, 500, COOLDOWN, 4e6, 40e6), // maxTrade < minLotUsdg (E-1)
             _config(key, 5000, 259, COOLDOWN, 100e6, 500e6), // deadband < 2 x (100 + 30) (E-2)
-            _config(key, 5000, 500, COOLDOWN - 1, 100e6, 500e6), // cooldown < 600 (X-5)
+            _config(key, 5000, 500, 59, 100e6, 500e6), // cooldown < 60 (X-5)
             _config(key, 1999, 500, COOLDOWN, 100e6, 500e6), // target < 20% (X-5)
             _config(key, 9001, 500, COOLDOWN, 100e6, 500e6), // target > 90% (X-5)
             _config(key, 5000, 500, COOLDOWN, 100e6, 2_400e6 + 1) // maxDaily > 24 x maxTrade (X-5)
