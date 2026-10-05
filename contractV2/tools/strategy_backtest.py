@@ -3,7 +3,8 @@
 
 A model of the rule in HedgeFunTreasuryBase / HedgeFunV2Treasury / HedgeFunV2AllInTreasury, not the contracts:
 one keeper visit per price, repeating execute() until nothing is due, then buy-backs as the cooldown allows.
-It was checked against the contracts on a fork for one nine-step path (tools/tests/test_strategy_backtest.py).
+It was checked against the contracts for three price paths, two on a fork and one for the cycle treasury in
+the repository's own fixture (tools/tests/test_strategy_backtest.py).
 
 Not modelled: the token pool (so no burned amounts and no impact cap on a buy-back), trade tax and LP fees
 arriving, user order flow, stock-pool depth (slippage is one assumed number), stops, closures and gaps between
@@ -51,7 +52,7 @@ class Treasury:
     dip: float
     buy_share: float
     costs: Costs = field(default_factory=Costs)
-    cycle: bool = False             # HedgeFunV2CycleTreasury's one recovery buy after a sale; not checked on chain
+    cycle: bool = False             # HedgeFunV2CycleTreasury's one recovery buy after a sale
     lots: list = field(default_factory=list)
     usdg: float = 0.0
     buyback_stock: float = 0.0
@@ -101,7 +102,7 @@ class Treasury:
                 self.lots.remove(lot)
             self.last_sale = p
             self.sells += 1
-            if self.cycle and got >= c.min_lot:
+            if self.cycle and principal * p >= c.min_lot:     # a real sale of at least a lot re-arms the recovery
                 self.armed = p
             return True
         dip_due = self.last_sale and p <= self.last_sale * (1 - self.dip)

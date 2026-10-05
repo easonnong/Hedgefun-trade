@@ -70,6 +70,27 @@ What the rule does not do: act when the stock is under every lot's cost. Over th
 series (TSLA -8%) the 3% and 5% rules took no action at all, and the tightest rule moved about 1% of the capital
 into buy-backs. No setting of the rungs makes a buy-back happen on a day the stock has not risen past a lot.
 
+## The cycle treasury
+
+`HedgeFunV2CycleTreasury` is the same lot rule with one more entry: after a real sale, if the stock rises
+`dipBps` above that sale's price, it buys once more, up to the listing's chunk. On this series it did worse than
+the ordinary rule at every setting tried (pool fee 0.05%, keeper 0.1%):
+
+| take-profit 1 / 2 / dip, buy share | rule | sells | dip buys | recovery buys | days with a buy-back | bought back, of capital | NAV + buy-backs |
+|---|---|---:|---:|---:|---:|---:|---:|
+| 3% / 6% / 3%, 50% | ordinary | 373 | 131 | 0 | 118 | 101% | +98.4% |
+| 3% / 6% / 3%, 50% | cycle | 430 | 188 | 6 | 187 | 78% | +55.4% |
+| 1% / 2% / 1%, 50% | ordinary | 1058 | 408 | 0 | 220 | 115% | +106.1% |
+| 1% / 2% / 1%, 50% | cycle | 848 | 343 | 24 | 196 | 70% | +42.9% |
+
+A recovery buy moves the reference the next dip is measured from up to the price it bought at, so in the
+declines that followed, the cycle rule started buying sooner and higher. It has more days with a buy-back and
+less bought back. One stock and one period; a steadier climb would favour it more.
+
+It is also not available as a choice today: it is not registered on chain 46630's factory, it is a direct,
+non-upgradeable implementation, and it keeps the legacy rung floor of twice the slippage limit plus pool fee
+(2.1% with a 0.05% pool, so the 1% row above is not launchable with it as it stands).
+
 ## The keeper reward
 
 `bountyBps` is a factory default, frozen into each treasury at launch. `SetV2KeeperReward` changes it for future
@@ -123,10 +144,13 @@ accept a registry whose kind 0 is either that reviewed code, by its pinned hash,
 
 ## What the backtest is and is not
 
-- It is a model of the rule, in Python. It was checked against the contracts on a fork of chain 46630 for one
-  nine-step price path: every visit took the same number of actions, and stock, cash and buy-back spend ended
-  within 0.1% (`tools/tests/test_strategy_backtest.py`). On the fork the buy-backs came to 9 calls where the model
-  counts 5, because the token pool's impact cap fills a call short; the model's buy-back counts are low.
+- It is a model of the rule, in Python. It was checked against the contracts for three price paths
+  (`tools/tests/test_strategy_backtest.py`): two on a fork of chain 46630, the 5% and the 1% rule, where every
+  visit took the same number of actions and stock, cash and buy-back spend ended within 0.1% to 0.3%; and the
+  cycle treasury in the repository's own fixture, sixteen steps with a recovery buy, where actions, lots and
+  the armed price were identical and balances within 0.001%. On the first fork path the buy-backs came to 9
+  calls where the model counts 5, because the token pool's impact cap fills a call short; the model's
+  buy-back counts are low.
 - One visit per hour, closes only. Overnight and weekend gaps are one step. A 1% rule on a feed that prints on
   0.5% moves would see more triggers than an hourly series shows.
 - No token pool, no trade tax or LP fees arriving, no user flow, no stops, and one assumed slippage number in
