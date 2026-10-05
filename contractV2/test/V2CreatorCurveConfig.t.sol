@@ -10,6 +10,8 @@ import {V2TreasuryDeployer} from "../src/v2/V2TreasuryDeployer.sol";
 import {V2FactoryFixture} from "./utils/V2FactoryFixture.sol";
 
 contract CurveDeployerBuilder {
+    // Test-only helper: its runtime embeds CurveDeployer init code.
+    bool public constant IS_TEST = true;
     function build(uint16 saleBps) external returns (CurveDeployer) { return new CurveDeployer(saleBps); }
 }
 

@@ -19,11 +19,13 @@ library V2MainnetDefaults {
 
     function release() internal pure returns (HedgeFunFactory.Defaults memory d) {
         d.supply = 1_000_000_000e18;
-        d.lpFee = 3000; // V2's locked liquidity vault collects fees; V1's zero-fee default cannot be reused.
+        // 0.20%. V2's locked liquidity vault collects it for the buy-back, so V1's zero-fee default cannot be reused;
+        // with the 1% minimum tax a trade costs about 1.2%, inside the range of the launchpads this one is compared with.
+        d.lpFee = 2000;
         d.tickSpacing = 60;
         d.minTaxBps = 100; // the 1% base tax; a creator chooses 1% to 15%
         d.maxTaxBps = 1500;
-        d.protocolBps = 2000;
+        d.protocolBps = 3000; // 30% of the collected tax; the creator takes up to 10% and the token's treasury the rest
         d.maxCreatorBps = 1000; // up to 10% of the collected tax, not 10% of trade volume
         d.spikeBps = 0; // V2 LP fees can fund buybacks without strategy profit; no buyback-triggered sell spike.
         d.spikeSeconds = 0;
@@ -34,7 +36,7 @@ library V2MainnetDefaults {
         d.maxSlippageBps = 100;
         d.maxDeviationBps = 50;
         d.maxBuybackImpactBps = 300;
-        d.buybackCooldown = 60;
+        d.buybackCooldown = 10; // seconds between buy-backs; retain the 600-second TWAP and bounded anchor fallback
         d.minLotUsdg = 5e6;
         d.buybackChunkUsdg = 500e6;
         d.sellChunkUsdg = 2_000e6;

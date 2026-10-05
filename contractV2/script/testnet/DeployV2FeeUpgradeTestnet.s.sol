@@ -197,7 +197,7 @@ contract DeployV2FeeUpgradeTestnet is Script {
         _checkVenue(x.venue);
         x.defaults = x.venue.factory.getDefaults();
         if (
-            x.defaults.supply != 1_000_000_000e18 || x.defaults.protocolBps != 2000 || x.defaults.minTaxBps > 100
+            x.defaults.supply != 1_000_000_000e18 || x.defaults.minTaxBps > 100
                 || x.defaults.maxTaxBps < 100 || x.defaults.maxCreatorBps < 1000
         ) {
             revert BadBinding("base fee defaults");

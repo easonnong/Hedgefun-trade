@@ -302,7 +302,9 @@ contract DeployV2MainnetCoreTest is Test {
         assertEq(d.maxCreatorBps, 1000);
         assertEq(d.minTaxBps, 100);
         assertEq(d.maxTaxBps, 1500);
-        assertEq(d.protocolBps, 2000);
+        assertEq(d.protocolBps, 3000);
+        assertEq(d.lpFee, 2000);
+        assertEq(d.buybackCooldown, 10);
         assertEq(d.sweepTipBps, 0);
     }
 

@@ -329,7 +329,7 @@ contract DeployV2TestnetTest is Test {
         assertEq(IPoolManager(PM).balanceOf(address(x.hook), uint256(uint160(token))), 0);
         protocolBefore = stock.balanceOf(x.protocol);
         x.hook.sweep(pid);
-        assertEq(stock.balanceOf(x.protocol) - protocolBefore, stockFees * 2000 / 10_000,
+        assertEq(stock.balanceOf(x.protocol) - protocolBefore, stockFees * 3000 / 10_000,
             "one sweep paid the V4 buy's and the V4 sale's stock fees to the protocol exactly once");
         (tokenFees, stockFees) = x.hook.accrued(pid);
         assertEq(tokenFees + stockFees, 0);

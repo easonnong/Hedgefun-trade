@@ -274,21 +274,21 @@ contract DeployV2Testnet is Script {
     ///      Current fee choices: 0.0005 ETH to launch, creator share 0-10% of collected tax.
     function _defaults() internal pure returns (HedgeFunFactory.Defaults memory d) {
         d.supply = 1_000_000_000e18;
-        d.lpFee = 3000;
+        d.lpFee = 2000;
         d.tickSpacing = 60;
         d.minTaxBps = 100;
         d.maxTaxBps = 1500;
-        d.protocolBps = 2000;
+        d.protocolBps = 3000;
         d.spikeBps = 0;
         d.spikeSeconds = 0;
-        d.sweepTipBps = 0; // V2 stock revenue is split exactly 20% protocol / creator share / treasury remainder.
+        d.sweepTipBps = 0; // V2 stock revenue is split exactly 30% protocol / creator share / treasury remainder.
         d.snipeBps = 9900;
         d.snipeSeconds = 3;
         d.bountyBps = 50;
         d.maxSlippageBps = 100;
         d.maxDeviationBps = 50;
         d.maxBuybackImpactBps = 300;
-        d.buybackCooldown = 60;
+        d.buybackCooldown = 10;
         d.minLotUsdg = 5e6;
         d.buybackChunkUsdg = 500e6;
         d.sellChunkUsdg = 2_000e6;
