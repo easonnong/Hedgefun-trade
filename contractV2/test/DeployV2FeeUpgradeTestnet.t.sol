@@ -78,6 +78,8 @@ contract FeeUpgradeFixtureHarness is DeployV2FeeUpgradeTestnet {
 
 // A real call frame is needed: Foundry refuses startBroadcast within a prank.
 contract FeeUpgradeOperatorInvoker {
+    receive() external payable {}
+
     function deploy(DeployV2FeeUpgradeTestnet s) external returns (DeployV2FeeUpgradeTestnet.Deployment memory) {
         return s.deploy(0);
     }
@@ -113,7 +115,7 @@ contract FreshCreatorFixtureHarness is DeployV2FreshCreatorTestnet {
 contract DeployV2FeeUpgradeTestnetTest is Test {
     using PoolIdLibrary for PoolKey;
     using StateLibrary for IPoolManager;
-    address constant OPERATOR = 0x75Cee941B0eF3A83feA0397BbF903C12c1D7e96D;
+    address payable constant OPERATOR = payable(0x75Cee941B0eF3A83feA0397BbF903C12c1D7e96D);
     address constant PM = 0x8366a39CC670B4001A1121B8F6A443A643e40951;
     address constant WETH = 0x7943e237c7F95DA44E0301572D358911207852Fa;
     address alice = makeAddr("fee upgrade buyer");
@@ -233,7 +235,7 @@ contract DeployV2FeeUpgradeTestnetTest is Test {
         assertNotEq(signer, OPERATOR);
         bytes32 beforeState = _venueState();
         vm.etch(signer, type(FeeUpgradeOperatorInvoker).runtimeCode);
-        DeployV2FeeUpgradeTestnet.Deployment memory d = FeeUpgradeOperatorInvoker(signer).deploy(fresh);
+        DeployV2FeeUpgradeTestnet.Deployment memory d = FeeUpgradeOperatorInvoker(payable(signer)).deploy(fresh);
         assertEq(d.factory.owner(), signer);
         assertEq(d.factory.protocol(), OPERATOR);
         assertEq(d.treasury.kindCount(), 3);
@@ -382,12 +384,12 @@ contract DeployV2FeeUpgradeTestnetTest is Test {
         q.tp2Bps = 600;
         q.dipBps = 500;
         q.lotBps = 2000;
-        q.maxFee = 25e6;
+        q.maxFee = 0.0005 ether;
         q.expectedOpenPriceE18 = l.openPriceE18;
+        vm.deal(alice, 0.0005 ether);
         vm.startPrank(alice);
-        base.usdg.approve(address(x.factory), q.maxFee);
         (,, bytes32 terms) = x.factory.predict(q);
-        uint256 id = x.factory.launch(q, terms);
+        uint256 id = x.factory.launch{value: 0.0005 ether}(q, terms);
         (address token, address treasury,,,) = x.factory.strategies(id);
         HedgeFunBondingCurve curve = HedgeFunBondingCurve(x.factory.curves(id));
         assertEq(curve.taxBps(), 100);

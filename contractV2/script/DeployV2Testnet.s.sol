@@ -21,6 +21,7 @@ import {PriceOracle} from "../src/PriceOracle.sol";
 import {TradingCalendar} from "../src/TradingCalendar.sol";
 import {TestUsdg, TestStock, TestFeed} from "./testnet/TestnetAssets.sol";
 import {TestnetMarket, IV3Factory, IV3Pool} from "./testnet/TestnetMarket.sol";
+import {V2LaunchFeeDefaults} from "./testnet/V2LaunchFeeDefaults.sol";
 
 /// @notice The whole Hedgefun V2 launchpad on the PUBLIC Robinhood Chain testnet (chain 46630), with test doubles
 ///         for everything the testnet lacks: a Uniswap V3 factory (from the vendored bytecode, byte-identical to
@@ -269,7 +270,8 @@ contract DeployV2Testnet is Script {
     }
 
     /// @dev the rehearsal's Defaults (docs/V2_DEPLOYMENT_REHEARSAL.md, decisions of 2026-09-28): creators choose tax
-    ///      1-15%, raise size (default saleBps 7931) and opening window (default 3 s); 25 USDG launch fee.
+    ///      1-15%, raise size (default saleBps 7931) and opening window (default 3 s).
+    ///      Current fee choices: 0.0005 ETH to launch, creator share 0-10% of collected tax.
     function _defaults() internal pure returns (HedgeFunFactory.Defaults memory d) {
         d.supply = 1_000_000_000e18;
         d.lpFee = 3000;
@@ -277,7 +279,6 @@ contract DeployV2Testnet is Script {
         d.minTaxBps = 100;
         d.maxTaxBps = 1500;
         d.protocolBps = 2000;
-        d.maxCreatorBps = 3000;
         d.spikeBps = 0;
         d.spikeSeconds = 0;
         d.sweepTipBps = 0; // V2 stock revenue is split exactly 20% protocol / creator share / treasury remainder.
@@ -291,8 +292,7 @@ contract DeployV2Testnet is Script {
         d.minLotUsdg = 5e6;
         d.buybackChunkUsdg = 500e6;
         d.sellChunkUsdg = 2_000e6;
-        d.launchFeeCurrency = HedgeFunFactory.FeeCurrency.Usdg;
-        d.launchFeeAmount = 25e6;
+        return V2LaunchFeeDefaults.applyTo(d);
     }
 
     // ------------------------------------------------------------------------------------------ checks

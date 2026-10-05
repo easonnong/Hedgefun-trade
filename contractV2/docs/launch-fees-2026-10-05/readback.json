@@ -1,0 +1,41 @@
+{
+  "chainId": 46630,
+  "factory": "0xc9610d4A749b2A62a7327a0f40B59013D8fC415a",
+  "txHash": "0xc15677ab95546ba7863685cff47ffc12a681f7db0d213b9f37e86898025c3e07",
+  "blockNumber": 129034324,
+  "blockHash": "0x30bbcb53f67b7634143c572b65829b5a5ceae0a9e4853642c22a1d9c05360d74",
+  "gasUsed": "78615",
+  "gasPrice": "10000000",
+  "readbackBlock": 129034329,
+  "defaults": {
+    "supply": "1000000000000000000000000000",
+    "lpFee": "3000",
+    "tickSpacing": "60",
+    "minTaxBps": "100",
+    "maxTaxBps": "1500",
+    "protocolBps": "2000",
+    "maxCreatorBps": "1000",
+    "spikeBps": "0",
+    "spikeSeconds": "0",
+    "sweepTipBps": "0",
+    "snipeBps": "9900",
+    "snipeSeconds": "3",
+    "bountyBps": "50",
+    "maxSlippageBps": "100",
+    "maxDeviationBps": "50",
+    "maxBuybackImpactBps": "300",
+    "buybackCooldown": "60",
+    "minLotUsdg": "5000000",
+    "buybackChunkUsdg": "500000000",
+    "sellChunkUsdg": "2000000000",
+    "launchFeeCurrency": "1",
+    "launchFeeAmount": "500000000000000"
+  },
+  "defaultsHash": "0xddc1ea0ab062c76efacc7ad54b9e7a81a72f408e40ea8bc82ae4ccd50648b278",
+  "unchangedFactoryCodeHash": "0x519680600a1b92328e7a6d7de3213c443511e027a650e7fb837929c5bf42c404",
+  "changedFields": [
+    "maxCreatorBps",
+    "launchFeeCurrency",
+    "launchFeeAmount"
+  ]
+}
