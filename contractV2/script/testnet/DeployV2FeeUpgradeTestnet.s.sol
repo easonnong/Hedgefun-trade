@@ -39,6 +39,8 @@ contract DeployV2FeeUpgradeTestnet is Script {
     address public constant MARKET = 0xc1AF2f52980F8A7AA4E90A8E30D5c3FaF0375f21;
     string public constant BASE_BOOK_SHA256 = "1b0d19f7e5e36ec19df5c3d8b879d95510dbe70527724602686d95411d04b67e";
     uint160 public constant HOOK_FLAGS = 0x28CC;
+    /// The share of supply every launch on the new core sells on its curve; `CurveDeployer` accepts no other.
+    uint16 public constant SALE_BPS = 7931;
     uint256 public constant PLANNED_TRANSACTIONS = 38;
     string internal constant OUT = "deploy/testnet-v2-fees.candidate.json";
     string internal constant OUT_DRY = "deploy/testnet-v2-fees.dryrun.json";
@@ -303,7 +305,7 @@ contract DeployV2FeeUpgradeTestnet is Script {
     function _deployCore(Deployment memory x) internal {
         x.treasury = new V2TreasuryDeployer();
         x.token = new TokenDeployer();
-        x.curve = new CurveDeployer();
+        x.curve = new CurveDeployer(SALE_BPS);
         x.hook = new HedgeFunV2Hook{salt: x.hookSalt}(IPoolManager(PM));
         if (uint160(address(x.hook)) & 0x3FFF != HOOK_FLAGS) revert BadBinding("hook flags");
         x.factory = new HedgeFunV2Factory(

@@ -65,7 +65,7 @@ contract V2IncomeKindCompatibilityTest is V2IncomeKindsFixture {
     }
 
     function test_everyGraduationModuleImmutableReferenceIncludingPrivateSelfIsChecked() public {
-        _rejectEachImmutable(address(factory.curveDeployer()), hex"09520d05014d117501c408b7", "graduation module runtime");
+        _rejectEachImmutable(address(factory.curveDeployer()), hex"09830d36014d11c401e208e801bb04b6118f", "graduation module runtime");
     }
 
     function test_readbackRepeatsFactoryCompatibilityCheck() public {
@@ -76,7 +76,7 @@ contract V2IncomeKindCompatibilityTest is V2IncomeKindsFixture {
 
     function test_registryCountUnchangedAfterIncompatibleModuleRejected() public {
         uint256 before = deployer.kindCount();
-        _flip(address(factory.curveDeployer()), 2386 + 31); // one private SELF reference only
+        _flip(address(factory.curveDeployer()), 2435 + 31); // one private SELF reference only
         vm.expectRevert(_error("graduation module runtime"));
         script.register(owner, factory);
         assertEq(deployer.kindCount(), before);

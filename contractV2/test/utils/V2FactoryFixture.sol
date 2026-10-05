@@ -47,10 +47,10 @@ abstract contract V2FactoryFixture is Test, HookMiner {
     address internal owner = address(0xA11CE);
     address internal protocol = address(0x5AFE);
     uint256 internal openPrice;
-    /// The curve choices `_launchV2` registers, as the fixture's creator, for the salt it launches under
-    /// (`CurveDeployer.setCurveConfig`). The suites built on this fixture were written against an 80% sale and a
-    /// 3-second window, the factory's values before creators chose their own; they keep those numbers by choosing
-    /// them. Set `creatorSaleBps` to 0 to register nothing and launch on the defaults (7931 and `d.snipeSeconds`).
+    /// The sale share this fixture's `CurveDeployer` is constructed with, and the window `_launchV2` registers as
+    /// the fixture's creator for the salt it launches under (`CurveDeployer.setCurveConfig`). The suites built on
+    /// this fixture were written against an 80% sale and a 3-second window; a release deploys 7931. Set
+    /// `creatorSaleBps` to 0 BEFORE `_setUpV2` to deploy 7931 and register nothing (the window is `d.snipeSeconds`).
     uint16 internal creatorSaleBps = 8000;
     uint8 internal creatorSnipeSeconds = 3;
     /// the nonce of the last `_launchV2`, whose salt is (`_request().symbol`, this contract, `lastNonce`)
@@ -73,7 +73,7 @@ abstract contract V2FactoryFixture is Test, HookMiner {
         v3f.set(address(stock), address(usdg), 3000, address(stockPool));
         hook = _deployV2Hook(pm);
         factory = new HedgeFunV2Factory(owner, address(pm), address(v3f), address(usdg), protocol,
-            address(new V2TreasuryDeployer()), address(new TokenDeployer()), address(hook), address(new CurveDeployer()), _defaults());
+            address(new V2TreasuryDeployer()), address(new TokenDeployer()), address(hook), address(new CurveDeployer(creatorSaleBps == 0 ? 7931 : creatorSaleBps)), _defaults());
         // CurveDeployer creates its curve-code chunk in its own constructor: every curve address below hashes these bytes.
         assertEq(keccak256(factory.curveDeployer().curveChunk().code), keccak256(type(HedgeFunBondingCurve).creationCode));
         openPrice = 50 * 10 ** decimals_ / 1_000_000;

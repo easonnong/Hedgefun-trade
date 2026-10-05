@@ -9,6 +9,14 @@ import {HedgeFunFactory} from "../../src/HedgeFunFactory.sol";
 ///      supplies their hash, which is how a reviewer confirms the exact values and how an edit here is noticed.
 ///      A treasury and a curve freeze what they read at launch; the owner can change these for later launches.
 library V2MainnetDefaults {
+    /// The share of supply every launch sells on its curve: `CurveDeployer` is constructed with it and accepts
+    /// no other. 79.31%, the ordinary-curve allocation of the launchpads this one is compared with.
+    /// The defaults hash does not cover it: the deployment takes it again as EXPECTED_SALE_BPS, and the readback
+    /// requires the deployed curve deployer to carry it.
+    uint16 internal constant SALE_BPS = 7931;
+    /// The registry's default share of a graduation's raise seeded into the locked LP; the readback requires it.
+    uint16 internal constant LP_BPS = 7000;
+
     function release() internal pure returns (HedgeFunFactory.Defaults memory d) {
         d.supply = 1_000_000_000e18;
         d.lpFee = 3000; // V2's locked liquidity vault collects fees; V1's zero-fee default cannot be reused.

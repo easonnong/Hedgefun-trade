@@ -11,6 +11,7 @@ import {HedgeFunV2Hook} from "../../src/hooks/HedgeFunV2Hook.sol";
 import {HedgeFunV2TradeRouter} from "../../src/v2/HedgeFunV2TradeRouter.sol";
 import {HedgeFunV2NativeRouter} from "../../src/v2/HedgeFunV2NativeRouter.sol";
 import {V2MainnetCore} from "./V2MainnetCore.sol";
+import {V2MainnetDefaults} from "./V2MainnetDefaults.sol";
 
 /// @notice Deploys the V2 core on Robinhood Chain (4663). It refuses every other chain.
 /// @dev Seven transactions from the broadcaster, which ends with no role. Rehearse first, on a fork, with
@@ -18,7 +19,8 @@ import {V2MainnetCore} from "./V2MainnetCore.sol";
 ///
 ///      Requires OWNER and PROTOCOL (Safes), WETH (the chain's wrapped native token), GIT_COMMIT (the 40-hex
 ///      release commit, recorded only) and EXPECTED_DEFAULTS_HASH: `keccak256(abi.encode(defaults))` of
-///      `V2MainnetDefaults.release()`, as reviewed. HOOK_SALT_START is optional. DEPLOYER_SETS_UP=true makes the
+///      `V2MainnetDefaults.release()`, as reviewed, and EXPECTED_SALE_BPS: the reviewed sale share, which that
+///      hash does not cover and which is permanent once the curve deployer exists. HOOK_SALT_START is optional. DEPLOYER_SETS_UP=true makes the
 ///      broadcaster the factory's first owner, for the setup scripts; it must then run `HandOverV2Mainnet`.
 ///
 ///      What this does NOT do, because only the factory owner can: register any strategy kind beyond kind 0 or
@@ -31,6 +33,7 @@ contract DeployV2MainnetCore is V2MainnetCore {
     error WrongChain(uint256 chainId);
     error BadCommit();
     error DefaultsNotReviewed(bytes32 actual);
+    error SaleShareNotReviewed(uint16 actual);
 
     function run() external returns (Deployed memory x) {
         string memory commit = vm.envString("GIT_COMMIT");
@@ -39,7 +42,8 @@ contract DeployV2MainnetCore is V2MainnetCore {
         uint256 startBlock = block.number;
         bool deployerSetsUp = vm.envOr("DEPLOYER_SETS_UP", false);
         x = deploy(
-            msg.sender, r, deployerSetsUp, vm.envBytes32("EXPECTED_DEFAULTS_HASH"), vm.envOr("HOOK_SALT_START", uint256(0))
+            msg.sender, r, deployerSetsUp, vm.envBytes32("EXPECTED_DEFAULTS_HASH"),
+            uint16(vm.envUint("EXPECTED_SALE_BPS")), vm.envOr("HOOK_SALT_START", uint256(0))
         );
         bool requested =
             vm.isContext(VmSafe.ForgeContext.ScriptBroadcast) || vm.isContext(VmSafe.ForgeContext.ScriptResume);
@@ -63,12 +67,14 @@ contract DeployV2MainnetCore is V2MainnetCore {
         Roles memory r,
         bool deployerSetsUp,
         bytes32 expectedDefaultsHash,
+        uint16 expectedSaleBps,
         uint256 saltStart
     ) public returns (Deployed memory x) {
         if (block.chainid != CHAIN_ID) revert WrongChain(block.chainid);
         HedgeFunFactory.Defaults memory d = _defaults();
         bytes32 defaultsHash = keccak256(abi.encode(d));
         if (defaultsHash != expectedDefaultsHash) revert DefaultsNotReviewed(defaultsHash);
+        if (V2MainnetDefaults.SALE_BPS != expectedSaleBps) revert SaleShareNotReviewed(V2MainnetDefaults.SALE_BPS);
         _preflight(deployer, r, d);
         (bytes32 salt, address mined) = _mineHook(saltStart);
         address firstOwner = _firstOwner(deployer, r, deployerSetsUp);
@@ -111,6 +117,8 @@ contract DeployV2MainnetCore is V2MainnetCore {
         vm.serializeAddress(k, "v3Factory", V3_FACTORY);
         vm.serializeAddress(k, "usdg", USDG);
         vm.serializeBytes32(k, "defaultsHash", keccak256(abi.encode(x.factory.getDefaults())));
+        vm.serializeUint(k, "saleBps", x.curve.DEFAULT_SALE_BPS());
+        vm.serializeUint(k, "defaultLpBps", x.treasury.DEFAULT_LP_BPS());
         vm.serializeAddress(k, "factory", address(x.factory));
         vm.serializeAddress(k, "treasuryDeployer", address(x.treasury));
         vm.serializeAddress(k, "upgradeController", address(x.treasury.upgradeController()));
@@ -135,6 +143,7 @@ contract DeployV2MainnetCore is V2MainnetCore {
 contract VerifyV2MainnetCore is V2MainnetCore {
     error WrongChain(uint256 chainId);
     error DefaultsNotReviewed(bytes32 actual);
+    error SaleShareNotReviewed(uint16 actual);
 
     function run() external view {
         if (block.chainid != CHAIN_ID) revert WrongChain(block.chainid);
@@ -147,14 +156,24 @@ contract VerifyV2MainnetCore is V2MainnetCore {
         x.hook = HedgeFunV2Hook(vm.envAddress("V2_HOOK"));
         x.router = HedgeFunV2TradeRouter(vm.envAddress("V2_TRADE_ROUTER"));
         x.nativeRouter = HedgeFunV2NativeRouter(payable(vm.envAddress("V2_NATIVE_ROUTER")));
-        check(x, vm.envAddress("FIRST_OWNER"), r, vm.envBytes32("EXPECTED_DEFAULTS_HASH"));
+        check(
+            x, vm.envAddress("FIRST_OWNER"), r, vm.envBytes32("EXPECTED_DEFAULTS_HASH"),
+            uint16(vm.envUint("EXPECTED_SALE_BPS"))
+        );
         console2.log("live V2 mainnet core verified", address(x.factory));
     }
 
-    function check(Deployed memory x, address firstOwner, Roles memory r, bytes32 expectedDefaultsHash) public view {
+    function check(
+        Deployed memory x,
+        address firstOwner,
+        Roles memory r,
+        bytes32 expectedDefaultsHash,
+        uint16 expectedSaleBps
+    ) public view {
         HedgeFunFactory.Defaults memory d = _defaults();
         bytes32 defaultsHash = keccak256(abi.encode(d));
         if (defaultsHash != expectedDefaultsHash) revert DefaultsNotReviewed(defaultsHash);
+        if (V2MainnetDefaults.SALE_BPS != expectedSaleBps) revert SaleShareNotReviewed(V2MainnetDefaults.SALE_BPS);
         if (uint160(address(x.hook)) & 0x3FFF != HOOK_FLAGS) revert BadHook(address(x.hook), address(x.hook));
         _requireSafe(r.owner);
         _requireSafe(r.protocol);

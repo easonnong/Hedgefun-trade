@@ -112,7 +112,7 @@ contract V2TreasuryDeployer is BoundDeployer {
     ///         treasury's strategy capital. Per stock, set by the factory owner for FUTURE launches, in the
     ///         launch terms, and frozen per treasury when the launch deploys it. Neither factory nor curve
     ///         deployer has the bytes for it.
-    uint16 public constant DEFAULT_LP_BPS = 5000;
+    uint16 public constant DEFAULT_LP_BPS = 7000;
     uint16 public constant MIN_LP_BPS = 1000;
     mapping(address => uint16) private _lpBps;
     /// @notice the LP share a launched treasury's curve graduates with

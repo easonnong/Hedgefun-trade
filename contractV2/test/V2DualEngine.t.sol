@@ -65,7 +65,7 @@ contract V2DualEngineTest is V2FactoryFixture {
         uint256 realReserve = curve.terminalStock() - curve.virtualStock();
         _graduateV2(curve);
         assertEq(hook.liquidityVaultOf(key.toId()), predicted);
-        assertApproxEqAbs(stock.balanceOf(address(pm)), realReserve / 2, 2);
+        assertApproxEqAbs(stock.balanceOf(address(pm)), realReserve * 7000 / 10_000, 2);
         assertEq(stock.balanceOf(predicted), 3e18);
         assertEq(IERC20(curve.token()).balanceOf(predicted), 1e18 + V2LiquidityVault(predicted).lockedSeedTokens());
         (uint256 stockFee, uint256 funFee) = V2LiquidityVault(predicted).collectFees();

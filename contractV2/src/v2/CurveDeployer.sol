@@ -41,10 +41,12 @@ contract CurveDeployer is BoundDeployer {
     address public immutable curveChunk;
     address public immutable vaultChunk;
 
-    /// @notice The raise a launch gets when its creator registered nothing: 79.31% of supply sold on the curve.
-    uint16 public constant DEFAULT_SALE_BPS = 7931;
-    /// @notice The curve constructor's lower bound on `saleBps`, 10% of supply sold. A creator's `saleBps` is anything
-    ///         the constructor accepts, and nothing narrower.
+    /// @notice The share of supply every launch through this deployer sells on its curve, fixed when the deployer is
+    ///         created: 7931 on a release, 79.31%. No creator, owner or later transaction can choose another.
+    /// @dev An immutable, so the value is part of this deployment and not of anyone's registration. The name is
+    ///      kept from when it was only the default of a creator's choice, for the front ends that read it.
+    uint16 public immutable DEFAULT_SALE_BPS;
+    /// @notice The curve constructor's lower bound on `saleBps`, 10% of supply sold, and so this deployer's too.
     uint16 public constant MIN_SALE_BPS = 1000;
     /// @notice The curve constructor's upper bound on `saleBps`, 90% of supply sold.
     uint16 public constant MAX_SALE_BPS = 9000;
@@ -71,7 +73,8 @@ contract CurveDeployer is BoundDeployer {
     error VaultDeployFailed();
     error Unseedable();
     error InexactTransfer();
-    /// @notice `saleBps` outside [MIN_SALE_BPS, MAX_SALE_BPS], or `snipeSeconds` over MAX_SNIPE_SECONDS.
+    /// @notice `saleBps` other than `DEFAULT_SALE_BPS`, or `snipeSeconds` over MAX_SNIPE_SECONDS. At construction:
+    ///         a sale share outside [MIN_SALE_BPS, MAX_SALE_BPS].
     error BadCurveConfig();
     error BadOpeningTaxExemptions();
     struct GraduationCtx {
@@ -86,22 +89,25 @@ contract CurveDeployer is BoundDeployer {
         uint256 max0;
         uint256 max1;
     }
-    constructor() {
+    constructor(uint16 saleBps_) {
+        if (saleBps_ < MIN_SALE_BPS || saleBps_ > MAX_SALE_BPS) revert BadCurveConfig();
+        DEFAULT_SALE_BPS = saleBps_;
         curveChunk = address(new V2InitCodeChunk(type(HedgeFunBondingCurve).creationCode));
         vaultChunk = address(new V2InitCodeChunk(type(V2LiquidityVault).creationCode));
     }
 
-    /// @notice A creator chooses the raise size and the opening window of their own upcoming launch. The salt is
+    /// @notice A creator chooses the opening window of their own upcoming launch. The salt is
     ///         (symbol, msg.sender, nonce), exactly as the factory derives it, so nobody can choose for anyone else.
-    ///         `saleBps` is the share of supply sold on the curve: the graduation raise is
-    ///         `V * saleBps / (10000 - saleBps)` of the opening valuation `V`. `snipeSeconds` is how long the opening
-    ///         buy tax takes to decay to the flat tax; 0 is none. Both are in the launch terms, so a change after
-    ///         `predict` makes the launch revert `Restated`. A launch with no registration gets `DEFAULT_SALE_BPS`
-    ///         and the factory's default window.
-    /// @dev No owner limit applies per stock. A raise larger than the stock's V3 pool can deliver never graduates,
-    ///      and its buyers can only sell back to the curve; `tools/v2_launch_check.py` shows that before a launch.
+    ///         `saleBps` is the share of supply sold on the curve and is not a choice: it must be this deployer's
+    ///         `DEFAULT_SALE_BPS`. The graduation raise is `V * saleBps / (10000 - saleBps)` of the opening
+    ///         valuation `V`, which the stock's listing sets. `snipeSeconds` is how long the opening buy tax takes
+    ///         to decay to the flat tax; 0 is none. It is in the launch terms, so a change after `predict` makes
+    ///         the launch revert `Restated`. A launch with no registration gets the factory's default window.
+    /// @dev The argument stays so that a front end written for a chosen raise keeps its call. A raise larger than
+    ///      the stock's V3 pool can deliver never graduates, and its buyers can only sell back to the curve;
+    ///      `tools/v2_launch_check.py` shows that for a listing.
     function setCurveConfig(string calldata symbol, uint96 nonce, uint16 saleBps, uint8 snipeSeconds) external {
-        if (saleBps < MIN_SALE_BPS || saleBps > MAX_SALE_BPS || snipeSeconds > MAX_SNIPE_SECONDS) revert BadCurveConfig();
+        if (saleBps != DEFAULT_SALE_BPS || snipeSeconds > MAX_SNIPE_SECONDS) revert BadCurveConfig();
         curveConfigOf[keccak256(abi.encode(symbol, msg.sender, nonce))] = CurveChoice(saleBps, snipeSeconds);
         emit CurveConfigSet(msg.sender, symbol, nonce, saleBps, snipeSeconds);
     }

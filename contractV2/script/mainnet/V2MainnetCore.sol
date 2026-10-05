@@ -105,7 +105,7 @@ abstract contract V2MainnetCore is Script {
         x.hookSalt = salt;
         x.treasury = new V2TreasuryDeployer();
         x.token = new TokenDeployer();
-        x.curve = new CurveDeployer();
+        x.curve = new CurveDeployer(V2MainnetDefaults.SALE_BPS);
         x.hook = new HedgeFunV2Hook{salt: salt}(IPoolManager(PM));
         if (address(x.hook) != mined || uint160(address(x.hook)) & 0x3FFF != HOOK_FLAGS) {
             revert BadHook(mined, address(x.hook));
@@ -144,6 +144,9 @@ abstract contract V2MainnetCore is Script {
         }
         if (x.treasury.upgradeController().owner() != firstOwner) revert ReadbackFailed("upgrade controller owner");
         if (keccak256(abi.encode(f.getDefaults())) != keccak256(abi.encode(d))) revert ReadbackFailed("defaults");
+        // Permanent: the sale share is the curve deployer's immutable, and nothing can correct it but a redeployment.
+        if (x.curve.DEFAULT_SALE_BPS() != V2MainnetDefaults.SALE_BPS) revert ReadbackFailed("sale share");
+        if (x.treasury.DEFAULT_LP_BPS() != V2MainnetDefaults.LP_BPS) revert ReadbackFailed("default LP share");
         // The curve deployer creates its curve-code chunk in its own constructor; every curve address hashes it.
         if (keccak256(x.curve.curveChunk().code) != keccak256(type(HedgeFunBondingCurve).creationCode)) {
             revert ReadbackFailed("curve code");
