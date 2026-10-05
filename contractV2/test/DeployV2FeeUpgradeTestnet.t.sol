@@ -325,7 +325,7 @@ contract DeployV2FeeUpgradeTestnetTest is Test {
         assertEq(address(x.nativeRouter.router()), address(x.router));
         assertEq(address(x.nativeRouter.wrappedNative()), WETH);
         assertEq(x.factory.getDefaults().sweepTipBps, 0);
-        assertEq(x.factory.getDefaults().protocolBps, 2000);
+        assertEq(x.factory.getDefaults().protocolBps, 3000);
         assertEq(x.treasury.kindCount(), 3);
         assertEq(x.engineKind, 2);
         assertEq(x.lines.length, 8);
@@ -449,7 +449,7 @@ contract DeployV2FeeUpgradeTestnetTest is Test {
         (address token, address treasury,,,) = x.factory.strategies(id);
         HedgeFunBondingCurve curve = HedgeFunBondingCurve(x.factory.curves(id));
         assertEq(curve.taxBps(), 100);
-        assertEq(curve.protocolBps(), 2000);
+        assertEq(curve.protocolBps(), 3000);
         assertEq(curve.creatorBps(), 1000);
         base.usdg.approve(address(x.router), type(uint256).max);
         IERC20(token).approve(address(x.router), type(uint256).max);
@@ -481,9 +481,9 @@ contract DeployV2FeeUpgradeTestnetTest is Test {
 
     function _assertCurveSplit(HedgeFunBondingCurve curve) private view {
         uint256 fee = curve.totalFees();
-        assertEq(curve.claimable(OPERATOR), fee * 2000 / 10_000);
+        assertEq(curve.claimable(OPERATOR), fee * 3000 / 10_000);
         assertEq(curve.claimable(alice), fee * 1000 / 10_000);
-        assertEq(curve.claimable(curve.treasury()), fee - fee * 2000 / 10_000 - fee * 1000 / 10_000);
+        assertEq(curve.claimable(curve.treasury()), fee - fee * 3000 / 10_000 - fee * 1000 / 10_000);
     }
 
     function _settle(
@@ -516,7 +516,7 @@ contract DeployV2FeeUpgradeTestnetTest is Test {
         PoolId pid = key.toId();
         HedgeFunHook.Rates memory rates = x.hook.rates(pid);
         assertEq(rates.taxBps, 100);
-        assertEq(rates.protocolBps, 2000);
+        assertEq(rates.protocolBps, 3000);
         assertEq(rates.creatorBps, 1000);
         assertEq(rates.sweepTipBps, 0);
         assertEq(rates.snipeBps, 0);
@@ -533,10 +533,10 @@ contract DeployV2FeeUpgradeTestnetTest is Test {
         uint256 creatorBefore = stock.balanceOf(alice);
         uint256 treasuryBefore = stock.balanceOf(treasury);
         x.hook.sweep(pid);
-        assertEq(stock.balanceOf(OPERATOR) - before, stockOut * 2000 / 10_000);
+        assertEq(stock.balanceOf(OPERATOR) - before, stockOut * 3000 / 10_000);
         assertEq(stock.balanceOf(alice) - creatorBefore, stockOut * 1000 / 10_000);
         assertEq(
-            stock.balanceOf(treasury) - treasuryBefore, stockOut - stockOut * 2000 / 10_000 - stockOut * 1000 / 10_000
+            stock.balanceOf(treasury) - treasuryBefore, stockOut - stockOut * 3000 / 10_000 - stockOut * 1000 / 10_000
         );
         before = stock.balanceOf(OPERATOR);
         x.hook.sweep(pid);

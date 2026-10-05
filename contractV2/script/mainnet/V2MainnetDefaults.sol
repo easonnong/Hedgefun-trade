@@ -25,7 +25,7 @@ library V2MainnetDefaults {
         d.tickSpacing = 60;
         d.minTaxBps = 100; // the 1% base tax; a creator chooses 1% to 15%
         d.maxTaxBps = 1500;
-        d.protocolBps = 2000;
+        d.protocolBps = 3000; // 30% of the collected tax; the creator takes up to 10% and the token's treasury the rest
         d.maxCreatorBps = 1000; // up to 10% of the collected tax, not 10% of trade volume
         d.spikeBps = 0; // V2 LP fees can fund buybacks without strategy profit; no buyback-triggered sell spike.
         d.spikeSeconds = 0;

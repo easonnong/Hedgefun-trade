@@ -278,7 +278,7 @@ contract DeployV2Testnet is Script {
         d.tickSpacing = 60;
         d.minTaxBps = 100;
         d.maxTaxBps = 1500;
-        d.protocolBps = 2000;
+        d.protocolBps = 3000;
         d.spikeBps = 0;
         d.spikeSeconds = 0;
         d.sweepTipBps = 0; // V2 stock revenue is split exactly 20% protocol / creator share / treasury remainder.

@@ -21,10 +21,12 @@ contract V2LaunchFeesTest is V2FactoryFixture {
         factory.setDefaults(next);
         HedgeFunFactory.Defaults memory after_ = factory.getDefaults();
         assertEq(after_.lpFee, 2000);
+        assertEq(after_.protocolBps, 3000);
         assertEq(after_.maxCreatorBps, 1000);
         assertEq(uint8(after_.launchFeeCurrency), uint8(HedgeFunFactory.FeeCurrency.Native));
         assertEq(after_.launchFeeAmount, FEE);
         after_.lpFee = before_.lpFee;
+        after_.protocolBps = before_.protocolBps;
         after_.maxCreatorBps = before_.maxCreatorBps;
         after_.launchFeeCurrency = before_.launchFeeCurrency;
         after_.launchFeeAmount = before_.launchFeeAmount;
@@ -47,7 +49,7 @@ contract V2LaunchFeesTest is V2FactoryFixture {
         HedgeFunBondingCurve curve = HedgeFunBondingCurve(factory.curves(id));
         assertEq(curve.creatorBps(), creatorBps);
         assertEq(curve.taxBps(), 100);
-        assertEq(curve.protocolBps(), 2000);
+        assertEq(curve.protocolBps(), 3000);
     }
 
     function test_zeroCreatorSharePaysNativeFee() public { _configure(); _paidLaunch(0); }
