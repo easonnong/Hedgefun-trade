@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
+import {V2LaunchFeeDefaults} from "./testnet/V2LaunchFeeDefaults.sol";
+
 import {Script, console2} from "forge-std/Script.sol";
 import {VmSafe} from "forge-std/Vm.sol";
 import {IPoolManager} from "v4-core/src/interfaces/IPoolManager.sol";
@@ -199,6 +201,7 @@ contract DeployV2FeeUpgradeTestnet is Script {
             revert BadBinding("base fee defaults");
         }
         x.defaults.sweepTipBps = 0;
+        x.defaults = V2LaunchFeeDefaults.applyTo(x.defaults);
         Seed[] memory seeds = _seeds();
         // The shared test market is append-only. New, unrelated lines must not
         // block a fresh core for these eight reviewed seeds. _readPool still

@@ -32,6 +32,8 @@ contract AddStockHarness is AddV2TestnetStocks {
 
 // Real calls from the operator address: Foundry forbids starting a script broadcast inside a prank frame.
 contract OperatorInvoker {
+    receive() external payable {}
+
     function append(AddV2TestnetStocks s) external returns (AddV2TestnetStocks.Line[] memory) {
         return s.append();
     }
@@ -46,7 +48,7 @@ contract OperatorInvoker {
 }
 
 contract AddV2TestnetStocksTest is Test {
-    address constant OPERATOR = 0x75Cee941B0eF3A83feA0397BbF903C12c1D7e96D;
+    address payable constant OPERATOR = payable(0x75Cee941B0eF3A83feA0397BbF903C12c1D7e96D);
     address constant PM = 0x8366a39CC670B4001A1121B8F6A443A643e40951;
     address constant WETH = 0x7943e237c7F95DA44E0301572D358911207852Fa;
     address alice = makeAddr("stock extension buyer");
@@ -238,10 +240,10 @@ contract AddV2TestnetStocksTest is Test {
         q.nonce = nonce;
         q.maxFee = type(uint256).max;
         q.expectedOpenPriceE18 = l.openPriceE18;
+        vm.deal(alice, 0.0005 ether);
         vm.startPrank(alice);
-        base.usdg.approve(address(base.factory), type(uint256).max);
         (,, bytes32 terms) = base.factory.predict(q);
-        uint256 id = base.factory.launch(q, terms);
+        uint256 id = base.factory.launch{value: 0.0005 ether}(q, terms);
         (address token, address treasury,,,) = base.factory.strategies(id);
         HedgeFunBondingCurve curve = HedgeFunBondingCurve(base.factory.curves(id));
         HedgeFunV2TradeRouter.Hop[] memory path = new HedgeFunV2TradeRouter.Hop[](1);

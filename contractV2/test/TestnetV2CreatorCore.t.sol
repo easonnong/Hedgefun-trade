@@ -12,6 +12,8 @@ import {HedgeFunV2UpgradeableTreasury} from "../src/v2/HedgeFunV2UpgradeableTrea
 import {HedgeFunBondingCurve} from "../src/v2/HedgeFunBondingCurve.sol";
 
 contract CreatorCoreRoleInvoker {
+    receive() external payable {}
+
     function deploy(DeployV2CreatorTestnet tool) external returns (DeployV2FeeUpgradeTestnet.Deployment memory) {
         return tool.deploy(0);
     }
@@ -35,7 +37,7 @@ contract TestnetV2CreatorCoreTest is Test {
         uint256 oldCount = HedgeFunV2Factory(OLD_FEE_FACTORY).strategyCount();
         DeployV2CreatorTestnet tool = new DeployV2CreatorTestnet();
         vm.etch(tool.OPERATOR(), address(new CreatorCoreRoleInvoker()).code);
-        DeployV2FeeUpgradeTestnet.Deployment memory x = CreatorCoreRoleInvoker(tool.OPERATOR()).deploy(tool);
+        DeployV2FeeUpgradeTestnet.Deployment memory x = CreatorCoreRoleInvoker(payable(tool.OPERATOR())).deploy(tool);
         assertEq(x.lines.length, 8);
         assertTrue(address(x.factory) != OLD_FEE_FACTORY);
         assertTrue(address(x.treasury) != OLD_FEE_REGISTRY);
@@ -62,11 +64,11 @@ contract TestnetV2CreatorCoreTest is Test {
         q.nonce = 202609300410;
         q.maxFee = x.defaults.launchFeeAmount;
         q.expectedOpenPriceE18 = x.lines[3].openPriceE18;
+        vm.deal(CREATOR, x.defaults.launchFeeAmount);
         vm.startPrank(CREATOR);
         x.curve.setCurveConfig(q.symbol, q.nonce, 4400, 0);
         (address token, address treasury, bytes32 terms) = x.factory.predict(q);
-        assertTrue(IERC20(address(x.venue.usdg)).approve(address(x.factory), q.maxFee));
-        assertEq(x.factory.launch(q, terms), 0);
+        assertEq(x.factory.launch{value: x.defaults.launchFeeAmount}(q, terms), 0);
         (address actualToken, address actualTreasury,,,) = x.factory.strategies(0);
         assertEq(actualToken, token);
         assertEq(actualTreasury, treasury);
