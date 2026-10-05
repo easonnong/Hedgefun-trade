@@ -1,6 +1,6 @@
 # Hedgefun 合约范围与发布状态（内部文档）
 
-更新于 **2026-10-04**。代码基线是本仓库默认分支 `codex/contract-v1`，已合并
+更新于 **2026-10-04**。代码基线是本仓库默认分支 `main`（2026-10-05 由 `codex/contract-v1` 改名），已合并
 [Cycle 集成 #12](https://github.com/0xHedgeHood/Hedgefun-trade/pull/12) 和
 [测试网及股票策略回放 #20](https://github.com/0xHedgeHood/Hedgefun-trade/pull/20)。
 本页同时更新为 [#25](https://github.com/0xHedgeHood/Hedgefun-trade/pull/25) 的独立集成版本，
