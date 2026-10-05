@@ -54,15 +54,15 @@ V2 先通过股票计价的 bonding curve 募集真实资产，再毕业建立�
 | 路径 | 收费与入账 |
 |---|---|
 | 曲线买入/卖出 | 基础费以股票记入三方可领取账本；买入的开盘附加部分另行销毁 FUN |
-| V4 固定投入买入 | FUN 基础费先记为每池 claims；兑换为股票后再分账 |
+| V4 固定投入买入 | 股票基础费在 `beforeSwap` 从支付额中收取，经 `sweep` 结算到协议、创建者和 treasury |
 | V4 固定投入卖出 | 股票基础费经 `sweep` 结算到协议、创建者和 treasury |
 | V4 指定买到数量 | 按股票输入 gross-up 收基础费；不支持指定卖出所得的卖出 |
 | LP 手续费 | 股票侧进入 treasury 回购预算，FUN 侧销毁；不等于提取 LP 本金 |
 
-普通基础买入费已经不是 V1 的“全部立即烧掉”。`pendingTokenFees` 是待转换的 FUN claims，
-不能当作已到账股票、USDG 或已销毁供应。当前 `convertFees` 需要 factory owner；
+普通基础买入费已经不是 V1 的“全部立即烧掉”。hook version 3 在 `beforeSwap` 直接从买家支付的股票里收取，
+任何人 `sweep` 即可分账，没有待转换的 FUN 库存，也没有 owner 环节；触及价格限制而提前停止的固定投入买入会被拒绝。
+已部署的 version 2 核心仍是旧流程：`pendingTokenFees` 是待转换的 FUN claims，`convertFees` 需要 factory owner。
 曲线 `claimFees`、hook `sweep`、LP 领取、策略 `execute` 和 `buyback` 各有自己的条件。
-因此“策略可公开执行”不能扩大成“整个手续费流水线无需管理员”。
 
 ### 毕业：保留项目币供应，区分本金与收入
 

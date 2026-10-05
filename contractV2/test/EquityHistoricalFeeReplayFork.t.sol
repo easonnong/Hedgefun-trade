@@ -19,6 +19,7 @@ import {HedgeFunV2TradeRouter as Router} from "../src/v2/HedgeFunV2TradeRouter.s
 import {PriceOracle} from "../src/PriceOracle.sol";
 import {TestFeed, TestnetRoles} from "../script/testnet/TestnetAssets.sol";
 import {HedgeFunV2Hook} from "../src/hooks/HedgeFunV2Hook.sol";
+import {ILegacyV2FeeConversion} from "../script/testnet/ILegacyV2FeeConversion.sol";
 import {V2LiquidityVault} from "../src/v2/V2LiquidityVault.sol";
 import {V2FundAssetReader} from "../src/v2/V2FundAssetReader.sol";
 import {TestnetMarket} from "../script/testnet/TestnetMarket.sol";
@@ -604,7 +605,7 @@ contract EquityHistoricalFeeReplayForkTest is Test {
         assertTrue(protocolRecipient != CREATOR && protocolRecipient != address(this) && CREATOR != address(this));
         uint256[3] memory paidBefore = [stock.balanceOf(protocolRecipient),stock.balanceOf(CREATOR),stock.balanceOf(address(this))];
         hook.sweep(key.toId());
-        uint256 pending = hook.pendingTokenFees(key.toId());
+        uint256 pending = ILegacyV2FeeConversion(address(hook)).pendingTokenFees(key.toId());
         if (pending != 0) _convertHookFees(hook, pending);
         hook.sweep(key.toId());
         hookStockDelivered += stock.balanceOf(address(treasury)) - beforeTreasuryStock;
@@ -626,17 +627,17 @@ contract EquityHistoricalFeeReplayForkTest is Test {
         address owner = FACTORY.owner();
         uint256 snapshot = vm.snapshotState();
         vm.prank(owner);
-        (uint256 quoteConsumed,uint256 quoteStock) = hook.convertFees(key,pending,1,limit,deadline);
+        (uint256 quoteConsumed,uint256 quoteStock) = ILegacyV2FeeConversion(address(hook)).convertFees(key,pending,1,limit,deadline);
         assertTrue(vm.revertToState(snapshot));
         vm.deleteStateSnapshot(snapshot);
         assertGt(quoteConsumed,0);
         assertGt(quoteStock,0);
         uint256 floor = Math.max(1,Math.mulDiv(quoteStock,9900,10_000));
         vm.prank(owner);
-        (uint256 consumed,uint256 stockOut) = hook.convertFees(key,pending,floor,limit,deadline);
+        (uint256 consumed,uint256 stockOut) = ILegacyV2FeeConversion(address(hook)).convertFees(key,pending,floor,limit,deadline);
         assertEq(consumed,quoteConsumed);
         assertEq(stockOut,quoteStock);
-        assertEq(hook.pendingTokenFees(key.toId()), pending-consumed);
+        assertEq(ILegacyV2FeeConversion(address(hook)).pendingTokenFees(key.toId()), pending-consumed);
         convertedFeeTokens += consumed;
         convertedFeeStock += stockOut;
         ++conversionCount;
@@ -703,7 +704,7 @@ contract EquityHistoricalFeeReplayForkTest is Test {
         vm.serializeUint(name, "hookCreatorStockPaidRaw", hookCreatorStockPaid);
         vm.serializeUint(name, "hookSweeperStockPaidRaw", hookSweeperStockPaid);
         vm.serializeUint(name, "conversionCount", conversionCount);
-        vm.serializeUint(name, "pendingHookTokenFeesRaw", HedgeFunV2Hook(address(FACTORY.hook())).pendingTokenFees(key.toId()));
+        vm.serializeUint(name, "pendingHookTokenFeesRaw", ILegacyV2FeeConversion(address(FACTORY.hook())).pendingTokenFees(key.toId()));
         vm.serializeUint(name, "traderUsdgInRaw", traderUsdIn);
         vm.serializeUint(name, "traderUsdgOutRaw", traderUsdOut);
         vm.serializeUint(name, "traderUsdgBalanceRaw", USDG.balanceOf(TRADER));

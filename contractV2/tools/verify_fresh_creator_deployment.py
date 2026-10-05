@@ -10,7 +10,7 @@ import subprocess
 ROOT = Path(__file__).resolve().parents[1]
 SIGNER = '0xcecad0ebb0cab4fbb2fe6213e3cd6de82e4d164b'
 LEGACY = '0x75cee941b0ef3a83fea0397bbf903c12c1d7e96d'
-FEATURE = 'v2-creator-selected-fresh-wallet-v1'
+FEATURE = 'v2-creator-selected-fresh-wallet-v2'
 CORE = {'treasuryDeployer': ('V2TreasuryDeployer', 'V2TreasuryDeployer'),
         'tokenDeployer': ('HedgeFunDeployers', 'TokenDeployer'), 'curveDeployer': ('CurveDeployer', 'CurveDeployer'),
         'hook': ('HedgeFunV2Hook', 'HedgeFunV2Hook'), 'factory': ('HedgeFunV2Factory', 'HedgeFunV2Factory'),
@@ -84,7 +84,7 @@ def main():
     hook_input=hook_rows[0]['transaction']['input']
     assert hook_input[2:66].lower()==book['hookSalt'][2:].lower()
     assert ('0x'+hook_input[66:]).startswith(code('HedgeFunV2Hook'))
-    assert int(book['hook'],16)&0x3fff==0x2844
+    assert int(book['hook'],16)&0x3fff==0x28cc
 
     def read(target,sig,*args):
         raw=rpc('eth_call',[{'to':target,'data':cast('calldata',sig,*args)},tag])
@@ -103,7 +103,7 @@ def main():
     for key in ('treasuryDeployer','tokenDeployer','curveDeployer','hook','tradeRouter'):
         eq(book[key],'factory()',[book['factory']])
     eq(book['nativeRouter'],'router()',[book['tradeRouter']]);eq(book['nativeRouter'],'wrappedNative()',[book['weth']])
-    eq(book['hook'],'version()',[2]);eq(book['treasuryDeployer'],'kindCount()',[3])
+    eq(book['hook'],'version()',[3]);eq(book['treasuryDeployer'],'kindCount()',[3])
     for i,name in enumerate(('HedgeFunV2UpgradeableTreasury','HedgeFunV2UpgradeableBuybackTreasury','HedgeFunV2UpgradeableEngineTreasury')):
         manifest=read(book['treasuryDeployer'],'kindManifest(uint8)',i)
         assert manifest[2]==int(cast('keccak',code(name)),16)

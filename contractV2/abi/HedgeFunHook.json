@@ -923,7 +923,7 @@
     "internalType": "uint24"
    }
   ],
-  "stateMutability": "pure"
+  "stateMutability": "nonpayable"
  },
  {
   "type": "function",

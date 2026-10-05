@@ -1,5 +1,11 @@
 # V2 two-sided fee testnet release
 
+> **This runbook describes the version-2 hook release.** `DeployV2FeeUpgradeTestnet` now deploys the version-3
+> hook, whose V4 buy fee is taken in stock by `beforeSwap`: its readback requires `hook.version()==3`, its book
+> says `v2-two-sided-stock-fees-v2`, and a core it deploys has no `pendingTokenFees` and no `convertFees`. For
+> such a core, skip the conversion steps below and expect every V4 fee as a stock claim that one `sweep` pays.
+> See [V2_TWO_SIDED_FEES.md](./V2_TWO_SIDED_FEES.md).
+
 This release creates a new core on Robinhood testnet, chain **46630**. It reuses the eight existing synthetic
 stock venues: AAPL, GME, NVDA, TSLA, MSFT, AMZN, GOOGL and META. Prices are operator-set test values, not live
 equity quotes. Existing strategies keep their original factory, curve, hook and fee rules.

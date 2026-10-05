@@ -37,7 +37,7 @@ abstract contract V2MainnetCore is Script {
     address public constant PM = 0x8366a39CC670B4001A1121B8F6A443A643e40951;
     address public constant V3_FACTORY = 0x1f7d7550B1b028f7571E69A784071F0205FD2EfA;
     address public constant USDG = 0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168;
-    uint160 public constant HOOK_FLAGS = 0x2844;
+    uint160 public constant HOOK_FLAGS = 0x28CC;
 
     error MissingCode(address target);
     error UnsafeRole(address who);
@@ -139,7 +139,7 @@ abstract contract V2MainnetCore is Script {
                 || address(x.nativeRouter.router()) != address(x.router)
                 || address(x.nativeRouter.wrappedNative()) != r.weth
         ) revert ReadbackFailed("component bindings");
-        if (x.treasury.version() != 2 || x.hook.version() != 2 || x.treasury.kindCount() != 1) {
+        if (x.treasury.version() != 2 || x.hook.version() != 3 || x.treasury.kindCount() != 1) {
             revert ReadbackFailed("versions and kinds");
         }
         if (x.treasury.upgradeController().owner() != firstOwner) revert ReadbackFailed("upgrade controller owner");

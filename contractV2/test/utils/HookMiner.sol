@@ -23,12 +23,12 @@ abstract contract HookMiner is CommonBase {
         revert("no hook salt");
     }
 
-    /// V2 uses its own immutable fee handler; V1 deployments continue to use `_deployHook`.
+    /// V2 uses its own immutable fee handler, at 0x28CC; V1 deployments continue to use `_deployHook`.
     function _deployV2Hook(IPoolManager pm) internal returns (HedgeFunV2Hook) {
         bytes32 initHash = keccak256(abi.encodePacked(type(HedgeFunV2Hook).creationCode, abi.encode(pm)));
         for (uint256 i = _cursor; i < _cursor + 2_000_000; i++) {
             address at = vm.computeCreate2Address(bytes32(i), initHash, address(this));
-            if (uint160(at) & 0x3FFF == 0x2844 && at.code.length == 0) {
+            if (uint160(at) & 0x3FFF == 0x28CC && at.code.length == 0) {
                 _cursor = i + 1;
                 return new HedgeFunV2Hook{salt: bytes32(i)}(pm);
             }

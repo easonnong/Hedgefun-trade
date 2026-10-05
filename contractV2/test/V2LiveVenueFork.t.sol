@@ -290,7 +290,6 @@ contract StrategyForkTestV2LiveVenue is Test, HookMiner {
     function _sweepV4Fees() private {
         (uint256 taxTokens, uint256 taxStock) = hook.accrued(key.toId());
         uint256 supplyBefore = token.totalSupply();
-        uint256 pendingBefore = hook.pendingTokenFees(key.toId());
         uint256 tokenTip = token.balanceOf(BOT);
         uint256 protocolBefore = IERC20(GME).balanceOf(PROTOCOL);
         uint256 creatorBefore = IERC20(GME).balanceOf(CREATOR);
@@ -300,9 +299,8 @@ contract StrategyForkTestV2LiveVenue is Test, HookMiner {
         vm.prank(BOT); hook.sweep(key.toId());
         assertEq(token.balanceOf(BOT), tokenTip, "V2 has no sweep tip");
         assertEq(token.totalSupply(), supplyBefore, "V2 basic buy fees are not burned");
-        assertEq(hook.pendingTokenFees(key.toId()), pendingBefore + taxTokens);
-        assertEq(PM.balanceOf(address(hook), uint256(uint160(address(token)))), pendingBefore + taxTokens,
-            "pending inventory is backed by manager claims");
+        assertEq(taxTokens, 0, "V2 takes every fee in stock");
+        assertEq(PM.balanceOf(address(hook), uint256(uint160(address(token)))), 0, "no token fee inventory");
         uint256 stockAfter = IERC20(GME).balanceOf(PROTOCOL) + IERC20(GME).balanceOf(CREATOR)
             + IERC20(GME).balanceOf(curve.treasury()) + IERC20(GME).balanceOf(BOT);
         assertEq(stockAfter - stockBefore, taxStock, "tax stays with configured recipients and sweeper");
@@ -454,51 +452,33 @@ contract StrategyForkTestV2LiveVenue is Test, HookMiner {
         console2.log("Live kind-1 buyback burned FUN raw:", burned);
     }
 
-    /// The selected 3% fee schedule on deployed stock/V3/V4 contracts: buy-token claims become actual stock
-    /// payouts in bounded batches, with every unconverted and unpaid amount still independently accounted for.
-    function test_fork_selectedThreePercentBuyFeesConvertToStockAndSplit() public {
+    /// The selected 3% fee schedule on deployed stock/V3/V4 contracts: a V4 buy's fee is a stock claim from the
+    /// swap itself, and one permissionless sweep pays it out with nothing left to convert.
+    function test_fork_selectedThreePercentBuyFeesAreStockAndSplit() public {
         _setUpForkKindAndTax(0, 300);
         _quotedBuy(ALICE, 250e6, 0);
         assertEq(uint256(curve.status()), 2);
         _quotedBuy(BOB, 5e6, 2);
         (uint256 taxTokens, uint256 stockTax) = hook.accrued(key.toId());
-        assertGt(taxTokens, 0);
-        assertEq(stockTax, 0, "ordinary buy fee starts in tokens, not stock cash");
+        assertEq(taxTokens, 0, "the buy fee is never held in the token");
+        assertGt(stockTax, 0);
+        assertEq(PM.balanceOf(address(hook), uint256(uint160(address(token)))), 0);
+        assertEq(PM.balanceOf(address(hook), uint256(uint160(GME))), stockTax);
         uint256 supplyBefore = token.totalSupply();
         uint256 protocolBefore = IERC20(GME).balanceOf(PROTOCOL);
         uint256 creatorBefore = IERC20(GME).balanceOf(CREATOR);
         uint256 treasuryBefore = IERC20(GME).balanceOf(curve.treasury());
-        hook.sweep(key.toId());
-        assertEq(hook.pendingTokenFees(key.toId()), taxTokens);
-        assertEq(PM.balanceOf(address(hook), uint256(uint160(address(token)))), taxTokens);
-        uint256 convertedStock;
-        for (uint256 i; i < 4 && hook.pendingTokenFees(key.toId()) != 0; ++i) {
-            uint256 pending = hook.pendingTokenFees(key.toId());
-            (uint160 spot,,,) = PM.getSlot0(key.toId());
-            uint160 limit = address(token) < GME
-                ? uint160(uint256(spot) * 9950 / 10_000)
-                : uint160(uint256(spot) * 10050 / 10_000);
-            vm.prank(OWNER);
-            (uint256 consumed, uint256 stockOut) = hook.convertFees(key, pending, 1, limit, block.timestamp);
-            assertGt(consumed, 0);
-            assertEq(hook.pendingTokenFees(key.toId()), pending - consumed);
-            assertEq(PM.balanceOf(address(hook), uint256(uint160(address(token)))), pending - consumed);
-            convertedStock += stockOut;
-            _assertClean();
-        }
-        assertEq(hook.pendingTokenFees(key.toId()), 0);
-        assertEq(token.totalSupply(), supplyBefore, "converting base fees never burns live supply");
-        hook.sweep(key.toId());
+        vm.prank(BOT); hook.sweep(key.toId());
+        assertEq(token.totalSupply(), supplyBefore, "the basic buy fee burns nothing");
         uint256 protocolPaid = IERC20(GME).balanceOf(PROTOCOL) - protocolBefore;
         uint256 creatorPaid = IERC20(GME).balanceOf(CREATOR) - creatorBefore;
         uint256 treasuryPaid = IERC20(GME).balanceOf(curve.treasury()) - treasuryBefore;
-        assertApproxEqAbs(protocolPaid, Math.mulDiv(convertedStock, 2000, 10_000), 4);
-        assertApproxEqAbs(creatorPaid, Math.mulDiv(convertedStock, 1000, 10_000), 4);
-        assertEq(protocolPaid + creatorPaid + treasuryPaid, convertedStock);
+        assertEq(protocolPaid, Math.mulDiv(stockTax, 2000, 10_000));
+        assertEq(creatorPaid, Math.mulDiv(stockTax, 1000, 10_000));
+        assertEq(protocolPaid + creatorPaid + treasuryPaid, stockTax);
         assertEq(PM.balanceOf(address(hook), uint256(uint160(GME))), 0);
         _assertClean();
-        console2.log("Live 3% buy fee token claims raw:", taxTokens);
-        console2.log("Live converted GME fee raw:", convertedStock);
+        console2.log("Live 3% buy fee GME raw:", stockTax);
         console2.log("Live protocol/creator/treasury GME payouts raw:", protocolPaid, creatorPaid, treasuryPaid);
     }
 

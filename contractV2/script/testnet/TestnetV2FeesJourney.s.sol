@@ -9,6 +9,7 @@ import {HedgeFunBondingCurve} from "../../src/v2/HedgeFunBondingCurve.sol";
 import {HedgeFunV2TradeRouter} from "../../src/v2/HedgeFunV2TradeRouter.sol";
 import {CurveDeployer} from "../../src/v2/CurveDeployer.sol";
 import {HedgeFunV2Hook} from "../../src/hooks/HedgeFunV2Hook.sol";
+import {ILegacyV2FeeConversion} from "./ILegacyV2FeeConversion.sol";
 import {VmSafe} from "forge-std/Vm.sol";
 import {PoolKey} from "v4-core/src/types/PoolKey.sol";
 import {PoolId, PoolIdLibrary} from "v4-core/src/types/PoolId.sol";
@@ -218,7 +219,7 @@ contract TestnetV2FeesJourney is Script {
         address token = _strategy(b, id, 2);
         (PoolKey memory key,) = b.factory.graduationConfig(id);
         (uint256 accrued,) = b.hook.accrued(key.toId());
-        uint256 maximum = vm.envOr("CONVERSION_MAX_TOKENS", b.hook.pendingTokenFees(key.toId()) + accrued);
+        uint256 maximum = vm.envOr("CONVERSION_MAX_TOKENS", ILegacyV2FeeConversion(address(b.hook)).pendingTokenFees(key.toId()) + accrued);
         uint256 minimum = vm.envUint("MIN_CONVERSION_STOCK_OUT");
         uint256 move = vm.envOr("CONVERSION_SQRT_MOVE_BPS", uint256(50));
         if (maximum == 0 || minimum == 0 || move == 0 || move > 50) revert BadAmount(minimum);
@@ -232,7 +233,7 @@ contract TestnetV2FeesJourney is Script {
         console2.log("conversion sqrt limit", uint256(limit));
         console2.log("conversion deadline", deadline);
         vm.startBroadcast();
-        (uint256 consumed, uint256 stockOut) = b.hook.convertFees(key, maximum, minimum, limit, deadline);
+        (uint256 consumed, uint256 stockOut) = ILegacyV2FeeConversion(address(b.hook)).convertFees(key, maximum, minimum, limit, deadline);
         vm.stopBroadcast();
         console2.log("conversion consumed tokens", consumed);
         console2.log("conversion output stock claims", stockOut);
@@ -397,7 +398,7 @@ contract TestnetV2FeesJourney is Script {
         (uint256 tokenClaims, uint256 stockClaims) = b.hook.accrued(pid);
         console2.log("hook accrued token claims", tokenClaims);
         console2.log("hook accrued stock claims", stockClaims);
-        console2.log("hook pending token fees", b.hook.pendingTokenFees(pid));
+        console2.log("hook pending token fees", ILegacyV2FeeConversion(address(b.hook)).pendingTokenFees(pid));
         console2.log("hook owed protocol", b.hook.owedProtocol(pid));
         console2.log("hook owed creator", b.hook.owedCreator(pid));
         console2.log("hook owed treasury", b.hook.owedTreasury(pid));

@@ -14,7 +14,7 @@ contract DeployV2FreshCreatorTestnet is DeployV2CreatorTestnet {
     }
 
     function _featureVersion() internal pure override returns (string memory) {
-        return "v2-creator-selected-fresh-wallet-v1";
+        return "v2-creator-selected-fresh-wallet-v2";
     }
 
     function _candidatePath(bool requested) internal pure override returns (string memory) {

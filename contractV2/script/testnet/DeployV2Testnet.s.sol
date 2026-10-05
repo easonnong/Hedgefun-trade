@@ -38,7 +38,7 @@ contract DeployV2Testnet is Script {
     uint256 internal constant CHAIN_ID = 46630;
     address internal constant PM = 0x8366a39CC670B4001A1121B8F6A443A643e40951;          // Uniswap V4, testnet
     address internal constant WETH = 0x7943e237c7F95DA44E0301572D358911207852Fa;        // L2 WETH, testnet
-    uint160 internal constant HOOK_FLAGS = 0x2844;
+    uint160 internal constant HOOK_FLAGS = 0x28CC;
     string internal constant V3_FACTORY_BYTECODE = "lib/v4-core/test/bin/v3Factory.bytecode";
     string internal constant OUT = "deploy/testnet-v2-whitelist.json";
     string internal constant OUT_DRY = "deploy/testnet-v2-whitelist.dryrun.json";
@@ -304,7 +304,7 @@ contract DeployV2Testnet is Script {
         }
         if (x.treasury.factory() != address(f) || x.token.factory() != address(f) || x.curve.factory() != address(f)
             || x.hook.factory() != address(f) || address(x.router.factory()) != address(f)) revert ReadbackFailed("binding");
-        if (x.hook.version() != 2) revert ReadbackFailed("two-sided fee hook");
+        if (x.hook.version() != 3) revert ReadbackFailed("stock-fee hook");
         if (x.treasury.kindCount() != 3 || x.engineKind != 2) revert ReadbackFailed("kinds");
         if (x.treasury.policy(x.policyKey).implementation != address(x.policy)) revert ReadbackFailed("policy");
         if (keccak256(abi.encode(f.getDefaults())) != keccak256(abi.encode(_defaults()))) revert ReadbackFailed("defaults");
@@ -368,7 +368,7 @@ contract DeployV2Testnet is Script {
         string memory o = "testnet";
         vm.serializeUint(o, "chainId", CHAIN_ID);
         vm.serializeBool(o, "broadcast", live);
-        vm.serializeString(o, "featureVersion", "v2-two-sided-stock-fees-v1");
+        vm.serializeString(o, "featureVersion", "v2-two-sided-stock-fees-v2");
         // Launch requests remain bounded creator choices; these are the selected UI defaults, not immutable rates.
         vm.serializeUint(o, "recommendedTaxBps", 100);
         vm.serializeUint(o, "recommendedCreatorBps", 1000);

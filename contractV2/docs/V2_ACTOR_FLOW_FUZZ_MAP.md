@@ -127,7 +127,7 @@ curve.buy() 触及 minTokenReserve
 
 1. [`curve.claimFees(recipient)`](../src/v2/HedgeFunBondingCurve.sol)：任意人可触发，但只能把曲线待领 stock 发给既定 recipient；给 treasury 的钱到账后仍须 `book()`。
 2. [`hook.sweep(poolId)` / `claimFor(poolId, who)` / `claim(poolId, to)`](../src/hooks/HedgeFunHook.sol)：前两者是向固定收款人结算/推送；`claim` 仅可重定向**调用者自己的**角色款项。待领款按**角色**记账：协议或 creator 收款人合法变更后，未领取额度跟随角色到新地址，不归旧地址继续领取。受阻转账仍留在待领账本。
-3. [`HedgeFunV2Hook.convertFees()`](../src/hooks/HedgeFunV2Hook.sol)：owner 才可把 token 侧费按价格保护转换为 stock，之后仍需结算；此动作有 minOut、限价和 deadline。
+3. `HedgeFunV2Hook.convertFees()`（仅 version 2 的已部署核心，见 [`ILegacyV2FeeConversion`](../script/testnet/ILegacyV2FeeConversion.sol)）：owner 才可把 token 侧费按价格保护转换为 stock，之后仍需结算；此动作有 minOut、限价和 deadline。version 3 的 hook 在 `beforeSwap` 直接收股票，没有这一步。
 4. [`V2LiquidityVault.collectFees()`](../src/v2/V2LiquidityVault.sol)：任何人触发 V4 fee poke；FUN 侧 LP fee 销毁，stock 侧 fee 转 treasury 的 buyback 预算。vault 没有提走 LP 本金的入口。
 
 FUN holder 可调用 [`HedgeFunToken.burn()`](../src/HedgeFunToken.sol) 自烧。Creator 可 `setEditor(editor)`；未锁定时 creator 或当前 editor 可 `setMetadata(...)`；只有 creator 可 `lock()`，而且锁定前必须清除 editor，锁定不可逆。测试 editor 切换/撤销、过长 metadata 使 `launchWithMetadata` 全回滚、锁定后任何编辑都失败。**V2 没有 holder 的份额 redeem/withdraw 路径**；别把 StockLend 或 EarnVault 的行为混进这一套测试。
@@ -186,7 +186,7 @@ creator → factory.launch() / LaunchNativeRouter.launchAndBuy()
 | [`HedgeFunFactory.setDefaults()` / `setPublicLaunch()` / `list()` / `setListingGates()` / `setBandCeiling()` / `setLauncher()`](../src/HedgeFunFactory.sol) | 后续 launch 的费用、上市、边界与允许的路由；`list` 核验 oracle/stock 和规范 V3 pool | 非 owner 拒绝；影响 `terms` 的参数变动使旧承诺失效，权限/资格 gate 单独验证；已存在 fund 的条款不变；暂停新发射不等于暂停交易 |
 | [`V2TreasuryDeployer.setLpBps()` / `registerKind()` / `registerEngineKind()` / `registerPolicy()` / `disablePolicy()`](../src/v2/V2TreasuryDeployer.sol) | 后续创建可选的 treasury/policy 与 LP 比例；注册项不可随意替换 | 非 owner 拒绝；空 chunk、零依赖/审计 manifest 等无效输入拒绝；注册后派生的 codehash 正确。链上不会替审计者比对“预期”哈希，须另做链下核验；禁用只挡新 launch，不改变旧 fund |
 | [`HedgeFunHook.setProtocol()` / `proposeCreator()` / `acceptCreator()`，creator 的 `vetoCreator()`](../src/hooks/HedgeFunHook.sol) | 已存在池的协议/creator 费用收款角色；creator 变更带延迟与 180 天 veto quiet period | 非 owner、提前接受、过期窗口、veto 后接受均拒绝；待领款随角色合法转移，旧地址不再有收款权；creator 即使无待处理提案也能 veto，owner 取消提案不产生 quiet period |
-| [`HedgeFunV2Hook.convertFees()`](../src/hooks/HedgeFunV2Hook.sol) | 已累积 token 费用换 stock | 非 owner、坏 minOut/price/deadline 回滚；费用只扣一次 |
+| `HedgeFunV2Hook.convertFees()`（仅 version 2 的已部署核心；version 3 已删除） | 已累积 token 费用换 stock | 非 owner、坏 minOut/price/deadline 回滚；费用只扣一次 |
 | [`TradingCalendar.setOverride()`](../src/TradingCalendar.sol) | 强制开/闭股票交易日 | 关市阻断需要健康股价的 treasury 路径；不误认为全局交易暂停；复市后额度日期正确 |
 | [`HedgeFunTreasuryBase.setVoteDelegate()`](../src/HedgeFunTreasuryBase.sol) | 对固定 stock 尝试 delegation，无资产转移 | 非 owner 拒绝，不能借此挪走 stock |
 

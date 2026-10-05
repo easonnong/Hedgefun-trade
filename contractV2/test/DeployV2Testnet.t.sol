@@ -72,7 +72,7 @@ contract DeployV2TestnetTest is Test {
     function test_deploysListsAndOpens() public view {
         assertEq(x.factory.owner(), operator);
         assertTrue(x.factory.publicLaunch());
-        assertEq(x.hook.version(), 2);
+        assertEq(x.hook.version(), 3);
         assertEq(x.factory.getDefaults().sweepTipBps, 0);
         assertEq(x.factory.getDefaults().maxCreatorBps, 1000);
         assertEq(uint8(x.factory.getDefaults().launchFeeCurrency), uint8(HedgeFunFactory.FeeCurrency.Native));
@@ -323,22 +323,15 @@ contract DeployV2TestnetTest is Test {
 
         (PoolKey memory key,) = x.factory.graduationConfig(id);
         PoolId pid = key.toId();
+        (uint256 tokenFees, uint256 stockFees) = x.hook.accrued(pid);
+        assertEq(tokenFees, 0, "the V4 buy's fee was taken in stock, never in the token");
+        assertGt(stockFees, 0);
+        assertEq(IPoolManager(PM).balanceOf(address(x.hook), uint256(uint160(token))), 0);
         protocolBefore = stock.balanceOf(x.protocol);
         x.hook.sweep(pid);
-        assertGt(stock.balanceOf(x.protocol), protocolBefore, "the V4 sale also paid the protocol");
-        uint256 pending = x.hook.pendingTokenFees(pid);
-        assertGt(pending, 0, "the V4 buy accrued token fee inventory independently of the sale");
-        (uint160 spot,,,) = IPoolManager(PM).getSlot0(pid);
-        uint160 limit = Currency.unwrap(key.currency0) == token
-            ? uint160(uint256(spot) * 9950 / 10_000)
-            : uint160(uint256(spot) * 10050 / 10_000);
-        vm.prank(operator);
-        (uint256 consumed, uint256 stockOut) = x.hook.convertFees(key, pending, 1, limit, block.timestamp);
-        assertEq(consumed, pending);
-        assertEq(x.hook.pendingTokenFees(pid), 0);
-        protocolBefore = stock.balanceOf(x.protocol);
-        x.hook.sweep(pid);
-        assertEq(stock.balanceOf(x.protocol) - protocolBefore, stockOut * 2000 / 10_000,
-            "the V4 buy's converted stock fees reached the protocol exactly once");
+        assertEq(stock.balanceOf(x.protocol) - protocolBefore, stockFees * 2000 / 10_000,
+            "one sweep paid the V4 buy's and the V4 sale's stock fees to the protocol exactly once");
+        (tokenFees, stockFees) = x.hook.accrued(pid);
+        assertEq(tokenFees + stockFees, 0);
     }
 }
