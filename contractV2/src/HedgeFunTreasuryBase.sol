@@ -96,8 +96,7 @@ abstract contract HedgeFunTreasuryBase is ReentrancyGuard, IUnlockCallback {
     /// ring covers it with room for a griefer writing one observation a second.
     uint32 public constant BUYBACK_TWAP_WINDOW = 600;
 
-    /// how stale a cached price may be and still SIZE a buy-back chunk. Long enough for a holiday weekend, short
-    /// enough that a feed which has genuinely stopped takes the buy-back down with it.
+    /// Legacy sizing-cache age limit. Retained in the V2 ABI; V2 uses guarded pool TWAP instead of this cache.
     uint256 public constant MAX_SIZING_AGE = 5 days;
 
     uint256 public constant MAX_BOUNTY_BPS = Limits.MAX_BOUNTY_BPS;
@@ -484,26 +483,26 @@ abstract contract HedgeFunTreasuryBase is ReentrancyGuard, IUnlockCallback {
     }
 
     // ------------------------------------------------------------------------------------------------ buy back and burn
+    /// @dev Sizing only. V2 supplies the stock pool's guarded TWAP during scheduled closures.
+    function _buybackFallbackPrice() internal view virtual returns (uint256) {
+        return block.timestamp - lastGoodPriceAt <= MAX_SIZING_AGE ? lastGoodPrice : 0;
+    }
+
     /// @notice spend one chunk of realised profit buying the token in its own pool -- the launch's <token>/<stock> V4
     ///         pool -- and burn it.
     function buyback() external nonReentrant returns (uint256 spent, uint256 burned) {
         if (hook == address(0) || buybackStock == 0) revert NotDue();
         if (block.timestamp < lastBuybackAt + _params.buybackCooldown) revert Cooldown();
-        // Only to size the chunk. The price the buy-back EXECUTES at is bounded by the pool's own TWAP, never by
-        // this -- which is why a stale one is acceptable here and nowhere else in the rule. The token pool trades
-        // straight through the weekend while the equity feed is frozen for 65 hours, and blocking burns for that
-        // whole time would protect nothing: it is not a stock trade.
+        // Only to size the chunk. Execution uses the FUN/stock pool's own price bounds. The legacy fallback is a
+        // cached observation; V2 overrides it with a guarded stock/USDG TWAP during scheduled closures.
         (bool ok, uint256 p) = _oracle.tryPrice();
         if (ok) {
-            // Kind-1 treasuries deliberately do not need an oracle to book newly arrived stock, so a buy-back may
-            // be their only live-price touchpoint. Preserve that observation for the documented five-day sizing
-            // fallback before the market closes or the feed ages out.
+            // Record live oracle observations only; fallback quotes never refresh this timestamp.
             _notePrice(p);
         } else {
-            p = lastGoodPrice;
-            ok = p != 0 && block.timestamp - lastGoodPriceAt <= MAX_SIZING_AGE;
+            p = _buybackFallbackPrice();
         }
-        if (!ok) revert Unhealthy();
+        if (p == 0) revert Unhealthy();
         uint256 amountIn = Math.min(buybackStock, _ruleStockFor(_params.buybackChunkUsdg, p));
 
         _swapKind = 2;

@@ -1,8 +1,9 @@
 # Treasury product profiles and percentage limits
 
-Status: first implementation PR [#26](https://github.com/0xHedgeHood/Hedgefun-trade/pull/26), stacked on #22.
-No public registration or deployment has been broadcast. Review results, reproduction commands and captured
-logs are in [the schema-3 audit evidence](fuzz/treasury-profiles-2026-10-04/README.md).
+Status: schema 3 originated in PR #26, now merged with #22. This follow-up adds directional daily budgets and
+net realized-income accounting on top of the weekend buyback fix in PR #29. It has not been publicly deployed.
+The initial implementation audit is in [the schema-3 audit evidence](fuzz/treasury-profiles-2026-10-04/README.md);
+current behavior and LP comparison are in [the directional-budget report](V2_DIRECTIONAL_BUDGET_AND_INCOME.md).
 The implemented new profile is **Strategy treasury → Rebalance → Continuous**. This is the first part of
 the product consolidation, not a claim that all of its price/cycle/buyback/frontend work is complete.
 
@@ -16,7 +17,7 @@ proxy implementation names are deployment details resolved from a verified addre
 | Buyback treasury | No stock strategy; buy FUN from eligible income | Existing #22 upgradeable implementation retained; percentage buyback remains pending |
 | Strategy treasury / Price / Single round | Manage the current round, finish exiting, then stop opening new positions | Pending state machine; not an alias for the existing lot strategy |
 | Strategy treasury / Price / Cycle | Manage a round and re-enter under explicit price/cooldown rules | Pending integration with the current price implementation |
-| Strategy treasury / Rebalance / Continuous | Correct the tradable stock/USDG allocation towards its target | Implemented here, upgradeable, schema 3; not deployed |
+| Strategy treasury / Rebalance / Continuous | Correct the tradable stock/USDG allocation towards its target | Upgradeable, schema 3; this follow-up needs a new registration or compatible upgrade |
 
 The existing ordinary lot strategy already permits dip re-entry. The old Cycle implementation additionally
 permits one recovery entry after an actual sale. Neither implements the proposed single/cycle product switch.
@@ -27,6 +28,36 @@ Income distribution is a separate choice. Production recurring dividends and per
 not implemented by schema 3. Its inherited buyback retains the existing fixed chunk and separate TWAP/anchor
 guards. This version has no pending-dividend liability ledger; a future dividend successor must add and audit
 that accounting before any cash balance is considered available for trading.
+
+### Weekend buyback sizing
+
+The V2 buyback uses the live stock/USDG oracle when available. During a scheduled market closure it instead
+converts its fixed USDG chunk and minimum fill through the stock/USDG pool's **600-second TWAP**, even when
+the treasury has never cached a live price and `bandBpsPerHour` is zero. That parameter still controls the
+separate stock strategy; enabling this income-funded FUN buyback does not enable weekend rebalance trades.
+
+The fallback requires an unpaused stock, a valid last stock-feed reference, a fresh USDG feed, a complete TWAP
+window, spot within `maxDeviationBps` of TWAP, and TWAP within the existing 30% outer band of the reference.
+It returns the TWAP itself for sizing, without recording it as `lastGoodPrice`. V2 no longer falls through to
+the legacy five-day cache: an open-session oracle outage, forced closure, or invalid weekend quote fails closed.
+
+Execution still buys the launched FUN token with `buybackStock`, under the separate **FUN/stock** pool's
+TWAP/anchor and price-impact limits. Keeper rewards, burn accounting, cooldown and principal isolation remain
+unchanged. No storage fields or public selectors are added. Existing proxy deployments need a compatible
+implementation upgrade through the 48-hour controller; a source change does not activate the fallback on chain.
+
+Regression coverage is in `test/V2BuybackKind.t.sol`. `TestnetV2WeekendBuybackFork.t.sol` optionally reproduces
+the deployed schema-3 pool's old rejection and the repaired FUN purchase on the same weekend state with a local
+implementation-code overlay, then separately verifies the real delayed upgrade path. It sends no public-chain
+transactions. Run it with `WEEKEND_BUYBACK_FORK=true` and `WEEKEND_BUYBACK_FORK_BLOCK=<fresh testnet block>`.
+The comparison requires a block during a scheduled closure and an unupgraded sample with accrued LP fees;
+its precondition assertions fail rather than silently skip when that state changes.
+
+Validated at Robinhood testnet block 128935822: the repaired local implementation spent
+0.073093088609826987 TSLA and burned 12,996,897.044329732493693297 FUN, with principal unchanged. Both fork
+tests passed; the offline suite passed 1,083 tests with 45 opt-in skips, and 163 Python tests passed.
+[Evidence and source hashes](fuzz/weekend-buyback-2026-10-04/results.json) record the candidate. No public
+testnet implementation was upgraded by this validation.
 
 ## Implemented schema-3 execution
 
@@ -40,8 +71,8 @@ code, domain, nonce, direction and capability, and clips the proposed action aga
 
 - **Buy limit:** available USDG cash × buy percentage, rounded down. At most 25% per action.
 - **Sell limit:** tradable stock quantity × sell percentage, rounded down. At most 25% per action.
-- **Daily limit:** (tradable stock's live oracle value + available USDG) × daily percentage, rounded down.
-  Remaining capacity subtracts actual turnover already recorded for the same US trading date.
+- **Daily buy/sell limits:** a separate percentage for each direction, applied to tradable capital immediately
+  before the trading date's first successful action. Each budget subtracts only that direction's actual usage.
 - Buys/sells are also bounded by the target gap, actual inventory and existing live-price/slippage guards.
   The legacy `sellChunkUsdg` no longer clips schema-3 stock strategy execution; the 25% ceiling on each
   action percentage is the protocol's bound in its place, and scales with the treasury. A small percentage on a small
@@ -54,9 +85,10 @@ oracle. Sells count stock actually leaving strategy inventory, including realize
 buyback. Buys count USDG actually spent. Keeper rewards use actual swap output, and buy inventory/cost uses
 stock retained after the reward. Failed transactions roll back trades and accounting atomically.
 
-Daily capacity is dynamic: a price drop can reduce remaining capacity to zero, and a price rise or capital
-inflow can increase it. Previously used USDG is never reset by a price change, donation, failed attempt or
-upgrade. The trading-date boundary remains the oracle calendar's 20:00 New York boundary, including DST;
+The daily basis is pinned after the first successful action. Price moves and new deposits cannot reopen or
+shrink it during that date. Both directions have separate used amounts, so a prior sale does not consume the
+buy budget. A legacy same-day aggregate cannot reveal its direction: an upgrade conservatively charges it to
+both budgets until the next date. A 50% buy plus 50% sell setting can permit 100% combined daily turnover. The trading-date boundary remains the oracle calendar's 20:00 New York boundary, including DST;
 this is not a rolling 24-hour window. A preview describes the current snapshot, not a guaranteed fill.
 
 ### Configuration encoding
@@ -71,7 +103,7 @@ this is not a rolling 24-hour window. A preview describes the current snapshot, 
 | Cooldown | At least 600 seconds |
 | Profit share | 0–100% of realized stock profit, not graduation principal |
 | `words[1]` | Buy bps [0..15], sell bps [16..31]; higher bits zero; each 1–2,500 bps |
-| `words[2]` | Daily turnover bps, 1–10,000; no other bits |
+| `words[2]` | Daily buy bps [0..15], daily sell bps [16..31]; each 1–10,000; higher bits zero. A zero high half is the legacy encoding and applies the low half to each direction |
 
 The action and daily fractions use different denominators, so the daily percentage is not required to exceed
 either action percentage.
@@ -120,9 +152,14 @@ For example (illustrative values, not a production recommendation), save:
 {
   "mode": "strategy", "strategy": "rebalance", "execution": "continuous",
   "targetPercent": "50", "bandPercent": "5", "buyPercent": "20", "sellPercent": "20",
-  "dailyPercent": "50", "profitToBuybackPercent": "50", "cooldownSeconds": 600
+  "dailyBuyPercent": "50", "dailySellPercent": "50",
+  "profitToBuybackPercent": "50", "cooldownSeconds": 600
 }
 ```
+
+The adapter also accepts the legacy `dailyPercent` field, exclusively instead of the two directional fields.
+New packed directional configs require this candidate's policy and kind; old policy bytecode rejects those words.
+Existing proxies retain their original config/policy binding and use its one legacy percentage in both directions.
 
 After a registration has been verified, build the candidate and run the read-only adapter:
 

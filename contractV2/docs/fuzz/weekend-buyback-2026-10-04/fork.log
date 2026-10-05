@@ -1,0 +1,42 @@
+Compiling 1 files with Solc 0.8.26
+Solc 0.8.26 finished in 4.78s
+Compiler run successful with warnings:
+Warning (3628): This contract has a payable fallback function, but no receive ether function. Consider adding a receive ether function.
+  --> src/v2/HedgeFunV2UpgradeableTreasury.sol:37:1:
+   |
+37 | contract HedgeFunV2UpgradeableTreasury is Proxy {
+   | ^ (Relevant source part starts here and spans across multiple lines).
+Note: The payable fallback function is defined here.
+  --> lib/openzeppelin-contracts/contracts/proxy/Proxy.sol:66:5:
+   |
+66 |     fallback() external payable virtual {
+   |     ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning (3628): This contract has a payable fallback function, but no receive ether function. Consider adding a receive ether function.
+   --> src/v2/HedgeFunV2TradablePercentEngineTreasury.sol:587:1:
+    |
+587 | contract HedgeFunV2TradablePercentEngineTreasury is Proxy {
+    | ^ (Relevant source part starts here and spans across multiple lines).
+Note: The payable fallback function is defined here.
+  --> lib/openzeppelin-contracts/contracts/proxy/Proxy.sol:66:5:
+   |
+66 |     fallback() external payable virtual {
+   |     ^ (Relevant source part starts here and spans across multiple lines).
+
+2026-10-04T23:13:55.784895Z  WARN foundry_fork_db::cache: Failed to read cache file err=Os { code: 2, kind: NotFound, message: "No such file or directory" } path="/Users/leo/.foundry/cache/rpc/46630/128935822"
+
+Ran 2 tests for test/TestnetV2WeekendBuybackFork.t.sol:TestnetV2WeekendBuybackForkTest
+[PASS] test_candidateCanUpgradeThroughExistingControllerAfterDelay() (gas: 220479)
+Logs:
+  fork block: 128935822
+
+[PASS] test_sameWeekendStateOldCodeRejectsNewCodeBuysFun() (gas: 756702)
+Logs:
+  fork block: 128935822
+  spent stock raw: 73093088609826987
+  burned FUN raw: 12996897044329732493693297
+  stock USDG TWAP 1e18: 358277771442389909222
+
+Suite result: ok. 2 passed; 0 failed; 0 skipped; finished in 12.77s (9.21s CPU time)
+
+Ran 1 test suite in 12.78s (12.77s CPU time): 2 tests passed, 0 failed, 0 skipped (2 total tests)

@@ -2,6 +2,8 @@
 pragma solidity ^0.8.24;
 
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import {Math} from "@openzeppelin/contracts/utils/math/Math.sol";
+import {IPoolManager} from "v4-core/src/interfaces/IPoolManager.sol";
 import {PoolKey} from "v4-core/src/types/PoolKey.sol";
 import {PoolIdLibrary} from "v4-core/src/types/PoolId.sol";
 import {HedgeFunFactory} from "../src/HedgeFunFactory.sol";
@@ -159,7 +161,7 @@ contract V2BuybackKindTest is V2FactoryFixture {
         uint256 supplyBefore = token.totalSupply();
         (uint256 spent, uint256 burned) = treasury.buyback();
         assertGt(spent, 0); assertGt(burned, 0);
-        assertGt(treasury.lastGoodPrice(), 0, "a live buy-back must seed the stale-price fallback");
+        assertGt(treasury.lastGoodPrice(), 0, "a live buy-back records the oracle observation");
         assertEq(treasury.lastGoodPriceAt(), block.timestamp);
         assertLt(spent, budget, "one chunk, not the whole budget");
         assertEq(treasury.buybackStock(), budget - spent);
@@ -175,7 +177,7 @@ contract V2BuybackKindTest is V2FactoryFixture {
         assertEq(treasury.lotCount(), 0, "still no stock position after two buy-backs");
     }
 
-    function test_liveBuybackSeedsFallbackForAStaleOracle() public {
+    function test_openMarketOracleOutageCannotUseCachedPrice() public {
         _graduateV2(curve);
         _creditFeeIncome();
         (uint256 spent,) = treasury.buyback();
@@ -183,12 +185,12 @@ contract V2BuybackKindTest is V2FactoryFixture {
         assertGt(spent, 0);
         assertGt(left, 0);
 
-        // The fixture oracle accepts prices for 26 hours. At 27 hours the second buy-back can only be sized from
-        // the live price cached by the first one; this is still well inside MAX_SIZING_AGE (five days).
+        // An open-market outage must not be mistaken for a scheduled closure, even with a recent cache.
         vm.warp(block.timestamp + 27 hours);
-        (uint256 spentFromCache,) = treasury.buyback();
-        assertGt(spentFromCache, 0);
-        assertEq(treasury.buybackStock(), left - spentFromCache);
+        usdgFeed.set(1e8);
+        vm.expectRevert(HedgeFunTreasuryBase.Unhealthy.selector);
+        treasury.buyback();
+        assertEq(treasury.buybackStock(), left);
     }
 
     function test_staleOracleWithoutACacheStillFailsClosed() public {
@@ -201,20 +203,142 @@ contract V2BuybackKindTest is V2FactoryFixture {
         treasury.buyback();
     }
 
-    function test_cachedSizingPriceExpiresAfterFiveDays() public {
+    function test_weekendTwapWorksWithoutCacheAndWithStrategyBandDisabled() public {
+        _graduateV2(curve);
+        _creditFeeIncome();
+        assertEq(treasury.lastGoodPrice(), 0);
+        assertEq(treasury.params().bandBpsPerHour, 0);
+        _weekend();
+        _poolPrice(120e18);
+        assertFalse(treasury.book());
+        (bool healthy,) = treasury.health();
+        assertFalse(healthy, "stock strategy remains disabled out of hours");
+        _assertTwapBuyback();
+        assertEq(treasury.lastGoodPrice(), 0, "TWAP must not become an oracle observation");
+        assertEq(treasury.lastGoodPriceAt(), 0);
+    }
+
+    function test_weekendTwapTakesPriorityOverOldCache() public {
         _graduateV2(curve);
         _creditFeeIncome();
         treasury.buyback();
-        uint256 left = treasury.buybackStock();
-        vm.warp(block.timestamp + 5 days);
-        (uint256 spentAtBoundary,) = treasury.buyback();
-        assertGt(spentAtBoundary, 0, "the five-day boundary is inclusive");
-        left -= spentAtBoundary;
+        uint256 cached = treasury.lastGoodPrice();
+        uint256 cachedAt = treasury.lastGoodPriceAt();
+        _weekend();
+        _poolPrice(120e18);
+        _assertTwapBuyback();
+        assertEq(treasury.lastGoodPrice(), cached);
+        assertEq(treasury.lastGoodPriceAt(), cachedAt);
+    }
 
-        vm.warp(block.timestamp + 61);
+    function testFuzz_weekendSizingUsesBoundedTwap(uint96 priceSeed) public {
+        _graduateV2(curve);
+        _creditFeeIncome();
+        _weekend();
+        _poolPrice(bound(uint256(priceSeed), 71e18, 129e18));
+        _assertTwapBuyback();
+    }
+
+    function test_weekendWithoutObservationHistoryFailsClosed() public {
+        _fundWeekend();
+        vm.mockCallRevert(address(stockPool), abi.encodeWithSignature("observe(uint32[])"), bytes("OLD"));
+        _assertRejected();
+    }
+
+    function test_weekendSpotShoveCannotUseTwapOrCachedPrice() public {
+        _graduateV2(curve);
+        _creditFeeIncome();
+        treasury.buyback(); // a valid cache must not bypass the weekend checks
+        _weekend();
+        int56[] memory tc = new int56[](2);
+        tc[1] = int56(stockPool.tick()) * 600;
+        vm.mockCall(address(stockPool), abi.encodeWithSignature("observe(uint32[])"),
+            abi.encode(tc, new uint160[](2)));
+        _poolPrice(120e18);
+        _assertRejected();
+    }
+
+    function test_weekendTwapOutsideLastFeedBandFailsClosed() public {
+        _fundWeekend();
+        _poolPrice(140e18);
+        _assertRejected();
+        _poolPrice(60e18);
+        _assertRejected();
+    }
+
+    function test_weekendPausedStockFailsClosed() public {
+        _fundWeekend();
+        stock.setOraclePaused(true);
+        _assertRejected();
+    }
+
+    function test_weekendStaleDollarFeedFailsClosed() public {
+        _fundWeekend();
+        usdgFeed.setAt(1e8, block.timestamp - 27 hours);
+        _assertRejected();
+    }
+
+    function test_weekendInvalidStockReferenceFailsClosed() public {
+        _fundWeekend();
+        stockFeed.set(0);
+        _assertRejected();
+        stockFeed.setAt(100e8, block.timestamp + 1);
+        _assertRejected();
+    }
+
+    function test_forcedClosureCannotEnableTwap() public {
+        _fundWeekend();
+        vm.mockCall(address(oracle.calendar()), abi.encodeWithSignature("isScheduledClosure(uint256)"), abi.encode(false));
+        _assertRejected();
+    }
+
+    function test_brokenCalendarFailsClosed() public {
+        _fundWeekend();
+        vm.mockCallRevert(address(oracle.calendar()), abi.encodeWithSignature("isScheduledClosure(uint256)"), bytes("broken"));
+        _assertRejected();
+    }
+
+    function _weekend() private {
+        vm.warp(block.timestamp + 2 days);
+        usdgFeed.set(1e8);
+        vm.mockCall(address(oracle.calendar()), abi.encodeWithSignature("isClosed(uint256)"), abi.encode(true));
+        vm.mockCall(address(oracle.calendar()), abi.encodeWithSignature("isScheduledClosure(uint256)"), abi.encode(true));
+    }
+
+    function _poolPrice(uint256 price) private {
+        stockPool.setSqrt(uint160(Math.sqrt(Math.mulDiv(price, 1 << 192, 1e30))));
+    }
+
+    function _fundWeekend() private {
+        _graduateV2(curve);
+        _creditFeeIncome();
+        _weekend();
+    }
+
+    function _assertTwapBuyback() private {
+        uint256 budget = treasury.buybackStock();
+        uint256 principal = treasury.bookedStock();
+        uint256 balance = stock.balanceOf(address(treasury));
+        uint256 supply = IERC20(curve.token()).totalSupply();
+        uint256 chunk = Math.min(budget, Math.mulDiv(treasury.params().buybackChunkUsdg, 1e30, treasury.twapPrice()));
+        vm.expectCall(address(pm), abi.encodeCall(IPoolManager.unlock, (abi.encode(chunk))));
+        (uint256 spent, uint256 burned) = treasury.buyback();
+        assertGt(spent, 0);
+        assertGt(burned, 0);
+        assertLe(spent, chunk);
+        assertEq(treasury.buybackStock(), budget - spent);
+        assertEq(stock.balanceOf(address(treasury)), balance - spent);
+        assertEq(treasury.bookedStock(), principal, "principal is never spent");
+        assertEq(IERC20(curve.token()).totalSupply(), supply - burned, "the acquired FUN is burned");
+    }
+
+    function _assertRejected() private {
+        uint256 budget = treasury.buybackStock();
+        uint256 lastAt = treasury.lastBuybackAt();
         vm.expectRevert(HedgeFunTreasuryBase.Unhealthy.selector);
         treasury.buyback();
-        assertEq(treasury.buybackStock(), left, "an expired sizing cache cannot spend the budget");
+        assertEq(treasury.buybackStock(), budget);
+        assertEq(treasury.lastBuybackAt(), lastAt);
     }
 
     /// The published score is `(stockEquivalentHeld + totalStockSpentOnBuybacks) / totalStockReceived`. Kind 1

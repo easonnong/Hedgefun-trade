@@ -132,6 +132,19 @@
  },
  {
   "type": "function",
+  "name": "FUND_GAS_FLOOR",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "type": "function",
   "name": "MAX_BAND_BPS",
   "inputs": [],
   "outputs": [
@@ -1455,6 +1468,11 @@
  {
   "type": "error",
   "name": "Cooldown",
+  "inputs": []
+ },
+ {
+  "type": "error",
+  "name": "FundingStarved",
   "inputs": []
  },
  {

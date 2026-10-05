@@ -1,0 +1,48 @@
+{
+  "base_commit": "d3ace520860226b00be15a895c785864f961a4d8",
+  "source_sha256": {
+    "src/HedgeFunTreasury.sol": "a4677b80ae435244886c2bc908753516df73d5549e57223447f3de59ec1b90d9",
+    "src/HedgeFunTreasuryBase.sol": "b1c555168a044667af9ae2891497e4f34dfa261b510f6935d9b7ac7496a8ac9e",
+    "src/v2/HedgeFunV2Treasury.sol": "c318b786e1771930a459491f019da2137474f906eef8170cd5111387eeac303f",
+    "test/V2BuybackKind.t.sol": "dde05e6f8ab351433a0fe8673f3d24f96c6dd0027b57c9f36cdba8f8e1b3b177",
+    "test/TestnetV2WeekendBuybackFork.t.sol": "492d9d483424aa2e0ac448834fbf262b433da764a26bfe5008ea2c0d36c048cf"
+  },
+  "offline": {
+    "passed": 1083,
+    "failed": 0,
+    "skipped": 45,
+    "suites": 122,
+    "command": "forge test --offline"
+  },
+  "python": {
+    "tests": 93,
+    "tools_tests": 70,
+    "failed": 0
+  },
+  "fork": {
+    "chain_id": 46630,
+    "block": 128935822,
+    "passed": 2,
+    "failed": 0,
+    "log": "fork.log",
+    "environment": "local testnet fork only; no public transactions",
+    "treasury": "0x1A6803bDBFe57A76c5264aebeb619fFA3Abf2b95",
+    "comparison": "same weekend state, old implementation rejects with Unhealthy; local implementation-code overlay buys FUN",
+    "upgrade": "separate test schedules and executes through the existing controller after its 48-hour delay",
+    "spent_stock_raw": "73093088609826987",
+    "burned_fun_raw": "12996897044329732493693297",
+    "twap_usdg_per_stock_1e18": "358277771442389909222",
+    "principal_unchanged": true
+  },
+  "bytecode": {
+    "registry_init": 49116,
+    "kind0_logic_runtime": 24444,
+    "cycle_runtime": 24498,
+    "schema3_logic_runtime": 24130,
+    "limits": {
+      "init": 49152,
+      "runtime": 24576
+    }
+  },
+  "deployment_status": "Source fix only. Existing testnet treasuries have not been upgraded."
+}

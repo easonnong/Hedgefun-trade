@@ -15,6 +15,7 @@ ROOT = Path(__file__).resolve().parents[1]
 PROFILE = "strategy/rebalance/continuous"
 PROXY = "HedgeFunV2TradablePercentEngineTreasury"
 POLICY = "V2TradablePercentRebalancePolicy"
+REVIEWED_KIND_ZERO = 0x09fb34de0fb09901d28f6ccc1cd6a344471209deb9153d8a4801d48f7e47062e
 # TradablePercentEngineConfig.MAX_ACTION_BPS
 MAX_ACTION_BPS = 2_500
 
@@ -41,19 +42,27 @@ def bps(value, name):
 
 def engine_config(profile, policy_key):
     fields = {"mode", "strategy", "execution", "targetPercent", "bandPercent",
-              "buyPercent", "sellPercent", "dailyPercent", "profitToBuybackPercent", "cooldownSeconds"}
-    if not isinstance(profile, dict) or set(profile) != fields:
+              "buyPercent", "sellPercent", "profitToBuybackPercent", "cooldownSeconds"}
+    if not isinstance(profile, dict) or set(profile) not in (
+            fields | {"dailyPercent"}, fields | {"dailyBuyPercent", "dailySellPercent"}):
         raise ValueError("profile must contain exactly the documented fields; legacy USDG caps are not accepted")
     if (profile["mode"], profile["strategy"], profile["execution"]) != ("strategy", "rebalance", "continuous"):
         raise ValueError("only strategy/rebalance/continuous is implemented by this adapter")
-    target, band, buy, sell, daily, payout = [bps(profile[k], k) for k in (
-        "targetPercent", "bandPercent", "buyPercent", "sellPercent", "dailyPercent", "profitToBuybackPercent")]
+    target, band, buy, sell, payout = [bps(profile[k], k) for k in (
+        "targetPercent", "bandPercent", "buyPercent", "sellPercent", "profitToBuybackPercent")]
+    if "dailyPercent" in profile:
+        daily_buy = daily_sell = bps(profile["dailyPercent"], "dailyPercent")
+        daily_word = daily_buy  # Legacy encoding: same percentage for each direction.
+    else:
+        daily_buy = bps(profile["dailyBuyPercent"], "dailyBuyPercent")
+        daily_sell = bps(profile["dailySellPercent"], "dailySellPercent")
+        daily_word = daily_buy | daily_sell << 16
     cooldown = profile["cooldownSeconds"]
     if type(cooldown) is not int or not 600 <= cooldown <= 2**32 - 1:
         raise ValueError("cooldownSeconds must be an integer between 600 and uint32.max")
     if not 2000 <= target <= 9000 or band >= target or target + band >= 10000:
         raise ValueError("target must be 20–90%; band must stay strictly inside 0–100% allocation")
-    if min(buy, sell, daily) == 0:
+    if min(buy, sell, daily_buy, daily_sell) == 0:
         raise ValueError("buy, sell and daily percentages must be positive")
     if max(buy, sell) > MAX_ACTION_BPS:
         raise ValueError("one action may take at most 25% of the cash (buy) or of the tradable stock (sell)")
@@ -63,7 +72,7 @@ def engine_config(profile, policy_key):
         raise ValueError("bandPercent must be positive: the treasury refuses a band under one trade's cost")
     return {"schema": 3, "engineVersion": 1, "policyKey": hex_value(policy_key, 32, "policyKey"),
             "words": [f"0x{x:064x}" for x in (target | band << 16 | cooldown << 32 | payout << 64,
-                                              buy | sell << 16, daily)]}
+                                              buy | sell << 16, daily_word)]}
 
 
 def cast(*args):
@@ -117,6 +126,16 @@ def verify_runtime(reader, address, name, bindings, template_hash, keccak=cast):
         raise ValueError(f"{name}: runtime differs from reviewed release")
 
 
+def kind_zero(reader, registry, keccak=cast):
+    # The reviewed deployment's kind 0, or this build's own for a registry deployed from it; a registry
+    # keeps the kind-0 code it was built with, and this source's moves with the shared treasury base.
+    trigger = reader.words(registry, "allInTriggerCodeHash()")[0]
+    if trigger not in (REVIEWED_KIND_ZERO,
+                       int(keccak("keccak", artifact_bytecode("HedgeFunV2UpgradeableTreasury", "bytecode")), 16)):
+        raise ValueError("registry was built with an unreviewed kind-0 implementation")
+    return trigger
+
+
 def verify_infrastructure(reader, factory, registry, controller, keccak=cast):
     # Same complete immutable binding as the Solidity publication guard. Do not
     # replace these comparisons with a few getters or operator-supplied hashes.
@@ -149,7 +168,7 @@ def verify_infrastructure(reader, factory, registry, controller, keccak=cast):
             or keccak("keccak", reader.code(vault_chunk)).lower()
             != "0xe0b01f54fd3d486753adada93bee53dc2602c494ed2faba0144215b58a2d73f0"):
         raise ValueError("graduation creation code differs from reviewed release")
-    trigger = int(keccak("keccak", artifact_bytecode("HedgeFunV2UpgradeableTreasury", "bytecode")), 16)
+    trigger = kind_zero(reader, registry, keccak)
     verify_runtime(reader, registry, "V2TreasuryDeployer",
         {1335: trigger, 7163: trigger, 975: int(controller, 16)},
         "0xb1b1adc4d2960d06e0eaa957fba812db587e4c8a701b342a027854b6425cacb7", keccak)

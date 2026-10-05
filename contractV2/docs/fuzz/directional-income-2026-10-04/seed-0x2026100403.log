@@ -1,0 +1,203 @@
+No files changed, compilation skipped
+
+Ran 6 tests for test/V2UpgradeableKindRegistration.t.sol:V2UpgradeableKindRegistrationTest
+[PASS] test_existingImmutableKindsArePreservedAndNewIdsAreReturned() (gas: 23803234)
+[PASS] test_freshRegistryUsesUpgradeableKindsOneAndTwo() (gas: 13492459)
+[PASS] test_matchingDelayGettersDoNotSubstituteForControllerCode() (gas: 13444695)
+[PASS] test_publicRegistryNonceCannotSubstituteOperatorChunks() (gas: 13534956)
+[PASS] test_readbackRejectsWrongKindFamilyAndCode() (gas: 13584107)
+[PASS] test_wrongOperatorRejectedBeforeAnyRegistration() (gas: 187657)
+Suite result: ok. 6 passed; 0 failed; 0 skipped; finished in 104.15ms (10.42ms CPU time)
+
+Ran 1 test for test/V2DirectionalLpComparison.t.sol:V2DirectionalLpComparisonTest
+[PASS] test_compare50And70PercentLpAtEqualOrderflow() (gas: 39357640)
+Logs:
+  LP share bps: 5000
+  LP stock value USDG raw: 9583131947
+  treasury principal USDG raw: 9583131947
+  base liquidity: 2804031940795254212435
+  surplus liquidity: 4272983228175574220698
+  buy input USDG raw: 100000000
+  buy FUN received: 840262106963810223566
+  buy ending price / graduation 1e18: 1009951971477848725
+  buy input USDG raw: 1000000000
+  buy FUN received: 8102652857397536930734
+  buy ending price / graduation 1e18: 1085894748544477605
+  buy input USDG raw: 5000000000
+  buy FUN received: 34978309061693695917297
+  buy ending price / graduation 1e18: 1456722256937910871
+  sell FUN input: 1000000000000000000000
+  sell output USDG raw: 113902634
+  sell ending price / graduation 1e18: 976132539008327928
+  sell FUN input: 10000000000000000000000
+  sell output USDG raw: 1027953690
+  sell ending price / graduation 1e18: 795038845120865800
+  sell FUN input: 50000000000000000000000
+  sell output USDG raw: 3585713267
+  sell ending price / graduation 1e18: 386947776774468032
+  earned LP fees USDG raw: 30000000
+  buyback spent USDG raw: 30000000
+  buyback burned FUN raw: 127495068980235760577
+  buyback price increase bps: 17
+  LP share bps: 7000
+  LP stock value USDG raw: 13416384726
+  treasury principal USDG raw: 5749879168
+  base liquidity: 3925644717113355897421
+  surplus liquidity: 3149807157824742197064
+  buy input USDG raw: 100000000
+  buy FUN received: 840634947968015477827
+  buy ending price / graduation 1e18: 1009509519520361055
+  buy input USDG raw: 1000000000
+  buy FUN received: 8106094848378734649361
+  buy ending price / graduation 1e18: 1085453041136688294
+  buy input USDG raw: 5000000000
+  buy FUN received: 34991128769778673371470
+  buy ending price / graduation 1e18: 1456298577072770326
+  sell FUN input: 1000000000000000000000
+  sell output USDG raw: 114294691
+  sell ending price / graduation 1e18: 982863869691104981
+  sell FUN input: 10000000000000000000000
+  sell output USDG raw: 1060792959
+  sell ending price / graduation 1e18: 846647255980513340
+  sell FUN input: 50000000000000000000000
+  sell output USDG raw: 4019791915
+  sell ending price / graduation 1e18: 486304607459048178
+  earned LP fees USDG raw: 30000000
+  buyback spent USDG raw: 30000000
+  buyback burned FUN raw: 127518494723825020788
+  buyback price increase bps: 17
+
+Suite result: ok. 1 passed; 0 failed; 0 skipped; finished in 106.47ms (7.96ms CPU time)
+
+Ran 6 tests for test/V2TradablePercentRegistration.t.sol:V2TradablePercentRegistrationTest
+[PASS] test_appendAndExactReadbackLeaveExistingKindUnchanged() (gas: 10684287)
+[PASS] test_invalidAuthorityOrMissingEvidenceRejectedBeforeRegistration() (gas: 361878)
+[PASS] test_matchingDelayGettersDoNotSubstituteForControllerCode() (gas: 237342)
+[PASS] test_publicRegistryNonceCannotRedirectFiveOperatorTransactions() (gas: 10423136)
+[PASS] test_readbackRejectsDisabledPolicyAndFalseEvidence() (gas: 10946946)
+[PASS] test_readbackRejectsReplacedKindChunksOrPolicyCode() (gas: 10903769)
+Suite result: ok. 6 passed; 0 failed; 0 skipped; finished in 118.09ms (18.99ms CPU time)
+Warning: Failure from "/private/tmp/hedgefun-pr22-review-20261004/contractV2/cache/invariant/failures/V2TradablePercentInvariantTest/invariant_dynamicCapsUseInputAssetsAndNeverRewriteHistoricalSpend" file was ignored because test contract bytecode has changed.
+Warning: Failure from "/private/tmp/hedgefun-pr22-review-20261004/contractV2/cache/invariant/failures/V2TradablePercentInvariantTest/invariant_inventoryAndNonceMatchActualSuccessfulFillsAcrossUpgrades" file was ignored because test contract bytecode has changed.
+
+Ran 4 tests for test/V2RealizedIncome.t.sol:V2RealizedIncomeTest
+[PASS] testFuzz_reservedIncomeCannotExceedNetRealizedPayout(uint16,uint16,uint256) (runs: 1024, μ: 15364499, ~: 15364635)
+[PASS] test_lossesSurviveDateRolloverAndMustBeRecoveredBeforePayout() (gas: 15621198)
+[PASS] test_lpFeeIncomeRemainsEligibleWhileStrategyCarriesLoss() (gas: 15398882)
+[PASS] test_markedGainBelowFeesAndRewardDoesNotFundBuyback() (gas: 15359924)
+Suite result: ok. 4 passed; 0 failed; 0 skipped; finished in 2.20s (2.11s CPU time)
+
+Ran 8 tests for test/V2DirectionalDailyBudget.t.sol:V2DirectionalDailyBudgetTest
+[PASS] testFuzz_priceMovesAndDonationsCannotReopenDailyCapacity(uint96,uint96) (runs: 1024, μ: 15403699, ~: 15403405)
+[PASS] test_buyExhaustionDoesNotConsumeIndependentSellBudget() (gas: 15582585)
+[PASS] test_controllerUpgradePreservesPinnedBasisDirectionsAndLossLedger() (gas: 22302570)
+[PASS] test_failedDustFillDoesNotFreezeBasisOrSpendEitherDirection() (gas: 15305314)
+[PASS] test_nextTradingDateGetsFreshBasisAndIndependentCounters() (gas: 15395966)
+[PASS] test_partialFillChargesOnlyActualInputAndKeepsBuyCapacity() (gas: 15334097)
+[PASS] test_sameDateLegacyUsageIsChargedToBothDirections() (gas: 15630568)
+[PASS] test_sellExhaustionDoesNotConsumeSameDayDipBudget() (gas: 15730058)
+Suite result: ok. 8 passed; 0 failed; 0 skipped; finished in 2.26s (2.19s CPU time)
+
+Ran 10 tests for test/V2TradablePercentAudit.t.sol:V2TradablePercentAuditTest
+[PASS] testFuzz_partialFillUsesIndependentDirectionalCapsAndActualReward(uint16,uint16,uint16,bool,bool) (runs: 1024, μ: 15538473, ~: 15536361)
+[PASS] testFuzz_sameDateCapitalShrinkAndDonationNeverEraseConsumedTurnover(uint96) (runs: 1025, μ: 15697019, ~: 15696763)
+[PASS] testFuzz_unboundedPolicyCannotBypassCoreInputOrDailyCaps(bool,uint16) (runs: 1024, μ: 15885935, ~: 15893184)
+[PASS] test_lpDonationsAndCreditedBuybackCannotInflateAnyTradingCap() (gas: 15682175)
+[PASS] test_malformedDomainNonceActionAndWrongDirectionAreAtomicallyRejected() (gas: 61952544)
+[PASS] test_matureUpgradePreservesCurrentDateSpendBeforeAnyEpochRollover() (gas: 22438982)
+[PASS] test_minimumLotCannotRoundUpOneBasisPointCap() (gas: 15860871)
+[PASS] test_oracleFailureReportsNoCapacityAndCannotChangeSpentHistory() (gas: 15508861)
+[PASS] test_rewardFailureRevertsSwapAndPercentageLedger() (gas: 15454740)
+[PASS] test_unbookedDonationIsCountedOnceAndOnlyForItsInputAsset() (gas: 15380684)
+Suite result: ok. 10 passed; 0 failed; 0 skipped; finished in 2.82s (7.71s CPU time)
+
+Ran 10 tests for test/V2TradablePercentEngine.t.sol:V2TradablePercentEngineTest
+[PASS] testFuzz_upgradeAfterPartialFillPreservesAllRiskAndAccounting(uint16,uint16) (runs: 1024, μ: 22407005, ~: 22407115)
+[PASS] test_changedRatioProxyOrDecimalsCannotUseOriginalUpgradeIdentity() (gas: 35123341)
+[PASS] test_delistingBlocksNewLaunchButAllowsCompatibleUpgrade() (gas: 22137703)
+[PASS] test_failedMigrationRollsBackPointerStateAndProposalThenCompatibleMigrationSucceeds() (gas: 22856207)
+[PASS] test_launchRefusesBandInsideFrictionAndActionsOverAQuarter() (gas: 40844815)
+[PASS] test_limitsUseCashAndStockSeparatelyAndIgnoreFixedChunk() (gas: 15899368)
+[PASS] test_proxyInitializationCommitmentAndConstructorBytecodeLimits() (gas: 21815704)
+[PASS] test_schemaThreeValidationRejectsReservedBitsAndInvalidPercentages() (gas: 208541)
+[PASS] test_upgradeEnforcesOwnerNoticeAndControllerOnlyEntrypoint() (gas: 21779857)
+[PASS] test_upgradePreservesSameDateUsageCustodyAndConfiguration() (gas: 22575518)
+Suite result: ok. 10 passed; 0 failed; 0 skipped; finished in 3.00s (2.93s CPU time)
+
+Ran 3 tests for test/V2TradablePercentInvariant.t.sol:V2TradablePercentInvariantTest
+[PASS] invariant_dynamicCapsUseInputAssetsAndNeverRewriteHistoricalSpend() (runs: 512, calls: 65536, reverts: 0)
+
+╭-----------------------------+-----------------+-------+---------+----------╮
+| Contract                    | Selector        | Calls | Reverts | Discards |
++============================================================================+
+| TradablePercentAuditHandler | advanceCooldown | 4288  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | attemptExecute  | 4360  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | book            | 4400  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | cancelUpgrade   | 4332  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | changeMarket    | 4322  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | creditLpIncome  | 4362  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | donateCash      | 4496  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | donateStock     | 4335  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | finishUpgrade   | 4421  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | nextEpoch       | 4420  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | pauseOracle     | 4446  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | refreshFeeds    | 4377  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | scheduleUpgrade | 4215  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | shoveVenue      | 4392  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | staleOracle     | 4370  | 0       | 0        |
+╰-----------------------------+-----------------+-------+---------+----------╯
+
+[PASS] invariant_inventoryAndNonceMatchActualSuccessfulFillsAcrossUpgrades() (runs: 512, calls: 65536, reverts: 0)
+
+╭-----------------------------+-----------------+-------+---------+----------╮
+| Contract                    | Selector        | Calls | Reverts | Discards |
++============================================================================+
+| TradablePercentAuditHandler | advanceCooldown | 4288  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | attemptExecute  | 4360  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | book            | 4400  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | cancelUpgrade   | 4332  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | changeMarket    | 4322  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | creditLpIncome  | 4362  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | donateCash      | 4496  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | donateStock     | 4335  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | finishUpgrade   | 4421  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | nextEpoch       | 4420  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | pauseOracle     | 4446  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | refreshFeeds    | 4377  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | scheduleUpgrade | 4215  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | shoveVenue      | 4392  | 0       | 0        |
+|-----------------------------+-----------------+-------+---------+----------|
+| TradablePercentAuditHandler | staleOracle     | 4370  | 0       | 0        |
+╰-----------------------------+-----------------+-------+---------+----------╯
+
+[PASS] test_handlerWitnessBuysSellsRejectsAndPreservesHistoryThroughUpgrade() (gas: 2032858)
+Suite result: ok. 3 passed; 0 failed; 0 skipped; finished in 8.06s (14.86s CPU time)
+
+Ran 8 test suites in 8.06s (18.67s CPU time): 48 tests passed, 0 failed, 0 skipped (48 total tests)

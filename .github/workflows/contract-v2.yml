@@ -241,14 +241,14 @@ jobs:
           set -euo pipefail
           log="income-fuzz-$INCOME_TEST_SEED.log"
           printf 'seed=%s fuzz_runs=%s invariant_runs=%s invariant_depth=%s fail_on_revert=%s\n' "$INCOME_TEST_SEED" "$FOUNDRY_FUZZ_RUNS" "$FOUNDRY_INVARIANT_RUNS" "$FOUNDRY_INVARIANT_DEPTH" "$FOUNDRY_INVARIANT_FAIL_ON_REVERT" | tee "$log"
-          forge test --fuzz-seed "$INCOME_TEST_SEED" --mc '^V2IncomeGraduation.*Test$|^V2StakingIncomeInvariantTest$|^V2StakingAllocationRegressionTest$|^V2StakingRemainderBoundaryTest$|^V2IncomeGasRegressionTest$|^V2BuybackTreasuryUpgradeTest$|^V2EngineTreasuryUpgradeTest$|^V2EngineTreasuryUpgradeInvariantTest$|^V2UpgradeableKindRegistrationTest$|^V2TradablePercent.*Test$' -vv 2>&1 | tee -a "$log"
+          forge test --fuzz-seed "$INCOME_TEST_SEED" --mc '^V2IncomeGraduation.*Test$|^V2StakingIncomeInvariantTest$|^V2StakingAllocationRegressionTest$|^V2StakingRemainderBoundaryTest$|^V2IncomeGasRegressionTest$|^V2BuybackTreasuryUpgradeTest$|^V2EngineTreasuryUpgradeTest$|^V2EngineTreasuryUpgradeInvariantTest$|^V2UpgradeableKindRegistrationTest$|^V2TradablePercent.*Test$|^V2Directional.*Test$|^V2RealizedIncomeTest$' -vv 2>&1 | tee -a "$log"
           if grep -q '\[SKIP' "$log"; then
             echo "::error::income fuzz or invariant scenarios were skipped"
             exit 1
           fi
           grep -q '^\[PASS\]' "$log" || { echo "::error::no income fuzz test passed"; exit 1; }
           # An accidental selector/class rename cannot silently remove an entire regression family.
-          for suite in V2IncomeGraduationTest V2IncomeGraduationSixDecimalsTest V2StakingIncomeInvariantTest V2StakingAllocationRegressionTest V2StakingRemainderBoundaryTest V2IncomeGasRegressionTest V2BuybackTreasuryUpgradeTest V2EngineTreasuryUpgradeTest V2EngineTreasuryUpgradeInvariantTest V2UpgradeableKindRegistrationTest V2TradablePercentEngineTest V2TradablePercentAuditTest V2TradablePercentInvariantTest V2TradablePercentRegistrationTest; do
+          for suite in V2IncomeGraduationTest V2IncomeGraduationSixDecimalsTest V2StakingIncomeInvariantTest V2StakingAllocationRegressionTest V2StakingRemainderBoundaryTest V2IncomeGasRegressionTest V2BuybackTreasuryUpgradeTest V2EngineTreasuryUpgradeTest V2EngineTreasuryUpgradeInvariantTest V2UpgradeableKindRegistrationTest V2TradablePercentEngineTest V2TradablePercentAuditTest V2TradablePercentInvariantTest V2TradablePercentRegistrationTest V2DirectionalDailyBudgetTest V2DirectionalLpComparisonTest V2RealizedIncomeTest; do
             grep -Fq ":$suite" "$log" || { echo "::error::missing income suite: $suite"; exit 1; }
           done
           grep -Fq '[PASS] invariant_principalAndRewardsAreBackedByIndependentTransfers()' "$log"
