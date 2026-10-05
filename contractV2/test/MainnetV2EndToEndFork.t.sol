@@ -441,7 +441,9 @@ contract MainnetV2EndToEndForkTest is Test {
         assertEq(p.bountyBps, BOUNTY_BPS);
         assertEq(p.maxSlippageBps, 100);
         assertEq(p.maxDeviationBps, 50);
-        assertEq(p.buybackCooldown, 60);
+        assertEq(p.buybackCooldown, 10);
+        assertEq(key.fee, 2000, "the graduated pool charges the release's 0.20% LP fee");
+        assertEq(curve.protocolBps(), 3000, "the curve freezes the release's 30% protocol share");
         assertEq(p.maxBuybackImpactBps, 300);
         assertEq(p.minLotUsdg, MIN_LOT_USDG);
 
@@ -934,7 +936,7 @@ contract MainnetV2EndToEndForkTest is Test {
     }
 
     function _sweepAndCheckSplit() private {
-        // ---- anyone sweeps: protocol 20%, creator 10%, treasury 70%, nothing to the sweeper
+        // ---- anyone sweeps: protocol 30%, creator 10%, treasury 60%, nothing to the sweeper
         uint256 total = _accruedStock();
         uint256[4] memory b = [
             IERC20(NVDA).balanceOf(SAFE),
@@ -945,9 +947,9 @@ contract MainnetV2EndToEndForkTest is Test {
         uint256 supply = token.totalSupply();
         vm.prank(KEEPER);
         hook.sweep(key.toId());
-        uint256 protocolCut = Math.mulDiv(total, 2000, 10_000);
+        uint256 protocolCut = Math.mulDiv(total, 3000, 10_000);
         uint256 creatorCut = Math.mulDiv(total, 1000, 10_000);
-        assertEq(IERC20(NVDA).balanceOf(SAFE) - b[0], protocolCut, "protocol Safe: 20% of the fees, in real NVDA");
+        assertEq(IERC20(NVDA).balanceOf(SAFE) - b[0], protocolCut, "protocol Safe: 30% of the fees, in real NVDA");
         assertEq(IERC20(NVDA).balanceOf(CREATOR) - b[1], creatorCut, "creator: 10%");
         assertEq(IERC20(NVDA).balanceOf(address(treasury)) - b[2], total - protocolCut - creatorCut, "treasury: the rest");
         assertEq(IERC20(NVDA).balanceOf(KEEPER), b[3], "no sweep tip");

@@ -4,7 +4,7 @@
 2026-10-05起发布默认值改为协议30%、创作者最多10%、其余归金库（`protocolBps=3000`）；本文其余部分的20/10/70
 是此前的配置，已发射的launch保持发射时冻结的比例。
 新代码支持这组参数，同时保留已有的、有上限的按launch选费率机制；它不把所有自定义launch硬编码为3%。
-发布请求须采用 `taxBps=300`、`creatorBps=1000`，Factory defaults采用 `protocolBps=2000`。
+此前的3%发布请求采用 `taxBps=300`、`creatorBps=1000`；当前Factory defaults采用 `protocolBps=3000`。
 每个launch的参数在创建时冻结；更改未来默认值不能追改已发行的池子。
 
 ## 当前改动
