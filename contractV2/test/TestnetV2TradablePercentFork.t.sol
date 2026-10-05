@@ -120,7 +120,7 @@ contract TestnetV2TradablePercentForkTest is Test {
             assertEq(capital, t.bookedStock() * t.avgCost() / 1e30, "only tradable stock, not locked LP, funds limits");
             assertEq(maxBuy, 0);
             assertEq(maxSell, t.bookedStock() / 5);
-            assertEq(daily, capital / 2);
+            assertEq(daily, (capital / 2) * 2);
         }
         _sellOnce(t);
         uint64 nonceBefore = t.strategyNonce();
@@ -171,7 +171,8 @@ contract TestnetV2TradablePercentForkTest is Test {
         uint256 reserve = t.reserveUsdg();
         (bool due,, uint256 proposed) = t.preview();
         assertTrue(due);
-        (,,, uint256 maxSell,, uint256 remaining,,) = t.riskLimits();
+        (,,, uint256 maxSell,,,,) = t.riskLimits();
+        uint256 remaining = _sellRemaining(t);
         assertLe(proposed, maxSell);
         uint256 beforeUsed = t.turnoverInEpoch();
         uint64 previousEpoch = t.turnoverEpoch();
@@ -186,6 +187,11 @@ contract TestnetV2TradablePercentForkTest is Test {
         assertLe(inventory - t.bookedStock(), proposed);
         emit log_named_uint("proposed sell stock", proposed);
         emit log_named_uint("actual turnover USDG", increment);
+    }
+
+    function _sellRemaining(HedgeFunV2TradablePercentEngineTreasuryCore t) private view returns (uint256) {
+        (,,, uint256 cap,, uint256 sold) = t.dailyRiskLimits();
+        return cap > sold ? cap - sold : 0;
     }
 
     function _launch() private returns (Launch memory l) {

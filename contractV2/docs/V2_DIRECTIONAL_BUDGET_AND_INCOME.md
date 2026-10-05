@@ -1,7 +1,9 @@
 # Directional daily budgets, LP allocation and earned FUN buybacks
 
 This candidate integrates PR #28 hardening and follows the weekend TWAP repair in PR #29. It changes only the schema-3 strategy treasury's
-budget/income behavior. The public testnet contracts and asset LP settings have not been changed by this work.
+budget/income behavior. The registry identity fix is reused from PR #30 so the candidate recognizes the reviewed existing registry
+as well as one deployed from the current build. The public testnet contracts and asset LP settings have not
+been changed by this work.
 
 ## Daily budget
 
@@ -30,6 +32,8 @@ mid-date, the old aggregate cannot reveal which side traded. It is conservativel
 until the next date. This can temporarily leave less headroom; it never silently resets prior spend. Legacy
 configs apply their one daily percentage independently to both sides. Newly packed, unequal percentages need
 the new policy/kind registration and strict configuration adapter described in TREASURY_PROFILES.md.
+An older config must also meet #28's 25% action ceiling and listing-dependent band floor to use this replacement;
+older configs outside those bounds require a separately reviewed migration, not an unconditional upgrade.
 
 ## Controlled LP comparison
 
