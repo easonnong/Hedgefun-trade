@@ -50,7 +50,8 @@ contract TestnetV2TradablePercentForkTest is Test {
     address internal venue;
     address internal creator = makeAddr("tradable percent fork creator");
     address internal keeper = makeAddr("tradable percent fork keeper");
-    bytes32[3] internal oldKinds;
+    bytes32[] internal oldKinds;
+    uint8 internal firstNewKind;
 
     struct Launch {
         uint256 id;
@@ -82,13 +83,16 @@ contract TestnetV2TradablePercentForkTest is Test {
         stock = IERC20(listed);
         (oracle, venue,,) = factory.listings(listed);
         market = TestnetMarket(vm.envOr("TESTNET_MARKET", address(0xc1AF2f52980F8A7AA4E90A8E30D5c3FaF0375f21)));
-        assertEq(registry.kindCount(), 3, "recorded deployment starts with legacy kinds 0/1/2");
-        for (uint8 i; i < 3; ++i) {
-            oldKinds[i] = _kindDigest(i);
+        // The registry is append-only and this runs at a floating block: whatever is registered there now is
+        // the baseline, and must still be there, unchanged, after this registration.
+        firstNewKind = uint8(registry.kindCount());
+        assertGe(firstNewKind, 3, "recorded deployment has at least the legacy kinds 0/1/2");
+        for (uint8 i; i < firstNewKind; ++i) {
+            oldKinds.push(_kindDigest(i));
         }
         registration = new RegisterV2TradablePercent().register(factory.owner(), factory, DEPENDENCIES, AUDIT);
-        assertEq(registration.kind, 3);
-        assertEq(registry.kindCount(), 4);
+        assertEq(registration.kind, firstNewKind);
+        assertEq(registry.kindCount(), uint256(firstNewKind) + 1);
         _assertLegacyKindsUnchanged();
     }
 
@@ -320,7 +324,7 @@ contract TestnetV2TradablePercentForkTest is Test {
     }
 
     function _assertLegacyKindsUnchanged() private view {
-        for (uint8 i; i < 3; ++i) {
+        for (uint8 i; i < firstNewKind; ++i) {
             assertEq(_kindDigest(i), oldKinds[i], "legacy kind manifest/chunks changed");
         }
     }

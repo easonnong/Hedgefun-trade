@@ -3,7 +3,7 @@ pragma solidity ^0.8.24;
 
 import {Script, console2} from "forge-std/Script.sol";
 import {HedgeFunV2Factory} from "../src/v2/HedgeFunV2Factory.sol";
-import {V2TreasuryDeployer} from "../src/v2/V2TreasuryDeployer.sol";
+import {V2TreasuryDeployer, V2InitCodeChunk} from "../src/v2/V2TreasuryDeployer.sol";
 import {IncomeKindCompatibility} from "./helpers/IncomeKindCompatibility.sol";
 import {HedgeFunV2DividendTreasury, HedgeFunV2BuybackDividendTreasury} from "../src/v2/HedgeFunV2IncomeTreasury.sol";
 import {
@@ -11,8 +11,11 @@ import {
 } from "../src/v2/HedgeFunV2StrategyIncomeTreasury.sol";
 
 /// @notice Add the dividend kinds to an existing V2 factory's treasury registry, for future launches.
-/// @dev Requires OPERATOR and V2_FACTORY. The operator must be the factory owner. Eight transactions: each kind's
-///      creation code is stored as two chunks, then registered. Existing kinds and launched treasuries are untouched;
+/// @dev Requires OPERATOR and V2_FACTORY. The operator must be the factory owner. Twelve transactions: each kind's
+///      creation code is stored as two chunks the operator creates, then registered. The registry's own
+///      `makeChunks` is public, so anyone can move the addresses it would use between this script's simulation
+///      and its broadcast, and the recorded `registerKind` would then name someone else's bytes for good.
+///      Existing kinds and launched treasuries are untouched;
 ///      a creator opts in per launch with `V2TreasuryDeployer.setStrategyKind(symbol, nonce, kind)`.
 ///      Run a fork simulation before broadcasting, then `VerifyV2IncomeKinds` against the confirmed chain.
 contract RegisterV2IncomeKinds is IncomeKindCompatibility {
@@ -35,7 +38,7 @@ contract RegisterV2IncomeKinds is IncomeKindCompatibility {
         console2.log("strategy + 50% dividend kind", k.strategy50);
         console2.log("dividend kind, no strategy (100% of income to stakers)", k.dividend);
         console2.log("buyback + dividend kind, no strategy (50% / 50%)", k.split);
-        console2.log("simulation readback passed; verify eight receipts and live state after broadcast");
+        console2.log("simulation readback passed; verify twelve receipts and live state after broadcast");
     }
 
     /// @notice every transaction, broadcast from `operator`; `run` adds the environment and the log
@@ -58,9 +61,16 @@ contract RegisterV2IncomeKinds is IncomeKindCompatibility {
         check(registry, k);
     }
 
+    /// @dev The chunk addresses come from the operator's own nonce, which nobody else can advance.
     function _add(V2TreasuryDeployer registry, bytes memory code) private returns (uint8) {
-        (address a, address b) = registry.makeChunks(code);
-        return registry.registerKind(a, b);
+        uint256 half = code.length / 2;
+        bytes memory left = new bytes(half);
+        bytes memory right = new bytes(code.length - half);
+        assembly ("memory-safe") {
+            mcopy(add(left, 32), add(code, 32), half)
+            mcopy(add(right, 32), add(add(code, 32), half), mload(right))
+        }
+        return registry.registerKind(address(new V2InitCodeChunk(left)), address(new V2InitCodeChunk(right)));
     }
 
     /// @notice The registered chunks hold exactly this source's creation code, and no kind is an engine kind.
@@ -83,7 +93,7 @@ contract RegisterV2IncomeKinds is IncomeKindCompatibility {
     }
 }
 
-/// @notice Read-only confirmation after all eight registration transactions have succeeded on chain.
+/// @notice Read-only confirmation after all twelve registration transactions have succeeded on chain.
 /// @dev Requires V2_FACTORY, STRATEGY25_KIND, STRATEGY50_KIND, DIVIDEND_KIND and SPLIT_KIND from the reviewed
 ///      registration.
 contract VerifyV2IncomeKinds is Script {

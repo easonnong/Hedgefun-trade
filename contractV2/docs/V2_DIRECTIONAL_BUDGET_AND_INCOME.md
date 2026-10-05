@@ -1,6 +1,6 @@
 # Directional daily budgets, LP allocation and earned FUN buybacks
 
-This candidate follows the weekend TWAP repair in PR #29. It changes only the schema-3 strategy treasury's
+This candidate integrates PR #28 hardening and follows the weekend TWAP repair in PR #29. It changes only the schema-3 strategy treasury's
 budget/income behavior. The public testnet contracts and asset LP settings have not been changed by this work.
 
 ## Daily budget
@@ -13,7 +13,8 @@ actual inventory consumption to its own direction. Partial fills charge actual a
 A 50% buy / 20% sell configuration on 10,000 USDG tradable capital permits up to 5,000 USDG buys and 2,000 USDG
 sells that date. A sale does not consume buy capacity. A later price move or deposit cannot change those caps.
 The combined ceiling can therefore exceed the old shared ceiling: 50% / 50% permits up to 100% combined turnover.
-Per-action input percentages, target gap, cooldown, minimum size, price and slippage guards still apply.
+Per-action input percentages (at most 25%), the listing-dependent minimum band, target gap, cooldown,
+minimum size, price and slippage guards still apply.
 
 The date remains the oracle calendar's US equity trading date (20:00 New York boundary, including DST), not
 UTC midnight or a rolling 24-hour window. This is a throttle, not a guarantee of a daily dip purchase: healthy

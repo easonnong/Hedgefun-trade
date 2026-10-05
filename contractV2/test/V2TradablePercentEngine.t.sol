@@ -413,6 +413,37 @@ contract V2TradablePercentEngineTest is V2TradablePercentEngineFixture {
         assertEq(t.strategyNonce(), nonce + 1);
     }
 
+    /// The words a creator registers are theirs; what the treasury accepts is not. No listing chunk bounds a
+    /// schema-3 action, so a band inside execution friction, or an action over a quarter, is refused at launch.
+    function test_launchRefusesBandInsideFrictionAndActionsOverAQuarter() public {
+        HedgeFunTreasuryBase.Params memory p = _launchPercent(2020, 2500, 2500, 10_000, 0).params();
+        uint256 floor = 2 * (uint256(p.maxSlippageBps) + 30 + p.bountyBps);
+        assertLe(floor, 500, "the fixture's own 5% band is on the allowed side");
+        _expectUndeployable(2021, floor - 1, 2000, 2000);
+        _expectUndeployable(2022, 0, 2000, 2000);
+        _expectUndeployable(2023, 500, 2501, 2000);
+        _expectUndeployable(2024, 500, 2000, 10_000);
+        // exactly on both limits
+        EngineConfig memory c = _percentConfig(2500, 2500, 10_000, 0);
+        c.words[0] = bytes32(uint256(7000) | floor << 16 | uint256(600) << 32);
+        HedgeFunFactory.Request memory q = _request();
+        q.nonce = 2025;
+        deployer.setEngineConfig(q.symbol, q.nonce, percentKind, c);
+        (,, bytes32 terms) = factory.predict(q);
+        factory.launch(q, terms);
+    }
+
+    function _expectUndeployable(uint96 nonce, uint256 band, uint256 buy, uint256 sell) private {
+        EngineConfig memory c = _percentConfig(buy, sell, 5000, 0);
+        c.words[0] = bytes32(uint256(7000) | band << 16 | uint256(600) << 32);
+        HedgeFunFactory.Request memory q = _request();
+        q.nonce = nonce;
+        deployer.setEngineConfig(q.symbol, q.nonce, percentKind, c);
+        (,, bytes32 terms) = factory.predict(q);
+        vm.expectRevert(V2TreasuryDeployer.TreasuryDeployFailed.selector);
+        factory.launch(q, terms);
+    }
+
     function test_schemaThreeValidationRejectsReservedBitsAndInvalidPercentages() public {
         TradablePercentConfigHarness h = new TradablePercentConfigHarness();
         EngineConfig memory c = _percentConfig(2000, 1000, 500, 0);
@@ -423,6 +454,12 @@ contract V2TradablePercentEngineTest is V2TradablePercentEngineFixture {
         assertFalse(h.valid(c.words));
         c = _percentConfig(10001, 1000, 5000, 0);
         assertFalse(h.valid(c.words));
+        c = _percentConfig(2500, 2500, 10_000, 0);
+        assertTrue(h.valid(c.words), "a quarter per action is the ceiling, and daily may still be everything");
+        c = _percentConfig(2501, 1000, 5000, 0);
+        assertFalse(h.valid(c.words), "one action may not take more than a quarter of the cash");
+        c = _percentConfig(2000, 2501, 5000, 0);
+        assertFalse(h.valid(c.words), "one action may not take more than a quarter of the stock");
         c = _percentConfig(2000, 0, 5000, 0);
         assertFalse(h.valid(c.words));
         c = _percentConfig(2000, 10001, 5000, 0);

@@ -320,6 +320,22 @@ contract V2IncomeKindsTest is V2IncomeKindsFixture {
         script.register(alice, factory);
     }
 
+    /// Anyone may call the registry's makeChunks. The kinds' chunks must not depend on where it stands.
+    function test_publicRegistryNonceCannotSubstituteOperatorChunks() public {
+        vm.setNonce(owner, 31);
+        vm.prank(alice);
+        deployer.makeChunks(hex"60006000");
+        RegisterV2IncomeKinds.Kinds memory k = new RegisterV2IncomeKinds().register(owner, factory);
+        uint8[4] memory ids = [k.strategy25, k.strategy50, k.dividend, k.split];
+        for (uint256 i; i < 4; ++i) {
+            (address a, address b) = deployer.kinds(ids[i]);
+            assertEq(a, vm.computeCreateAddress(owner, 31 + 3 * i), "first chunk is the operator's own create");
+            assertEq(b, vm.computeCreateAddress(owner, 32 + 3 * i), "second chunk is the operator's own create");
+        }
+        assertEq(vm.getNonce(owner), 43, "twelve operator transactions");
+        script.check(deployer, k);
+    }
+
     function test_registrationReadbackRejectsOtherKinds() public {
         script.check(deployer, kinds);
         RegisterV2IncomeKinds.Kinds memory wrong = kinds;

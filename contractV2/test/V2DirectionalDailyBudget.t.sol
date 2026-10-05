@@ -18,7 +18,7 @@ contract V2DirectionalDailyBudgetTest is V2TradablePercentEngineFixture {
     }
 
     function _launchDaily(uint96 nonce) private returns (Treasury) {
-        return _launchPercent(nonce, 10_000, 10_000, uint256(5000) | uint256(2000) << 16, 0);
+        return _launchPercent(nonce, 2500, 2500, uint256(5000) | uint256(2000) << 16, 0);
     }
 
     function test_sellExhaustionDoesNotConsumeSameDayDipBudget() public {
@@ -50,7 +50,7 @@ contract V2DirectionalDailyBudgetTest is V2TradablePercentEngineFixture {
     }
 
     function test_buyExhaustionDoesNotConsumeIndependentSellBudget() public {
-        Treasury t = _launchPercent(4106, 10_000, 10_000, uint256(2000) | uint256(5000) << 16, 0);
+        Treasury t = _launchPercent(4106, 2500, 2500, uint256(2000) | uint256(5000) << 16, 0);
         usdg.mint(address(t), 100_000e6);
         t.execute();
         Day memory bought = _day(t);

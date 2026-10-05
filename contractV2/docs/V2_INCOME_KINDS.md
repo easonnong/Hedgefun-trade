@@ -54,7 +54,10 @@ the treasury refuses to open a lot, so `execute()` cannot turn tax into principa
 and a dip waits for `book()`. A keeper calls `book()` before `execute()`.
 
 If the stock token refuses the transfer to the staking pool, that share stays in the buy-back budget. A
-take-profit is never blocked by the dividend.
+take-profit is never blocked by the dividend. The funding is not attempted with less than `FUND_GAS_FLOOR`
+(500,000) gas left: a `book()` or `execute()` that reaches the split with less reverts `FundingStarved`, so a
+caller cannot pick a gas limit that fails the funding and leaves the stakers' share in the buy-back. Send these
+calls with ordinary headroom; unused gas is not charged.
 
 The staking pool's `totalFunded` and its `IncomeFunded` event are the record of what was paid; the treasury keeps
 no second counter. Run `forge build --sizes` on the candidate commit to check the limited runtime headroom.
@@ -111,8 +114,11 @@ Each dividend-kind treasury, with or without a strategy, deploys its own `V2Stak
 source. `treasury.staking()` returns it.
 
 - Stake the launch token; earn the listed stock token. The reward is the stock, not USDG and not ETH.
-- Each funding streams over 7 days. A new funding restarts a 7-day stream over the new amount plus whatever had
-  not yet streamed.
+- A funding streams over 7 days. One that arrives while a stream is running joins it: what was already
+  streaming keeps the time it had left, the new amount gets a full 7 days, and the stream runs for the mean of
+  the two weighted by amount. The end never moves earlier and is never more than 7 days away. A funding
+  therefore moves the end only by its own share of the total, and a one-wei funding, which anyone can cause by
+  sending the treasury a wei and calling `book()`, does not move it at all.
 - A stake is locked for 7 days from the staker's most recent deposit. Adding to a stake restarts that staker's lock.
 - `withdraw` returns principal and never attempts a reward transfer, so a blocked reward token cannot trap staked
   tokens. `claim` pays accrued rewards separately.
@@ -172,7 +178,9 @@ not sufficient. The fork suite targets compatible testnet factory
 `0xc9610d4A749b2A62a7327a0f40B59013D8fC415a` and rejects legacy factory
 `0xACEB03aAeE5494Aa54929Ec840630ae32A9ade0A`.
 
-1. **Dividend kinds.** `OPERATOR` must be the factory owner. Eight transactions.
+1. **Dividend kinds.** `OPERATOR` must be the factory owner. Twelve transactions: the operator creates each
+   kind's two code chunks itself, because the registry's public `makeChunks` lets anyone move the addresses a
+   recorded `registerKind` names.
 
    ```sh
    OPERATOR=<owner> V2_FACTORY=<factory> forge script script/RegisterV2IncomeKinds.s.sol:RegisterV2IncomeKinds \

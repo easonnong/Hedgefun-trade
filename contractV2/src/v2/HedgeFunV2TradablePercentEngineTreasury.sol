@@ -24,6 +24,7 @@ import {V2TreasuryUpgradeController} from "./V2TreasuryUpgradeController.sol";
 import {IV2UpgradeRegistry} from "./HedgeFunV2UpgradeableTreasury.sol";
 import {V2TradablePercentPreview, ITradablePercentPreview} from "./strategy/V2TradablePercentPreview.sol";
 import {TradablePercentEngineConfig} from "./strategy/TradablePercentEngineConfig.sol";
+import {SpotEngineConfig} from "./strategy/SpotEngineConfig.sol";
 
 /// @notice Schema-3 rebalance: input-asset percentages and daily limits based only on tradable capital.
 /// @dev Its registry kind is assigned at registration. Existing schemas 1 and 2 retain their original semantics.
@@ -151,7 +152,8 @@ abstract contract HedgeFunV2TradablePercentEngineTreasuryCore is HedgeFunV2Treas
         EngineConfig memory c = binding.config;
         PolicyManifest memory manifest = binding.manifest;
         if (binding.treasury == address(0)) revert BadEngineConfig();
-        _validateEngineConfig(c, manifest);
+        // The band floor needs the listing's gates, which only this constructor sees: schema 1's own floor.
+        _validateEngineConfig(c, manifest, SpotEngineConfig.minDeadbandBps(p.maxSlippageBps, poolFeeBps, p.bountyBps));
         _engineConfig = c;
         payoutBps = uint16(TradablePercentEngineConfig.payoutBps(c.words[0]));
         tradingCalendar = PriceOracle(oracle_).calendar();
@@ -179,7 +181,11 @@ abstract contract HedgeFunV2TradablePercentEngineTreasuryCore is HedgeFunV2Treas
 
     /// @dev Schema 3 validation is authoritative here; existing factories need no code change to append this kind.
     /// The mutable policy listing flag is checked by the proxy only at initial creation, not during an upgrade.
-    function _validateEngineConfig(EngineConfig memory c, PolicyManifest memory manifest) private view {
+    /// An upgrade's replacement logic runs this again on the same frozen config and listing, so it passes again.
+    function _validateEngineConfig(EngineConfig memory c, PolicyManifest memory manifest, uint256 minDeadband)
+        private
+        view
+    {
         bytes32 actualCodeHash = manifest.implementation.codehash;
         if (
             c.schema != TradablePercentEngineConfig.CONFIG_SCHEMA
@@ -188,7 +194,7 @@ abstract contract HedgeFunV2TradablePercentEngineTreasuryCore is HedgeFunV2Treas
                 || actualCodeHash == bytes32(0) || actualCodeHash != manifest.runtimeCodeHash || manifest.maxGas == 0
                 || manifest.maxGas > MAX_POLICY_GAS || manifest.maxReturnBytes != INTENT_RETURN_BYTES
                 || manifest.capabilities & SPOT_CAPABILITIES == 0 || manifest.capabilities & ~SPOT_CAPABILITIES != 0
-                || !TradablePercentEngineConfig.valid(c.words, 0)
+                || !TradablePercentEngineConfig.valid(c.words, minDeadband)
         ) revert BadEngineConfig();
     }
 
@@ -204,7 +210,8 @@ abstract contract HedgeFunV2TradablePercentEngineTreasuryCore is HedgeFunV2Treas
         return _engineConfig;
     }
 
-    /// @notice Buy cap is a percentage of cash; sell cap is a percentage of tradable stock units.
+    /// @notice Buy cap is a percentage of cash; sell cap is a percentage of tradable stock units; neither
+    /// percentage is over `TradablePercentEngineConfig.MAX_ACTION_BPS`.
     /// Daily capital is booked + bookable stock valued at the live oracle, plus available USDG.
     /// Locked LP, parked LP assets, unclaimed LP fees and already reserved buyback stock are excluded.
     /// Daily capital is fixed immediately before the date's first successful action. Buy and sell budgets each
@@ -280,8 +287,8 @@ abstract contract HedgeFunV2TradablePercentEngineTreasuryCore is HedgeFunV2Treas
     }
 
     /// @notice Simulate the immutable policy. `execute()` always recomputes the context and intent on chain.
-    ///         For a sale, `amountIn` is the stock the action would take out of inventory; with a gain over
-    ///         `avgCost`, `payoutBps` of the gain part of it goes to the buy-back and the rest to the pool.
+    ///         For a sale, `amountIn` bounds stock removed from inventory. Net settlement, loss recovery and
+    ///         partial fills may reduce the amount removed; only earned income can enter the buyback reserve.
     function preview() external view returns (bool due, StrategyAction action, uint256 amountIn) {
         return previewReader.preview(ITradablePercentPreview(address(this)));
     }
