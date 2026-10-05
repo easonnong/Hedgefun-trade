@@ -25,13 +25,18 @@ abstract contract V2CycleBase is V2ExecuteBase {
         _useOriginalParams();
     }
 
+    /// @dev The two convenience views, through hooks: the upgradeable logic has no room for them, and its suite
+    ///      answers the same questions another way.
+    function _pending() internal virtual returns (bool) { return cycle.reentryPending(); }
+    function _due() internal virtual returns (bool) { return cycle.recoveryDue(); }
+
     function _cycleParams() internal pure returns (HedgeFunTreasuryBase.Params memory p) {
         p = _params(500);
         p.tp2Bps = 0;
         p.sellChunkUsdg = 2000e6;
     }
 
-    function _deployCycle(HedgeFunTreasuryBase.Params memory p) internal {
+    function _deployCycle(HedgeFunTreasuryBase.Params memory p) internal virtual {
         cycle = new HedgeFunV2CycleTreasury(
             address(usdg),
             address(stock),
@@ -63,7 +68,7 @@ abstract contract V2CycleBase is V2ExecuteBase {
         (HedgeFunV2Treasury.Action action,) = cycle.execute();
         assertEq(uint256(action), uint256(HedgeFunV2Treasury.Action.TakeProfit));
         assertEq(cycle.lotCount(), 0);
-        assertTrue(cycle.reentryPending());
+        assertTrue(_pending());
         assertEq(cycle.reentrySalePrice(), 106e18);
         at = cycle.reentrySaleAt();
     }
@@ -76,8 +81,8 @@ abstract contract V2CycleBase is V2ExecuteBase {
         usdg.mint(address(cycle), 100e6);
         vm.warp(block.timestamp + 601);
         _px(106e18);
-        assertFalse(cycle.reentryPending());
-        assertFalse(cycle.recoveryDue());
+        assertFalse(_pending());
+        assertFalse(_due());
         vm.expectRevert(HedgeFunTreasuryBase.NotDue.selector);
         cycle.execute();
     }
@@ -86,21 +91,21 @@ abstract contract V2CycleBase is V2ExecuteBase {
         uint256 at = _profitSale();
         vm.warp(at + 599);
         _px(111.3e18);
-        assertFalse(cycle.recoveryDue());
+        assertFalse(_due());
         vm.expectRevert(HedgeFunTreasuryBase.NotDue.selector);
         cycle.execute();
         vm.warp(at + 600);
         stockFeed.setAt(111.3e8, at);
-        assertFalse(cycle.recoveryDue(), "a changed price with the same stock report time is not a new report");
+        assertFalse(_due(), "a changed price with the same stock report time is not a new report");
         vm.expectRevert(HedgeFunTreasuryBase.NotDue.selector);
         cycle.execute();
         _px(111.299e18);
-        assertFalse(cycle.recoveryDue());
+        assertFalse(_due());
         _px(111.3e18);
-        assertTrue(cycle.recoveryDue());
+        assertTrue(_due());
         (HedgeFunV2Treasury.Action action,) = cycle.execute();
         assertEq(uint256(action), uint256(HedgeFunV2Treasury.Action.BuyRecovery));
-        assertFalse(cycle.reentryPending());
+        assertFalse(_pending());
         assertEq(cycle.lotCount(), 1);
     }
 
@@ -133,7 +138,7 @@ abstract contract V2CycleBase is V2ExecuteBase {
         vm.warp(at + 601);
         _px(111.3e18);
         cycle.execute();
-        assertFalse(cycle.reentryPending());
+        assertFalse(_pending());
         vm.warp(at + 1202);
         _px(120e18);
         (HedgeFunV2Treasury.Action action,) = cycle.execute();
@@ -145,7 +150,7 @@ abstract contract V2CycleBase is V2ExecuteBase {
         _px(126e18);
         (action,) = cycle.execute();
         assertEq(uint256(action), uint256(HedgeFunV2Treasury.Action.BuyRecovery));
-        assertFalse(cycle.reentryPending());
+        assertFalse(_pending());
         assertEq(cycle.lotCount(), 1);
     }
 
@@ -158,11 +163,11 @@ abstract contract V2CycleBase is V2ExecuteBase {
         uint256 at = cycle.reentrySaleAt();
         vm.warp(at + 601);
         _px(98.7e18);
-        assertTrue(cycle.recoveryDue());
+        assertTrue(_due());
         (HedgeFunV2Treasury.Action action,) = cycle.execute();
         assertEq(uint256(action), uint256(HedgeFunV2Treasury.Action.BuyRecovery));
         assertEq(cycle.lastStopAt(), 0);
-        assertFalse(cycle.reentryPending());
+        assertFalse(_pending());
     }
 
     function test_dueProfitStillWinsOverAnEligibleRecovery() public {
@@ -171,14 +176,14 @@ abstract contract V2CycleBase is V2ExecuteBase {
         _px(106e18); // TP1 leaves half the lot for TP2
         cycle.execute();
         uint256 at = cycle.reentrySaleAt();
-        assertTrue(cycle.reentryPending());
+        assertTrue(_pending());
         vm.warp(at + 601);
         _px(112e18);
-        assertTrue(cycle.recoveryDue(), "the signal alone is deliberately not an execution preview");
+        assertTrue(_due(), "the signal alone is deliberately not an execution preview");
         (HedgeFunV2Treasury.Action action,) = cycle.execute();
         assertEq(uint256(action), uint256(HedgeFunV2Treasury.Action.TakeProfit));
         assertEq(cycle.lotCount(), 0);
-        assertTrue(cycle.reentryPending());
+        assertTrue(_pending());
         assertEq(cycle.reentrySalePrice(), 112e18, "the real TP refreshes the waiting reference");
     }
 
@@ -190,12 +195,12 @@ abstract contract V2CycleBase is V2ExecuteBase {
         vm.warp(at + 601);
         _px(111.3e18);
         cycle.execute();
-        assertFalse(cycle.reentryPending());
+        assertFalse(_pending());
         _px(105.735e18);
         (HedgeFunV2Treasury.Action action,) = cycle.execute();
         assertEq(uint256(action), uint256(HedgeFunV2Treasury.Action.BuyDip));
         assertEq(cycle.lotCount(), 2);
-        assertFalse(cycle.reentryPending(), "an ordinary later rung cannot arm recovery");
+        assertFalse(_pending(), "an ordinary later rung cannot arm recovery");
     }
 
     function test_forgedSwapCallbackCannotSpendTreasury() public {
@@ -204,7 +209,7 @@ abstract contract V2CycleBase is V2ExecuteBase {
         vm.expectRevert(PoolTrader.NotPool.selector);
         cycle.uniswapV3SwapCallback(10e6, 10e6, "");
         assertEq(cycle.reserveUsdg(), cash);
-        assertTrue(cycle.reentryPending());
+        assertTrue(_pending());
     }
 
     function test_originalProfitDipNeedsNoNewCooldownAndConsumesRecovery() public {
@@ -212,7 +217,7 @@ abstract contract V2CycleBase is V2ExecuteBase {
         _px(100.7e18); // exactly 5% below 106, in the same timestamp as the TP
         (HedgeFunV2Treasury.Action action,) = cycle.execute();
         assertEq(uint256(action), uint256(HedgeFunV2Treasury.Action.BuyDip));
-        assertFalse(cycle.reentryPending());
+        assertFalse(_pending());
     }
 
     function test_recoveryBudgetUsesBothCashFractionAndSellChunk() public {
@@ -238,7 +243,7 @@ abstract contract V2CycleBase is V2ExecuteBase {
         vm.expectRevert(HedgeFunTreasuryBase.NotDue.selector);
         cycle.execute();
         assertEq(cycle.reentrySaleAt(), at);
-        assertTrue(cycle.reentryPending());
+        assertTrue(_pending());
         deal(address(usdg), address(cycle), cash);
         vm.mockCall(
             address(mirror),
@@ -253,7 +258,7 @@ abstract contract V2CycleBase is V2ExecuteBase {
         assertEq(cycle.reentrySaleAt(), at);
         vm.clearMockedCalls();
         cycle.execute();
-        assertFalse(cycle.reentryPending(), "a later actual fill can still use the pending entry");
+        assertFalse(_pending(), "a later actual fill can still use the pending entry");
     }
 
     function _thinLiquidity(uint256 remaining) internal {
@@ -297,7 +302,7 @@ abstract contract V2CycleBase is V2ExecuteBase {
         assertLt(spent, cash * 2000 / 10000, "the concentrated pool should fill short at the price limit");
         (uint256 qty, uint256 cost,,) = cycle.lots(0);
         assertEq(cost, spent * SCALE / qty);
-        assertFalse(cycle.reentryPending());
+        assertFalse(_pending());
     }
 
     function test_realDustRecoveryRollsBackPoolTransfersAndState() public {
@@ -336,18 +341,18 @@ abstract contract V2CycleBase is V2ExecuteBase {
         uint256 stoppedAt = cycle.lastStopAt();
         assertEq(cycle.lotCount(), 0);
         assertEq(cycle.reentrySaleAt(), at);
-        assertFalse(cycle.recoveryDue(), "the old recovery must respect the newer sub-minimum stop");
+        assertFalse(_due(), "the old recovery must respect the newer sub-minimum stop");
         vm.expectRevert(HedgeFunTreasuryBase.NotDue.selector);
         cycle.execute();
         vm.warp(stoppedAt + 600);
-        assertFalse(cycle.recoveryDue(), "the cooldown alone does not replace the newer-report requirement");
+        assertFalse(_due(), "the cooldown alone does not replace the newer-report requirement");
         vm.expectRevert(HedgeFunTreasuryBase.NotDue.selector);
         cycle.execute();
         _px(113e18);
-        assertTrue(cycle.recoveryDue());
+        assertTrue(_due());
         (HedgeFunV2Treasury.Action action,) = cycle.execute();
         assertEq(uint256(action), uint256(HedgeFunV2Treasury.Action.BuyRecovery));
-        assertFalse(cycle.reentryPending());
+        assertFalse(_pending());
     }
 
     function test_subMinimumProfitAfterLaterStopCannotEraseRecoveryCooldownOrReportGate() public {
@@ -382,7 +387,7 @@ abstract contract V2CycleBase is V2ExecuteBase {
         (action,) = cycle.execute(); // Its $3 TP1 principal is also below the recovery minimum.
         assertEq(uint256(action), uint256(HedgeFunV2Treasury.Action.TakeProfit));
         assertEq(cycle.reentrySaleAt(), saleAt);
-        assertFalse(cycle.recoveryDue(), "a small TP1 must not erase the later stop's recovery cooldown");
+        assertFalse(_due(), "a small TP1 must not erase the later stop's recovery cooldown");
         vm.expectRevert(HedgeFunTreasuryBase.NotDue.selector);
         cycle.execute();
 
@@ -391,27 +396,27 @@ abstract contract V2CycleBase is V2ExecuteBase {
         assertEq(uint256(action), uint256(HedgeFunV2Treasury.Action.TakeProfit));
         assertEq(cycle.lotCount(), 0);
         assertEq(cycle.reentrySaleAt(), saleAt);
-        assertFalse(cycle.recoveryDue(), "a small TP2 must not erase the later stop's recovery cooldown");
+        assertFalse(_due(), "a small TP2 must not erase the later stop's recovery cooldown");
         vm.expectRevert(HedgeFunTreasuryBase.NotDue.selector);
         cycle.execute();
 
         vm.warp(stoppedAt + 599);
         _px(112e18);
-        assertFalse(cycle.recoveryDue(), "a new report cannot bypass the latest stop's full 600 seconds");
+        assertFalse(_due(), "a new report cannot bypass the latest stop's full 600 seconds");
         vm.expectRevert(HedgeFunTreasuryBase.NotDue.selector);
         cycle.execute();
         vm.warp(stoppedAt + 600);
         stockFeed.setAt(112e8, stoppedReportAt);
-        assertFalse(cycle.recoveryDue(), "the old stop report remains insufficient after its cooldown");
+        assertFalse(_due(), "the old stop report remains insufficient after its cooldown");
         vm.expectRevert(HedgeFunTreasuryBase.NotDue.selector);
         cycle.execute();
         _px(98.69e18);
-        assertFalse(cycle.recoveryDue(), "a fresh report also needs the independent sale's rise threshold");
+        assertFalse(_due(), "a fresh report also needs the independent sale's rise threshold");
         _px(112e18);
-        assertTrue(cycle.recoveryDue());
+        assertTrue(_due());
         (action,) = cycle.execute();
         assertEq(uint256(action), uint256(HedgeFunV2Treasury.Action.BuyRecovery));
-        assertFalse(cycle.reentryPending());
+        assertFalse(_pending());
     }
 
     function test_oneWeiProfitAfterLaterStopCannotEraseRecoveryCooldownOrReportGate() public {
@@ -455,31 +460,31 @@ abstract contract V2CycleBase is V2ExecuteBase {
         assertEq(cycle.reserveUsdg(), cash);
         assertEq(cycle.buybackStock(), burnStock);
         assertEq(cycle.reentrySaleAt(), saleAt);
-        assertFalse(cycle.recoveryDue(), "a zero-sale TP1 must not erase the later stop's recovery cooldown");
+        assertFalse(_due(), "a zero-sale TP1 must not erase the later stop's recovery cooldown");
         _px(112e18); // TP2 is due, while the ordinary 5% dip from the $113 stop is not.
         (action,) = cycle.execute(); // The current scheduler retires the microscopic TP2 tail without a sale.
         assertEq(uint256(action), uint256(HedgeFunV2Treasury.Action.TakeProfit));
         assertEq(cycle.lotCount(), 0);
         assertEq(cycle.reentrySaleAt(), saleAt);
-        assertFalse(cycle.recoveryDue());
+        assertFalse(_due());
         vm.expectRevert(HedgeFunTreasuryBase.NotDue.selector);
         cycle.execute();
 
         vm.warp(stoppedAt + 599);
         _px(112e18);
-        assertFalse(cycle.recoveryDue());
+        assertFalse(_due());
         vm.expectRevert(HedgeFunTreasuryBase.NotDue.selector);
         cycle.execute();
         vm.warp(stoppedAt + 600);
         stockFeed.setAt(112e8, stoppedReportAt);
-        assertFalse(cycle.recoveryDue(), "a zero-sale TP cannot remove the latest stop's newer-report requirement");
+        assertFalse(_due(), "a zero-sale TP cannot remove the latest stop's newer-report requirement");
         vm.expectRevert(HedgeFunTreasuryBase.NotDue.selector);
         cycle.execute();
         _px(112e18);
-        assertTrue(cycle.recoveryDue());
+        assertTrue(_due());
         (action,) = cycle.execute();
         assertEq(uint256(action), uint256(HedgeFunV2Treasury.Action.BuyRecovery));
-        assertFalse(cycle.reentryPending());
+        assertFalse(_pending());
     }
 
     function test_smallProfitAfterLaterStopStillAllowsImmediateOriginalDipAndConsumesRecovery() public {
@@ -507,8 +512,8 @@ abstract contract V2CycleBase is V2ExecuteBase {
         (action,) = cycle.execute(); // A real sub-minimum TP still opens the original profit-to-dip rung.
         assertEq(uint256(action), uint256(HedgeFunV2Treasury.Action.TakeProfit));
         assertEq(cycle.lastStopAt(), 0);
-        assertFalse(cycle.recoveryDue(), "the separate recovery gate still remembers the latest stop");
-        assertTrue(cycle.reentryPending());
+        assertFalse(_due(), "the separate recovery gate still remembers the latest stop");
+        assertTrue(_pending());
 
         uint256 cashBefore = cycle.reserveUsdg();
         uint256 stockBefore = stock.balanceOf(address(cycle));
@@ -518,7 +523,7 @@ abstract contract V2CycleBase is V2ExecuteBase {
         assertEq(block.timestamp, stoppedAt, "the original dip must not inherit recovery's 600-second delay");
         assertGt(stock.balanceOf(address(cycle)), stockBefore);
         assertLt(cycle.reserveUsdg(), cashBefore);
-        assertFalse(cycle.reentryPending(), "a successful original dip consumes the old recovery entry");
+        assertFalse(_pending(), "a successful original dip consumes the old recovery entry");
         assertEq(cycle.reentrySalePrice(), 0);
         assertEq(cycle.reentryStockUpdatedAt(), 0);
     }
@@ -537,10 +542,10 @@ abstract contract V2CycleBase is V2ExecuteBase {
         _fundAndBook(0.1 ether);
         _px(106e18);
         calendar.setClosed(true);
-        assertFalse(cycle.recoveryDue());
+        assertFalse(_due());
         (HedgeFunV2Treasury.Action action,) = cycle.execute();
         assertEq(uint256(action), uint256(HedgeFunV2Treasury.Action.TakeProfit));
-        assertFalse(cycle.reentryPending(), "a closure sale cannot reuse an older live anchor");
+        assertFalse(_pending(), "a closure sale cannot reuse an older live anchor");
         vm.expectRevert(HedgeFunTreasuryBase.NotDue.selector);
         cycle.execute();
     }
@@ -550,13 +555,13 @@ abstract contract V2CycleBase is V2ExecuteBase {
         vm.warp(at + 601);
         _px(111.3e18);
         stock.setOraclePaused(true);
-        assertFalse(cycle.recoveryDue());
+        assertFalse(_due());
         vm.expectRevert(HedgeFunTreasuryBase.Unhealthy.selector);
         cycle.execute();
         assertEq(cycle.reentrySaleAt(), at);
         stock.setOraclePaused(false);
         stockFeed.setAt(111.3e8, block.timestamp - 27 hours);
-        assertFalse(cycle.recoveryDue());
+        assertFalse(_due());
         vm.expectRevert(HedgeFunTreasuryBase.Unhealthy.selector);
         cycle.execute();
         assertEq(cycle.reentrySaleAt(), at);
