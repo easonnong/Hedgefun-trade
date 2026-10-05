@@ -160,11 +160,13 @@ jobs:
           INCOME_COMPAT_FORK: "true"
           UPGRADEABLE_KINDS_FORK: "true"
           TRADABLE_PERCENT_FORK: "true"
-          # Spread pinned, read-only suites across providers instead of sharing the native-launch RPC quota.
+          LAUNCH_FEES_FORK: "true"
+          # Pinned state needs archive reads; native-launch jobs keep using the official RPC separately.
           INCOME_KINDS_FORK_RPC: ${{ secrets.RH_INCOME_TESTNET_RPC_URL || 'https://robinhood-testnet.drpc.org' }}
           INCOME_COMPAT_FORK_RPC: ${{ secrets.RH_INCOME_TESTNET_RPC_URL || 'https://robinhood-testnet.drpc.org' }}
-          UPGRADEABLE_KINDS_FORK_RPC: ${{ secrets.RH_UPGRADE_TESTNET_RPC_URL || 'https://robinhood-sepolia-rpc.publicnode.com' }}
-          TRADABLE_PERCENT_FORK_RPC: ${{ secrets.RH_TRADABLE_TESTNET_RPC_URL || 'https://rpc.testnet.chain.robinhood.com' }}
+          UPGRADEABLE_KINDS_FORK_RPC: ${{ secrets.RH_UPGRADE_TESTNET_RPC_URL || 'https://robinhood-testnet.drpc.org' }}
+          TRADABLE_PERCENT_FORK_RPC: ${{ secrets.RH_TRADABLE_TESTNET_RPC_URL || 'https://robinhood-testnet.drpc.org' }}
+          LAUNCH_FEES_FORK_RPC: ${{ secrets.RH_TRADABLE_TESTNET_RPC_URL || 'https://robinhood-testnet.drpc.org' }}
           V2_FACTORY: "0xc9610d4A749b2A62a7327a0f40B59013D8fC415a"
           TESTNET_MARKET: "0xc1AF2f52980F8A7AA4E90A8E30D5c3FaF0375f21"
         run: |
@@ -175,10 +177,11 @@ jobs:
           export INCOME_COMPAT_FORK_BLOCK="$INCOME_KINDS_FORK_BLOCK"
           export UPGRADEABLE_KINDS_FORK_BLOCK="$INCOME_KINDS_FORK_BLOCK"
           export TRADABLE_PERCENT_FORK_BLOCK="$INCOME_KINDS_FORK_BLOCK"
+          export LAUNCH_FEES_FORK_BLOCK="$INCOME_KINDS_FORK_BLOCK"
           [[ "$INCOME_KINDS_FORK_BLOCK" =~ ^[0-9]+$ ]] || { echo "::error::RPC returned no valid block"; exit 1; }
           printf 'chain=46630\nblock=%s\nfactory=%s\nmarket=%s\n' "$INCOME_KINDS_FORK_BLOCK" "$V2_FACTORY" "$TESTNET_MARKET" | tee income-kinds-fork-state.txt
           # RPC failures fail the job. Do not turn an unavailable fork into a green skipped run.
-          forge test --threads 1 --mc '^TestnetV2IncomeKindsForkTest$|^TestnetV2IncomeCompatibilityForkTest$|^TestnetV2TreasuryUpgradeForkTest$|^TestnetV2TradablePercentForkTest$' -vv 2>&1 | tee income-kinds-fork.log
+          forge test --threads 1 --mc '^TestnetV2IncomeKindsForkTest$|^TestnetV2IncomeCompatibilityForkTest$|^TestnetV2TreasuryUpgradeForkTest$|^TestnetV2TradablePercentForkTest$|^TestnetV2LaunchFeesForkTest$' -vv 2>&1 | tee income-kinds-fork.log
           if grep -q '\[SKIP' income-kinds-fork.log; then
             echo "::error::income kind fork scenarios were skipped"
             exit 1
@@ -206,7 +209,8 @@ jobs:
             test_buybackUpgradePreservesRealBalancesAndLpThenBooksAndBuys \
             test_engineUpgradePreservesRealInventoryAndLpThenExecutesAgain \
             test_registrationAppendsSchemaThreeAndPreservesLegacyManifestsAndChunks \
-            test_launchGraduationTradableRebalanceAndUpgradePreserveInventoryAndLpThenExecuteAgain; do
+            test_launchGraduationTradableRebalanceAndUpgradePreserveInventoryAndLpThenExecuteAgain \
+            test_forkConfigurePreservesDefaultsAndAcceptsNativeLaunch; do
             grep -Fq "[PASS] $scenario()" income-kinds-fork.log || { echo "::error::missing fork pass: $scenario"; exit 1; }
           done
       - name: Preserve fork block and results, including failures

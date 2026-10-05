@@ -19,9 +19,13 @@ contract TestnetV2LaunchFeesForkTest is Test {
 
     function test_forkConfigurePreservesDefaultsAndAcceptsNativeLaunch() public {
         vm.skip(!vm.envOr("LAUNCH_FEES_FORK", false), "set LAUNCH_FEES_FORK=true");
-        vm.createSelectFork("https://rpc.testnet.chain.robinhood.com", vm.envUint("LAUNCH_FEES_FORK_BLOCK"));
+        uint256 forkBlock = vm.envUint("LAUNCH_FEES_FORK_BLOCK");
+        vm.createSelectFork(
+            vm.envOr("LAUNCH_FEES_FORK_RPC", string("https://rpc.testnet.chain.robinhood.com")),
+            forkBlock
+        );
         assertEq(block.chainid, 46630);
-        emit log_named_uint("fork block", block.number);
+        emit log_named_uint("requested fork block", forkBlock);
         HedgeFunFactory.Defaults memory before_ = FACTORY.getDefaults();
         (bool ok, bytes memory frozenBefore) = address(FACTORY).staticcall(abi.encodeWithSignature("graduationConfig(uint256)", 0));
         assertTrue(ok);

@@ -42,6 +42,14 @@ LAUNCH_FEES_FORK=true LAUNCH_FEES_FORK_BLOCK=129030873 \
 
 The public RPC may prune the recorded block; use a fresh block for a new rehearsal and record it separately.
 
+## Post-configuration fork regression
+
+The deployed append-only registry had **six** kinds at the reviewed L2 block **129058489**. The old upgrade and schema-three fork fixtures incorrectly required exactly three. They now snapshot every existing kind's chunk addresses, runtime hashes and manifest, require new registrations to append, and verify all existing entries remain unchanged. The fixtures retain a minimum of the original three legacy kinds without freezing the current count.
+
+The pinned income, compatibility, treasury-upgrade, tradable-percent and launch-fee CI forks default to `https://robinhood-testnet.drpc.org`. Native-launch jobs keep using the official testnet RPC, so the jobs do not share one provider's quota. Each pinned suite has an explicit RPC override and uses one requested L2 block selected after compilation. PublicNode returned the same block hash but could not supply all of that block's historical state. The official endpoint also pruned the older validation block during a later rerun, so neither is a default provider for this pinned suite.
+
+The launch-fee fork is now a required CI scenario, alongside the existing 23 income/compatibility/upgrade/percentage scenarios. CI fails on any RPC failure, skipped scenario or missing expected pass. No signed transaction or public-chain broadcast is needed for these checks.
+
 ## Future configuration operations
 
 Do not rebroadcast the recorded transaction. For a different reviewed testnet factory, read and review all 22 defaults, record `keccak256(abi.encode(defaults))`, then dry-run with explicit `V2_FACTORY`, `OPERATOR`, and `EXPECTED_DEFAULTS_HASH`:
