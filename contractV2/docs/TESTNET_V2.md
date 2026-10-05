@@ -1,5 +1,9 @@
 # Hedgefun V2 on the Robinhood Chain testnet
 
+> To redeploy the release core on the testnet, follow section A of [V2_RELEASE_RUNBOOK.md](./V2_RELEASE_RUNBOOK.md).
+> This document describes the venue and its test doubles, and the first deployment's defaults, some of which the
+> release changed (0.20% LP fee, a fixed 79.31% sale share, a 10% creator cap, a 0.0005 ETH launch fee).
+
 The whole V2 launchpad on the **public** Robinhood Chain testnet, so team members can use the front end with their own
 wallets and nothing of value. The testnet has Uniswap V4 but no Uniswap V3, no USDG we can mint, no Chainlink equity
 feeds, and faucet stock tokens without `oraclePaused()`. `script/testnet/DeployV2Testnet.s.sol` deploys test doubles for those
