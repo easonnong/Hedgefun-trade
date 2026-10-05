@@ -41,6 +41,9 @@ contract TradablePercentAuditHandler is Test {
     uint256 public lastSuccessAt;
     uint64 public ghostEpoch;
     uint256 public ghostUsed;
+    uint256 public ghostBought;
+    uint256 public ghostSold;
+    uint256 public ghostDailyBasis;
     uint256 public dailyAtLastSuccess;
     uint256 public directionalCapAtLastSuccess;
     uint256 public directionalInputAtLastSuccess;
@@ -212,12 +215,17 @@ contract TradablePercentAuditHandler is Test {
         if (ghostEpoch != epoch) {
             ghostEpoch = epoch;
             ghostUsed = 0;
+            ghostBought = 0;
+            ghostSold = 0;
+            ghostDailyBasis = s.capital;
         }
         ghostUsed += consumed;
-        dailyAtLastSuccess = Math.mulDiv(s.capital, 5000, 10_000);
+        if (action == HedgeFunV2Treasury.Action.RebalanceBuy) ghostBought += consumed;
+        else ghostSold += consumed;
+        dailyAtLastSuccess = Math.mulDiv(ghostDailyBasis, 5000, 10_000);
         if (consumed < 5e6) _fail(128);
         if (directionalInputAtLastSuccess > directionalCapAtLastSuccess) _fail(256);
-        if (ghostUsed > dailyAtLastSuccess) _fail(512);
+        if (ghostBought > dailyAtLastSuccess || ghostSold > dailyAtLastSuccess) _fail(512);
         if (treasury.turnoverInEpoch() != ghostUsed) _fail(1024);
         if (treasury.turnoverEpoch() != epoch) _fail(2048);
         if (nonce != successes + 1 || treasury.strategyNonce() != nonce) _fail(4096);
@@ -237,14 +245,18 @@ contract TradablePercentAuditHandler is Test {
     }
 
     function _digest() private view returns (bytes32) {
+        (bool readOk, bytes memory daily) = address(treasury).staticcall(abi.encodeWithSignature("dailyRiskLimits()"));
+        require(readOk, "daily read");
         bytes32 execution = keccak256(
             abi.encode(
+                daily,
                 treasury.strategyNonce(),
                 treasury.lastStrategyAt(),
                 treasury.turnoverEpoch(),
                 treasury.turnoverInEpoch(),
                 treasury.policyState(),
                 treasury.avgCost(),
+                treasury.unrecoveredLossUsdg(),
                 treasury.bookedStock(),
                 treasury.buybackStock()
             )
@@ -333,7 +345,9 @@ contract V2TradablePercentInvariantTest is V2TradablePercentEngineFixture {
     function invariant_dynamicCapsUseInputAssetsAndNeverRewriteHistoricalSpend() public view {
         assertEq(handler.failureMask(), 0);
         assertLe(handler.directionalInputAtLastSuccess(), handler.directionalCapAtLastSuccess());
-        assertLe(handler.ghostUsed(), handler.dailyAtLastSuccess());
+        assertLe(handler.ghostBought(), handler.dailyAtLastSuccess());
+        assertLe(handler.ghostSold(), handler.dailyAtLastSuccess());
+        assertEq(handler.ghostUsed(), handler.ghostBought() + handler.ghostSold());
         assertEq(treasury.turnoverInEpoch(), handler.ghostUsed());
         assertEq(treasury.turnoverEpoch(), handler.ghostEpoch());
     }

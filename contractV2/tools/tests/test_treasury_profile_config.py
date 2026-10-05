@@ -42,6 +42,18 @@ class ProfileSerializationTest(unittest.TestCase):
         self.assertEqual(int(c["words"][0], 16) >> 80, 0)
         self.assertEqual(int(c["words"][1], 16) >> 32, 0)
 
+    def test_directional_daily_limits_are_distinct_and_exclusive(self):
+        p = profile()
+        del p["dailyPercent"]
+        p.update(dailyBuyPercent="50", dailySellPercent="20")
+        c = TOOL.engine_config(p, "0x" + "01" * 32)
+        self.assertEqual(int(c["words"][2], 16), 5000 | 2000 << 16)
+        for bad in (dict(p, dailyPercent="50"), dict(p, dailyBuyPercent="0"),
+                    dict(p, dailySellPercent="0"), dict(p, dailySellPercent="100.01"),
+                    {k: v for k, v in p.items() if k != "dailySellPercent"}):
+            with self.subTest(bad=bad), self.assertRaises(ValueError):
+                TOOL.engine_config(bad, "0x" + "01" * 32)
+
     def test_decimal_strings_have_exact_basis_point_precision(self):
         for value, expected in (("0.01", 1), ("0.10", 10), ("19.99", 1999), ("100", 10000)):
             with self.subTest(value=value):

@@ -217,6 +217,7 @@ contract V2TradablePercentAuditTest is V2TradablePercentEngineFixture {
 
     function testFuzz_sameDateCapitalShrinkAndDonationNeverEraseConsumedTurnover(uint96 rawCash) public {
         HedgeFunV2TradablePercentEngineTreasuryCore t = _launchPercent(3104, 2000, 1000, 1000, 0);
+        AuditRisk memory initial = _auditRisk(t);
         t.execute();
         _advance(600);
         uint256 used = t.turnoverInEpoch();
@@ -224,17 +225,14 @@ contract V2TradablePercentAuditTest is V2TradablePercentEngineFixture {
         assertGt(used, 0);
         _price(1e18);
         AuditRisk memory reduced = _auditRisk(t);
-        assertLt(reduced.daily, used);
-        assertEq(reduced.remaining, 0);
-        bytes32 digestBefore = _auditDigest(t);
-        vm.expectRevert(HedgeFunTreasuryBase.NotDue.selector);
-        t.execute();
-        assertEq(_auditDigest(t), digestBefore);
+        assertEq(reduced.daily, initial.daily, "falling NAV cannot shrink the pinned daily budgets");
+        assertEq(reduced.used, used);
+        assertGt(reduced.remaining, 0, "a sale cannot consume the independent dip budget");
         usdg.mint(address(t), used * 30 + bound(rawCash, 0, 100_000e6));
         AuditRisk memory grown = _auditRisk(t);
         assertEq(grown.epoch, epoch);
         assertEq(grown.used, used);
-        assertEq(grown.remaining, grown.daily - used);
+        assertEq(grown.daily, initial.daily, "new capital cannot reopen today's budget");
         t.execute();
         assertGt(t.turnoverInEpoch(), used);
         assertLe(t.turnoverInEpoch(), grown.daily);

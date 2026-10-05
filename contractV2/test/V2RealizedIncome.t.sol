@@ -1,0 +1,72 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.24;
+
+import {Math} from "@openzeppelin/contracts/utils/math/Math.sol";
+import {HedgeFunV2TradablePercentEngineTreasuryCore as Treasury} from "../src/v2/HedgeFunV2TradablePercentEngineTreasury.sol";
+import {V2TradablePercentEngineFixture} from "./V2TradablePercentEngine.t.sol";
+
+contract V2RealizedIncomeTest is V2TradablePercentEngineFixture {
+    function test_markedGainBelowFeesAndRewardDoesNotFundBuyback() public {
+        Treasury t = _launchPercent(5300, 10_000, 10_000, 10_000, 10_000);
+        _price(1002e17); // +0.2%, less than 0.3% venue fee plus 0.5% keeper reward
+        uint256 held = t.bookedStock();
+        t.execute();
+        assertEq(t.buybackStock(), 0, "mark-to-oracle gain is not earned net income");
+        uint256 principalCost = Math.mulDiv(held - t.bookedStock(), 100e18, 1e30, Math.Rounding.Ceil);
+        assertEq(t.unrecoveredLossUsdg(), principalCost - t.reserveUsdg());
+        assertGt(t.unrecoveredLossUsdg(), 0);
+    }
+
+    function test_lossesSurviveDateRolloverAndMustBeRecoveredBeforePayout() public {
+        Treasury t = _launchPercent(5301, 10_000, 10_000, 10_000, 10_000);
+        _price(50e18);
+        t.execute();
+        uint256 loss = t.unrecoveredLossUsdg();
+        assertGt(loss, 0);
+        assertEq(t.buybackStock(), 0);
+        _advance(1 days);
+        assertEq(t.unrecoveredLossUsdg(), loss, "daily quota rollover does not erase losses");
+        _price(120e18);
+        t.execute();
+        assertGt(t.unrecoveredLossUsdg(), 0);
+        assertLt(t.unrecoveredLossUsdg(), loss);
+        assertEq(t.buybackStock(), 0, "later profit first repairs prior losses");
+        _advance(1 days);
+        _price(1000e18);
+        t.execute();
+        assertEq(t.unrecoveredLossUsdg(), 0);
+        assertGt(t.buybackStock(), 0, "only net excess can fund FUN buyback");
+    }
+
+    function test_lpFeeIncomeRemainsEligibleWhileStrategyCarriesLoss() public {
+        Treasury t = _launchPercent(5302, 10_000, 10_000, 10_000, 5000);
+        _price(50e18);
+        t.execute();
+        uint256 loss = t.unrecoveredLossUsdg();
+        stock.mint(t.liquidityVault(), 1e18);
+        vm.startPrank(t.liquidityVault());
+        stock.approve(address(t), 1e18);
+        t.creditLiquidityFee(1e18);
+        vm.stopPrank();
+        assertEq(t.buybackStock(), 1e18, "earned LP fee is an independent income source");
+        assertEq(t.unrecoveredLossUsdg(), loss);
+    }
+
+    function testFuzz_reservedIncomeCannotExceedNetRealizedPayout(uint16 rawPayout, uint16 rawFill, uint256 rawPrice) public {
+        uint256 payout = bound(rawPayout, 1, 10_000);
+        Treasury t = _launchPercent(5303, 10_000, 10_000, 10_000, payout);
+        uint256 price = bound(rawPrice, 101e18, 50_000e18); // $101..$50,000
+        _price(price);
+        venue.setFillBps(uint16(bound(rawFill, 1000, 10_000)));
+        uint256 beforeHeld = t.bookedStock();
+        t.execute();
+        uint256 removed = beforeHeld - t.bookedStock();
+        uint256 reserve = t.buybackStock();
+        uint256 stockValue = Math.mulDiv(reserve, price, 1e30);
+        uint256 cost = Math.mulDiv(removed, 100e18, 1e30, Math.Rounding.Ceil);
+        uint256 netValue = t.reserveUsdg() + stockValue;
+        if (netValue <= cost) assertEq(reserve, 0);
+        else assertLe(stockValue, Math.mulDiv(netValue - cost, payout, 10_000) + 1);
+        assertEq(t.bookedStock() + reserve, stock.balanceOf(address(t)));
+    }
+}

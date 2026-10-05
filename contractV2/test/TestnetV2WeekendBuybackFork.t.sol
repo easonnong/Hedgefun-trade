@@ -17,7 +17,7 @@ import {
 
 /// Read-only public RPC; changes exist only in the fork. The first test replaces implementation code locally
 /// to compare old/new behavior at exactly the same weekend timestamp. The second uses the real upgrade delay.
-contract TestnetV2WeekendBuybackForkTest is Test {
+abstract contract TestnetV2BuybackForkFixture is Test {
     HedgeFunV2TradablePercentEngineTreasuryLogic internal treasury;
     HedgeFunV2TradablePercentEngineTreasury internal proxy;
     HedgeFunV2TradablePercentEngineTreasuryLogic internal next;
@@ -50,6 +50,9 @@ contract TestnetV2WeekendBuybackForkTest is Test {
         assertEq(next.upgradeConfigHash(), proxy.upgradeConfigHash());
     }
 
+}
+
+contract TestnetV2WeekendBuybackForkTest is TestnetV2BuybackForkFixture {
     function test_sameWeekendStateOldCodeRejectsNewCodeBuysFun() public {
         assertTrue(treasury.oracle().calendar().isScheduledClosure(block.timestamp));
         assertEq(treasury.lastGoodPrice(), 0, "reproduce the new pool without an oracle cache");

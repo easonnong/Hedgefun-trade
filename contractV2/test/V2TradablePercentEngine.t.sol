@@ -172,6 +172,7 @@ abstract contract V2TradablePercentEngineFixture is V2StrategyEngineAccountingFi
                 t.turnoverInEpoch(),
                 t.configHash(),
                 t.avgCost(),
+                t.unrecoveredLossUsdg(),
                 t.engineConfig()
             )
         );
@@ -270,7 +271,7 @@ contract V2TradablePercentEngineTest is V2TradablePercentEngineFixture {
         assertEq(initial.buy, 0);
         assertEq(initial.sell, t.bookedStock() / 10);
         assertEq(initial.capital, Math.mulDiv(t.bookedStock(), PRICE, 1e30));
-        assertEq(initial.daily, initial.capital / 2);
+        assertEq(initial.daily, (initial.capital / 2) * 2, "aggregate of the two directional budgets");
         (bool due, StrategyAction action, uint256 offered) = t.preview();
         assertTrue(due);
         assertEq(uint256(action), uint256(StrategyAction.SellStock));
@@ -285,7 +286,7 @@ contract V2TradablePercentEngineTest is V2TradablePercentEngineFixture {
         (due, action, offered) = t.preview();
         assertTrue(due);
         assertEq(uint256(action), uint256(StrategyAction.BuyStock));
-        assertEq(offered, cash.buy);
+        assertEq(offered, initial.capital / 2, "new cash cannot enlarge today's pinned buy budget");
         assertGt(offered, 2000e6, "large capital no longer hits a fixed 2000 cap");
         uint256 beforeCash = t.reserveUsdg();
         t.execute();

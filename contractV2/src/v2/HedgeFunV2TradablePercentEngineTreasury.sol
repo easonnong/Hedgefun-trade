@@ -22,6 +22,7 @@ import {HedgeFunTreasuryBase} from "../HedgeFunTreasuryBase.sol";
 import {EngineBinding} from "./HedgeFunV2EngineTreasury.sol";
 import {V2TreasuryUpgradeController} from "./V2TreasuryUpgradeController.sol";
 import {IV2UpgradeRegistry} from "./HedgeFunV2UpgradeableTreasury.sol";
+import {V2TradablePercentPreview, ITradablePercentPreview} from "./strategy/V2TradablePercentPreview.sol";
 import {TradablePercentEngineConfig} from "./strategy/TradablePercentEngineConfig.sol";
 
 /// @notice Schema-3 rebalance: input-asset percentages and daily limits based only on tradable capital.
@@ -36,11 +37,11 @@ import {TradablePercentEngineConfig} from "./strategy/TradablePercentEngineConfi
 /// are reserved in the shared interface but rejected here: collateral, expiry, exercise and settlement require a
 /// different engine version and different solvency invariants.
 ///
-/// Gains reach the burn as they do in kind 0. Inventory carries one average cost: stock booked at the live oracle
-/// price, stock bought at its fill price, each weighted by quantity; a sale leaves it unchanged. A sale above that
-/// cost realises a gain, and `payoutBps` of the gain -- the creator's choice, frozen in the config -- stays in stock
-/// and moves to `buybackStock` instead of being sold, for the inherited paced `buyback()` to burn. The principal and
-/// the rest of the gain are sold. `payoutBps = 0` is a pure rebalance whose buy-back is funded by LP fees alone.
+/// Inventory carries one average cost, including acquisition fees and executor rewards. Net cash from sales
+/// first covers sold inventory's cost and recovers tracked realized strategy losses. Only the remaining gain
+/// can fund the creator's frozen `payoutBps` share, conservatively retained in stock for the separate FUN buyback.
+/// Retained stock's own cost/gain is included in the payout calculation. Loss history starts at this accounting
+/// upgrade and persists across trading dates. `payoutBps = 0` funds buybacks from LP fees alone.
 abstract contract HedgeFunV2TradablePercentEngineTreasuryCore is HedgeFunV2Treasury {
     using SafeERC20 for IERC20;
 
@@ -53,6 +54,7 @@ abstract contract HedgeFunV2TradablePercentEngineTreasuryCore is HedgeFunV2Treas
     address public immutable policyImplementation;
     bytes32 public immutable policyRuntimeCodeHash;
     uint256 public immutable policyCapabilities;
+    V2TradablePercentPreview public immutable previewReader;
     uint32 public immutable policyGasLimit;
     uint16 public immutable policyReturnLimit;
     bytes32 public immutable configHash;
@@ -71,6 +73,24 @@ abstract contract HedgeFunV2TradablePercentEngineTreasuryCore is HedgeFunV2Treas
     uint64 public turnoverEpoch;
     /// @notice what the actions of trading date `turnoverEpoch` have taken out of inventory, in USDG
     uint256 public turnoverInEpoch;
+
+    /// @dev Separate namespace leaves existing proxy and successor storage untouched. An old same-day total
+    ///      has no directional history, so its entire value is conservatively charged to BOTH directions.
+    struct DailyBudget {
+        uint64 epoch;
+        uint256 capital;
+        uint256 legacyUsed;
+        uint256 bought;
+        uint256 unrecoveredLossUsdg;
+    }
+
+    function _dailyBudget() private pure returns (DailyBudget storage b) {
+        bytes32 slot = keccak256("hedgefun.v2.tradable-percent.directional-budget.v1");
+        assembly ("memory-safe") { b.slot := slot }
+    }
+
+    /// @notice Realized strategy losses since this accounting upgrade, net of subsequent realized gains.
+    function unrecoveredLossUsdg() external view returns (uint256) { return _dailyBudget().unrecoveredLossUsdg; }
 
     struct ExecutionLimits {
         uint256 targetBps;
@@ -98,9 +118,10 @@ abstract contract HedgeFunV2TradablePercentEngineTreasuryCore is HedgeFunV2Treas
     error BadIntent();
 
     event InventoryBooked(uint256 amount, uint256 stockInventory);
-    /// @notice a sale above `avgCost`: `gain` of the stock it took out of inventory was profit, and `toBuyback` of
-    ///         that (`payoutBps`) stayed in stock for the buy-back instead of being sold
+    /// @notice Compatibility event: `gain` is the gross oracle-marked stock gain before venue fees, executor
+    ///         reward and loss recovery; `toBuyback` is the actual net-income-funded reserve. See StrategyIncomeAccounted.
     event GainToBuyback(uint256 gain, uint256 toBuyback, uint256 avgCost, uint256 price);
+    event StrategyIncomeAccounted(uint256 eligibleCashUsdg, uint256 lossCarryforwardUsdg, uint256 buybackStockAdded);
     event StrategyExecuted(
         uint64 indexed nonce,
         StrategyAction indexed action,
@@ -126,6 +147,7 @@ abstract contract HedgeFunV2TradablePercentEngineTreasuryCore is HedgeFunV2Treas
         Params memory p,
         EngineBinding memory binding
     ) HedgeFunV2Treasury(usdg_, stock_, v3Pool_, oracle_, token_, poolManager_, factory_, p) {
+        previewReader = new V2TradablePercentPreview(_SCALE);
         EngineConfig memory c = binding.config;
         PolicyManifest memory manifest = binding.manifest;
         if (binding.treasury == address(0)) revert BadEngineConfig();
@@ -185,7 +207,8 @@ abstract contract HedgeFunV2TradablePercentEngineTreasuryCore is HedgeFunV2Treas
     /// @notice Buy cap is a percentage of cash; sell cap is a percentage of tradable stock units.
     /// Daily capital is booked + bookable stock valued at the live oracle, plus available USDG.
     /// Locked LP, parked LP assets, unclaimed LP fees and already reserved buyback stock are excluded.
-    /// These live caps can shrink or grow, but capacity always subtracts the same date's actual turnover.
+    /// Daily capital is fixed immediately before the date's first successful action. Buy and sell budgets each
+    /// use their respective percentage of that basis. Aggregate remaining capacity cannot all be spent in one direction.
     /// Healthy describes only the price snapshot; use preview() to check cooldown and executable allocation.
     function riskLimits()
         external
@@ -201,19 +224,33 @@ abstract contract HedgeFunV2TradablePercentEngineTreasuryCore is HedgeFunV2Treas
             uint256 usedUsdg
         )
     {
+        return previewReader.riskLimits(ITradablePercentPreview(address(this)));
+    }
+
+    /// @notice Per-direction daily cap, charged buys and charged sells. Before the first successful action,
+    ///         basis is a live preview; later price changes or donations cannot reopen today's capacity.
+    function dailyRiskLimits() external view returns (uint64 epoch, uint256 basis, uint256 buyCap, uint256 sellCap, uint256 bought, uint256 sold) {
         epoch = _tradingDate();
-        usedUsdg = turnoverEpoch == epoch ? turnoverInEpoch : 0;
-        (bool ok, uint256 price) = health();
-        (bool live,) = _oracle.tryPrice();
-        if (!ok || !live) return (false, 0, 0, 0, 0, 0, epoch, usedUsdg);
-        StrategyContext memory context = _context(price, bookedStock + unbookedStock());
-        if (context.stockValueUsdg > type(uint256).max - context.usdgInventory) {
-            return (false, 0, 0, 0, 0, 0, epoch, usedUsdg);
+        DailyBudget storage b = _dailyBudget();
+        basis = b.epoch == epoch ? b.capital : 0;
+        if (basis == 0) {
+            (bool ok, uint256 p) = health();
+            (bool live,) = _oracle.tryPrice();
+            if (ok && live) basis = _ruleValue(bookedStock + unbookedStock(), p) + reserveUsdg();
         }
-        tradableValueUsdg = context.stockValueUsdg + context.usdgInventory;
-        (,,, maxBuyUsdg, maxSellStock, maxDailyTurnoverUsdg) = _riskConfig(context);
-        remainingDailyUsdg = maxDailyTurnoverUsdg > usedUsdg ? maxDailyTurnoverUsdg - usedUsdg : 0;
-        healthy = true;
+        buyCap = _dailyCap(basis, true);
+        sellCap = _dailyCap(basis, false);
+        bought = _usedDaily(epoch, StrategyAction.BuyStock);
+        sold = _usedDaily(epoch, StrategyAction.SellStock);
+    }
+
+    function _remaining(uint256 cap, uint256 used) private pure returns (uint256) { return cap > used ? cap - used : 0; }
+
+    function _usedDaily(uint64 epoch, StrategyAction action) private view returns (uint256) {
+        uint256 total = turnoverEpoch == epoch ? turnoverInEpoch : 0;
+        DailyBudget storage b = _dailyBudget();
+        if (b.epoch != epoch || b.capital == 0) return total;
+        return action == StrategyAction.BuyStock ? b.legacyUsed + b.bought : total - b.bought;
     }
 
     /// @dev Engine inventory is a balance bucket, not a collection of cost-basis lots.
@@ -246,73 +283,7 @@ abstract contract HedgeFunV2TradablePercentEngineTreasuryCore is HedgeFunV2Treas
     ///         For a sale, `amountIn` is the stock the action would take out of inventory; with a gain over
     ///         `avgCost`, `payoutBps` of the gain part of it goes to the buy-back and the rest to the pool.
     function preview() external view returns (bool due, StrategyAction action, uint256 amountIn) {
-        (bool ok, uint256 p) = health();
-        (bool live,) = _oracle.tryPrice();
-        if (!ok || !live) return (false, StrategyAction.Hold, 0);
-        StrategyContext memory context = _context(p, bookedStock + unbookedStock());
-        StrategyIntent memory intent = _policyIntent(context);
-        if (!_basicIntentValid(intent) || intent.action == StrategyAction.Hold) {
-            return (false, StrategyAction.Hold, 0);
-        }
-        amountIn = _previewExecutableAmount(context, intent, p);
-        if (amountIn == 0) return (false, StrategyAction.Hold, 0);
-        return (true, intent.action, amountIn);
-    }
-
-    function _previewExecutableAmount(StrategyContext memory context, StrategyIntent memory intent, uint256 price)
-        private
-        view
-        returns (uint256 offered)
-    {
-        ExecutionLimits memory limits;
-        uint256 cooldown;
-        uint256 maxDaily;
-        if (context.stockValueUsdg > type(uint256).max - context.usdgInventory) return 0;
-        limits.totalValue = context.stockValueUsdg + context.usdgInventory;
-        if (limits.totalValue == 0) return 0;
-        (limits.targetBps, limits.deadbandBps, cooldown, limits.maxBuy, limits.maxSell, maxDaily) = _riskConfig(context);
-        if (lastStrategyAt != 0 && block.timestamp < lastStrategyAt + cooldown) return 0;
-        uint64 epoch = _tradingDate();
-        uint256 used = turnoverEpoch == epoch ? turnoverInEpoch : 0;
-        if (used >= maxDaily) return 0;
-        limits.remainingDaily = maxDaily - used;
-
-        if (intent.action == StrategyAction.SellStock) {
-            return _previewSell(context, intent.amountIn, price, limits);
-        }
-        if (intent.action == StrategyAction.BuyStock) {
-            return _previewBuy(context, intent.amountIn, limits);
-        }
-        return 0;
-    }
-
-    function _previewSell(
-        StrategyContext memory context,
-        uint256 requested,
-        uint256 price,
-        ExecutionLimits memory limits
-    ) private view returns (uint256 offered) {
-        if (policyCapabilities & StrategyCapabilities.SPOT_SELL == 0) return 0;
-        uint256 upperValue = Math.mulDiv(limits.totalValue, limits.targetBps + limits.deadbandBps, BPS);
-        if (context.stockValueUsdg <= upperValue) return 0;
-        uint256 targetValue = Math.mulDiv(limits.totalValue, limits.targetBps, BPS);
-        uint256 capUsdg = Math.min(limits.remainingDaily, context.stockValueUsdg - targetValue);
-        offered = Math.min(requested, Math.min(limits.maxSell, _ruleStockFor(capUsdg, price)));
-        if (offered == 0 || _ruleValue(offered, price) < _params.minLotUsdg) return 0;
-    }
-
-    function _previewBuy(StrategyContext memory context, uint256 requested, ExecutionLimits memory limits)
-        private
-        view
-        returns (uint256 offered)
-    {
-        if (policyCapabilities & StrategyCapabilities.SPOT_BUY == 0) return 0;
-        uint256 lowerValue = Math.mulDiv(limits.totalValue, limits.targetBps - limits.deadbandBps, BPS);
-        if (context.stockValueUsdg >= lowerValue) return 0;
-        uint256 targetValue = Math.mulDiv(limits.totalValue, limits.targetBps, BPS);
-        uint256 capUsdg = Math.min(Math.min(limits.maxBuy, limits.remainingDaily), targetValue - context.stockValueUsdg);
-        offered = Math.min(Math.min(requested, capUsdg), context.usdgInventory);
-        if (offered < _params.minLotUsdg) return 0;
+        return previewReader.preview(ITradablePercentPreview(address(this)));
     }
 
     /// @notice Execute one bounded policy action, paying its caller `bountyBps` of the actual swap output.
@@ -329,7 +300,7 @@ abstract contract HedgeFunV2TradablePercentEngineTreasuryCore is HedgeFunV2Treas
         if (!_basicIntentValid(intent) || intent.action == StrategyAction.Hold) revert NotDue();
 
         uint256 requested = intent.amountIn;
-        ExecutionLimits memory limits = _executionLimits(context);
+        ExecutionLimits memory limits = _executionLimits(context, intent.action);
         _notePrice(p);
         _noteTokenSpot();
         ExecutionResult memory result = _executeIntent(context, intent, p, limits);
@@ -340,6 +311,14 @@ abstract contract HedgeFunV2TradablePercentEngineTreasuryCore is HedgeFunV2Treas
         // state is committed; reverting here rolls the swap and its transfers back atomically.
         if (result.turnover < _params.minLotUsdg) revert NotDue();
         if (result.turnover > limits.remainingDaily) revert BadIntent();
+        DailyBudget storage b = _dailyBudget();
+        if (b.epoch != limits.epoch || b.capital == 0) {
+            b.epoch = limits.epoch;
+            b.capital = limits.totalValue;
+            b.legacyUsed = limits.used;
+            b.bought = 0;
+        }
+        if (intent.action == StrategyAction.BuyStock) b.bought += result.turnover;
         turnoverEpoch = limits.epoch;
         turnoverInEpoch = limits.used + result.turnover;
         lastStrategyAt = block.timestamp;
@@ -365,18 +344,18 @@ abstract contract HedgeFunV2TradablePercentEngineTreasuryCore is HedgeFunV2Treas
         }
     }
 
-    function _executionLimits(StrategyContext memory context) private view returns (ExecutionLimits memory limits) {
+    function _executionLimits(StrategyContext memory context, StrategyAction action) private view returns (ExecutionLimits memory limits) {
         uint256 cooldown;
         uint256 maxDaily;
         if (context.stockValueUsdg > type(uint256).max - context.usdgInventory) revert BadIntent();
         limits.totalValue = context.stockValueUsdg + context.usdgInventory;
         if (limits.totalValue == 0) revert NotDue();
-        (limits.targetBps, limits.deadbandBps, cooldown, limits.maxBuy, limits.maxSell, maxDaily) = _riskConfig(context);
+        (limits.targetBps, limits.deadbandBps, cooldown, limits.maxBuy, limits.maxSell, maxDaily) = _riskConfig(context, action);
         if (lastStrategyAt != 0 && block.timestamp < lastStrategyAt + cooldown) revert Cooldown();
         limits.epoch = _tradingDate();
         limits.used = turnoverEpoch == limits.epoch ? turnoverInEpoch : 0;
-        if (limits.used >= maxDaily) revert NotDue();
-        limits.remainingDaily = maxDaily - limits.used;
+        limits.remainingDaily = _remaining(maxDaily, _usedDaily(limits.epoch, action));
+        if (limits.remainingDaily == 0) revert NotDue();
     }
 
     function _executeIntent(
@@ -409,9 +388,9 @@ abstract contract HedgeFunV2TradablePercentEngineTreasuryCore is HedgeFunV2Treas
         uint256 capUsdg = Math.min(limits.remainingDaily, excessUsdg);
         uint256 offered = Math.min(requested, Math.min(limits.maxSell, _ruleStockFor(capUsdg, price)));
         if (offered == 0 || _ruleValue(offered, price) < _params.minLotUsdg) revert NotDue();
-        // `offered` leaves inventory. The part of it that is gain over the average cost is `offered * (1 - cost/p)`;
-        // `payoutBps` of that stays in stock for the buy-back and the rest is sold -- kind 0's split. A short fill
-        // takes out only the share of both that the sold amount stands for, so a dust fill moves dust.
+        // Withhold at most the gross marked payout while swapping the rest. Actual net proceeds and prior
+        // losses can only REDUCE this reserve. Any withheld stock that is not earned remains strategy inventory.
+        // A partial fill scales the proposed reserve before the same net-income checks.
         uint256 cost = avgCost;
         uint256 gain = price > cost ? offered - Math.mulDiv(offered, cost, price) : 0;
         uint256 toBuyback = gain * payoutBps / BPS;
@@ -422,12 +401,24 @@ abstract contract HedgeFunV2TradablePercentEngineTreasuryCore is HedgeFunV2Treas
             gain = Math.mulDiv(gain, result.actualInput, sale);
             toBuyback = Math.mulDiv(toBuyback, result.actualInput, sale);
         }
+        toBuyback = _accountIncome(result, price, toBuyback);
         uint256 moved = result.actualInput + toBuyback;
         bookedStock -= moved;
         buybackStock += toBuyback;
         result.turnover = _ruleValue(moved, price);
         result.action = Action.RebalanceSell;
         if (gain != 0) emit GainToBuyback(gain, toBuyback, cost, price);
+    }
+
+    function _accountIncome(ExecutionResult memory result, uint256 price, uint256 maximumReserve)
+        private returns (uint256 reserved)
+    {
+        uint256 eligibleCash;
+        DailyBudget storage b = _dailyBudget();
+        (reserved, b.unrecoveredLossUsdg, eligibleCash) = previewReader.saleIncome(
+            avgCost, price, result.actualInput, result.actualOutput - result.keeperReward,
+            maximumReserve, payoutBps, b.unrecoveredLossUsdg);
+        emit StrategyIncomeAccounted(eligibleCash, b.unrecoveredLossUsdg, reserved);
     }
 
     function _executeBuy(
@@ -488,7 +479,7 @@ abstract contract HedgeFunV2TradablePercentEngineTreasuryCore is HedgeFunV2Treas
         return intent.configHash == configHash && intent.nonce == strategyNonce;
     }
 
-    function _riskConfig(StrategyContext memory context)
+    function _riskConfig(StrategyContext memory context, StrategyAction action)
         private
         view
         returns (
@@ -506,33 +497,20 @@ abstract contract HedgeFunV2TradablePercentEngineTreasuryCore is HedgeFunV2Treas
         cooldown = uint32(packed >> 32);
         maxBuy = Math.mulDiv(context.usdgInventory, TradablePercentEngineConfig.buyBps(_engineConfig.words[1]), BPS);
         maxSell = Math.mulDiv(context.stockInventory, TradablePercentEngineConfig.sellBps(_engineConfig.words[1]), BPS);
-        maxDaily = Math.mulDiv(context.stockValueUsdg + context.usdgInventory, uint256(_engineConfig.words[2]), BPS);
+        maxDaily = _dailyCap(_capitalBasis(context.stockValueUsdg + context.usdgInventory), action == StrategyAction.BuyStock);
+    }
+
+    function _capitalBasis(uint256 liveValue) private view returns (uint256) {
+        DailyBudget storage b = _dailyBudget();
+        return b.epoch == _tradingDate() && b.capital != 0 ? b.capital : liveValue;
+    }
+
+    function _dailyCap(uint256 basis, bool buy) private view returns (uint256) {
+        return Math.mulDiv(basis, TradablePercentEngineConfig.dailyBps(_engineConfig.words[2], buy), BPS);
     }
 
     function _policyIntent(StrategyContext memory context) private view returns (StrategyIntent memory intent) {
-        address implementation = policyImplementation;
-        if (implementation.codehash != policyRuntimeCodeHash) revert PolicyUnavailable();
-        bytes memory callData = abi.encodeCall(IStrategyPolicy.decide, (context, _engineConfig, policyState));
-        bool success;
-        uint256 size;
-        uint256 gasLimit = policyGasLimit;
-        assembly ("memory-safe") {
-            success := staticcall(gasLimit, implementation, add(callData, 0x20), mload(callData), 0, 0)
-            size := returndatasize()
-        }
-        if (!success) revert PolicyFailure();
-        if (size != INTENT_RETURN_BYTES || size > policyReturnLimit) revert BadPolicyReturn();
-        bytes memory result = new bytes(size);
-        uint256 actionWord;
-        assembly ("memory-safe") {
-            returndatacopy(add(result, 0x20), 0, size)
-            actionWord := mload(add(result, 0x60)) // word 2 of (configHash, nonce, action, amountIn, nextState)
-        }
-        // `abi.decode` would refuse an undeclared enum value too, but with EMPTY revert data that a keeper cannot
-        // tell from running out of gas; refuse it first, by name, so a policy returning a future action word
-        // (options are 64 and up) is diagnosable.
-        if (actionWord > uint256(type(StrategyAction).max)) revert BadPolicyReturn();
-        intent = abi.decode(result, (StrategyIntent));
+        return previewReader.intent(ITradablePercentPreview(address(this)), context);
     }
 }
 

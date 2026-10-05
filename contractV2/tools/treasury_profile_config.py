@@ -39,23 +39,31 @@ def bps(value, name):
 
 def engine_config(profile, policy_key):
     fields = {"mode", "strategy", "execution", "targetPercent", "bandPercent",
-              "buyPercent", "sellPercent", "dailyPercent", "profitToBuybackPercent", "cooldownSeconds"}
-    if not isinstance(profile, dict) or set(profile) != fields:
+              "buyPercent", "sellPercent", "profitToBuybackPercent", "cooldownSeconds"}
+    if not isinstance(profile, dict) or set(profile) not in (
+            fields | {"dailyPercent"}, fields | {"dailyBuyPercent", "dailySellPercent"}):
         raise ValueError("profile must contain exactly the documented fields; legacy USDG caps are not accepted")
     if (profile["mode"], profile["strategy"], profile["execution"]) != ("strategy", "rebalance", "continuous"):
         raise ValueError("only strategy/rebalance/continuous is implemented by this adapter")
-    target, band, buy, sell, daily, payout = [bps(profile[k], k) for k in (
-        "targetPercent", "bandPercent", "buyPercent", "sellPercent", "dailyPercent", "profitToBuybackPercent")]
+    target, band, buy, sell, payout = [bps(profile[k], k) for k in (
+        "targetPercent", "bandPercent", "buyPercent", "sellPercent", "profitToBuybackPercent")]
+    if "dailyPercent" in profile:
+        daily_buy = daily_sell = bps(profile["dailyPercent"], "dailyPercent")
+        daily_word = daily_buy  # Legacy encoding: same percentage for each direction.
+    else:
+        daily_buy = bps(profile["dailyBuyPercent"], "dailyBuyPercent")
+        daily_sell = bps(profile["dailySellPercent"], "dailySellPercent")
+        daily_word = daily_buy | daily_sell << 16
     cooldown = profile["cooldownSeconds"]
     if type(cooldown) is not int or not 600 <= cooldown <= 2**32 - 1:
         raise ValueError("cooldownSeconds must be an integer between 600 and uint32.max")
     if not 2000 <= target <= 9000 or band >= target or target + band >= 10000:
         raise ValueError("target must be 20–90%; band must stay strictly inside 0–100% allocation")
-    if min(buy, sell, daily) == 0:
+    if min(buy, sell, daily_buy, daily_sell) == 0:
         raise ValueError("buy, sell and daily percentages must be positive")
     return {"schema": 3, "engineVersion": 1, "policyKey": hex_value(policy_key, 32, "policyKey"),
             "words": [f"0x{x:064x}" for x in (target | band << 16 | cooldown << 32 | payout << 64,
-                                              buy | sell << 16, daily)]}
+                                              buy | sell << 16, daily_word)]}
 
 
 def cast(*args):
