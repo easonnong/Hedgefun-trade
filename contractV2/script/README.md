@@ -32,3 +32,19 @@ Those are the factory owner's. There is no mainnet script for listing stocks yet
 5. The Safe opens public launch.
 
 A strategy kind is permanent once registered and cannot be replaced. Register a kind only when its code is final.
+
+## The whole sequence on a mainnet fork
+
+`test/MainnetV2EndToEndFork.t.sol` runs steps 2 and 3 on a fork of chain 4663 and then uses what they built:
+`DeployV2MainnetCore.deploy`, the four `RegisterV2*` scripts in the order above (kinds 1 to 5), a listing of the
+real NVDA token, and one launch per kind taken through graduation and every action its strategy has, against the
+real NVDA/USDG pool and oracle. A price move is a real swap on that pool plus a mocked report from the NVDA feed;
+the file's header lists everything that is simulated. It is skipped unless asked for, and CI does not run it:
+
+```sh
+MAINNET_E2E=1 RH_RPC=<archive RPC URL> forge test --mc MainnetV2EndToEndForkTest -vv
+```
+
+It forks block 81,045,655 (2026-10-05, US session); `MAINNET_E2E_BLOCK` overrides that, and another block's pool
+depth and prices may not fit the scenarios. No script registers the spot engine's policy (`V2RebalancePolicy`)
+on mainnet yet; the test makes the owner's `registerPolicy` call directly.
