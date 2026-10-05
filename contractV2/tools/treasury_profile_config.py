@@ -59,9 +59,9 @@ def engine_config(profile, policy_key):
     if max(buy, sell) > MAX_ACTION_BPS:
         raise ValueError("one action may take at most 25% of the cash (buy) or of the tradable stock (sell)")
     if band == 0:
-        # The treasury's floor is twice the listing's slippage + pool fee + keeper reward, which this tool
-        # does not read; zero is under it on every listing. A launch simulation checks the exact floor.
-        raise ValueError("bandPercent must be positive: the treasury refuses a band inside execution friction")
+        # The treasury's floor is the listing's pool fee + keeper reward, which this tool does not read;
+        # zero is under it on every listing. A launch simulation checks the exact floor.
+        raise ValueError("bandPercent must be positive: the treasury refuses a band under one trade's cost")
     return {"schema": 3, "engineVersion": 1, "policyKey": hex_value(policy_key, 32, "policyKey"),
             "words": [f"0x{x:064x}" for x in (target | band << 16 | cooldown << 32 | payout << 64,
                                               buy | sell << 16, daily)]}

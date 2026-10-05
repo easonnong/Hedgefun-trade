@@ -413,11 +413,11 @@ contract V2TradablePercentEngineTest is V2TradablePercentEngineFixture {
     }
 
     /// The words a creator registers are theirs; what the treasury accepts is not. No listing chunk bounds a
-    /// schema-3 action, so a band inside execution friction, or an action over a quarter, is refused at launch.
+    /// schema-3 action, so a band under one trade's cost, or an action over a quarter, is refused at launch.
     function test_launchRefusesBandInsideFrictionAndActionsOverAQuarter() public {
         HedgeFunTreasuryBase.Params memory p = _launchPercent(2020, 2500, 2500, 10_000, 0).params();
-        uint256 floor = 2 * (uint256(p.maxSlippageBps) + 30 + p.bountyBps);
-        assertLe(floor, 500, "the fixture's own 5% band is on the allowed side");
+        uint256 floor = 30 + p.bountyBps;                           // the venue's 0.3% fee and the keeper reward
+        assertEq(floor, 80);
         _expectUndeployable(2021, floor - 1, 2000, 2000);
         _expectUndeployable(2022, 0, 2000, 2000);
         _expectUndeployable(2023, 500, 2501, 2000);

@@ -23,7 +23,6 @@ import {EngineBinding} from "./HedgeFunV2EngineTreasury.sol";
 import {V2TreasuryUpgradeController} from "./V2TreasuryUpgradeController.sol";
 import {IV2UpgradeRegistry} from "./HedgeFunV2UpgradeableTreasury.sol";
 import {TradablePercentEngineConfig} from "./strategy/TradablePercentEngineConfig.sol";
-import {SpotEngineConfig} from "./strategy/SpotEngineConfig.sol";
 
 /// @notice Schema-3 rebalance: input-asset percentages and daily limits based only on tradable capital.
 /// @dev Its registry kind is assigned at registration. Existing schemas 1 and 2 retain their original semantics.
@@ -130,8 +129,8 @@ abstract contract HedgeFunV2TradablePercentEngineTreasuryCore is HedgeFunV2Treas
         EngineConfig memory c = binding.config;
         PolicyManifest memory manifest = binding.manifest;
         if (binding.treasury == address(0)) revert BadEngineConfig();
-        // The band floor needs the listing's gates, which only this constructor sees: schema 1's own floor.
-        _validateEngineConfig(c, manifest, SpotEngineConfig.minDeadbandBps(p.maxSlippageBps, poolFeeBps, p.bountyBps));
+        // The band floor is what one trade costs on this listing, which only this constructor sees.
+        _validateEngineConfig(c, manifest, poolFeeBps + p.bountyBps);
         _engineConfig = c;
         payoutBps = uint16(TradablePercentEngineConfig.payoutBps(c.words[0]));
         tradingCalendar = PriceOracle(oracle_).calendar();

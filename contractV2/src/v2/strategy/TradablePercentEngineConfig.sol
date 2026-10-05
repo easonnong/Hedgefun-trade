@@ -9,9 +9,11 @@ pragma solidity ^0.8.24;
 ///
 /// The percentages are the creator's, under two protocol limits. Schema 3 has no listing chunk, so nothing else
 /// bounds one action: `MAX_ACTION_BPS` does, and it scales with the treasury where a fixed amount could not.
-/// And the allocation band has the floor schema 1 has, `SpotEngineConfig.minDeadbandBps` of the listing: a
-/// band inside execution friction rebalances on moves smaller than the cost of rebalancing. The treasury's
-/// constructor knows the listing and passes that floor; a caller without it (the policy, tooling) passes zero.
+/// And the allocation band is at least what one trade costs on the listing, its pool fee plus the keeper
+/// reward. That is a floor against churn, not a break-even: a narrower band only trades more often for slightly
+/// less, with no point under which it starts to lose, so the floor is one trade's cost and not a multiple of
+/// the listing's slippage LIMIT, which is a bound on a fill and not a cost. The treasury's constructor knows
+/// the listing and passes the floor; a caller without it (the policy, tooling) passes zero.
 library TradablePercentEngineConfig {
     uint32 internal constant CONFIG_SCHEMA = 3;
     uint256 internal constant BPS = 10_000;
