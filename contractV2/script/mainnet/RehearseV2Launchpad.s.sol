@@ -4,14 +4,14 @@ pragma solidity ^0.8.24;
 import {Script, console2} from "forge-std/Script.sol";
 import {VmSafe} from "forge-std/Vm.sol";
 import {IPoolManager} from "v4-core/src/interfaces/IPoolManager.sol";
-import {HedgeFunFactory, TokenDeployer} from "../src/HedgeFunFactory.sol";
-import {HedgeFunV2Hook} from "../src/hooks/HedgeFunV2Hook.sol";
-import {HedgeFunV2Factory} from "../src/v2/HedgeFunV2Factory.sol";
-import {V2TreasuryDeployer} from "../src/v2/V2TreasuryDeployer.sol";
-import {HedgeFunV2BuybackTreasury} from "../src/v2/HedgeFunV2BuybackTreasury.sol";
-import {CurveDeployer} from "../src/v2/CurveDeployer.sol";
-import {HedgeFunBondingCurve} from "../src/v2/HedgeFunBondingCurve.sol";
-import {HedgeFunV2TradeRouter} from "../src/v2/HedgeFunV2TradeRouter.sol";
+import {HedgeFunFactory, TokenDeployer} from "../../src/HedgeFunFactory.sol";
+import {HedgeFunV2Hook} from "../../src/hooks/HedgeFunV2Hook.sol";
+import {HedgeFunV2Factory} from "../../src/v2/HedgeFunV2Factory.sol";
+import {V2TreasuryDeployer} from "../../src/v2/V2TreasuryDeployer.sol";
+import {HedgeFunV2BuybackTreasury} from "../../src/v2/HedgeFunV2BuybackTreasury.sol";
+import {CurveDeployer} from "../../src/v2/CurveDeployer.sol";
+import {HedgeFunBondingCurve} from "../../src/v2/HedgeFunBondingCurve.sol";
+import {HedgeFunV2TradeRouter} from "../../src/v2/HedgeFunV2TradeRouter.sol";
 
 /// @notice Simulates the V2 platform deployment against a local Robinhood Chain fork.
 /// @dev Deliberately refuses chain 4663. This script neither lists a stock nor opens public launch.

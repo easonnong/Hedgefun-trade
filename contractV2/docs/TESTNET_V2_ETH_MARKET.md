@@ -29,7 +29,7 @@ Before running file-based phases, put an exact byte copy of the separately verif
 
 The operator must have **at least 1.001 native test ETH and 3,100 tUSDG before initialization**. One ETH is deposited into the real WETH contract. The seeder receives one WETH and 3,100 tUSDG; the position uses at most 0.9 WETH, leaving a WETH budget outside the position for bounded test swaps. The 0.001 ETH reserve is a preflight minimum, not a promise that it covers every future transaction's gas cost.
 
-`script/TestnetV2EthMarket.s.sol` has three separate phases:
+`script/testnet/TestnetV2EthMarket.s.sol` has three separate phases:
 
 1. `initialize(basePath, sha256(rawBaseBytes))`: twelve operator transactions, including four helper deployments, canonical pool creation/initialization, ring growth, real ETH deposit, two prefunding transfers and bounded liquidity provision.
 2. `pokeFile(initCandidate)`: one bounded round-trip transaction, mined in a later second than initialization.

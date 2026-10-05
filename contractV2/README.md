@@ -54,7 +54,7 @@ forge test
 
 The fork tests (`V2LiveVenueFork`, `V2LowFrequencyFork`) skip unless `RH_FORK=1` is set; they then fork Robinhood
 Chain at a pinned block through the `robinhood` RPC alias in `foundry.toml` and never broadcast.
-`script/RehearseV2Launchpad.s.sol` is the fork-only deployment rehearsal; it reads its addresses from the environment
+`script/mainnet/RehearseV2Launchpad.s.sol` is the fork-only deployment rehearsal; it reads its addresses from the environment
 and is not a deployment record.
 
 ## Public testnet

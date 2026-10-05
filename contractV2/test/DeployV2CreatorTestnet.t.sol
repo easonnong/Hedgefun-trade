@@ -2,8 +2,8 @@
 pragma solidity ^0.8.24;
 
 import {Test} from "forge-std/Test.sol";
-import {DeployV2CreatorTestnet} from "../script/DeployV2CreatorTestnet.s.sol";
-import {DeployV2FeeUpgradeTestnet} from "../script/DeployV2FeeUpgradeTestnet.s.sol";
+import {DeployV2CreatorTestnet} from "../script/testnet/DeployV2CreatorTestnet.s.sol";
+import {DeployV2FeeUpgradeTestnet} from "../script/testnet/DeployV2FeeUpgradeTestnet.s.sol";
 import {V2TreasuryDeployer} from "../src/v2/V2TreasuryDeployer.sol";
 import {HedgeFunV2UpgradeableBuybackTreasury} from "../src/v2/HedgeFunV2UpgradeableBuybackTreasury.sol";
 import {HedgeFunV2UpgradeableEngineTreasury} from "../src/v2/HedgeFunV2UpgradeableEngineTreasury.sol";

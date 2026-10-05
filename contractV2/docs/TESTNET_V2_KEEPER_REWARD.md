@@ -31,7 +31,7 @@ forge test --match-contract TestnetV2KeeperRewardTest
 KEEPER_REWARD_FORK=true KEEPER_REWARD_FORK_BLOCK=126884377 \
   forge test --match-contract TestnetV2KeeperRewardTest --match-test test_fork -vv
 GIT_COMMIT=$(git rev-parse HEAD) forge script \
-  script/TestnetV2KeeperReward.s.sol:TestnetV2KeeperReward \
+  script/testnet/TestnetV2KeeperReward.s.sol:TestnetV2KeeperReward \
   --sig 'appendEngine()' --sender 0x75Cee941B0eF3A83feA0397BbF903C12c1D7e96D \
   --rpc-url https://rpc.testnet.chain.robinhood.com --fork-block-number 126884377
 ```

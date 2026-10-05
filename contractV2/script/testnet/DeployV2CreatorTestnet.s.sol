@@ -2,11 +2,11 @@
 pragma solidity ^0.8.24;
 
 import {DeployV2FeeUpgradeTestnet} from "./DeployV2FeeUpgradeTestnet.s.sol";
-import {V2InitCodeChunk} from "../src/v2/V2TreasuryDeployer.sol";
-import {HedgeFunV2UpgradeableBuybackTreasury} from "../src/v2/HedgeFunV2UpgradeableBuybackTreasury.sol";
-import {HedgeFunV2UpgradeableEngineTreasury} from "../src/v2/HedgeFunV2UpgradeableEngineTreasury.sol";
-import {V2RebalancePolicy} from "../src/v2/strategy/V2RebalancePolicy.sol";
-import {StrategyCapabilities} from "../src/v2/strategy/IStrategyPolicy.sol";
+import {V2InitCodeChunk} from "../../src/v2/V2TreasuryDeployer.sol";
+import {HedgeFunV2UpgradeableBuybackTreasury} from "../../src/v2/HedgeFunV2UpgradeableBuybackTreasury.sol";
+import {HedgeFunV2UpgradeableEngineTreasury} from "../../src/v2/HedgeFunV2UpgradeableEngineTreasury.sol";
+import {V2RebalancePolicy} from "../../src/v2/strategy/V2RebalancePolicy.sol";
+import {StrategyCapabilities} from "../../src/v2/strategy/IStrategyPolicy.sol";
 
 /// @notice Fresh creator-selected ordinary V2 core, reusing the eight screened testnet stock markets.
 /// @dev Same pinned actors/venues as the fee core; 40 transactions deploy the additional chunks from the

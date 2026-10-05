@@ -1,26 +1,26 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
-import {V2LaunchFeeDefaults} from "./testnet/V2LaunchFeeDefaults.sol";
+import {V2LaunchFeeDefaults} from "./V2LaunchFeeDefaults.sol";
 
 import {Script, console2} from "forge-std/Script.sol";
 import {VmSafe} from "forge-std/Vm.sol";
 import {IPoolManager} from "v4-core/src/interfaces/IPoolManager.sol";
-import {HedgeFunFactory, TokenDeployer} from "../src/HedgeFunFactory.sol";
-import {HedgeFunV2Factory} from "../src/v2/HedgeFunV2Factory.sol";
-import {V2TreasuryDeployer} from "../src/v2/V2TreasuryDeployer.sol";
-import {CurveDeployer} from "../src/v2/CurveDeployer.sol";
-import {HedgeFunV2Hook} from "../src/hooks/HedgeFunV2Hook.sol";
-import {HedgeFunV2TradeRouter} from "../src/v2/HedgeFunV2TradeRouter.sol";
-import {HedgeFunV2NativeRouter, IWrappedNative} from "../src/v2/HedgeFunV2NativeRouter.sol";
-import {HedgeFunV2UpgradeableBuybackTreasury} from "../src/v2/HedgeFunV2UpgradeableBuybackTreasury.sol";
-import {HedgeFunV2UpgradeableEngineTreasury} from "../src/v2/HedgeFunV2UpgradeableEngineTreasury.sol";
-import {V2RebalancePolicy} from "../src/v2/strategy/V2RebalancePolicy.sol";
-import {StrategyCapabilities} from "../src/v2/strategy/IStrategyPolicy.sol";
-import {PriceOracle} from "../src/PriceOracle.sol";
-import {TradingCalendar} from "../src/TradingCalendar.sol";
-import {TestUsdg, TestStock, TestFeed} from "./testnet/TestnetAssets.sol";
-import {TestnetMarket, IV3Factory, IV3Pool} from "./testnet/TestnetMarket.sol";
+import {HedgeFunFactory, TokenDeployer} from "../../src/HedgeFunFactory.sol";
+import {HedgeFunV2Factory} from "../../src/v2/HedgeFunV2Factory.sol";
+import {V2TreasuryDeployer} from "../../src/v2/V2TreasuryDeployer.sol";
+import {CurveDeployer} from "../../src/v2/CurveDeployer.sol";
+import {HedgeFunV2Hook} from "../../src/hooks/HedgeFunV2Hook.sol";
+import {HedgeFunV2TradeRouter} from "../../src/v2/HedgeFunV2TradeRouter.sol";
+import {HedgeFunV2NativeRouter, IWrappedNative} from "../../src/v2/HedgeFunV2NativeRouter.sol";
+import {HedgeFunV2UpgradeableBuybackTreasury} from "../../src/v2/HedgeFunV2UpgradeableBuybackTreasury.sol";
+import {HedgeFunV2UpgradeableEngineTreasury} from "../../src/v2/HedgeFunV2UpgradeableEngineTreasury.sol";
+import {V2RebalancePolicy} from "../../src/v2/strategy/V2RebalancePolicy.sol";
+import {StrategyCapabilities} from "../../src/v2/strategy/IStrategyPolicy.sol";
+import {PriceOracle} from "../../src/PriceOracle.sol";
+import {TradingCalendar} from "../../src/TradingCalendar.sol";
+import {TestUsdg, TestStock, TestFeed} from "./TestnetAssets.sol";
+import {TestnetMarket, IV3Factory, IV3Pool} from "./TestnetMarket.sol";
 
 /// @notice Fresh two-sided-fee core on chain 46630, reusing exactly the eight existing synthetic stock markets.
 /// @dev No venue mutation, signing material or environment-supplied target address. Candidate files are ALWAYS

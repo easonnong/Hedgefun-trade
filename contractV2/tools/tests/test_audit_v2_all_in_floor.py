@@ -144,7 +144,7 @@ class PublicFixture:
         self.chunk_artifact_path = chunks
         self.chunk_artifact = {"bytecode": {"object": self.chunk_creation}, "metadata": copy.deepcopy(self.artifact["metadata"])}
         chunks.write_text(json.dumps(self.chunk_artifact))
-        for name in ["script/TestnetV2AllInFloor.s.sol", "tools/audit_v2_all_in_floor.py", "tools/audit_v2_keeper_reward.py"]:
+        for name in ["script/testnet/TestnetV2AllInFloor.s.sol", "tools/audit_v2_all_in_floor.py", "tools/audit_v2_keeper_reward.py"]:
             path = self.root / name
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_text("// synthetic public tool fixture\n")

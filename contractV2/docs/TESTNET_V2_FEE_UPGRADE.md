@@ -6,7 +6,7 @@ equity quotes. Existing strategies keep their original factory, curve, hook and 
 
 ## Deployment boundary
 
-`script/DeployV2FeeUpgradeTestnet.s.sol` pins operator
+`script/testnet/DeployV2FeeUpgradeTestnet.s.sol` pins operator
 `0x75Cee941B0eF3A83feA0397BbF903C12c1D7e96D`, the previous factory, quote asset, market, calendar, V3 factory,
 eight stock/feed/oracle/pool tuples, PoolManager and WETH. Target addresses cannot be provided by environment
 variables or calldata. Offline tests alone subclass the venue getters.
@@ -34,7 +34,7 @@ After protocol review and merge, build from the final release source commit with
 ```sh
 git submodule update --init --recursive
 forge test --match-path test/DeployV2FeeUpgradeTestnet.t.sol -vv
-GIT_COMMIT="$(git rev-parse HEAD)" forge script script/DeployV2FeeUpgradeTestnet.s.sol:DeployV2FeeUpgradeTestnet \
+GIT_COMMIT="$(git rev-parse HEAD)" forge script script/testnet/DeployV2FeeUpgradeTestnet.s.sol:DeployV2FeeUpgradeTestnet \
   --rpc-url https://rpc.testnet.chain.robinhood.com \
   --sender 0x75Cee941B0eF3A83feA0397BbF903C12c1D7e96D --slow
 ```
@@ -131,7 +131,7 @@ changing their old book underneath them is not a compatible reuse.
 
 ## TSLA phase script
 
-`script/TestnetV2FeesJourney.s.sol` provides the new versioned journey. It pins the new factory/router/hook
+`script/testnet/TestnetV2FeesJourney.s.sol` provides the new versioned journey. It pins the new factory/router/hook
 predicted by this release's production dry-run, the original TSLA pool/stock and the three existing test wallets:
 creator `0xD4f69D180a9bc36F27D307E90E365d1E012816d5`, operator/protocol
 `0x75Cee941B0eF3A83feA0397BbF903C12c1D7e96D`, and exempt recipient
@@ -178,7 +178,7 @@ also asks the treasury to book it. Verify this independently rather than countin
 Example read-only launch invocation (the real core and verified book must already exist):
 
 ```sh
-JOURNEY_NONCE=2026093001 forge script script/TestnetV2FeesJourney.s.sol:TestnetV2FeesJourney \
+JOURNEY_NONCE=2026093001 forge script script/testnet/TestnetV2FeesJourney.s.sol:TestnetV2FeesJourney \
   --sig 'launch()' --rpc-url https://rpc.testnet.chain.robinhood.com \
   --sender 0xD4f69D180a9bc36F27D307E90E365d1E012816d5 --slow
 ```

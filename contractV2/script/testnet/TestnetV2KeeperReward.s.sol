@@ -5,14 +5,14 @@ import {Script, console2} from "forge-std/Script.sol";
 import {Vm} from "forge-std/Vm.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {Math} from "@openzeppelin/contracts/utils/math/Math.sol";
-import {HedgeFunFactory} from "../src/HedgeFunFactory.sol";
-import {HedgeFunTreasuryBase} from "../src/HedgeFunTreasuryBase.sol";
-import {HedgeFunV2Factory} from "../src/v2/HedgeFunV2Factory.sol";
-import {HedgeFunV2Treasury} from "../src/v2/HedgeFunV2Treasury.sol";
-import {HedgeFunV2EngineTreasury, HedgeFunV2EngineTreasuryCore} from "../src/v2/HedgeFunV2EngineTreasury.sol";
-import {HedgeFunBondingCurve} from "../src/v2/HedgeFunBondingCurve.sol";
-import {V2TreasuryDeployer, V2InitCodeChunk} from "../src/v2/V2TreasuryDeployer.sol";
-import {EngineConfig, PolicyManifest, StrategyAction} from "../src/v2/strategy/IStrategyPolicy.sol";
+import {HedgeFunFactory} from "../../src/HedgeFunFactory.sol";
+import {HedgeFunTreasuryBase} from "../../src/HedgeFunTreasuryBase.sol";
+import {HedgeFunV2Factory} from "../../src/v2/HedgeFunV2Factory.sol";
+import {HedgeFunV2Treasury} from "../../src/v2/HedgeFunV2Treasury.sol";
+import {HedgeFunV2EngineTreasury, HedgeFunV2EngineTreasuryCore} from "../../src/v2/HedgeFunV2EngineTreasury.sol";
+import {HedgeFunBondingCurve} from "../../src/v2/HedgeFunBondingCurve.sol";
+import {V2TreasuryDeployer, V2InitCodeChunk} from "../../src/v2/V2TreasuryDeployer.sol";
+import {EngineConfig, PolicyManifest, StrategyAction} from "../../src/v2/strategy/IStrategyPolicy.sol";
 
 /// @notice Append one immutable Engine to the already deployed fee core, then exercise two independent strategies.
 ///         Contains no keys. A phase is simulated unless the human operator explicitly supplies --broadcast.

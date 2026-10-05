@@ -4,7 +4,7 @@ The current scripts deploy `HedgeFunV2Hook` for [two-sided fee income](./V2_TWO_
 The recorded September 27–28 runs below predate that change; their simulated addresses and gas estimates are
 historical evidence. Repeat the rehearsal with the exact new release commit and addresses before deployment.
 
-Use `script/RehearseV2Launchpad.s.sol` to check that the V2 deployers, hook, factory, stock trade router, and kind-1 buyback code registration can be created and bound on a **local fork**. The script rejects every chain ID except `31337` and also rejects Foundry broadcast/resume contexts. It does not list a stock, open public launches, create a strategy treasury, move funds, or deploy to Robinhood Chain. Run the command below **without `--broadcast`**: Foundry simulates its deployment transactions and discards them.
+Use `script/mainnet/RehearseV2Launchpad.s.sol` to check that the V2 deployers, hook, factory, stock trade router, and kind-1 buyback code registration can be created and bound on a **local fork**. The script rejects every chain ID except `31337` and also rejects Foundry broadcast/resume contexts. It does not list a stock, open public launches, create a strategy treasury, move funds, or deploy to Robinhood Chain. Run the command below **without `--broadcast`**: Foundry simulates its deployment transactions and discards them.
 
 ```sh
 anvil --fork-url https://rpc-robinhood.blockmachine.io \
@@ -18,7 +18,7 @@ export OWNER=0x2910117dd2cB431173Ae9Fb6eAF30726321d1693
 export PROTOCOL=0x2910117dd2cB431173Ae9Fb6eAF30726321d1693
 export CALENDAR=0xFE9E85f0C258Fc2757eB6Acd1ca032Ec860487F5
 forge build --sizes
-forge script script/RehearseV2Launchpad.s.sol:RehearseV2Launchpad \
+forge script script/mainnet/RehearseV2Launchpad.s.sol:RehearseV2Launchpad \
   --rpc-url http://127.0.0.1:8545 \
   --sender 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266 \
   --unlocked -vv

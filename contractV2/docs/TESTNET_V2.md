@@ -2,7 +2,7 @@
 
 The whole V2 launchpad on the **public** Robinhood Chain testnet, so team members can use the front end with their own
 wallets and nothing of value. The testnet has Uniswap V4 but no Uniswap V3, no USDG we can mint, no Chainlink equity
-feeds, and faucet stock tokens without `oraclePaused()`. `script/DeployV2Testnet.s.sol` deploys test doubles for those
+feeds, and faucet stock tokens without `oraclePaused()`. `script/testnet/DeployV2Testnet.s.sol` deploys test doubles for those
 gaps and then the same V2 contracts as mainnet, from the same `src/`. Nothing here is a mainnet rehearsal: the owner is
 an EOA, the prices are set by hand, and the pools are far deeper than mainnet's.
 
@@ -67,13 +67,13 @@ Prices are the mainnet oracles' `lastPriceAt()` on 2026-09-29, rounded.
 
 ## What the deployment script does
 
-`script/DeployV2Testnet.s.sol` reverts unless `block.chainid == 46630`, and unless the broadcaster is `OPERATOR`
+`script/testnet/DeployV2Testnet.s.sol` reverts unless `block.chainid == 46630`, and unless the broadcaster is `OPERATOR`
 from the environment. It never holds a key. In order, all from the operator's address:
 
 1. tUSDG, its feed, a `TradingCalendar`, the V3 factory and the `TestnetMarket`.
 2. Per stock: the test stock, its feed and `PriceOracle`; its V3 pool, created and initialised at the opening price
    and grown to a 720-slot observation ring (`PoolTrader` requires 660); then the market's liquidity.
-3. V2, as [`RehearseV2Launchpad`](../script/RehearseV2Launchpad.s.sol): treasury, token and curve deployers, the
+3. V2, as [`RehearseV2Launchpad`](../script/mainnet/RehearseV2Launchpad.s.sol): treasury, token and curve deployers, the
    hook at a CREATE2 salt it mines, `HedgeFunV2Factory`, `HedgeFunV2TradeRouter`, and `HedgeFunV2NativeRouter` on the
    testnet WETH.
 4. Registrations, as `test/V2StrategyEngine.t.sol`: strategy kind 1 (buyback), `V2RebalancePolicy` (150,000 gas,
@@ -93,7 +93,7 @@ always say `broadcast: false`: Forge writes files during simulation, before it s
 successful receipts, canonical block membership, runtime code hashes, roles, listings, defaults and policy bindings
 at one pinned live block. The verifier needs Python 3.9+ and Foundry `cast`; it never signs or broadcasts.
 
-`script/SeedTestnet.s.sol` tops team wallets up to 100,000 tUSDG and $25,000 of each test stock at the feed price
+`script/testnet/SeedTestnet.s.sol` tops team wallets up to 100,000 tUSDG and $25,000 of each test stock at the feed price
 (minting only the shortfall, so a rerun is harmless), and pokes each pool. The poke matters: a pool's grown
 observation ring goes live only on the first observation written in a later second, and V3 writes one only when a
 swap changes the tick. The poke is a one-tick round trip that ends at the exact starting price.
@@ -133,7 +133,7 @@ The operator broadcasts; nothing in this repository signs. Use a key that holds 
    export OPERATOR=0x...                                    # the address printed above
    export RPC=https://rpc.testnet.chain.robinhood.com
    forge build
-   forge script script/DeployV2Testnet.s.sol:DeployV2Testnet --rpc-url $RPC --sender $OPERATOR -vv
+   forge script script/testnet/DeployV2Testnet.s.sol:DeployV2Testnet --rpc-url $RPC --sender $OPERATOR -vv
    ```
 
    It must end `public launch true; readback passed` and print the estimated ETH. If the mined hook address is
@@ -143,7 +143,7 @@ The operator broadcasts; nothing in this repository signs. Use a key that holds 
 4. **Deploy:**
 
    ```sh
-   GIT_COMMIT=$(git rev-parse HEAD) forge script script/DeployV2Testnet.s.sol:DeployV2Testnet \
+   GIT_COMMIT=$(git rev-parse HEAD) forge script script/testnet/DeployV2Testnet.s.sol:DeployV2Testnet \
      --rpc-url $RPC --account hedgefun-testnet --sender $OPERATOR --broadcast --slow -vv
    ```
 
@@ -168,10 +168,10 @@ The operator broadcasts; nothing in this repository signs. Use a key that holds 
    check reads it.
 
    ```sh
-   TEAM=0xAAA...,0xBBB... forge script script/SeedTestnet.s.sol:SeedTestnet \
+   TEAM=0xAAA...,0xBBB... forge script script/testnet/SeedTestnet.s.sol:SeedTestnet \
      --rpc-url $RPC --account hedgefun-testnet --sender $OPERATOR --broadcast --slow
    # one more wallet later:
-   forge script script/SeedTestnet.s.sol:SeedTestnet --sig "topUp(address)" 0xCCC... \
+   forge script script/testnet/SeedTestnet.s.sol:SeedTestnet --sig "topUp(address)" 0xCCC... \
      --rpc-url $RPC --account hedgefun-testnet --sender $OPERATOR --broadcast
    ```
 

@@ -5,12 +5,12 @@ import {Script, console2} from "forge-std/Script.sol";
 import {VmSafe} from "forge-std/Vm.sol";
 import {Math} from "@openzeppelin/contracts/utils/math/Math.sol";
 import {TickMath} from "v4-core/src/libraries/TickMath.sol";
-import {HedgeFunV2Factory} from "../src/v2/HedgeFunV2Factory.sol";
-import {V2TreasuryDeployer} from "../src/v2/V2TreasuryDeployer.sol";
-import {PriceOracle} from "../src/PriceOracle.sol";
-import {TradingCalendar} from "../src/TradingCalendar.sol";
-import {TestUsdg, TestStock, TestFeed} from "./testnet/TestnetAssets.sol";
-import {TestnetMarket, IV3Factory, IV3Pool} from "./testnet/TestnetMarket.sol";
+import {HedgeFunV2Factory} from "../../src/v2/HedgeFunV2Factory.sol";
+import {V2TreasuryDeployer} from "../../src/v2/V2TreasuryDeployer.sol";
+import {PriceOracle} from "../../src/PriceOracle.sol";
+import {TradingCalendar} from "../../src/TradingCalendar.sol";
+import {TestUsdg, TestStock, TestFeed} from "./TestnetAssets.sol";
+import {TestnetMarket, IV3Factory, IV3Pool} from "./TestnetMarket.sol";
 
 /// @notice Append four synthetic stocks to the existing whitelist V2 TESTNET deployment.
 /// No factory, router, quote asset, calendar, feed or existing stock is redeployed or reconfigured.

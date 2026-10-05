@@ -4,7 +4,7 @@ pragma solidity ^0.8.24;
 import {Test} from "forge-std/Test.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {Math} from "@openzeppelin/contracts/utils/math/Math.sol";
-import {TestnetV2EthMarket} from "../script/TestnetV2EthMarket.s.sol";
+import {TestnetV2EthMarket} from "../script/testnet/TestnetV2EthMarket.s.sol";
 import {TestnetMarket, IV3Pool} from "../script/testnet/TestnetMarket.sol";
 import {HedgeFunFactory} from "../src/HedgeFunFactory.sol";
 import {HedgeFunV2Factory} from "../src/v2/HedgeFunV2Factory.sol";

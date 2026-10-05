@@ -9,8 +9,8 @@ import {HedgeFunFactory} from "../src/HedgeFunFactory.sol";
 import {HedgeFunBondingCurve} from "../src/v2/HedgeFunBondingCurve.sol";
 import {HedgeFunV2TradeRouter} from "../src/v2/HedgeFunV2TradeRouter.sol";
 import {HedgeFunV2Treasury} from "../src/v2/HedgeFunV2Treasury.sol";
-import {DeployV2Testnet} from "../script/DeployV2Testnet.s.sol";
-import {AddV2TestnetStocks} from "../script/AddV2TestnetStocks.s.sol";
+import {DeployV2Testnet} from "../script/testnet/DeployV2Testnet.s.sol";
+import {AddV2TestnetStocks} from "../script/testnet/AddV2TestnetStocks.s.sol";
 import {IV3Pool} from "../script/testnet/TestnetMarket.sol";
 import {MockToken} from "./mocks/Mocks.sol";
 

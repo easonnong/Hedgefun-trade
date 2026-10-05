@@ -37,7 +37,7 @@ deviation gate and an open calendar. That makes the model's rule slightly quicke
 **The treasury rule.** The launch kit's default template, *Trend holder*: take-profit 30% / 60%, dip 3%, no
 stop, 50% lots ([LAUNCH_KIT.md](https://github.com/keyuyuan/hedgefund/blob/64c0adc602bbcbb70c0b4511ac67ee2aa40fceca/docs/LAUNCH_KIT.md)). Three others are compared: *Scalper* 5 / 10, 5, none, 20% (the
 "shipped 5/5" rule of [rule-backtest/](https://github.com/keyuyuan/hedgefund/blob/64c0adc602bbcbb70c0b4511ac67ee2aa40fceca/docs/rule-backtest/README.md)), *Range grid* 20 / 40, 15, none, 20%, and
-*Take-profit + stop* 15 / 30, 10, 12%, 50%. Around the rule, the defaults of `script/RehearseV2Launchpad.s.sol`:
+*Take-profit + stop* 15 / 30, 10, 12%, 50%. Around the rule, the defaults of `script/mainnet/RehearseV2Launchpad.s.sol`:
 bounty 0.50%, `minLotUsdg` 5, `buybackChunkUsdg` 500, cooldown 60 s, `maxBuybackImpactBps` 300, `sellChunkUsdg`
 2,000. Every stock<->USDG swap loses 35 bps (pool fee plus slippage, the replay tool's default). The rule is
 `tools/rule_backtest.py`'s own `Ledger`, factored out so this model and the historical replays cannot disagree; its

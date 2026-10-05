@@ -3,7 +3,7 @@
 ## Full release: fresh core
 
 The old fee registry has an immutable global stop friction floor. To allow creator-selected TP/dip/stop without
-economic minima, use [DeployV2CreatorTestnet](../script/DeployV2CreatorTestnet.s.sol). It reuses the existing
+economic minima, use [DeployV2CreatorTestnet](../script/testnet/DeployV2CreatorTestnet.s.sol). It reuses the existing
 USDG, eight stock assets, feeds, oracles, canonical V3 pools, manager and calendar. It deploys a fresh
 registry/factory and their factory-bound hook, token/curve deployers and routers. No existing strategy funds move.
 
@@ -50,7 +50,7 @@ a human operator action under that repository's AGENTS.md.
 
 ## Optional old-core append: TP/dip only
 
-[TestnetV2AllInFloor](../script/TestnetV2AllInFloor.s.sol) is retained as an optional compatibility tool. It is not
+[TestnetV2AllInFloor](../script/testnet/TestnetV2AllInFloor.s.sol) is retained as an optional compatibility tool. It is not
 the full creator release because old registry stop constraints remain. It pins the old fee factory
 `0xACEB03aAeE5494Aa54929Ec840630ae32A9ade0A`, registry `0xe874fE425e14f3CBa3aDBA2Dd10B50E153Ac6064`,
 old code/manifests and actors, then executes three bounded phases:
