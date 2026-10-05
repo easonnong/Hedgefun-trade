@@ -19,7 +19,9 @@ library V2MainnetDefaults {
 
     function release() internal pure returns (HedgeFunFactory.Defaults memory d) {
         d.supply = 1_000_000_000e18;
-        d.lpFee = 3000; // V2's locked liquidity vault collects fees; V1's zero-fee default cannot be reused.
+        // 0.10%. V2's locked liquidity vault collects it for the buy-back, so V1's zero-fee default cannot be reused;
+        // with the 1% minimum tax a trade costs about 1.1%, inside the range of the launchpads this one is compared with.
+        d.lpFee = 1000;
         d.tickSpacing = 60;
         d.minTaxBps = 100; // the 1% base tax; a creator chooses 1% to 15%
         d.maxTaxBps = 1500;

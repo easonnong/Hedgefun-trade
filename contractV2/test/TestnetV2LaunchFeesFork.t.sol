@@ -36,9 +36,11 @@ contract TestnetV2LaunchFeesForkTest is Test {
         vm.etch(operator, type(LaunchFeeOperatorInvoker).runtimeCode);
         LaunchFeeOperatorInvoker(operator).run(new ConfigureV2LaunchFees());
         HedgeFunFactory.Defaults memory after_ = FACTORY.getDefaults();
+        assertEq(after_.lpFee, 1000);
         assertEq(after_.maxCreatorBps, 1000);
         assertEq(uint8(after_.launchFeeCurrency), 1);
         assertEq(after_.launchFeeAmount, FEE);
+        after_.lpFee = before_.lpFee;
         after_.maxCreatorBps = before_.maxCreatorBps;
         after_.launchFeeCurrency = before_.launchFeeCurrency;
         after_.launchFeeAmount = before_.launchFeeAmount;
