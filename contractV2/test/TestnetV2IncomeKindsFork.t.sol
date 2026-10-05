@@ -13,6 +13,8 @@ import {HedgeFunV2TradeRouter as Router} from "../src/v2/HedgeFunV2TradeRouter.s
 import {HedgeFunV2IncomeTreasury} from "../src/v2/HedgeFunV2IncomeTreasury.sol";
 import {HedgeFunV2StrategyIncomeTreasury} from "../src/v2/HedgeFunV2StrategyIncomeTreasury.sol";
 import {V2StakingIncome} from "../src/v2/V2StakingIncome.sol";
+import {TestnetMarket} from "../script/testnet/TestnetMarket.sol";
+import {TestnetForkVenue} from "./utils/TestnetForkVenue.sol";
 import {V2LiquidityVault} from "../src/v2/V2LiquidityVault.sol";
 import {V2TreasuryDeployer} from "../src/v2/V2TreasuryDeployer.sol";
 import {RegisterV2IncomeKinds} from "../script/RegisterV2IncomeKinds.s.sol";
@@ -50,11 +52,13 @@ contract TestnetV2IncomeKindsForkTest is Test {
             forkBlock
         );
         assertEq(block.chainid, 46630, "Robinhood testnet only");
-        factory = HedgeFunV2Factory(vm.envOr("V2_FACTORY", address(0xc9610d4A749b2A62a7327a0f40B59013D8fC415a)));
+        factory = HedgeFunV2Factory(vm.envOr("V2_FACTORY", address(0x6847318D28aB2f9343DDd2067871DC4f48609383)));
         assertGt(address(factory).code.length, 0, "the selected factory exists at the recorded block");
         registry = V2TreasuryDeployer(address(factory.treasuryDeployer()));
         usdg = IERC20(factory.usdg());
-        (,,, address listed,) = factory.strategies(0); // a stock this factory has already launched on
+        // a stock this factory lists; a core nobody has launched on yet has no `strategies(0)` to read
+        TestnetMarket market = TestnetMarket(vm.envOr("TESTNET_MARKET", address(0xc1AF2f52980F8A7AA4E90A8E30D5c3FaF0375f21)));
+        address listed = TestnetForkVenue.listedStock(factory, market);
         stock = IERC20(listed);
         assertGt(listed.code.length, 0, "the factory has a deployed stock listing");
         uint256 before = registry.kindCount();

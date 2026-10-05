@@ -7,6 +7,8 @@ import {HedgeFunFactory} from "../src/HedgeFunFactory.sol";
 import {HedgeFunV2Factory} from "../src/v2/HedgeFunV2Factory.sol";
 import {HedgeFunBondingCurve} from "../src/v2/HedgeFunBondingCurve.sol";
 import {ConfigureV2LaunchFees} from "../script/testnet/ConfigureV2LaunchFees.s.sol";
+import {TestnetMarket} from "../script/testnet/TestnetMarket.sol";
+import {TestnetForkVenue} from "./utils/TestnetForkVenue.sol";
 
 contract LaunchFeeOperatorInvoker {
     function run(ConfigureV2LaunchFees script) external { script.run(); }
@@ -14,7 +16,7 @@ contract LaunchFeeOperatorInvoker {
 
 /// Opt-in, pinned public-testnet fork. No signing or broadcast to the public chain.
 contract TestnetV2LaunchFeesForkTest is Test {
-    HedgeFunV2Factory constant FACTORY = HedgeFunV2Factory(0xc9610d4A749b2A62a7327a0f40B59013D8fC415a);
+    HedgeFunV2Factory constant FACTORY = HedgeFunV2Factory(0x6847318D28aB2f9343DDd2067871DC4f48609383);
     uint256 constant FEE = 0.0005 ether;
 
     function test_forkConfigurePreservesDefaultsAndAcceptsNativeLaunch() public {
@@ -64,7 +66,7 @@ contract TestnetV2LaunchFeesForkTest is Test {
         HedgeFunFactory.Request memory q;
         q.name = "Native Fee Fork Test";
         q.symbol = "NATIVEFEE";
-        (,,, q.stock,) = FACTORY.strategies(0);
+        q.stock = TestnetForkVenue.listedStock(FACTORY, TestnetMarket(vm.envOr("TESTNET_MARKET", address(0xc1AF2f52980F8A7AA4E90A8E30D5c3FaF0375f21))));
         q.creator = creator;
         q.taxBps = 100;
         q.creatorBps = share;
