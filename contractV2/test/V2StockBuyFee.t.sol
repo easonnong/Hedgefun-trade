@@ -56,10 +56,14 @@ abstract contract V2StockBuyFeeBase is V2FactoryFixture {
 
     function tokenIsCurrency0() internal pure virtual returns (bool);
     function stockDecimals() internal pure virtual returns (uint8) { return 18; }
+    function taxBps() internal pure virtual returns (uint16) { return 300; }
+
+    /// What a buy pays beyond its tax so that the pool's LP fee covers the whole payment: `fee / (1 - fee)` of it.
+    function _topUp(uint256 tax) internal pure returns (uint256) { return tax * 3000 / (1e6 - 3000); }
 
     function _request() internal view override returns (HedgeFunFactory.Request memory q) {
         q = super._request();
-        q.taxBps = 300;
+        q.taxBps = taxBps();
     }
 
     function setUp() public {
@@ -106,7 +110,7 @@ abstract contract V2StockBuyFeeBase is V2FactoryFixture {
         assertEq(_stockOf(d), -int256(paid));
         (uint256 at, uint256 ast) = hook.accrued(pid);
         assertEq(at, 0);
-        assertEq(ast, paid * 300 / 10_000);
+        assertEq(ast, paid * taxBps() / 10_000);
         assertEq(_stockClaim(), ast);
         assertEq(_tokenClaim(), 0);
         if (thenSell && _tokenOf(d) > 0) {
@@ -132,7 +136,7 @@ abstract contract V2StockBuyFeeBase is V2FactoryFixture {
             sqrtPriceLimitX96: _limit(!tokenIsCurrency0())}), plain, "");
         assertEq(_stockOf(d), -int256(paid));
         (, uint256 ast) = hook.accrued(pid);
-        assertEq(ast, paid * 300 / 10_000);
+        assertEq(ast, paid * taxBps() / 10_000);
         assertEq(_stockClaim(), ast);
     }
 
@@ -146,17 +150,18 @@ abstract contract V2StockBuyFeeBase is V2FactoryFixture {
             sqrtPriceLimitX96: _limit(!tokenIsCurrency0())}), plain, "");
         assertEq(_stockOf(d), -int256(paid));
         (, uint256 ast) = hook.accrued(pid);
-        assertEq(ast, paid * 300 / 10_000);
+        assertEq(ast, paid * taxBps() / 10_000);
         assertEq(_stockClaim(), ast);
     }
 
-    /// One meaning for both stock-taxed buys: `moved` is the stock that met the pool, and the buyer paid
-    /// `moved + tax`. An exact-input buy's tax is the rate of the payment; an exact-output buy's is grossed up.
+    /// One meaning for both stock-taxed buys: `moved` is the stock the swap moved, and the buyer paid it, the tax
+    /// and the LP-fee top-up on the tax. An exact-input buy's tax is the rate of the payment; an exact-output
+    /// buy's is grossed up.
     function test_taxedEventMeansTheSameForBothBuyTypes() public {
         uint256 paid = 10 ** uint256(stockDecimals());
-        uint256 tax = paid * 300 / 10_000;
+        uint256 tax = paid * taxBps() / 10_000;
         vm.expectEmit(true, true, false, true, address(hook));
-        emit Taxed(pid, false, false, paid - tax, tax, 300);
+        emit Taxed(pid, false, false, paid - tax - _topUp(tax), tax, taxBps());
         BalanceDelta d = swapRouter.swap(key, SwapParams({zeroForOne: !tokenIsCurrency0(), amountSpecified: -int256(paid),
             sqrtPriceLimitX96: _limit(!tokenIsCurrency0())}), plain, "");
         assertEq(_stockOf(d), -int256(paid));
@@ -173,7 +178,7 @@ abstract contract V2StockBuyFeeBase is V2FactoryFixture {
             (bool inToken, uint256 moved, uint256 outputTax,) = abi.decode(logs[i].data, (bool, uint256, uint256, uint256));
             assertFalse(inToken);
             assertEq(outputTax, afterOutput - before);
-            assertEq(moved + outputTax, uint256(-_stockOf(d)), "moved + tax is the payment");
+            assertEq(moved + outputTax + _topUp(outputTax), uint256(-_stockOf(d)), "moved, tax and top-up are the payment");
             seen = true;
         }
         assertTrue(seen);
@@ -198,11 +203,12 @@ abstract contract V2StockBuyFeeBase is V2FactoryFixture {
 
     /// Dust: a buy whose fee floors to zero is neither taxed nor held to a full fill.
     function test_aDustBuyIsUntaxed() public {
-        BalanceDelta d = swapRouter.swap(key, SwapParams({zeroForOne: !tokenIsCurrency0(), amountSpecified: -int256(33),
+        uint256 dust = 9_999 / uint256(taxBps());                               // the most whose fee floors to zero
+        BalanceDelta d = swapRouter.swap(key, SwapParams({zeroForOne: !tokenIsCurrency0(), amountSpecified: -int256(dust),
             sqrtPriceLimitX96: _limit(!tokenIsCurrency0())}), plain, "");
         (uint256 at, uint256 ast) = hook.accrued(pid);
         assertEq(at + ast, 0);
-        assertEq(_stockOf(d), -33);
+        assertEq(_stockOf(d), -int256(dust));
         assertEq(_stockClaim(), 0);
     }
 
@@ -226,16 +232,34 @@ abstract contract V2StockBuyFeeBase is V2FactoryFixture {
         assertEq(_stockClaim(), 0);
     }
 
-    /// The pool's LP fee is charged on the payment NET of the tax, so the vault's stock-side fee (the treasury's
-    /// buy-back budget) on an exact-input buy is `1 - taxBps` of 0.30% of the payment.
-    function test_theLpFeeIsChargedOnThePaymentNetOfTheTax() public {
-        if (stockDecimals() != 18) return;                                       // amounts below are 18-decimal
+    /// The pool's LP fee is the buy-back budget's, and a buy pays it on everything it pays, whatever the tax: the
+    /// swap's own LP fee on what it moved, and the hook's donation on the tax, come to 0.30% of the payment.
+    function test_theLpFeeIsThePoolsRateOfTheWholePaymentAtAnyTax() public {
         V2LiquidityVault vault = V2LiquidityVault(hook.liquidityVaultOf(pid));
         vault.collectFees();
-        swapRouter.swap(key, SwapParams({zeroForOne: !tokenIsCurrency0(), amountSpecified: -int256(100e18),
+        uint256 paid = 100 * 10 ** uint256(stockDecimals());
+        BalanceDelta d = swapRouter.swap(key, SwapParams({zeroForOne: !tokenIsCurrency0(), amountSpecified: -int256(paid),
             sqrtPriceLimitX96: _limit(!tokenIsCurrency0())}), plain, "");
         (uint256 stockFee,) = vault.collectFees();
-        assertApproxEqAbs(stockFee, 97e18 * 3000 / 1e6, 1e6);
+        assertApproxEqAbs(stockFee, paid * 3000 / 1e6, 4, "exact input: 0.30% of the payment");
+
+        d = swapRouter.swap(key, SwapParams({zeroForOne: !tokenIsCurrency0(), amountSpecified: _tokenOf(d) / 2,
+            sqrtPriceLimitX96: _limit(!tokenIsCurrency0())}), plain, "");
+        (stockFee,) = vault.collectFees();
+        assertApproxEqAbs(stockFee, uint256(-_stockOf(d)) * 3000 / 1e6, 4, "exact output: 0.30% of the payment");
+    }
+
+    /// The top-up is taken from the buyer with the tax and belongs to the pool: no claim, no balance, nothing owed.
+    function test_theTopUpIsNeverTheHooks() public {
+        uint256 paid = 100 * 10 ** uint256(stockDecimals());
+        uint256 pmBefore = stock.balanceOf(address(pm));
+        swapRouter.swap(key, SwapParams({zeroForOne: !tokenIsCurrency0(), amountSpecified: -int256(paid),
+            sqrtPriceLimitX96: _limit(!tokenIsCurrency0())}), plain, "");
+        (, uint256 accruedStock) = hook.accrued(pid);
+        assertEq(accruedStock, paid * taxBps() / 10_000, "the tax alone is the hook's to split");
+        assertEq(_stockClaim(), accruedStock);
+        assertEq(stock.balanceOf(address(hook)), 0);
+        assertEq(stock.balanceOf(address(pm)) - pmBefore, paid, "the whole payment is in the manager");
     }
 
     /// A pool registered WITHOUT a vault on a version-3 hook keeps the base rules, and `beforeSwap` is inert.
@@ -285,4 +309,10 @@ contract V2StockBuyFeeToken1Test is V2StockBuyFeeBase {
 contract V2StockBuyFeeSixDecimalsTest is V2StockBuyFeeBase {
     function tokenIsCurrency0() internal pure override returns (bool) { return true; }
     function stockDecimals() internal pure override returns (uint8) { return 6; }
+}
+
+/// The highest tax a launch may choose: the LP fee is still the pool's rate of the whole payment.
+contract V2StockBuyFeeMaximumTaxTest is V2StockBuyFeeBase {
+    function tokenIsCurrency0() internal pure override returns (bool) { return false; }
+    function taxBps() internal pure override returns (uint16) { return 1500; }
 }

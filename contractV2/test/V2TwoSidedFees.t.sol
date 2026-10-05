@@ -136,7 +136,9 @@ abstract contract V2TwoSidedFeesBase is V2FactoryFixture {
         assertEq(hook.owedProtocol(pid) + hook.owedCreator(pid) + hook.owedTreasury(pid), 0);
     }
 
-    /// Only the payment net of the fee meets the pool, exactly as on an exact-output buy of the same tokens.
+    /// The two ways to buy the same tokens cost the same to within a few parts in a million. An exact-input buy's
+    /// tax is the rate of the whole payment, top-up included; an exact-output buy's is grossed up from what its
+    /// swap moves, so it is smaller by the tax on its top-up: about `lpFee * rate` of the tax.
     function testExactInputAndExactOutputBuysCostTheSame() public {
         uint256 snapshot = vm.snapshotState();
         BalanceDelta exactIn = _swap(false, -int256(1e18));
@@ -146,8 +148,8 @@ abstract contract V2TwoSidedFeesBase is V2FactoryFixture {
         BalanceDelta exactOut = _swap(false, int256(tokensOut));
         (, uint256 feeOut) = hook.accrued(pid);
         assertEq(uint256(_tokenOf(exactOut)), tokensOut);
-        assertApproxEqAbs(uint256(-_stockOf(exactOut)), 1e18, 1e6, "the same total payment");
-        assertApproxEqAbs(feeOut, feeIn, 1e6, "the same fee");
+        assertApproxEqRel(uint256(-_stockOf(exactOut)), 1e18, 0.00001e18, "the same total payment");
+        assertApproxEqRel(feeOut, feeIn, 0.0002e18, "the same fee, but for the tax on the top-up");
     }
 
     function testFuzz_exactInputBuyFeeIsExactlyTheRateOfThePayment(uint256 paid) public {
