@@ -274,7 +274,7 @@ contract DeployV2Testnet is Script {
     ///      Current fee choices: 0.0005 ETH to launch, creator share 0-10% of collected tax.
     function _defaults() internal pure returns (HedgeFunFactory.Defaults memory d) {
         d.supply = 1_000_000_000e18;
-        d.lpFee = 1000;
+        d.lpFee = 2000;
         d.tickSpacing = 60;
         d.minTaxBps = 100;
         d.maxTaxBps = 1500;

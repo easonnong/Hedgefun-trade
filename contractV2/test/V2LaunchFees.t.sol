@@ -20,7 +20,7 @@ contract V2LaunchFeesTest is V2FactoryFixture {
         vm.prank(owner);
         factory.setDefaults(next);
         HedgeFunFactory.Defaults memory after_ = factory.getDefaults();
-        assertEq(after_.lpFee, 1000);
+        assertEq(after_.lpFee, 2000);
         assertEq(after_.maxCreatorBps, 1000);
         assertEq(uint8(after_.launchFeeCurrency), uint8(HedgeFunFactory.FeeCurrency.Native));
         assertEq(after_.launchFeeAmount, FEE);
