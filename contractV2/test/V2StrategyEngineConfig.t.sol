@@ -254,9 +254,11 @@ contract V2StrategyEngineConfigTest is V2FactoryFixture {
     }
 
     /// X-5: one V3 TWAP window, so two actions never share one pinned mean and a day holds at most 144 actions
-    function test_cooldownFloorIsOneTwapWindowOnBothPaths() public {
+    function test_cooldownFloorIsSixtySecondsOnBothPaths() public {
+        _assertBothRefuse(_config(5000, 500, 0, 100e6, 500e6), _params(), true, "cooldown 0 s");
         _assertBothRefuse(_config(5000, 500, 1, 100e6, 500e6), _params(), true, "cooldown 1 s");
-        _assertBothRefuse(_config(5000, 500, 599, 100e6, 500e6), _params(), true, "cooldown 599 s");
+        _assertBothRefuse(_config(5000, 500, 59, 100e6, 500e6), _params(), true, "cooldown 59 s");
+        _assertBothAccept(_config(5000, 500, 60, 100e6, 500e6), _params(), "cooldown 60 s");
         _assertBothAccept(_config(5000, 500, 600, 100e6, 500e6), _params(), "cooldown 600 s");
     }
 

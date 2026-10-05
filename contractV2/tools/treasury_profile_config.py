@@ -172,8 +172,8 @@ def verify_infrastructure(reader, factory, registry, controller, keccak=cast):
         raise ValueError("graduation creation code differs from reviewed release")
     trigger = kind_zero(reader, registry, keccak)
     verify_runtime(reader, registry, "V2TreasuryDeployer",
-        {1335: trigger, 7163: trigger, 975: int(controller, 16)},
-        "0xb9d94aa23f1f7bc8abc31384d3dfb82a666a859a64f35982a15e4b7284c9c72c", keccak)
+        {1335: trigger, 7162: trigger, 975: int(controller, 16)},
+        "0x652ca39277dc7b2259bc3ab9ccbfc6a5c04b576618514d888170a3113aed7a12", keccak)
     verify_runtime(reader, controller, "V2TreasuryUpgradeController", {1856: int(registry, 16)},
         "0x6506bf8c847967c042988fa140a0673ffc0e8338e300850707a0d06f670bc930", keccak)
 

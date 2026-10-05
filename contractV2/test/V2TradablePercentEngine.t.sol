@@ -444,6 +444,23 @@ contract V2TradablePercentEngineTest is V2TradablePercentEngineFixture {
         factory.launch(q, terms);
     }
 
+    /// The cooldown is bits 32..63 of the first word: 60 seconds is the least a creator may choose.
+    function test_schemaThreeCooldownFloorIsSixtySeconds() public {
+        TradablePercentConfigHarness h = new TradablePercentConfigHarness();
+        EngineConfig memory c = _percentConfig(2000, 1000, 500, 0);
+        uint256 rest = uint256(c.words[0]) & ~(uint256(type(uint32).max) << 32);
+        uint32[3] memory refused = [uint32(0), 1, 59];
+        for (uint256 i; i < refused.length; ++i) {
+            c.words[0] = bytes32(rest | uint256(refused[i]) << 32);
+            assertFalse(h.valid(c.words));
+        }
+        uint32[3] memory accepted = [uint32(60), 600, 86_400];
+        for (uint256 i; i < accepted.length; ++i) {
+            c.words[0] = bytes32(rest | uint256(accepted[i]) << 32);
+            assertTrue(h.valid(c.words));
+        }
+    }
+
     function test_schemaThreeValidationRejectsReservedBitsAndInvalidPercentages() public {
         TradablePercentConfigHarness h = new TradablePercentConfigHarness();
         EngineConfig memory c = _percentConfig(2000, 1000, 500, 0);

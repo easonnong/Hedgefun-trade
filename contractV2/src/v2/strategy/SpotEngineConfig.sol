@@ -22,8 +22,9 @@ pragma solidity ^0.8.24;
 ///    ordinary lot strategy's TP/dip floor: a band inside its own execution friction acts on every Chainlink print, and each round trip returns
 ///    the treasury to the same price with less value. Also `deadband < target` and `target + deadband < BPS`, so
 ///    both bands are reachable and the arithmetic cannot underflow.
-///  * `cooldown >= MIN_COOLDOWN`, one V3 TWAP window: two actions never share one pinned 600-second mean, and a day
-///    holds at most 144 actions whatever the daily cap says.
+///  * `cooldown >= MIN_COOLDOWN`, 60 seconds. It was one V3 TWAP window, 600 seconds, so that two actions never
+///    shared one pinned mean; at 60 a pin held for a window can meet up to ten actions. What bounds the damage is
+///    unchanged: each action's size, the day's turnover, and the oracle gate every fill is priced against.
 ///  * `minLotUsdg <= maxTradeUsdg <= sellChunkUsdg`: an action under the core's minimum lot can never execute (every
 ///    path ends `NotDue`, the treasury is inert for life -- V1 refuses `sellChunkUsdg < minLotUsdg` for the same
 ///    reason), and one over the listing's chunk exceeds the owner's per-call sizing.
@@ -38,7 +39,7 @@ library SpotEngineConfig {
     uint256 internal constant MIN_TARGET_BPS = 2_000;
     uint256 internal constant MAX_TARGET_BPS = 9_000;
     uint256 internal constant DEADBAND_FRICTION_MULTIPLE = 2;
-    uint256 internal constant MIN_COOLDOWN = 600;
+    uint256 internal constant MIN_COOLDOWN = 60;
     uint256 internal constant MAX_DAILY_TURNOVER_MULTIPLE = 24;
 
     /// @notice the deadband floor for a listing with these gates: twice its worst execution friction

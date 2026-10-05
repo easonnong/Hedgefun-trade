@@ -8,8 +8,9 @@ import {V2TreasuryUpgradeController} from "../../src/v2/V2TreasuryUpgradeControl
 import {HedgeFunV2UpgradeableTreasury} from "../../src/v2/HedgeFunV2UpgradeableTreasury.sol";
 
 /// @dev Exact registry/controller runtimes, with every immutable bound. The controller is the reviewed #25
-/// runtime. The registry is that runtime with `DEFAULT_LP_BPS` 7000 in place of 5000: one constant, the same
-/// immutable offsets, and not itself covered by the #25 review. A #25 registry is therefore refused here.
+/// runtime. The registry is that runtime with two constants changed, neither covered by the #25 review:
+/// `DEFAULT_LP_BPS` 7000 in place of 5000, and the spot engine's minimum cooldown 60 in place of 600, which is one
+/// byte shorter and moves the second kind-zero reference from 7163 to 7162. A #25 registry is therefore refused here.
 /// Getter values alone do not prove that a controller enforces a delay. Different
 /// compiler/runtime builds need a separately reviewed template update.
 abstract contract ReviewedTreasuryRegistry is IncomeKindCompatibility {
@@ -25,7 +26,7 @@ abstract contract ReviewedTreasuryRegistry is IncomeKindCompatibility {
         if (registry.factory() != address(factory)) revert IncompatibleTreasuryRegistry();
         V2TreasuryUpgradeController controller = registry.upgradeController();
         bytes memory code = vm.getDeployedCode("V2TreasuryDeployer.sol:V2TreasuryDeployer");
-        if (keccak256(code) != 0xb9d94aa23f1f7bc8abc31384d3dfb82a666a859a64f35982a15e4b7284c9c72c) {
+        if (keccak256(code) != 0x652ca39277dc7b2259bc3ab9ccbfc6a5c04b576618514d888170a3113aed7a12) {
             revert IncompatibleTreasuryRegistry();
         }
         // The reviewed deployment's kind 0, or this source's own for a registry deployed from it.
@@ -34,7 +35,7 @@ abstract contract ReviewedTreasuryRegistry is IncomeKindCompatibility {
             revert IncompatibleTreasuryRegistry();
         }
         _bindWord(code, 1335, trigger);
-        _bindWord(code, 7163, trigger);
+        _bindWord(code, 7162, trigger);
         _bindWord(code, 975, bytes32(uint256(uint160(address(controller)))));
         if (keccak256(code) != address(registry).codehash) revert IncompatibleTreasuryRegistry();
         code = vm.getDeployedCode("V2TreasuryUpgradeController.sol:V2TreasuryUpgradeController");

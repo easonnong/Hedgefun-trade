@@ -43,7 +43,7 @@ and `words[2]` `maxDailyTurnoverUsdg`. A launchable config clears every row belo
 |---|---|---|
 | `targetBps` | 2,000 to 9,000 | a treasury graduates 100% stock and sells straight down to target: under 20% that is "liquidate the lot at graduation"; over 90% the band has no room |
 | `deadbandBps` | at least `2 x (maxSlippageBps + poolFeeBps + bountyBps)`, below `targetBps`, and `targetBps + deadbandBps < 10,000` | A band must clear execution friction including the caller reward. 360 bps at 100 bps slippage, a 0.30% pool and 50 bps reward |
-| `cooldown` | at least 600 s | one V3 TWAP window: two actions never share one pinned mean, and a day holds at most 144 actions whatever the daily cap says |
+| `cooldown` | at least 60 s | the least a creator may choose; it was 600 s, one V3 TWAP window, so that two actions never shared one pinned mean. At 60 s a pin held for a window can meet up to ten actions; each action's size, the day's turnover and the oracle gate still bound the result. A core deployed before 2026-10-05 keeps 600 s |
 | `maxTradeUsdg` | from the listing's `minLotUsdg` to its `sellChunkUsdg` | an action under the minimum lot can never execute, so the treasury would be inert for life; one over the chunk exceeds the owner's per-call sizing |
 | `maxDailyTurnoverUsdg` | from `maxTradeUsdg` to `24 x maxTradeUsdg` | a cap under one action is a cap of zero; one over 24 actions no longer bounds a day |
 | `payoutBps` | 0 to 10,000 | the share of a sale's gain that funds the burn; see below |
@@ -137,7 +137,7 @@ New York time, with US daylight saving, the same session boundary the oracle's o
 bucket is one equity session, Sunday 20:00 to Friday 20:00 New York time a day at a time. Midnight UTC is 19:00 in
 New York in winter, an hour before the session ends, and no longer starts a new bucket there; in summer it is 20:00
 and coincides with the roll. It is still a calendar bucket: two caps can be spent
-either side of 20:00 New York, the cooldown (at least 600 s) being all that separates them. The cooldown remains
+either side of 20:00 New York, the cooldown (at least 60 s) being all that separates them. The cooldown remains
 active across the boundary.
 
 Stock or USDG sent directly to the treasury is an irrevocable donation and becomes part of the next strategy

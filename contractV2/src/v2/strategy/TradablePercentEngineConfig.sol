@@ -20,7 +20,8 @@ library TradablePercentEngineConfig {
     uint256 internal constant BPS = 10_000;
     uint256 internal constant MIN_TARGET_BPS = 2_000;
     uint256 internal constant MAX_TARGET_BPS = 9_000;
-    uint256 internal constant MIN_COOLDOWN = 600;
+    /// @notice 60 seconds; it was one 600-second V3 TWAP window. The per-action and daily shares still bound a day.
+    uint256 internal constant MIN_COOLDOWN = 60;
     /// @notice the most one action may take: a quarter of the available cash (a buy) or of the tradable stock (a sale)
     uint256 internal constant MAX_ACTION_BPS = 2_500;
 
