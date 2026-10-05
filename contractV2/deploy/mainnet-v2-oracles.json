@@ -1,0 +1,99 @@
+{
+ "_": "PriceOracle contracts deployed on Robinhood Chain mainnet for stocks the V1 factory never listed, so that a V2 factory can list them. Each is the same contract as the eighteen oracles the V1 listings use (deploy/v2-listings-plan.json): its runtime equals the live NVDA oracle's byte for byte once the immutables are masked. An oracle has no owner and holds no funds. Nothing here is a listing: opening prices, gates and the choice of stocks belong to the listing step. `usdgPool` is the stock's deepest USDG V3 pool at the time, recorded for that step, not a commitment.",
+ "chainId": 4663,
+ "deployer": "0x36437b878415EdA1a24186CF79AFffBc9ecEd298",
+ "contract": {
+  "name": "PriceOracle",
+  "source": "contractV2/src/PriceOracle.sol",
+  "sourceBlob": "54db0900660759611cd1343e1b29cb45a46e82b1",
+  "compiler": "solc 0.8.26, the repository's foundry.toml profile",
+  "creationCodeHash": "0x8c3b001d10f0b7ab3b31a87189de770f01f92e40a9b2e8fe7f2ef6c6f6380b89",
+  "referenceOracle": "0x03c77f527Aa1B0B304602e3fB9Ac994dd1c157f8"
+ },
+ "constructor": {
+  "usdgFeed": "0x61B7e5650328764B076A108EFF5fa7282a1B9aD2",
+  "calendar": "0xFE9E85f0C258Fc2757eB6Acd1ca032Ec860487F5",
+  "maxStockAge": 93600,
+  "maxUsdgAge": 93600,
+  "note": "the same four values every V1 oracle carries"
+ },
+ "oracles": {
+  "SGOV": {
+   "token": "0x92FD66527192E3e61d4DDd13322Aa222DE86F9B5",
+   "stockFeed": "0xa0DF4ee0fFf975306345875E3548Fcc519577A11",
+   "stockFeedDescription": "Robinhood SGOV-USD",
+   "oracle": "0x093CD301Ce1AdEEdd9bC3814f9c00E42Ba603BeD",
+   "transactionHash": "0x2c0fa68627ce07912e7d60bf13e8eb5f77db6628f51fb1b58e92999ea45762bd",
+   "block": 81118688,
+   "deployerNonce": 0,
+   "gasUsed": 554482,
+   "usdgPool": {
+    "address": "0xfAb520051f96F4D2a32c22B6a3dD7fFfdf231bFe",
+    "fee": 3000
+   }
+  },
+  "SPY": {
+   "token": "0x117cc2133c37B721F49dE2A7a74833232B3B4C0C",
+   "stockFeed": "0x319724394D3A0e3669269846abE664Cd621f9f6A",
+   "stockFeedDescription": "RHSPY / USD",
+   "oracle": "0x82E7737b3fb9aD752Fa894Bb5B8e67121FF00f8A",
+   "transactionHash": "0x51f35e4d69cf3035e0dfcf9dbe3d248ccfe2bcb281ab8a57c5351b0e4d4b297d",
+   "block": 81118897,
+   "deployerNonce": 1,
+   "gasUsed": 554482,
+   "usdgPool": {
+    "address": "0xa7Bb1AC63BBaB0C44316E6c8C455213441689167",
+    "fee": 500
+   }
+  },
+  "DELL": {
+   "token": "0x941AE714EC6D8130c7B75d67160Ca08f1e7d11Dd",
+   "stockFeed": "0x1C6c8cADBe02E19129c39dDB92281cE4c0bf206b",
+   "stockFeedDescription": "Robinhood DELL-USD",
+   "oracle": "0xCF6225669B65E779BaCd86465E9a240ac786B5D3",
+   "transactionHash": "0x9ac8188beaee144cd7f360eb58c23f34b94a122fda924f27cc9e1028a8f95ddf",
+   "block": 81119049,
+   "deployerNonce": 2,
+   "gasUsed": 554482,
+   "usdgPool": {
+    "address": "0xc30c89cB7815A1488b7998D15eEC73961707Fc5a",
+    "fee": 10000
+   }
+  },
+  "PLTR": {
+   "token": "0x894E1EC2D74FFE5AEF8Dc8A9e84686acCB964F2A",
+   "stockFeed": "0x820ABedFF239034956B7A9d2F0a331f9F075eB4c",
+   "stockFeedDescription": "Robinhood PLTR / USD",
+   "oracle": "0xB9391c7B6F8d51609Ff0CEAeb890e54494a8DA91",
+   "transactionHash": "0x688f4b540ca6ffdf382cd440000c18b3fe0ae56f52dc6d7aa5fd7966faeba2f0",
+   "block": 81119271,
+   "deployerNonce": 3,
+   "gasUsed": 554482,
+   "usdgPool": {
+    "address": "0x851680416A4f4E1c463d45171d61ACDdBc8554c0",
+    "fee": 3000
+   }
+  },
+  "SLV": {
+   "token": "0x411eFb0E7f985935DAec3D4C3ebaEa0d0AD7D89f",
+   "stockFeed": "0x209b73908e92Ae021826eD79609845451Ecba2ce",
+   "stockFeedDescription": "Robinhood SLV / USD",
+   "oracle": "0x7BbaAb5d1426650FaaAEB0214D5a045A80FD2621",
+   "transactionHash": "0x8660707addefa7188df57113262d3f941656fff7d9919e45718bdbbcacd4221d",
+   "block": 81119396,
+   "deployerNonce": 4,
+   "gasUsed": 554482,
+   "usdgPool": {
+    "address": "0x8cB787e6c315D464775289BaD00FDD67d53Ecb3D",
+    "fee": 3000
+   }
+  }
+ },
+ "verification": {
+  "blockNumber": 81124188,
+  "blockHash": "0xc84e93b6d7ff84b879d69781bb37d8edae6e308e7c33e09112dc702ca39a7a96",
+  "date": "2026-10-05",
+  "checks": "Read back at this block: each oracle's stock, stockFeed, usdgFeed, calendar and both maximum ages; runtime code equal to the reference oracle's with immutables masked; lastPriceAt and tryPrice answering; each token's symbol and 18 decimals; each feed present in Chainlink's Robinhood mainnet directory under the recorded description (8 decimals, 24-hour heartbeat, 0.5% deviation, as the NVDA feed); each usdgPool is the V3 factory's pool for (USDG, token, fee). The five receipts succeeded, sent by the deployer at nonces 0 to 4.",
+  "note": "The deployer's first mainnet nonces are the ones it used first on the testnet, so these five addresses equal testnet addresses of the V2 release deployment (deploy/testnet-v2-release.json); the SLV oracle's is the testnet factory's. The chains are unrelated."
+ }
+}
