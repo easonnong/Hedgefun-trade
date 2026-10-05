@@ -1,0 +1,231 @@
+{
+  "units": "Raw values emitted by the Solidity fixture; USDG has 6 decimals and stock/FUN have 18. External stock price is a mocked 100 USDG. No public trades.",
+  "scenarios": [
+    {
+      "lp_bps": 5000,
+      "measurements": [
+        {
+          "label": "LP share bps",
+          "value": "5000"
+        },
+        {
+          "label": "LP stock value USDG raw",
+          "value": "9583131947"
+        },
+        {
+          "label": "treasury principal USDG raw",
+          "value": "9583131947"
+        },
+        {
+          "label": "base liquidity",
+          "value": "2804031940795254212435"
+        },
+        {
+          "label": "surplus liquidity",
+          "value": "4272983228175574220698"
+        },
+        {
+          "label": "buy input USDG raw",
+          "value": "100000000"
+        },
+        {
+          "label": "buy FUN received",
+          "value": "840262106963810223566"
+        },
+        {
+          "label": "buy ending price / graduation 1e18",
+          "value": "1009951971477848725"
+        },
+        {
+          "label": "buy input USDG raw",
+          "value": "1000000000"
+        },
+        {
+          "label": "buy FUN received",
+          "value": "8102652857397536930734"
+        },
+        {
+          "label": "buy ending price / graduation 1e18",
+          "value": "1085894748544477605"
+        },
+        {
+          "label": "buy input USDG raw",
+          "value": "5000000000"
+        },
+        {
+          "label": "buy FUN received",
+          "value": "34978309061693695917297"
+        },
+        {
+          "label": "buy ending price / graduation 1e18",
+          "value": "1456722256937910871"
+        },
+        {
+          "label": "sell FUN input",
+          "value": "1000000000000000000000"
+        },
+        {
+          "label": "sell output USDG raw",
+          "value": "113902634"
+        },
+        {
+          "label": "sell ending price / graduation 1e18",
+          "value": "976132539008327928"
+        },
+        {
+          "label": "sell FUN input",
+          "value": "10000000000000000000000"
+        },
+        {
+          "label": "sell output USDG raw",
+          "value": "1027953690"
+        },
+        {
+          "label": "sell ending price / graduation 1e18",
+          "value": "795038845120865800"
+        },
+        {
+          "label": "sell FUN input",
+          "value": "50000000000000000000000"
+        },
+        {
+          "label": "sell output USDG raw",
+          "value": "3585713267"
+        },
+        {
+          "label": "sell ending price / graduation 1e18",
+          "value": "386947776774468032"
+        },
+        {
+          "label": "earned LP fees USDG raw",
+          "value": "30000000"
+        },
+        {
+          "label": "buyback spent USDG raw",
+          "value": "30000000"
+        },
+        {
+          "label": "buyback burned FUN raw",
+          "value": "127495068980235760577"
+        },
+        {
+          "label": "buyback price increase bps",
+          "value": "17"
+        }
+      ]
+    },
+    {
+      "lp_bps": 7000,
+      "measurements": [
+        {
+          "label": "LP share bps",
+          "value": "7000"
+        },
+        {
+          "label": "LP stock value USDG raw",
+          "value": "13416384726"
+        },
+        {
+          "label": "treasury principal USDG raw",
+          "value": "5749879168"
+        },
+        {
+          "label": "base liquidity",
+          "value": "3925644717113355897421"
+        },
+        {
+          "label": "surplus liquidity",
+          "value": "3149807157824742197064"
+        },
+        {
+          "label": "buy input USDG raw",
+          "value": "100000000"
+        },
+        {
+          "label": "buy FUN received",
+          "value": "840634947968015477827"
+        },
+        {
+          "label": "buy ending price / graduation 1e18",
+          "value": "1009509519520361055"
+        },
+        {
+          "label": "buy input USDG raw",
+          "value": "1000000000"
+        },
+        {
+          "label": "buy FUN received",
+          "value": "8106094848378734649361"
+        },
+        {
+          "label": "buy ending price / graduation 1e18",
+          "value": "1085453041136688294"
+        },
+        {
+          "label": "buy input USDG raw",
+          "value": "5000000000"
+        },
+        {
+          "label": "buy FUN received",
+          "value": "34991128769778673371470"
+        },
+        {
+          "label": "buy ending price / graduation 1e18",
+          "value": "1456298577072770326"
+        },
+        {
+          "label": "sell FUN input",
+          "value": "1000000000000000000000"
+        },
+        {
+          "label": "sell output USDG raw",
+          "value": "114294691"
+        },
+        {
+          "label": "sell ending price / graduation 1e18",
+          "value": "982863869691104981"
+        },
+        {
+          "label": "sell FUN input",
+          "value": "10000000000000000000000"
+        },
+        {
+          "label": "sell output USDG raw",
+          "value": "1060792959"
+        },
+        {
+          "label": "sell ending price / graduation 1e18",
+          "value": "846647255980513340"
+        },
+        {
+          "label": "sell FUN input",
+          "value": "50000000000000000000000"
+        },
+        {
+          "label": "sell output USDG raw",
+          "value": "4019791915"
+        },
+        {
+          "label": "sell ending price / graduation 1e18",
+          "value": "486304607459048178"
+        },
+        {
+          "label": "earned LP fees USDG raw",
+          "value": "30000000"
+        },
+        {
+          "label": "buyback spent USDG raw",
+          "value": "30000000"
+        },
+        {
+          "label": "buyback burned FUN raw",
+          "value": "127518494723825020788"
+        },
+        {
+          "label": "buyback price increase bps",
+          "value": "17"
+        }
+      ]
+    }
+  ]
+}

@@ -107,6 +107,8 @@ so the treasury remains deployable within EIP-170. It has no custody, approvals 
 Preview and execution call the policy through the same component; neither a policy nor a keeper supplies
 recipients, pools or execution bounds. Each trade still enforces directional budgets in the treasury itself.
 The component is replaced only by the existing delayed implementation upgrade, not a separate mutable pointer.
+The policy now sees this component as `msg.sender` on both paths. The supported stateless rebalance policy does
+not inspect the caller; a custom policy that depends on the old caller needs a separate compatibility review.
 
 Tests and evidence: `docs/fuzz/directional-income-2026-10-04/`. The local fork tests use the deployed 48-hour
 controller, actual testnet V3 pool and TestnetMarket price swaps. They never broadcast transactions, etch code,
