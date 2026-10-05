@@ -67,7 +67,7 @@ this is not a rolling 24-hour window. A preview describes the current snapshot, 
 |---|---|
 | `words[0]` | Target bps [0..15], allocation band bps [16..31], cooldown seconds [32..63], realized-profit-to-buyback bps [64..79]; higher bits zero |
 | Target | 20–90%; band must remain strictly inside the 0–100% allocation interval |
-| Band | At least twice the listing's execution friction (`maxSlippageBps` + pool fee + `bountyBps`), the floor schema 1 has; checked by the treasury constructor, which knows the listing. A zero band is refused |
+| Band | At least what one trade costs on the listing: its pool fee plus `bountyBps` (0.15% with a 0.05% pool and a 0.1% reward; 0.8% with a 0.3% pool and a 0.5% reward). Checked by the treasury constructor, which knows the listing. A zero band is refused |
 | Cooldown | At least 600 seconds |
 | Profit share | 0–100% of realized stock profit, not graduation principal |
 | `words[1]` | Buy bps [0..15], sell bps [16..31]; higher bits zero; each 1–2,500 bps |
@@ -78,7 +78,10 @@ either action percentage.
 
 The percentages are the creator's, under those two protocol limits. Without them a creator could launch with
 100% per action and no band: one permissionless `execute()` would then trade the whole allocation gap at up to
-the listing's slippage limit, and every small oracle move would pay execution friction again. The band floor
+the listing's slippage limit, and every small oracle move would pay a trade's cost again. The band floor is one
+trade's cost and no more: a replay of the rule on TSLA hourly closes found no band under which rebalancing starts
+to lose, only more actions for a slightly lower return as the band narrows, and a floor built on the listing's
+slippage limit (1% or more) kept the treasury to a few dozen actions in three years. The band floor
 depends on the listing, so the registry's `setEngineConfig` and `predict` cannot check it: a band under the
 floor, like any other invalid schema-3 word, is refused by the constructor and the launch reverts
 `TreasuryDeployFailed`. Schemas 1 (fixed money) and 2 (full external-asset percentages with a fixed listing
