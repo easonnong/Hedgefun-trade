@@ -26,8 +26,6 @@ jobs:
             // Only these existing PRs may keep their original branch names.
             // New PRs reusing the same names must follow the current convention.
             const legacyHeads = new Map([
-              [8, 'codex/sync-pr-105'],
-              [15, 'codex/sync-pr-119-rhnvda-earn'],
               [21, 'codex/all-strategy-income-tests-20261003'],
               [27, 'codex/audit-operations-migration'],
               [41, 'claude/v2-eth-pairing'],
