@@ -163,8 +163,13 @@ def verify(directory):
     assert int(rpc('eth_chainId', []), 16) == 46630
     assert plan['test_only'] and book['broadcast']
     assert state['planSha256'] == hashlib.sha256(json.dumps(plan, sort_keys=True).encode()).hexdigest()
-    assert book['featureVersion'] == 'v2-creator-selected-fresh-wallet-v1'
+    assert book['featureVersion'] in {
+        'v2-creator-selected-fresh-wallet-v1',
+        'v2-creator-selected-fresh-wallet-v2',
+    }
+    v2_stock_fee_core = book['featureVersion'].endswith('-v2')
     factory, router, hook = [book[k] for k in ('factory', 'tradeRouter', 'hook')]
+    assert uint(hook, 'version()', block=final_block) == (3 if v2_stock_fee_core else 2)
     stock, usdg, v3 = book['stocks']['TSLA']['token'], book['usdg'], book['stocks']['TSLA']['pool']
     token, curve = state['token'], state['curve']
     treasury = state.get('treasuryAddress', state['treasury'])
@@ -459,8 +464,14 @@ def verify(directory):
             in_token, moved, tax, rate = words(log['data'])
             assert log['topics'][1].lower() == state['poolId'].lower()
             assert bool(int(log['topics'][2], 16)) == (verb == 'sell')
-            assert bool(in_token) == (verb == 'buy') and rate == base
-            assert tax == moved * rate // 10000 and moved - tax == out
+            assert bool(in_token) == (verb == 'sell' if v2_stock_fee_core else verb == 'buy') and rate == base
+            if v2_stock_fee_core and verb == 'buy':
+                # v3 charges the stock input in beforeSwap and reports the net
+                # amount that reached the pool as `moved`; `out` is FUN and
+                # therefore cannot be compared with this stock denomination.
+                assert moved > 0 and tax == (moved + tax) * rate // 10000
+            else:
+                assert tax == moved * rate // 10000 and moved - tax == out
             record.update(hookTaxAsset='FUN' if in_token else 'STOCK', hookTaxWei=str(tax), hookRateBps=rate)
         if action['phase'] == 'graduate':
             assert verb == 'buy' and token_reserve == minimum_reserve and refund > 0

@@ -17,6 +17,7 @@ KEYS = ROOT / '.local/persona-wallets-20261003'
 CAST = str(ROOT / '.local/bin/cast')
 RPC = 'https://rpc.testnet.chain.robinhood.com'
 BOOK = json.loads((ROOT / 'contractV2/deploy/testnet-v2-fresh-creator.json').read_text())
+assert BOOK['featureVersion'] in {'v2-creator-selected-fresh-wallet-v1', 'v2-creator-selected-fresh-wallet-v2'}
 FACTORY, ROUTER, HOOK = [BOOK[k] for k in ('factory','tradeRouter','hook')]
 USDG, STOCK, POOL = BOOK['usdg'], BOOK['stocks']['TSLA']['token'], BOOK['stocks']['TSLA']['pool']
 OWNER = BOOK['owner']
@@ -360,8 +361,9 @@ def finish():
     s['treasuryBalances']['heldStock']=read(STOCK,'balanceOf(address)',s['treasury'],block=block)[0]
     s['feesAtFinal']={'curveStockClaimableTotal':str(read(s['curve'],'totalFees()',block=block)[0]),
         'hookAccrued':list(map(str,read(HOOK,'accrued(bytes32)',s['poolId'],block=block))),
-        'hookPendingTokenFees':str(read(HOOK,'pendingTokenFees(bytes32)',s['poolId'],block=block)[0]),
-        'note':'Fee settlement not executed in persona campaign; preserves post-trader price observation.'}
+        'hookOwed':{name:str(read(HOOK,name+'(bytes32)',s['poolId'],block=block)[0])
+                    for name in ('owedProtocol','owedCreator','owedTreasury')},
+        'note':'V3 stock claims are reported directly; settlement is permissionless and was not executed in the persona campaign.'}
     for token in (STOCK,USDG,s['token']):assert read(token,'balanceOf(address)',ROUTER,block=block)[0]==0
     save();record_price('final',block)
 

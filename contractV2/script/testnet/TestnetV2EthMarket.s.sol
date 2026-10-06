@@ -147,8 +147,9 @@ contract TestnetV2EthMarket is Script {
         b.sourceBookSha256 = vm.parseJsonString(json, ".verification.sourceBookSha256");
         b.verificationBlock = vm.parseJsonUint(json, ".verification.blockNumber");
         b.verificationBlockHash = vm.parseJsonBytes32(json, ".verification.blockHash");
-        bool creator = keccak256(bytes(b.feature)) == keccak256("v2-creator-selected-stock-fees-v1");
-        if ((!creator && keccak256(bytes(b.feature)) != keccak256("v2-two-sided-stock-fees-v1"))
+        uint8 featureKind = _featureKind(b.feature);
+        bool creator = featureKind == 1 || featureKind == 3;
+        if (featureKind == 0
             || bytes(b.sourceCommit).length != 40 || bytes(b.sourceBookSha256).length != 64
             || keccak256(bytes(b.sourceCommit)) != keccak256(bytes(vm.parseJsonString(json, ".commit")))
             || b.verificationBlock == 0 || b.verificationBlock > block.number || b.verificationBlockHash == bytes32(0)
@@ -165,9 +166,13 @@ contract TestnetV2EthMarket is Script {
 
     function _checkBase(Base memory b) internal view {
         if (block.chainid != 46630) revert BadBinding();
-        bool creator = keccak256(bytes(b.feature)) == keccak256("v2-creator-selected-stock-fees-v1");
-        if (!creator && keccak256(bytes(b.feature)) != keccak256("v2-two-sided-stock-fees-v1")) revert BadBinding();
-        if (!creator && (b.factory != FEE_FACTORY || b.treasuryDeployer != FEE_REGISTRY)) revert BadBinding();
+        uint8 featureKind = _featureKind(b.feature);
+        bool creator = featureKind == 1 || featureKind == 3;
+        if (featureKind == 0) revert BadBinding();
+        // The old fee book is pinned to the reviewed deployment. A v2 fee book
+        // deliberately has new factory/registry addresses, so its own binding
+        // checks below are the source of truth.
+        if (featureKind == 2 && (b.factory != FEE_FACTORY || b.treasuryDeployer != FEE_REGISTRY)) revert BadBinding();
         HedgeFunV2Factory f = HedgeFunV2Factory(b.factory);
         V2TreasuryDeployer r = V2TreasuryDeployer(b.treasuryDeployer);
         if (f.owner() != OPERATOR || f.protocol() != OPERATOR || address(f.treasuryDeployer()) != b.treasuryDeployer
@@ -176,6 +181,16 @@ contract TestnetV2EthMarket is Script {
             || address(HedgeFunV2NativeRouter(payable(b.nativeRouter)).router()) != b.tradeRouter
             || address(HedgeFunV2NativeRouter(payable(b.nativeRouter)).wrappedNative()) != WETH) revert BadBinding();
         if (creator && (b.factory == FEE_FACTORY || r.allInTriggerCodeHash() != keccak256(type(HedgeFunV2AllInTreasury).creationCode))) revert BadBinding();
+    }
+
+    // 1/2 are legacy creator/fee books; 3/4 are v2 creator/fee books.
+    function _featureKind(string memory feature) internal pure returns (uint8) {
+        bytes32 h = keccak256(bytes(feature));
+        if (h == keccak256("v2-creator-selected-stock-fees-v1")) return 1;
+        if (h == keccak256("v2-two-sided-stock-fees-v1")) return 2;
+        if (h == keccak256("v2-creator-selected-stock-fees-v2")) return 3;
+        if (h == keccak256("v2-two-sided-stock-fees-v2")) return 4;
+        return 0;
     }
 
     function _checkMarket(Deployment memory x) internal {

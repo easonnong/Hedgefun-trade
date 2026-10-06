@@ -9,28 +9,19 @@ import {HedgeFunBondingCurve} from "../../src/v2/HedgeFunBondingCurve.sol";
 import {HedgeFunV2TradeRouter} from "../../src/v2/HedgeFunV2TradeRouter.sol";
 import {CurveDeployer} from "../../src/v2/CurveDeployer.sol";
 import {HedgeFunV2Hook} from "../../src/hooks/HedgeFunV2Hook.sol";
-import {ILegacyV2FeeConversion} from "./ILegacyV2FeeConversion.sol";
 import {VmSafe} from "forge-std/Vm.sol";
 import {PoolKey} from "v4-core/src/types/PoolKey.sol";
 import {PoolId, PoolIdLibrary} from "v4-core/src/types/PoolId.sol";
-import {Currency} from "v4-core/src/types/Currency.sol";
-import {StateLibrary} from "v4-core/src/libraries/StateLibrary.sol";
-import {IPoolManager} from "v4-core/src/interfaces/IPoolManager.sol";
 
-/// @notice One TSLA phase at a time for the new two-sided-fee core. No key is held by this script.
+/// @notice One TSLA phase at a time for the v3 two-sided-stock-fee core. No key is held by this script.
 ///         Every phase can be simulated without --broadcast and inspected again after the broadcast settles.
 ///         See docs/TESTNET_V2_FEE_UPGRADE.md for the exact sequence and receipt checks.
 contract TestnetV2FeesJourney is Script {
     using PoolIdLibrary for PoolKey;
-    using StateLibrary for IPoolManager;
-    address private constant HOOK = 0xF1b4C95B63091AE2eb68E640F6D9485982146844;
-    address private constant PM = 0x8366a39CC670B4001A1121B8F6A443A643e40951;
     uint256 private constant CHAIN_ID = 46630;
     address private constant CREATOR = 0xD4f69D180a9bc36F27D307E90E365d1E012816d5;
     address private constant OPERATOR = 0x75Cee941B0eF3A83feA0397BbF903C12c1D7e96D;
     address private constant WHITELISTED = 0xdA1AEE7018a3925AA06dEEb8631Fca09E1067614;
-    address private constant FACTORY = 0xACEB03aAeE5494Aa54929Ec840630ae32A9ade0A;
-    address private constant ROUTER = 0xB291B34CD2D32C4a2DeFCe074107824654D427eF;
     address private constant USDG = 0x539574139BB4Ac74Fd2183ba0E38ed777E30B58d;
     address private constant TSLA = 0xcee322837F181Bd93AC2d71e4dDf334BFF565b98;
     address private constant TSLA_POOL = 0x04083643FF9E8c27f66C9dD99947743A9B777244;
@@ -211,37 +202,8 @@ contract TestnetV2FeesJourney is Script {
         _inspect(b, id);
     }
 
-    /// @notice Owner converts only this strategy's token fee claims; root supplies a reviewed nonzero minimum.
-    function convertTokenFees() external {
-        _sender(OPERATOR);
-        Book memory b = _book();
-        uint256 id = vm.envUint("JOURNEY_ID");
-        address token = _strategy(b, id, 2);
-        (PoolKey memory key,) = b.factory.graduationConfig(id);
-        (uint256 accrued,) = b.hook.accrued(key.toId());
-        uint256 maximum = vm.envOr("CONVERSION_MAX_TOKENS", ILegacyV2FeeConversion(address(b.hook)).pendingTokenFees(key.toId()) + accrued);
-        uint256 minimum = vm.envUint("MIN_CONVERSION_STOCK_OUT");
-        uint256 move = vm.envOr("CONVERSION_SQRT_MOVE_BPS", uint256(50));
-        if (maximum == 0 || minimum == 0 || move == 0 || move > 50) revert BadAmount(minimum);
-        (uint160 spot,,,) = IPoolManager(PM).getSlot0(key.toId());
-        uint160 limit = Currency.unwrap(key.currency0) == token
-            ? uint160(uint256(spot) * (10_000 - move) / 10_000)
-            : uint160(uint256(spot) * (10_000 + move) / 10_000);
-        uint256 deadline = block.timestamp + DEADLINE_SECONDS;
-        console2.log("conversion maximum tokens", maximum);
-        console2.log("conversion minimum stock", minimum);
-        console2.log("conversion sqrt limit", uint256(limit));
-        console2.log("conversion deadline", deadline);
-        vm.startBroadcast();
-        (uint256 consumed, uint256 stockOut) = ILegacyV2FeeConversion(address(b.hook)).convertFees(key, maximum, minimum, limit, deadline);
-        vm.stopBroadcast();
-        console2.log("conversion consumed tokens", consumed);
-        console2.log("conversion output stock claims", stockOut);
-        _inspect(b, id);
-    }
-
-    /// @notice A separate stock sweep distributes the converted claims; repeated sweeps must pay nothing twice.
-    function sweepConvertedFees() external {
+    /// @notice Re-run the permissionless settlement; v3 has no token-fee conversion phase.
+    function settleStockFees() external {
         _sender(CREATOR);
         Book memory b = _book();
         uint256 id = vm.envUint("JOURNEY_ID");
@@ -316,7 +278,7 @@ contract TestnetV2FeesJourney is Script {
         if (stock != b.stock || token.code.length == 0) revert BadBook();
         HedgeFunBondingCurve curve = HedgeFunBondingCurve(b.factory.curves(id));
         if (
-            curve.factory() != FACTORY || curve.taxBps() != 300 || curve.protocolBps() != 2000
+            address(curve.factory()) != address(b.factory) || curve.taxBps() != 300 || curve.protocolBps() != 2000
                 || curve.creatorBps() != 1000
         ) revert BadBook();
         uint8 stage = uint8(curve.status());
@@ -332,7 +294,7 @@ contract TestnetV2FeesJourney is Script {
                         || vm.isContext(VmSafe.ForgeContext.ScriptResume))
                     && !vm.parseJsonBool(json, ".broadcast")) || vm.parseJsonAddress(json, ".operator") != OPERATOR
                 || keccak256(bytes(vm.parseJsonString(json, ".featureVersion")))
-                    != keccak256("v2-two-sided-stock-fees-v1")
+                    != keccak256("v2-two-sided-stock-fees-v2")
         ) revert BadBook();
         b.factory = HedgeFunV2Factory(vm.parseJsonAddress(json, ".factory"));
         b.router = HedgeFunV2TradeRouter(vm.parseJsonAddress(json, ".tradeRouter"));
@@ -341,12 +303,12 @@ contract TestnetV2FeesJourney is Script {
         b.stock = vm.parseJsonAddress(json, ".stocks.TSLA.token");
         b.pool = vm.parseJsonAddress(json, ".stocks.TSLA.pool");
         if (
-            address(b.factory) != FACTORY || address(b.router) != ROUTER || address(b.usdg) != USDG || b.stock != TSLA
-                || b.pool != TSLA_POOL || b.factory.owner() != OPERATOR || address(b.factory).code.length == 0
+            address(b.usdg) != USDG || b.stock != TSLA || b.pool != TSLA_POOL || b.factory.owner() != OPERATOR
+                || address(b.factory).code.length == 0
                 || address(b.router).code.length == 0 || address(b.usdg).code.length == 0 || b.stock.code.length == 0
                 || b.pool.code.length == 0 || b.factory.usdg() != address(b.usdg)
-                || address(b.router.factory()) != address(b.factory) || address(b.hook) != HOOK || b.hook.version() != 2
-                || b.hook.factory() != FACTORY || address(b.factory.poolManager()) != PM
+                || address(b.router.factory()) != address(b.factory) || address(b.hook) != address(b.factory.hook())
+                || b.hook.version() != 3 || b.hook.factory() != address(b.factory)
                 || b.factory.getDefaults().sweepTipBps != 0
         ) revert BadBook();
         (address oracle, address pool, uint256 opening, bool enabled) = b.factory.listings(b.stock);
@@ -398,7 +360,6 @@ contract TestnetV2FeesJourney is Script {
         (uint256 tokenClaims, uint256 stockClaims) = b.hook.accrued(pid);
         console2.log("hook accrued token claims", tokenClaims);
         console2.log("hook accrued stock claims", stockClaims);
-        console2.log("hook pending token fees", ILegacyV2FeeConversion(address(b.hook)).pendingTokenFees(pid));
         console2.log("hook owed protocol", b.hook.owedProtocol(pid));
         console2.log("hook owed creator", b.hook.owedCreator(pid));
         console2.log("hook owed treasury", b.hook.owedTreasury(pid));
@@ -414,7 +375,7 @@ contract TestnetV2FeesJourney is Script {
         if (stock != b.stock || token.code.length == 0) revert BadBook();
         HedgeFunBondingCurve curve = HedgeFunBondingCurve(b.factory.curves(id));
         if (
-            curve.factory() != FACTORY || curve.taxBps() != 300 || curve.protocolBps() != 2000
+            address(curve.factory()) != address(b.factory) || curve.taxBps() != 300 || curve.protocolBps() != 2000
                 || curve.creatorBps() != 1000
         ) revert BadBook();
     }

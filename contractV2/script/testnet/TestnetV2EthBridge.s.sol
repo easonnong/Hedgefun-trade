@@ -162,8 +162,9 @@ contract TestnetV2EthBridge is Script {
         b.tradeRouter = vm.parseJsonAddress(json, ".tradeRouter");
         b.nativeRouter = vm.parseJsonAddress(json, ".nativeRouter");
         string memory feature = vm.parseJsonString(json, ".featureVersion");
-        bool creator = keccak256(bytes(feature)) == keccak256("v2-creator-selected-stock-fees-v1");
-        if ((!creator && keccak256(bytes(feature)) != keccak256("v2-two-sided-stock-fees-v1"))
+        uint8 featureKind = _featureKind(feature);
+        bool creator = featureKind == 1 || featureKind == 3;
+        if (featureKind == 0
             || vm.parseJsonStringArray(json, ".verification.transactionHashes").length != (creator ? 40 : 38)
             || vm.parseJsonUint(json, ".verification.blockNumber") == 0
             || vm.parseJsonBytes32(json, ".verification.blockHash") == bytes32(0)) revert BadSource();
@@ -175,6 +176,17 @@ contract TestnetV2EthBridge is Script {
                 revert BadSource();
         }
         _checkBase(b);
+    }
+
+    // 1/2 are the legacy creator/fee books; 3/4 are their v2 counterparts.
+    // This bridge only consumes core bindings, so it can safely read both generations.
+    function _featureKind(string memory feature) internal pure returns (uint8) {
+        bytes32 h = keccak256(bytes(feature));
+        if (h == keccak256("v2-creator-selected-stock-fees-v1")) return 1;
+        if (h == keccak256("v2-two-sided-stock-fees-v1")) return 2;
+        if (h == keccak256("v2-creator-selected-stock-fees-v2")) return 3;
+        if (h == keccak256("v2-two-sided-stock-fees-v2")) return 4;
+        return 0;
     }
 
     function _checkBase(Base memory b) internal view {

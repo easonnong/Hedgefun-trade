@@ -2,6 +2,7 @@
 
 import copy
 import importlib.util
+import json
 from pathlib import Path
 import unittest
 
@@ -148,6 +149,16 @@ class PersonaPlanTest(unittest.TestCase):
         for book in ({"broadcast": False, "chainId": 46630}, {"broadcast": True, "chainId": 1}):
             with self.assertRaises(ValueError):
                 TOOL.build_plan(address_book=book)
+
+    def test_v1_and_v2_fresh_creator_books_are_supported(self):
+        book = json.loads((ROOT / "deploy/testnet-v2-fresh-creator.json").read_text())
+        self.assertEqual(book["featureVersion"], "v2-creator-selected-fresh-wallet-v1")
+        legacy = TOOL.build_plan(address_book=book)
+        book["featureVersion"] = "v2-creator-selected-fresh-wallet-v2"
+        self.assertEqual(TOOL.build_plan(address_book=book), legacy)
+        book["featureVersion"] = "v2-creator-selected-stock-fees-v2"
+        with self.assertRaises(ValueError):
+            TOOL.build_plan(address_book=book)
 
 
 if __name__ == "__main__":

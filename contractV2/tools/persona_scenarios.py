@@ -47,7 +47,10 @@ def build_plan(seed: int = 20261003, *, address_book: dict | None = None,
         raise ValueError("a verified public testnet deployment is required")
     if profile.get("chainId") != CHAIN_ID or profile.get("kind") != 0:
         raise ValueError("the creator-selected all-in launch profile is required")
-    if book.get("featureVersion") != "v2-creator-selected-fresh-wallet-v1":
+    if book.get("featureVersion") not in {
+        "v2-creator-selected-fresh-wallet-v1",
+        "v2-creator-selected-fresh-wallet-v2",
+    }:
         raise ValueError("unexpected core feature version")
     if profile["taxBps"] != 300 or profile["curve"] != {"saleBps": 4000, "snipeSeconds": 180}:
         raise ValueError("this budget is calibrated for 300 bps, 40% sale and 180 seconds")

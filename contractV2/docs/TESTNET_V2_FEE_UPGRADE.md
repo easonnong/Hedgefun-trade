@@ -82,7 +82,7 @@ records the invocation context, not execution success. Dry-run and candidate sto
 snapshots. Large quantities are decimal strings; fees, decimals, gates and counts are JSON integers.
 
 The candidate has schema `v2-testnet-two-sided-fee-upgrade-v1`, feature version
-`v2-two-sided-stock-fees-v1`, source commit, start block, operator/owner/protocol, full flat new core addresses,
+`v2-two-sided-stock-fees-v2`, source commit, start block, operator/owner/protocol, full flat new core addresses,
 hook salt, policy address/key, engine kind, all reused venue addresses and eight stocks. Extra stock fields record
 old gates and LP allocation. `plannedTransactionCount=38`, recommended tax is 100 bps (1%) and creator share 1000 bps.
 The preflight requires the inherited creator tax range to include 100 bps. This is the recommendation for new
@@ -92,7 +92,7 @@ base book SHA-256 is `1b0d19f7e5e36ec19df5c3d8b879d95510dbe70527724602686d95411d
 
 The independent verifier must check canonical live transactions/receipts, exact from/to/input/value, nonces,
 CREATE initcode and constructor arguments from the compiled commit, CREATE2 salt and initcode, child chunks,
-all new bindings, `hook.version()==2`, zero sweep tip, kind/policy registrations, unchanged eight markets and
+all new bindings, `hook.version()==3`, zero sweep tip, kind/policy registrations, unchanged eight markets and
 new listings/gates/LP. Pin code and readback hashes to a canonical verification block. Attest the current
 600-second TWAP, ring cardinality, liquidity and quote-side balance separately from the historical base proof.
 
@@ -105,9 +105,9 @@ must not be copied into the new book as proof of the new listings. Keep old book
 
 - Add an independent deployment variant, resource and launch draft key. Keep strategy identity scoped by
   factory + ID; preserve the old deployment's explicit routes. Never redirect an old ID to the new factory.
-- Both fee versions support opening recipient exemptions. New curve `quoteBuyFor`'s third output is **opening
+- The v2 fee core supports opening recipient exemptions. New curve `quoteBuyFor`'s third output is **opening
   surcharge burn only**. Show base stock fee and opening token burn separately. V4 exact-input buys accrue
-  token fees awaiting conversion; V4 sells accrue stock fees. Static V4 LP fee is additional.
+  stock claims directly; V4 sells accrue stock claims. Static V4 LP fee is additional.
 - To finish the curve, read remaining net principal at one block and gross up exactly:
   `net == 0 ? 0 : (net - 1) * 10000 / (10000 - taxBps) + 1`. Confirm with recipient-specific quotes at the same
   block. The refunded excess is untaxed. Existing net-cap-as-payment logic is incompatible.
@@ -116,18 +116,14 @@ must not be copied into the new book as proof of the new listings. Keep old book
   curve buy/sell; read `TradeFeesAccrued`, `totalFees` and all three claims. Only the opening surcharge burns.
 - Cross the cap and verify atomic graduation, locked V4 liquidity, actual net-principal capital split and unpaid
   curve liabilities retained in the curve. A stale curve-stage quote must refuse to sign/execute after graduation.
-- Trade V4 buy/sell. Audit `Taxed` denomination and ERC6909 claims. `sweep` moves token fees into
-  `pendingTokenFees`; it does not yet pay stock income or burn those fees. Sell stock fees split normally.
+- Trade V4 buy/sell. Audit `Taxed` denomination and ERC6909 claims. `sweep` settles both buy-side and sell-side
+  stock claims; v3 has no token-fee conversion phase. Static LP fees remain separate.
 - Claim curve stock fees for protocol, creator and treasury; compare wallet deltas to their claims and book
   treasury fees independently. Repeated claims must not pay twice.
-- Owner-only `convertFees` uses the actual pool key, nonzero reviewed stock minimum, short deadline, and a
-  correctly directed sqrt-price limit within 0.5% of current sqrt price. Conversion consumes only actual token
-  claims; partial fills leave pending claims. It creates stock claims, not paid stock. The following `sweep`
-  pays 20/10/70 with integer floors and treasury remainder. Repeated sweeps must not duplicate payments.
-- Read `accrued`, `pendingTokenFees`, manager balances, owed roles and shared stock pot after every phase.
+- Read `accrued`, owed roles and the shared stock pot after every phase.
   Keep LP fee collection/buyback budget separate from base trading fees; verify routers retain no input dust.
-- On a local fork, include min-out/expired/wrong-owner/wrong-pool conversion reverts, partial conversion,
-  same-stock two-pool isolation, blocked-recipient ledger recovery and graduation rollback. No synthetic stress
+- On a local fork, include min-out/expired/wrong-owner/wrong-pool swap reverts, same-stock two-pool isolation,
+  blocked-recipient ledger recovery and graduation rollback. No synthetic stress
   report from the old fee version certifies these balances. Adapt historical event reconstruction to subtract
   curve buy stock fees from principal and add both buy/sell fee liabilities.
 
@@ -137,7 +133,7 @@ changing their old book underneath them is not a compatible reuse.
 
 ## TSLA phase script
 
-`script/testnet/TestnetV2FeesJourney.s.sol` provides the new versioned journey. It pins the new factory/router/hook
+`script/testnet/TestnetV2FeesJourney.s.sol` provides the v3 versioned journey. It reads the new factory/router/hook
 predicted by this release's production dry-run, the original TSLA pool/stock and the three existing test wallets:
 creator `0xD4f69D180a9bc36F27D307E90E365d1E012816d5`, operator/protocol
 `0x75Cee941B0eF3A83feA0397BbF903C12c1D7e96D`, and exempt recipient
@@ -162,16 +158,12 @@ is actually broadcast.
 | v4Buy() | Creator | Buy inputs, up to 1000 USDG; strategy must be graduated |
 | v4Sell() | Creator | `TOKEN_IN` up to a quarter of holdings, positive `MIN_FINAL_OUT` in raw USDG |
 | claimCurveFees() | Creator | Three claims to fixed protocol/creator/treasury recipients; no redirected payouts |
-| sweepStockFees() | Creator | Settle sell stock fees; move accrued buy-token fees to pending manager claims |
-| convertTokenFees() | Operator | Positive reviewed `MIN_CONVERSION_STOCK_OUT` in raw TSLA; optional max token cap and sqrt move |
-| sweepConvertedFees() | Creator | Distribute conversion's stock claims, separately from conversion execution |
+| sweepStockFees() | Creator | Permissionless settlement of buy-side and sell-side stock claims |
+| settleStockFees() | Creator | Re-run permissionless stock settlement; v3 has no token-fee conversion phase |
 | inspect() | Any | Read-only reserve, unpaid curve claims, hook token/stock claims, pending and owed ledger |
 
-All amounts use raw integer token units. Trade and conversion deadlines are 300 seconds. Buy min-stock protects
-the V3 quote route; final-output minima protect net receipt after base fee and any opening burn. The converter's
-optional `CONVERSION_MAX_TOKENS` defaults to this pool's pending + accrued token claims;
-`CONVERSION_SQRT_MOVE_BPS` defaults to 50 and must be 1–50. The script derives the correctly directed limit
-from current sqrt price and prints limits, actual consumption and resulting stock claims for independent audit.
+All amounts use raw integer token units. Trade deadlines are 300 seconds. Buy min-stock protects
+the V3 quote route; final-output minima protect net receipt after base fee and any opening burn.
 
 Before launch, confirm creator USDG covers the 25 USDG launch fee, ordinary buy, and full overflow payment;
 the refund is **TSLA stock**, not USDG. Confirm test ETH for each sender. Obtain/rehearse output minima before
