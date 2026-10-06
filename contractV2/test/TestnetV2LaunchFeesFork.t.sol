@@ -85,7 +85,7 @@ contract TestnetV2LaunchFeesForkTest is Test {
         FACTORY.launch(q, terms);
         vm.expectRevert(HedgeFunFactory.BadRequest.selector);
         FACTORY.launch{value: FEE + 1}(q, terms);
-        q.creatorBps = 1001;
+        q.creatorBps = 5001;
         vm.expectRevert(HedgeFunFactory.BadRequest.selector);
         FACTORY.launch{value: FEE}(q, terms);
         q.creatorBps = share;
