@@ -15,7 +15,7 @@ runs), [TESTNET_V2.md](./TESTNET_V2.md) (the testnet venue and its test doubles)
 | Sale share | **79.31%** of supply sold on the curve, fixed when the curve deployer is constructed; `setCurveConfig` refuses any other; the creator chooses only the opening window | `CurveDeployer.DEFAULT_SALE_BPS`, `V2MainnetDefaults.SALE_BPS` |
 | LP share of a raise | **70%** to the locked pool, 30% to the treasury, by default; owner may set per stock for future launches | `V2TreasuryDeployer.DEFAULT_LP_BPS`, `setLpBps` |
 | Pool LP fee | **0.20%**, owner-settable 0.0001%–0.30% for future launches, frozen per pool | `Defaults.lpFee` |
-| Tax | 1%–15%, the creator's; protocol **30%** of it, creator up to 10%, treasury the rest | `Defaults.protocolBps` |
+| Tax | 1%–15%, the creator's; protocol **30%** of it, creator up to 50%, treasury the rest. The site offers it as a base tax plus a creator tax on top (at most equal to the base, default 0) and derives the share: `taxBps = base + creator`, `creatorBps = creator / (base + creator)`; the creator receives exactly the creator tax, the protocol 30% of the total, the treasury the rest (decided 2026-10-06; the ceiling was 10% until then) | `Defaults.protocolBps`, `Defaults.maxCreatorBps` |
 | Keeper reward | **0.1%** | `Defaults.bountyBps` |
 | Buy-back interval | **10 seconds** between buy-backs; the price bound is the token pool's 600-second mean, not the interval | `Defaults.buybackCooldown` |
 | Launch fee | 0.0005 ETH, native | `Defaults.launchFeeCurrency/Amount` |
@@ -120,7 +120,9 @@ impersonated: steps 3 to 7 (the native launch activated with the factory briefly
 graduation each, the Safe accepting ownership and opening launch, the native launch activated and verified. The
 deployer's gas came to 0.0006 ETH at the fork's gas price; the rehearsal of step 1 estimates 0.0021 ETH for the
 core alone at mainnet prices, so fund the deployer with at least 0.02 ETH. The defaults hash is
-`0x0f7f98e96de5bc389e15d26382cd18c4943a8d11dbae00da6106285984118d22`, the same as the testnet's.
+`0x8860e8fbcbcdf1b9be1ac15c14e655d9c982b5e1cfe71776b9d18aa747d27ec8` with the 50% creator ceiling (it was
+`0x0f7f98e96de5bc389e15d26382cd18c4943a8d11dbae00da6106285984118d22` at 10%, the testnet release's value until the
+testnet's defaults are raised with `ConfigureV2LaunchFees`).
 9. **Record** the mainnet address book (addresses, transactions, defaults hash, code hashes, kinds, policies,
    listings) in `deploy/`, as the testnet book does.
 

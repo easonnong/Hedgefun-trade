@@ -41,7 +41,7 @@ contract TestnetV2LaunchFeesForkTest is Test {
         assertEq(after_.lpFee, 2000);
         assertEq(after_.protocolBps, 3000);
         assertEq(after_.buybackCooldown, 10);
-        assertEq(after_.maxCreatorBps, 1000);
+        assertEq(after_.maxCreatorBps, 5000);
         assertEq(uint8(after_.launchFeeCurrency), 1);
         assertEq(after_.launchFeeAmount, FEE);
         after_.lpFee = before_.lpFee;

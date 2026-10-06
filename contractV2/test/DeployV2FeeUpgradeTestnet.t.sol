@@ -264,7 +264,7 @@ contract DeployV2FeeUpgradeTestnetTest is Test {
         assertEq(d.treasury.kindCount(), 3);
         assertTrue(d.factory.publicLaunch());
         assertEq(d.factory.getDefaults().launchFeeAmount, 0.0005 ether);
-        assertEq(d.factory.getDefaults().maxCreatorBps, 1000);
+        assertEq(d.factory.getDefaults().maxCreatorBps, 5000);
         assertEq(release.plannedTransactionCount(), 40);
         assertEq(_venueState(), beforeState);
         assertEq(base.factory.owner(), OPERATOR);

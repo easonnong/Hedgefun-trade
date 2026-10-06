@@ -34,7 +34,7 @@ KINDS = [('HedgeFunV2UpgradeableTreasury', 'ordinary strategy (default)', 0, 0, 
          ('HedgeFunV2PercentBuybackTreasury', 'percentage buy-back', 0, 0, 0),
          ('HedgeFunV2UpgradeableCycleTreasury', 'cycle', 0, 0, 0)]
 # Defaults the deployment sets on top of the base venue's, then SetV2KeeperReward: index into the Defaults tuple.
-RELEASE_DEFAULTS = {1: 2000, 5: 3000, 6: 1000, 9: 0, 12: 10, 16: 10, 20: 1, 21: 500000000000000}
+RELEASE_DEFAULTS = {1: 2000, 5: 3000, 6: 5000, 9: 0, 12: 10, 16: 10, 20: 1, 21: 500000000000000}
 SALE_BPS, LP_BPS, TARGET_FDV_USD = 7931, 7000, 50_000
 
 

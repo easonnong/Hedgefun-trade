@@ -299,7 +299,7 @@ contract DeployV2MainnetCoreTest is Test {
         );
         assertEq(uint8(d.launchFeeCurrency), uint8(HedgeFunFactory.FeeCurrency.Native));
         assertEq(d.launchFeeAmount, 0.0005 ether);
-        assertEq(d.maxCreatorBps, 1000);
+        assertEq(d.maxCreatorBps, 5000);
         assertEq(d.minTaxBps, 100);
         assertEq(d.maxTaxBps, 1500);
         assertEq(d.protocolBps, 3000);
