@@ -74,7 +74,7 @@ contract DeployV2TestnetTest is Test {
         assertTrue(x.factory.publicLaunch());
         assertEq(x.hook.version(), 3);
         assertEq(x.factory.getDefaults().sweepTipBps, 0);
-        assertEq(x.factory.getDefaults().maxCreatorBps, 1000);
+        assertEq(x.factory.getDefaults().maxCreatorBps, 5000);
         assertEq(uint8(x.factory.getDefaults().launchFeeCurrency), uint8(HedgeFunFactory.FeeCurrency.Native));
         assertEq(x.factory.getDefaults().launchFeeAmount, 0.0005 ether);
         assertEq(x.treasury.kindCount(), 3);
