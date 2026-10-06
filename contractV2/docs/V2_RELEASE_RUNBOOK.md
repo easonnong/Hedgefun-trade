@@ -103,18 +103,20 @@ as decided.
    implied raise and graduation FDV, and prints `EXPECTED_PLAN_HASH`. `run()` lists and sets the gates, refusing
    any plan but the reviewed one. `SELL_CHUNK_USDG_<SYMBOL>` lowers a chunk where the listing check says so. Run
    `tools/v2_launch_check.py --factory` on the same block first, as section C says.
-6. **Native launch**: `ActivateV2NativeLaunch` requires `publicLaunch` to be open and is an owner action, so run it
-   BEFORE the hand-over, while the deployer owns the factory: `setPublicLaunch(true)`, `ActivateV2NativeLaunch` with
+6. **Native launch**: `ActivateV2NativeLaunch` and its verifier require `publicLaunch` to be open and the owner's
+   signature. Run it right after step 3, BEFORE any stock is listed: with nothing listed nothing can be launched,
+   so the factory is open for the three transactions in name only, and the deployer still owns it. `setPublicLaunch(true)`, `ActivateV2NativeLaunch` with
    `OPERATOR=<deployer> V2_FACTORY V2_TRADE_ROUTER WETH WETH_USDG_POOL=0x52e65B17fB6E5BA00Ed806f37Afcd2DaA50271Ca
    LAUNCH_FEE_WEI=500000000000000` (three transactions; prints the launch router), `VerifyV2NativeLaunch` with
-   `LAUNCH_ROUTER=<printed> EXPECTED_DEFAULTS_HASH`, then `setPublicLaunch(false)` again. Otherwise the Safe would
-   have to deploy the launch router itself. ETH-paired launches are v2.1 (PR #41) and not part of this release.
+   `LAUNCH_ROUTER=<printed> EXPECTED_DEFAULTS_HASH`, then `setPublicLaunch(false)` again, and only then steps 4
+   and 5. Otherwise the Safe would have to deploy the launch router itself after opening. ETH-paired launches are
+   v2.1 (PR #41) and not part of this release.
 7. **Hand over**: `HandOverV2Mainnet` (`V2_FACTORY OWNER`), the Safe's `acceptOwnership()`, `VerifyV2MainnetHandOver`.
 8. **Open**: the Safe sets `publicLaunch` true after one complete stock-specific fork replay has been reviewed and
    the front end points at the mainnet factory.
 
 Rehearsed end to end on an anvil fork of mainnet (block 81,393,878, 2026-10-06) with the deployer and the Safe
-impersonated: steps 3 to 7 in this order, with the eighteen day-one stocks listed at $8,204 raise / $49,999
+impersonated: steps 3 to 7 (the native launch activated with the factory briefly open), with the eighteen day-one stocks listed at $8,204 raise / $49,999
 graduation each, the Safe accepting ownership and opening launch, the native launch activated and verified. The
 deployer's gas came to 0.0006 ETH at the fork's gas price; the rehearsal of step 1 estimates 0.0021 ETH for the
 core alone at mainnet prices, so fund the deployer with at least 0.02 ETH. The defaults hash is
