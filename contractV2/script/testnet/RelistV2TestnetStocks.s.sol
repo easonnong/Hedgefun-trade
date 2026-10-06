@@ -40,6 +40,7 @@ contract RelistV2TestnetStocks is Script {
     uint16 private constant MAX_SLIPPAGE_BPS = 300;
     uint64 private constant SELL_CHUNK_USDG = 200e6;
     string private constant BOOK = "deploy/testnet-v2-release.json";
+    string private constant VERIFIED = "deploy/testnet-v2-venue.json";
     string private constant OUT = "deploy/testnet-v2-venue.candidate.json";
     string private constant OUT_DRY = "deploy/testnet-v2-venue.dryrun.json";
 
@@ -242,10 +243,12 @@ contract RelistV2TestnetStocks is Script {
         (uint160 sqrtP,,,,,,) = IV3Pool(l.pool).slot0();
         (address oracle, address pool,, bool enabled) = HedgeFunV2Factory(FACTORY).listings(l.stock);
         console2.log(string.concat("--- ", l.symbol), l.pool);
-        console2.log("  oracle ok / price", ok, p);
+        console2.log("  oracle ok", ok);
+        console2.log("  oracle price", p);
         console2.log("  pool price", market.priceAt(l.pool, sqrtP));
         console2.log("  pool liquidity", uint256(IV3Pool(l.pool).liquidity()));
-        console2.log("  market stock / affordable", IERC20(l.stock).balanceOf(address(market)), uint256(market.affordable(l.pool)));
+        console2.log("  market stock", IERC20(l.stock).balanceOf(address(market)));
+        console2.log("  market could still provide", uint256(market.affordable(l.pool)));
         console2.log("  listed on the release factory", enabled && oracle == address(l.oracle) && pool == l.pool);
     }
 
@@ -316,9 +319,10 @@ contract RelistV2TestnetStocks is Script {
         console2.log("wrote", requested ? OUT : OUT_DRY);
     }
 
+    /// @dev `VENUE`, else the verified file once the verifier wrote it, else this run's own candidate or dry run
     function _venuePath() private view returns (string memory) {
         bool requested = vm.isContext(VmSafe.ForgeContext.ScriptBroadcast) || vm.isContext(VmSafe.ForgeContext.ScriptResume);
-        return vm.envOr("VENUE", requested ? OUT : OUT_DRY);
+        return vm.envOr("VENUE", vm.exists(VERIFIED) ? VERIFIED : requested ? OUT : OUT_DRY);
     }
 
     // ----------------------------------------------------------------------------------------------------- helpers

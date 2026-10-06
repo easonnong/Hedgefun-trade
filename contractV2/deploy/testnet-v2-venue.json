@@ -1,0 +1,29 @@
+{
+  "broadcastRequested": true,
+  "calendar": "0xB8661bAd51e504862107CF4eBAdB1c8c2ABFA6CD",
+  "cardinalityNext": 720,
+  "chainId": 46630,
+  "factory": "0x6847318D28aB2f9343DDd2067871DC4f48609383",
+  "market": "0xfEb035be8B9473F8852FcDC93E1d3eB6A2E6352e",
+  "owner": "0x36437b878415EdA1a24186CF79AFffBc9ecEd298",
+  "schema": "v2-testnet-deployer-venue-v1",
+  "stocks": {
+    "TSLA": {
+      "decimals": 18,
+      "fee": 500,
+      "feed": "0x81e2c3b173FC478efbd7cAEf241B05aCf2D540d9",
+      "maxDeviationBps": 200,
+      "maxSlippageBps": 300,
+      "oracle": "0xd5c79180aEEC9752e2a4691592F33e69527Aaaf9",
+      "pool": "0x9735750450d53C5035611a45F8121389Ce29A0C9",
+      "priceE18": "358000000000000000000",
+      "sellChunkUsdg": 200000000,
+      "tickLower": 210550,
+      "tickUpper": 224470,
+      "token": "0xcee322837F181Bd93AC2d71e4dDf334BFF565b98"
+    }
+  },
+  "usdg": "0x539574139BB4Ac74Fd2183ba0E38ed777E30B58d",
+  "usdgFeed": "0x6beF5980dDa88F8B925f814C5033959A13ae535A",
+  "v3Factory": "0x0b0a96D7EB396E7471998889C4803dD0F529Eb01"
+}
