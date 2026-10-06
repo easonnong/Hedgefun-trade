@@ -25,4 +25,6 @@ contractV2/deploy/testnet-v2-creator.candidate.json
 contractV2/deploy/testnet-v2-creator.dryrun.json
 contractV2/deploy/testnet-v2-fresh-creator.candidate.json
 contractV2/deploy/testnet-v2-fresh-creator.dryrun.json
+contractV2/deploy/mainnet-v2-listings.candidate.json
+contractV2/deploy/mainnet-v2-listings.dryrun.json
 **/*.password

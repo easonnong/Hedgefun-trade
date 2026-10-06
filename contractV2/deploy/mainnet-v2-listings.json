@@ -1,0 +1,248 @@
+{
+ "_": "The day-one listing plan for the V2 mainnet factory, read by script/mainnet/ListV2MainnetStocks.s.sol. One entry per stock: token, PriceOracle, stock/USDG V3 pool and its fee tier, the three listing gates, and where each value comes from. The opening price is deliberately NOT here: plan() computes it from the oracle's live tryPrice() at the block it runs on (docs/V2_RELEASE_RUNBOOK.md section C), so a closed market or a stale feed excludes the stock from the plan instead of listing it on an old print. `candidates` are stocks that missed the deviation gate at block 81,045,661 and are NOT listed by plan(); move one into `stocks` once a fresh listing check passes. Edit this file only with a reviewed listing check (tools/v2_launch_check.py --factory) at a recent block; the plan hash printed by plan() covers every row that run() sends.",
+ "schema": "v2-mainnet-listings-plan-v1",
+ "chainId": 4663,
+ "usdg": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168",
+ "v3Factory": "0x1f7d7550B1b028f7571E69A784071F0205FD2EfA",
+ "oracleBindings": {
+  "usdgFeed": "0x61B7e5650328764B076A108EFF5fa7282a1B9aD2",
+  "calendar": "0xFE9E85f0C258Fc2757eB6Acd1ca032Ec860487F5",
+  "note": "every oracle below carries these two; the script refuses an oracle that does not"
+ },
+ "openingRule": {
+  "note": "openPriceE18 = floor(openingFdv * 1e18 / (price * 1e9)) with openingFdv = 50_000e18 * 2069^2 / 1e8 ($2,140.3805), the live oracle price in USDG per stock (18 decimals), a 1e27 supply and the curve deployer's fixed 79.31% sale: DeployV2Testnet.referenceOpenPriceE18, applied at plan time",
+  "targetGraduationFdvUsd": 50000,
+  "saleBps": 7931,
+  "lpBps": 7000
+ },
+ "sources": {
+  "v1.listings": "token, oracle and pool of the eighteen V1 listings, deploy/v2-listings-plan.json (read from the V1 factory 0x58F6Ced8d02cD2567f1458801440Bc4eb67fA961 at block 75,032,755); the oracles are the same contract the release uses and are reused as they are",
+  "v1.gates": "the gates the V1 listing used, deploy/v2-listings-plan.json: 50 / 100 / 2,000 USDG, which are also the V2 factory defaults; 125 / 175 on the 1% pool",
+  "mainnet-v2-oracles": "deploy/mainnet-v2-oracles.json: oracles deployed 2026-10-05 for stocks V1 never listed, and the stock's deepest USDG V3 pool recorded there",
+  "runbook.C": "docs/V2_RELEASE_RUNBOOK.md section C: maxDeviationBps 50 (125 on 1% pools), maxSlippageBps 100 (175 on 1% pools, because the factory requires deviation < slippage), sellChunkUsdg 2,000 USDG"
+ },
+ "stocks": [
+  {
+   "symbol": "NVDA",
+   "token": "0xd0601CE157Db5bdC3162BbaC2a2C8aF5320D9EEC",
+   "oracle": "0x03c77f527Aa1B0B304602e3fB9Ac994dd1c157f8",
+   "pool": "0xd4EB21209C4D6093f80B5b84f5C45cc093EA14a3",
+   "fee": 500,
+   "maxDeviationBps": 50,
+   "maxSlippageBps": 100,
+   "sellChunkUsdg": 2000000000,
+   "source": "v1.listings, v1.gates"
+  },
+  {
+   "symbol": "SPCX",
+   "token": "0x4a0E65A3EcceC6dBe60AE065F2e7bb85Fae35eEa",
+   "oracle": "0xC109426706b9D01719ED82e8cd027fA91fBcdC0b",
+   "pool": "0xc61284332117c3FB23A2A56cceFFD07F7aF60029",
+   "fee": 500,
+   "maxDeviationBps": 50,
+   "maxSlippageBps": 100,
+   "sellChunkUsdg": 2000000000,
+   "source": "v1.listings, v1.gates"
+  },
+  {
+   "symbol": "CRCL",
+   "token": "0xdF0992E440dD0be65BD8439b609d6D4366bf1CB5",
+   "oracle": "0x3bd2c093948D38A5eC2D945C5b065e5Db89aaB36",
+   "pool": "0x654E4143e82a5824445Ade0824351C2A9ACD95a8",
+   "fee": 3000,
+   "maxDeviationBps": 50,
+   "maxSlippageBps": 100,
+   "sellChunkUsdg": 2000000000,
+   "source": "v1.listings, v1.gates"
+  },
+  {
+   "symbol": "GOOGL",
+   "token": "0x2e0847E8910a9732eB3fb1bb4b70a580ADAD4FE3",
+   "oracle": "0x15400359B0D14B4151FAe80b837abF3fA1977256",
+   "pool": "0x34D0dC122CF9A8Eb296fC5e0D3A233625D7d19b7",
+   "fee": 500,
+   "maxDeviationBps": 50,
+   "maxSlippageBps": 100,
+   "sellChunkUsdg": 2000000000,
+   "source": "v1.listings, v1.gates"
+  },
+  {
+   "symbol": "AMZN",
+   "token": "0x12f190a9F9d7D37a250758b26824B97CE941bF54",
+   "oracle": "0xb34d278D2c792B7C48252C5eB8130Db45e35294e",
+   "pool": "0x8AC92DA74AB5F3b1d024Dc1943Ad7e15Dc4179Ef",
+   "fee": 3000,
+   "maxDeviationBps": 50,
+   "maxSlippageBps": 100,
+   "sellChunkUsdg": 2000000000,
+   "source": "v1.listings, v1.gates"
+  },
+  {
+   "symbol": "GME",
+   "token": "0x1b0E319c6A659F002271B69dB8A7df2F911c153E",
+   "oracle": "0x7548A343D06E45507Dd8F546D9d9Fdf684575ecE",
+   "pool": "0xE2b46c905E12Ab8E2f864e4821a4325884C1B126",
+   "fee": 500,
+   "maxDeviationBps": 50,
+   "maxSlippageBps": 100,
+   "sellChunkUsdg": 2000000000,
+   "source": "v1.listings, v1.gates; the 0.05% pool the V1 listing uses. Runbook C caps a 0.05% pool's chunk at the listing check's max chunk: re-check before listing"
+  },
+  {
+   "symbol": "META",
+   "token": "0xc0D6457C16Cc70d6790Dd43521C899C87ce02f35",
+   "oracle": "0x699E34068b8975bE113eD5fF12e429c69BCf1011",
+   "pool": "0x107a7Cb40d8665360ba10E59471Af06150A50922",
+   "fee": 3000,
+   "maxDeviationBps": 50,
+   "maxSlippageBps": 100,
+   "sellChunkUsdg": 2000000000,
+   "source": "v1.listings, v1.gates"
+  },
+  {
+   "symbol": "MSTR",
+   "token": "0xec262a75e413fAfD0dF80480274532C79D42da09",
+   "oracle": "0x19d0328F3152d1361db7B3Dd7708Cc36A779d612",
+   "pool": "0x17578C0e0D15da44f31677263114F71aE76653EA",
+   "fee": 10000,
+   "maxDeviationBps": 125,
+   "maxSlippageBps": 175,
+   "sellChunkUsdg": 2000000000,
+   "source": "v1.listings, v1.gates (the V1 listing's own 125 / 175 on the 1% pool)"
+  },
+  {
+   "symbol": "MU",
+   "token": "0xfF080c8ce2E5feadaCa0Da81314Ae59D232d4afD",
+   "oracle": "0x4D15A4A1028f001800774A3d2DC31d77945399a4",
+   "pool": "0xd057B1Bc54917855BBee58eAd58647f47caB35E5",
+   "fee": 3000,
+   "maxDeviationBps": 50,
+   "maxSlippageBps": 100,
+   "sellChunkUsdg": 2000000000,
+   "source": "v1.listings, v1.gates"
+  },
+  {
+   "symbol": "AAPL",
+   "token": "0xaF3D76f1834A1d425780943C99Ea8A608f8a93f9",
+   "oracle": "0x8fe64bCD251f35750a98d3f1E089a383399e10d4",
+   "pool": "0xAae0d815EE56e4092a5E5C2911E676Fea50B2d6D",
+   "fee": 500,
+   "maxDeviationBps": 50,
+   "maxSlippageBps": 100,
+   "sellChunkUsdg": 2000000000,
+   "source": "v1.listings, v1.gates"
+  },
+  {
+   "symbol": "QQQ",
+   "token": "0xD5f3879160bc7c32ebb4dC785F8a4F505888de68",
+   "oracle": "0x8d4bE55bD1B4ded24065c3891239D9084B659055",
+   "pool": "0xD60A5d14dB690B7Afad71F76B108071D7175597d",
+   "fee": 500,
+   "maxDeviationBps": 50,
+   "maxSlippageBps": 100,
+   "sellChunkUsdg": 2000000000,
+   "source": "v1.listings, v1.gates"
+  },
+  {
+   "symbol": "MSFT",
+   "token": "0xe93237C50D904957Cf27E7B1133b510C669c2e74",
+   "oracle": "0xB7634eE6ac2eeD7Ed85D2f927eB483eFC9e9215b",
+   "pool": "0xeb60bCD1D920ad6E102690CCFC6fB488899E1510",
+   "fee": 3000,
+   "maxDeviationBps": 50,
+   "maxSlippageBps": 100,
+   "sellChunkUsdg": 2000000000,
+   "source": "v1.listings, v1.gates"
+  },
+  {
+   "symbol": "TSLA",
+   "token": "0x322F0929c4625eD5bAd873c95208D54E1c003b2d",
+   "oracle": "0xe7bca6Aa83560CFD8f1aC3b8e27Eb4Ba9661F62C",
+   "pool": "0xf4ACdAEEB7022862A763C9B1B885e11191c889E3",
+   "fee": 3000,
+   "maxDeviationBps": 50,
+   "maxSlippageBps": 100,
+   "sellChunkUsdg": 2000000000,
+   "source": "v1.listings, v1.gates"
+  },
+  {
+   "symbol": "USO",
+   "token": "0xa30FA36Db767ad9eD3f7a60fC79526fB4d56D344",
+   "oracle": "0xBD130A4A18dBedFc69592FC3bfd474094354db32",
+   "pool": "0x02175608F1b5E6b5ed221cCFdC7Be197D111D915",
+   "fee": 3000,
+   "maxDeviationBps": 50,
+   "maxSlippageBps": 100,
+   "sellChunkUsdg": 2000000000,
+   "source": "v1.listings, v1.gates"
+  },
+  {
+   "symbol": "GLD",
+   "token": "0xC9a981FEE1F9DEc688bb123ccDeCc63D0deBFC4e",
+   "oracle": "0x32a2E01E7DffDDdE29112531aE20340100f9DBe5",
+   "pool": "0xBA2f1ed4cEB2169D538d1e614D847E83C5A55913",
+   "fee": 500,
+   "maxDeviationBps": 50,
+   "maxSlippageBps": 100,
+   "sellChunkUsdg": 2000000000,
+   "source": "v1.listings, v1.gates"
+  },
+  {
+   "symbol": "SGOV",
+   "token": "0x92FD66527192E3e61d4DDd13322Aa222DE86F9B5",
+   "oracle": "0x093CD301Ce1AdEEdd9bC3814f9c00E42Ba603BeD",
+   "pool": "0xfAb520051f96F4D2a32c22B6a3dD7fFfdf231bFe",
+   "fee": 3000,
+   "maxDeviationBps": 50,
+   "maxSlippageBps": 100,
+   "sellChunkUsdg": 2000000000,
+   "source": "mainnet-v2-oracles, runbook.C"
+  },
+  {
+   "symbol": "SPY",
+   "token": "0x117cc2133c37B721F49dE2A7a74833232B3B4C0C",
+   "oracle": "0x82E7737b3fb9aD752Fa894Bb5B8e67121FF00f8A",
+   "pool": "0xa7Bb1AC63BBaB0C44316E6c8C455213441689167",
+   "fee": 500,
+   "maxDeviationBps": 50,
+   "maxSlippageBps": 100,
+   "sellChunkUsdg": 2000000000,
+   "source": "mainnet-v2-oracles, runbook.C; a 0.05% pool: re-check the chunk before listing"
+  },
+  {
+   "symbol": "DELL",
+   "token": "0x941AE714EC6D8130c7B75d67160Ca08f1e7d11Dd",
+   "oracle": "0xCF6225669B65E779BaCd86465E9a240ac786B5D3",
+   "pool": "0xc30c89cB7815A1488b7998D15eEC73961707Fc5a",
+   "fee": 10000,
+   "maxDeviationBps": 125,
+   "maxSlippageBps": 175,
+   "sellChunkUsdg": 2000000000,
+   "source": "mainnet-v2-oracles, runbook.C (125 on the 1% pool, 175 slippage as MSTR's V1 listing)"
+  }
+ ],
+ "candidates": [
+  {
+   "symbol": "PLTR",
+   "token": "0x894E1EC2D74FFE5AEF8Dc8A9e84686acCB964F2A",
+   "oracle": "0xB9391c7B6F8d51609Ff0CEAeb890e54494a8DA91",
+   "pool": "0x851680416A4f4E1c463d45171d61ACDdBc8554c0",
+   "fee": 3000,
+   "maxDeviationBps": 50,
+   "maxSlippageBps": 100,
+   "sellChunkUsdg": 2000000000,
+   "source": "mainnet-v2-oracles, runbook.C; missed the deviation gate by a few basis points at block 81,045,661: not listed by plan()"
+  },
+  {
+   "symbol": "SLV",
+   "token": "0x411eFb0E7f985935DAec3D4C3ebaEa0d0AD7D89f",
+   "oracle": "0x7BbaAb5d1426650FaaAEB0214D5a045A80FD2621",
+   "pool": "0x8cB787e6c315D464775289BaD00FDD67d53Ecb3D",
+   "fee": 3000,
+   "maxDeviationBps": 50,
+   "maxSlippageBps": 100,
+   "sellChunkUsdg": 2000000000,
+   "source": "mainnet-v2-oracles, runbook.C; missed the deviation gate by a few basis points at block 81,045,661: not listed by plan()"
+  }
+ ]
+}

@@ -89,11 +89,20 @@ as decided.
    `FIRST_OWNER=<deployer>` and the same expectations.
 4. **Register the kinds**, as owner, with `OPERATOR=<deployer> V2_FACTORY=<factory>`: `RegisterV2UpgradeableKinds`
    (kinds 1 and 2), `RegisterV2TradablePercent` (kind 3 and its policy), `RegisterV2PercentBuyback` (kind 4),
-   `RegisterV2UpgradeableCycle` (kind 5); each `Verify*`. **Kind 2 also needs a schema-1 policy** (`V2RebalancePolicy`
-   registered with `registerPolicy`); no mainnet script does this yet, the testnet deployment and the end-to-end test
-   make the owner call directly. Without it kind 2 cannot be launched.
-5. **List the stocks** (section C). No script exists yet; until one does, each listing is an owner `factory.list` plus,
-   on 0.05% pools, `setListingGates` for the chunk, prepared and checked as section C says.
+   `RegisterV2UpgradeableCycle` (kind 5); each `Verify*`. **Kind 2 also needs a schema-1 policy**:
+   `script/mainnet/RegisterV2SpotPolicy` deploys `V2RebalancePolicy` from the release source (its runtime code hash
+   is pinned in the script) and registers it with `registerPolicy(policy, 150_000, 160, …)`, as the testnet
+   deployment does, with `DEPENDENCY_MANIFEST_HASH` and `AUDIT_MANIFEST_HASH` describing this candidate; then
+   `VerifyV2SpotPolicy` with the policy address and key from the receipts. Without it kind 2 cannot be launched.
+5. **List the stocks** (section C) with `script/mainnet/ListV2MainnetStocks` from `deploy/mainnet-v2-listings.json`,
+   on a market day after the listing check has passed at a recent block: `plan()` read-only with `V2_FACTORY`,
+   review the rows (every opening price comes from the oracle's live price at that moment; a stock whose oracle is
+   not healthy is excluded and said so) and the printed `EXPECTED_PLAN_HASH`; then `run()` with that hash,
+   `OPERATOR=<deployer>`, `--account deployer --sender $S --broadcast`. It sends `factory.list` per stock and
+   `setListingGates` only where the plan's gates differ from the factory's effective ones (the 1% pools), reads back,
+   and writes `deploy/mainnet-v2-listings.candidate.json`. Then `plan()` again (every row shows nothing to send) and
+   `VerifyV2MainnetListings` at the block the listings landed in. A feed that prints between `plan()` and `run()`
+   changes the hash: review the new plan rather than reuse the old hash.
 6. **Native launch**: `ActivateV2NativeLaunch` with `WETH WETH_USDG_POOL=0x52e65B17fB6E5BA00Ed806f37Afcd2DaA50271Ca
    LAUNCH_FEE_WEI=500000000000000 LAUNCH_ROUTER=<native router>`, then its `Verify*`. ETH-paired launches are v2.1
    (PR #41) and not part of this release.
@@ -153,7 +162,11 @@ B.9, the same for mainnet. What changed for the site in this release, beyond add
 
 ## E. Open items before mainnet
 
-- No mainnet listing script; no mainnet script for kind 2's policy (B.4, B.5).
+- The two mainnet scripts of B.4 and B.5 exist (`RegisterV2SpotPolicy`, `ListV2MainnetStocks`, both in
+  `script/mainnet/`, each with its `Verify*`) and have run on a fork (`test/MainnetV2ListingsFork.t.sol`, block
+  81,125,000); neither has run on the chain. Still the owner's: the final stock list and gates in
+  `deploy/mainnet-v2-listings.json` (eighteen day-one stocks; PLTR and SLV wait as candidates), the two manifest
+  hashes the policy is registered with, the Safe addresses of section B.
 - `tools/v2_launch_check.py` without `--factory` still judges at 44%; the historical plan is kept on purpose.
 - `test/V2LiveVenueFork.t.sol` (GME on a mainnet fork) has stale assertions and does not pass; the end-to-end suite
   supersedes it.

@@ -108,8 +108,9 @@ interface IEngineView {
 ///  * `test_kind0_upgrade...` alone also re-stamps the USDG feed's last answer after its two-day wait: a fork's
 ///    feeds stop at the fork block, and the oracle refuses a dollar leg older than 26 hours.
 ///
-/// There is no mainnet script that registers the spot engine's policy (`V2RebalancePolicy`, schema 1); the
-/// testnet deployment scripts do it inline. Here the factory owner registers it with the same call.
+/// The spot engine's policy (`V2RebalancePolicy`, schema 1) is registered here with the owner's direct call, as the
+/// testnet deployment scripts make it; `script/mainnet/RegisterV2SpotPolicy` makes the same call on mainnet, and
+/// `test/MainnetV2ListingsFork.t.sol` runs it together with the listing script.
 ///
 /// Every launch: 1% tax, 10% of it to the creator, take-profits 5% and 10% over cost (one rung for the cycle
 /// kind), dips 5% under the last sale, a fifth of the reserve per buy, and no stop unless the test says so. The
@@ -259,7 +260,7 @@ contract MainnetV2EndToEndForkTest is Test {
         assertEq(cycleKind, 5);
         assertEq(registry.kindCount(), 6);
 
-        // No mainnet script registers the schema-1 policy; the owner's call, as the testnet deployments make it.
+        // The owner's call, as the testnet deployments make it (RegisterV2SpotPolicy sends exactly this on mainnet).
         V2RebalancePolicy policy = new V2RebalancePolicy();
         vm.prank(DEPLOYER);
         spotPolicyKey = registry.registerPolicy(address(policy), 150_000, 160, DEPENDENCIES, AUDIT);
