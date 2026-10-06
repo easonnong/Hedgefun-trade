@@ -53,7 +53,9 @@ Chain 46630, RPC `https://rpc.testnet.chain.robinhood.com`, deployer `0x36437b87
    `EXPECTED_PLAN_HASH`; then `run()` with that hash, `--account deployer --broadcast`; then `plan()` again and expect
    every row to show nothing to change. The deployment copies the base venue's LP share (5000) as well as its
    opening prices, so the calibration moves both: opening price to the reference, `lpBps` to 7000.
-6. **Read back and record.** Verify roles, defaults (and their hash), the six kinds' stored creation code, the nine
+6. **Read back and record**, with `python3 tools/verify_testnet_release.py`: it checks every transaction of the six
+   broadcasts against its canonical receipt, reads the live state back at one block, and writes the book only when
+   everything matches. Verify roles, defaults (and their hash), the six kinds' stored creation code, the nine
    runtime codes, both policies, the eight listings (opening price equal to the reference formula, `lpBps` 7000),
    `hook.version() == 3`, `curveDeployer.DEFAULT_SALE_BPS() == 7931`, `treasuryDeployer.DEFAULT_LP_BPS() == 7000`,
    `getDefaults().lpFee == 2000`. Write `deploy/testnet-v2-release.json` with every transaction hash and the

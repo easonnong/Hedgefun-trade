@@ -76,7 +76,7 @@ contract TestnetV2TradablePercentForkTest is Test {
         );
         assertEq(block.chainid, 46630, "Robinhood testnet only");
         emit log_named_uint("tradable percent fork block", forkBlock);
-        factory = HedgeFunV2Factory(vm.envOr("V2_FACTORY", address(0xc9610d4A749b2A62a7327a0f40B59013D8fC415a)));
+        factory = HedgeFunV2Factory(vm.envOr("V2_FACTORY", address(0x6847318D28aB2f9343DDd2067871DC4f48609383)));
         registry = V2TreasuryDeployer(address(factory.treasuryDeployer()));
         controller = registry.upgradeController();
         usdg = IERC20(factory.usdg());

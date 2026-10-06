@@ -167,7 +167,7 @@ jobs:
           UPGRADEABLE_KINDS_FORK_RPC: ${{ secrets.RH_UPGRADE_TESTNET_RPC_URL || 'https://robinhood-testnet.drpc.org' }}
           TRADABLE_PERCENT_FORK_RPC: ${{ secrets.RH_TRADABLE_TESTNET_RPC_URL || 'https://robinhood-testnet.drpc.org' }}
           LAUNCH_FEES_FORK_RPC: ${{ secrets.RH_TRADABLE_TESTNET_RPC_URL || 'https://robinhood-testnet.drpc.org' }}
-          V2_FACTORY: "0xc9610d4A749b2A62a7327a0f40B59013D8fC415a"
+          V2_FACTORY: "0x6847318D28aB2f9343DDd2067871DC4f48609383"
           TESTNET_MARKET: "0xc1AF2f52980F8A7AA4E90A8E30D5c3FaF0375f21"
         run: |
           set -euo pipefail

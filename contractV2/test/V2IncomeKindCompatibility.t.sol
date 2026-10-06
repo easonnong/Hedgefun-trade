@@ -160,7 +160,7 @@ contract TestnetV2IncomeCompatibilityForkTest is Test {
     }
 
     function test_fork_reviewedFactoryAcceptsRegistrationAndReadback() public {
-        HedgeFunV2Factory factory = HedgeFunV2Factory(0xc9610d4A749b2A62a7327a0f40B59013D8fC415a);
+        HedgeFunV2Factory factory = HedgeFunV2Factory(vm.envOr("V2_FACTORY", address(0x6847318D28aB2f9343DDd2067871DC4f48609383)));
         V2TreasuryDeployer registry = V2TreasuryDeployer(address(factory.treasuryDeployer()));
         RegisterV2IncomeKinds script = new RegisterV2IncomeKinds();
         uint256 before = registry.kindCount();
