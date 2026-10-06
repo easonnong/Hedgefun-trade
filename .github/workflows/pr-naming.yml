@@ -23,17 +23,8 @@ jobs:
             const types = 'feat|fix|docs|test|refactor|perf|chore|ci|build|style|revert';
             const branchPattern = new RegExp(`^(${types})/[a-z0-9]+(?:-[a-z0-9]+)*$`);
             const titlePattern = new RegExp(`^(${types})(?:\\([a-z0-9]+(?:[-/._][a-z0-9]+)*\\))?!?: \\S(?:[^\\r\\n]*\\S)?$`);
-            // Only these existing PRs may keep their original branch names.
-            // New PRs reusing the same names must follow the current convention.
-            const legacyHeads = new Map([
-              [21, 'codex/all-strategy-income-tests-20261003'],
-              [27, 'codex/audit-operations-migration'],
-              [41, 'claude/v2-eth-pairing'],
-            ]);
-            const sameRepository = pr.head.repo?.full_name === `${context.repo.owner}/${context.repo.repo}`;
-            const legacyBranch = sameRepository && legacyHeads.get(pr.number) === pr.head.ref;
             const errors = [];
-            if (!branchPattern.test(pr.head.ref) && !legacyBranch) {
+            if (!branchPattern.test(pr.head.ref)) {
               errors.push('Branch must use type/kebab-case-description; see CONTRIBUTING.md.');
             }
             if (!titlePattern.test(pr.title)) {

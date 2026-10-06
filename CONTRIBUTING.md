@@ -21,10 +21,8 @@ Examples:
 
 GitHub's branch naming ruleset allows new branches only under the listed type
 prefixes, with one slash. The required PR check also validates the full lowercase
-kebab-case description. Branches retained during the initial cleanup are
-explicitly exempt while their work is pending. PRs #21, #27, and #41 may
-keep their existing head branch names; the exception does not apply to new PRs
-using those names.
+kebab-case description. All contributors and PRs follow the same convention;
+there are no legacy branch-name exemptions.
 
 ## PR titles
 
@@ -49,7 +47,8 @@ only and publishes the status on the PR head commit.
 GitHub automatically deletes remote head branches after merging a PR. The
 repository default branch is `main`. Keep branches with unmerged commits or open
 PR dependencies; closing a PR without merging does not authorize discarding its
-work.
+work. Retired work from branch cleanup is preserved under `archive/*` tags. To
+resume archived work, create a standard feature branch from the relevant tag.
 
 Refresh local remote references after merging:
 
