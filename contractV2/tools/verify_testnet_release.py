@@ -52,6 +52,7 @@ def main():
     p.add_argument('--rpc', default='https://rpc.testnet.chain.robinhood.com')
     p.add_argument('--cast', default='cast')
     p.add_argument('--confirmations', type=int, default=2)
+    p.add_argument('--venue', type=Path, help='the deployer venue file written by RelistV2TestnetStocks: its stocks are expected to be listed on it')
     a = p.parse_args()
     book = json.loads(a.candidate.read_text())
 
@@ -76,7 +77,11 @@ def main():
     assert book['featureVersion'] == FEATURE and book['broadcast'] is False and book['broadcastRequested'] is True
     assert book['operator'].lower() == book['owner'].lower() == DEPLOYER
     assert book['protocol'].lower() == book['venueOperator'].lower() == VENUE_OWNER
-    subprocess.run(['git', 'diff', '--exit-code', book['commit'], '--', 'src', 'script'], cwd=ROOT, check=True, capture_output=True)
+    subprocess.run(['git', 'diff', '--exit-code', book['commit'], '--', 'src'], cwd=ROOT, check=True, capture_output=True)
+    venue = json.loads(a.venue.read_text()) if a.venue else None
+    if venue:
+        assert venue['schema'] == 'v2-testnet-deployer-venue-v1' and venue['chainId'] == 46630 and venue['factory'].lower() == book['factory'].lower()
+        assert venue['owner'].lower() == DEPLOYER and venue['broadcastRequested'] is True
     head = rpc('eth_getBlockByNumber', ['latest', False])
     tag = hex(int(head['number'], 16) - a.confirmations)
     block = rpc('eth_getBlockByNumber', [tag, False])
@@ -135,7 +140,8 @@ def main():
                      ('usdg()', 'usdg'), ('hook()', 'hook'), ('treasuryDeployer()', 'treasuryDeployer'), ('tokenDeployer()', 'tokenDeployer'),
                      ('curveDeployer()', 'curveDeployer')]:
         eq(book['factory'], sig, [book[key]])
-    eq(book['factory'], 'pendingOwner()', [0]); eq(book['factory'], 'publicLaunch()', [1]); eq(book['factory'], 'strategyCount()', [0])
+    eq(book['factory'], 'pendingOwner()', [0]); eq(book['factory'], 'publicLaunch()', [1])
+    book['strategyCount'] = read(book['factory'], 'strategyCount()')[0]   # 0 at the release; launches since are recorded, not refused
     for key in ('treasuryDeployer', 'tokenDeployer', 'curveDeployer', 'hook', 'tradeRouter'):
         eq(book[key], 'factory()', [book['factory']])
     eq(book['nativeRouter'], 'router()', [book['tradeRouter']]); eq(book['nativeRouter'], 'wrappedNative()', [book['weth']])
@@ -190,6 +196,19 @@ def main():
         ok, price_e18, _ = read(oracle, 'lastPriceAt()')
         assert ok == 1 and price_e18 == int(stock['priceE18']), (symbol, price_e18)
         open_price = reference_open_price_e18(price_e18)
+        relisted = venue['stocks'].get(symbol) if venue else None
+        if relisted:
+            # the deployer venue's feed, oracle and pool; the price is whatever the deployer last set
+            assert relisted['token'].lower() == token.lower() and relisted['decimals'] == 18
+            for k in ('feed', 'oracle', 'pool', 'fee', 'tickLower', 'tickUpper', 'maxDeviationBps', 'maxSlippageBps', 'sellChunkUsdg'):
+                stock[k] = relisted[k]
+            oracle, pool = stock['oracle'], stock['pool']
+            ok, price_e18, _ = read(oracle, 'lastPriceAt()')
+            assert ok == 1 and price_e18 > 0, (symbol, 'venue oracle')
+            stock['priceE18'] = str(price_e18)
+            stock['liquidity'] = str(read(pool, 'liquidity()')[0])
+            eq(venue['market'], 'lines(address)', [token, stock['feed'], int(token, 16) < int(book['usdg'], 16), 10**30, stock['tickLower'], stock['tickUpper'], int(stock['liquidity'])], pool)
+            eq(stock['feed'], 'owner()', [DEPLOYER]); eq(stock['feed'], 'operators(address)', [1], venue['market'])
         eq(book['factory'], 'listings(address)', [oracle, pool, open_price, 1], token)
         eq(book['factory'], 'listingGates(address)', [stock['maxDeviationBps'], stock['maxSlippageBps'], stock['sellChunkUsdg']], token)
         eq(registry, 'lpBps(address)', [LP_BPS], token)
@@ -198,6 +217,10 @@ def main():
         eq(book['v3Factory'], 'getPool(address,address,uint24)', [pool], token, book['usdg'], stock['fee'])
         stock['openPriceE18'] = str(open_price)
         stock['lpBps'] = LP_BPS
+    if venue:
+        eq(venue['market'], 'owner()', [DEPLOYER]); eq(venue['market'], 'usdg()', [book['usdg']])
+        book['venue'] = {'schema': venue['schema'], 'market': venue['market'], 'stocks': sorted(venue['stocks']),
+                         'codeHash': cast('keccak', rpc('eth_getCode', [venue['market'], tag]))}
     # runtime code of every component, as deployed
     book['codeHashes'] = {k: cast('keccak', rpc('eth_getCode', [book[k], tag])) for k in CORE}
     book['codeHashes']['upgradeController'] = cast('keccak', rpc('eth_getCode', [controller, tag]))
@@ -212,10 +235,11 @@ def main():
                      'checks': f'{len(nonces)} transactions of six scripts against canonical receipts (status, sender, chain, input, '
                                'nonce sequence, block membership); creation code of the nine core contracts and the six kinds against '
                                'the build of the recorded commit; roles, versions, both policies, the release defaults against the base '
-                               "venue's, and the eight listings at the reference opening price with a 7000 LP share; read at one block.",
+                               "venue's, and the eight listings at the reference opening price with a 7000 LP share"
+                               + (f"; {', '.join(sorted(venue['stocks']))} re-listed on the deployer venue {venue['market']}" if venue else '') + '; read at one block.',
                      'verifiedAt': datetime.datetime.now(datetime.timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')}})
     a.out.write_text(json.dumps(book, indent=1, sort_keys=True) + '\n')
-    print(f'verified at block {int(tag, 16)}; wrote {a.out.relative_to(ROOT)}')
+    print(f'verified at block {int(tag, 16)}; wrote {a.out}')
 
 
 if __name__ == '__main__':
