@@ -111,6 +111,10 @@ as decided.
    `LAUNCH_ROUTER=<printed> EXPECTED_DEFAULTS_HASH`, then `setPublicLaunch(false)` again, and only then steps 4
    and 5. Otherwise the Safe would have to deploy the launch router itself after opening. ETH-paired launches are
    v2.1 (PR #41) and not part of this release.
+6b. **Defaults revised after the core was deployed** (the creator ceiling, 2026-10-06): `ApplyV2MainnetDefaults` with
+   `OPERATOR=<owner> V2_FACTORY EXPECTED_DEFAULTS_HASH=<live> EXPECTED_NEW_DEFAULTS_HASH=<V2MainnetDefaults.release()>`,
+   one owner transaction, both hashes pinned; the readback requires the chain to carry the target. Before the
+   hand-over the deployer runs it; after, the Safe would.
 7. **Hand over**: `HandOverV2Mainnet` (`V2_FACTORY OWNER`), the Safe's `acceptOwnership()`, `VerifyV2MainnetHandOver`.
 8. **Open**: the Safe sets `publicLaunch` true after one complete stock-specific fork replay has been reviewed and
    the front end points at the mainnet factory.
