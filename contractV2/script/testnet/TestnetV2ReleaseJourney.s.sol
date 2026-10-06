@@ -238,6 +238,21 @@ contract TestnetV2ReleaseJourney is Script {
         _inspect(b, id);
     }
 
+    /// @notice Book the stock the treasury received since (the hook's share, LP fees): a strategy kind books it as a
+    ///         lot at the oracle price, the buy-back kinds as buy-back budget. Anyone may call; `execute` books too.
+    function book() external {
+        Book memory b = _book();
+        uint256 id = vm.envUint("JOURNEY_ID");
+        _strategy(b, id, 2);
+        HedgeFunV2Treasury t = _treasury(b, id);
+        console2.log("unbooked stock before", t.unbookedStock());
+        vm.startBroadcast();
+        bool booked = t.book();
+        vm.stopBroadcast();
+        console2.log("booked", booked);
+        _inspect(b, id);
+    }
+
     /// @notice Spend the treasury's buy-back budget on the pool and burn what it buys. Permissionless; at most one
     ///         every `buybackCooldown` (10 s) and only inside market hours.
     function buyback() external {
@@ -342,11 +357,10 @@ contract TestnetV2ReleaseJourney is Script {
         (token,,, stock, creator) = b.factory.strategies(id);
         if (creator != _creator()) revert WrongCreator(creator);
         if (stock != b.stock || token.code.length == 0) revert BadBook();
+        // the tax and the creator's share are the creator's choice (a site launch may differ from this script's
+        // 1% / 10%); the protocol share and the sale share are the core's
         HedgeFunBondingCurve curve = HedgeFunBondingCurve(b.factory.curves(id));
-        if (
-            curve.factory() != FACTORY || curve.taxBps() != TAX_BPS || curve.protocolBps() != PROTOCOL_BPS
-                || curve.creatorBps() != CREATOR_BPS || !_sellsTheDefaultShare(curve)
-        ) revert BadBook();
+        if (curve.factory() != FACTORY || curve.protocolBps() != PROTOCOL_BPS || !_sellsTheDefaultShare(curve)) revert BadBook();
     }
 
     /// @dev The curve keeps no `saleBps`; its minimum token reserve is the unsold share of the supply.
@@ -423,6 +437,7 @@ contract TestnetV2ReleaseJourney is Script {
         console2.log("curve", address(curve));
         console2.log("treasury", curve.treasury());
         console2.log("curve status (0 active, 2 graduated)", uint256(curve.status()));
+        console2.log("curve tax bps / creator share bps", uint256(curve.taxBps()), uint256(curve.creatorBps()));
         console2.log("creator tUSDG", b.usdg.balanceOf(creator));
         console2.log("creator TSLA", IERC20(b.stock).balanceOf(creator));
         console2.log("creator strategy tokens", IERC20(token).balanceOf(creator));
@@ -446,6 +461,7 @@ contract TestnetV2ReleaseJourney is Script {
         console2.log("hook shared-stock total owed", b.hook.totalOwed(b.stock));
         HedgeFunV2Treasury t = _treasury(b, id);
         console2.log("treasury booked stock", t.bookedStock());
+        console2.log("treasury unbooked stock", t.unbookedStock());
         console2.log("treasury buy-back budget (stock)", t.buybackStock());
         console2.log("treasury strategy tokens", IERC20(_strategyAny(b, id)).balanceOf(address(t)));
         console2.log("vault", address(_vault(b, id)));
