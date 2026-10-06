@@ -18,6 +18,8 @@ fs_permissions = [
   { access = "read-write", path = "./deploy/testnet-v2-fresh-creator.dryrun.json" },
   { access = "read-write", path = "./deploy/testnet-v2-release.candidate.json" },
   { access = "read-write", path = "./deploy/testnet-v2-release.dryrun.json" },
+  { access = "read", path = "./deploy/v2-listings-plan.json" },
+  { access = "read", path = "./deploy/mainnet-v2-oracles.json" },
   { access = "read-write", path = "./deploy/mainnet-v2-core.candidate.json" },
   { access = "read-write", path = "./deploy/mainnet-v2-core.dryrun.json" },
   { access = "read", path = "./deploy/testnet-v2-fees.json" },

@@ -89,17 +89,38 @@ as decided.
    `FIRST_OWNER=<deployer>` and the same expectations.
 4. **Register the kinds**, as owner, with `OPERATOR=<deployer> V2_FACTORY=<factory>`: `RegisterV2UpgradeableKinds`
    (kinds 1 and 2), `RegisterV2TradablePercent` (kind 3 and its policy), `RegisterV2PercentBuyback` (kind 4),
-   `RegisterV2UpgradeableCycle` (kind 5); each `Verify*`. **Kind 2 also needs a schema-1 policy** (`V2RebalancePolicy`
-   registered with `registerPolicy`); no mainnet script does this yet, the testnet deployment and the end-to-end test
-   make the owner call directly. Without it kind 2 cannot be launched.
-5. **List the stocks** (section C). No script exists yet; until one does, each listing is an owner `factory.list` plus,
-   on 0.05% pools, `setListingGates` for the chunk, prepared and checked as section C says.
-6. **Native launch**: `ActivateV2NativeLaunch` with `WETH WETH_USDG_POOL=0x52e65B17fB6E5BA00Ed806f37Afcd2DaA50271Ca
-   LAUNCH_FEE_WEI=500000000000000 LAUNCH_ROUTER=<native router>`, then its `Verify*`. ETH-paired launches are v2.1
-   (PR #41) and not part of this release.
-7. **Hand over**: `HandOverV2Mainnet`, the Safe's `acceptOwnership()`, `VerifyV2MainnetHandOver`.
+   `RegisterV2UpgradeableCycle` (kind 5); each `Verify*`. **Kind 2 also needs a schema-1 policy**:
+   `RegisterV2RebalancePolicy` (`OPERATOR V2_FACTORY DEPENDENCY_MANIFEST_HASH AUDIT_MANIFEST_HASH`; two transactions,
+   the `V2RebalancePolicy` and its registration at 150,000 gas / 160 return bytes) and `VerifyV2RebalancePolicy`
+   with `REBALANCE_POLICY_KIND=2 REBALANCE_POLICY REBALANCE_POLICY_KEY`. Without it kind 2 cannot be launched.
+   The manifest hashes are commitments to the reviewed source: decide and record them before the run; the testnet
+   used placeholders.
+5. **List the stocks** (section C): `ListV2MainnetStocks` with `SYMBOLS=<comma list> V2_FACTORY OPERATOR`. `plan()`
+   is read-only: it reads token, oracle, pool and gates from `deploy/v2-listings-plan.json` (the eighteen V1
+   listings) or `deploy/mainnet-v2-oracles.json` (the five new oracles; defaults 50 / 100 / 2,000, or 125 / 175 on a
+   1% pool as V1 set MSTR's), binds each to the chain (token symbol and decimals, the oracle's stock, the factory's
+   own V3 factory and USDG), takes the opening price from the oracle's live `tryPrice()`, prints every row with its
+   implied raise and graduation FDV, and prints `EXPECTED_PLAN_HASH`. `run()` lists and sets the gates, refusing
+   any plan but the reviewed one. `SELL_CHUNK_USDG_<SYMBOL>` lowers a chunk where the listing check says so. Run
+   `tools/v2_launch_check.py --factory` on the same block first, as section C says.
+6. **Native launch**: `ActivateV2NativeLaunch` and its verifier require `publicLaunch` to be open and the owner's
+   signature. Run it right after step 3, BEFORE any stock is listed: with nothing listed nothing can be launched,
+   so the factory is open for the three transactions in name only, and the deployer still owns it. `setPublicLaunch(true)`, `ActivateV2NativeLaunch` with
+   `OPERATOR=<deployer> V2_FACTORY V2_TRADE_ROUTER WETH WETH_USDG_POOL=0x52e65B17fB6E5BA00Ed806f37Afcd2DaA50271Ca
+   LAUNCH_FEE_WEI=500000000000000` (three transactions; prints the launch router), `VerifyV2NativeLaunch` with
+   `LAUNCH_ROUTER=<printed> EXPECTED_DEFAULTS_HASH`, then `setPublicLaunch(false)` again, and only then steps 4
+   and 5. Otherwise the Safe would have to deploy the launch router itself after opening. ETH-paired launches are
+   v2.1 (PR #41) and not part of this release.
+7. **Hand over**: `HandOverV2Mainnet` (`V2_FACTORY OWNER`), the Safe's `acceptOwnership()`, `VerifyV2MainnetHandOver`.
 8. **Open**: the Safe sets `publicLaunch` true after one complete stock-specific fork replay has been reviewed and
    the front end points at the mainnet factory.
+
+Rehearsed end to end on an anvil fork of mainnet (block 81,393,878, 2026-10-06) with the deployer and the Safe
+impersonated: steps 3 to 7 (the native launch activated with the factory briefly open), with the eighteen day-one stocks listed at $8,204 raise / $49,999
+graduation each, the Safe accepting ownership and opening launch, the native launch activated and verified. The
+deployer's gas came to 0.0006 ETH at the fork's gas price; the rehearsal of step 1 estimates 0.0021 ETH for the
+core alone at mainnet prices, so fund the deployer with at least 0.02 ETH. The defaults hash is
+`0x0f7f98e96de5bc389e15d26382cd18c4943a8d11dbae00da6106285984118d22`, the same as the testnet's.
 9. **Record** the mainnet address book (addresses, transactions, defaults hash, code hashes, kinds, policies,
    listings) in `deploy/`, as the testnet book does.
 
@@ -153,7 +174,6 @@ B.9, the same for mainnet. What changed for the site in this release, beyond add
 
 ## E. Open items before mainnet
 
-- No mainnet listing script; no mainnet script for kind 2's policy (B.4, B.5).
 - `tools/v2_launch_check.py` without `--factory` still judges at 44%; the historical plan is kept on purpose.
 - `test/V2LiveVenueFork.t.sol` (GME on a mainnet fork) has stale assertions and does not pass; the end-to-end suite
   supersedes it.
