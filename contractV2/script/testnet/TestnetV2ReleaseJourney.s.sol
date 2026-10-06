@@ -36,7 +36,6 @@ contract TestnetV2ReleaseJourney is Script {
     address private constant PM = 0x8366a39CC670B4001A1121B8F6A443A643e40951;
     address private constant USDG = 0x539574139BB4Ac74Fd2183ba0E38ed777E30B58d;
     address private constant TSLA = 0xcee322837F181Bd93AC2d71e4dDf334BFF565b98;
-    address private constant TSLA_POOL = 0x04083643FF9E8c27f66C9dD99947743A9B777244;
     uint16 private constant TAX_BPS = 100;
     uint16 private constant CREATOR_BPS = 1000;
     uint16 private constant PROTOCOL_BPS = 3000;
@@ -135,8 +134,8 @@ contract TestnetV2ReleaseJourney is Script {
         Book memory b = _book();
         uint256 id = vm.envUint("JOURNEY_ID");
         _strategy(b, id, 0);
-        uint256 amount = vm.envUint("USDG_IN");
-        if (amount == 0 || amount > 2_000e6 || b.usdg.balanceOf(creator) < amount) revert BadAmount(amount);
+        uint256 amount = _amountIn();
+        if (_paysInStock() ? amount == 0 || amount > 5e18 || IERC20(b.stock).balanceOf(creator) < amount : amount == 0 || amount > 2_000e6 || b.usdg.balanceOf(creator) < amount) revert BadAmount(amount);
         _buy(b, id, amount, 0, false, creator);
         _inspect(b, id);
     }
@@ -162,8 +161,8 @@ contract TestnetV2ReleaseJourney is Script {
         Book memory b = _book();
         uint256 id = vm.envUint("JOURNEY_ID");
         _strategy(b, id, 0);
-        uint256 amount = vm.envUint("USDG_IN");
-        if (amount < 500e6 || amount > 25_000e6 || b.usdg.balanceOf(creator) < amount) revert BadAmount(amount);
+        uint256 amount = _amountIn();
+        if (_paysInStock() ? amount < 1e18 || amount > 60e18 || IERC20(b.stock).balanceOf(creator) < amount : amount < 500e6 || amount > 25_000e6 || b.usdg.balanceOf(creator) < amount) revert BadAmount(amount);
         _buy(b, id, amount, 0, true, creator);
         if (uint8(HedgeFunBondingCurve(b.factory.curves(id)).status()) != 2) revert BadStage(0);
         _inspect(b, id);
@@ -175,8 +174,8 @@ contract TestnetV2ReleaseJourney is Script {
         Book memory b = _book();
         uint256 id = vm.envUint("JOURNEY_ID");
         _strategy(b, id, 2);
-        uint256 amount = vm.envUint("USDG_IN");
-        if (amount == 0 || amount > 1_000e6 || b.usdg.balanceOf(creator) < amount) revert BadAmount(amount);
+        uint256 amount = _amountIn();
+        if (_paysInStock() ? amount == 0 || amount > 2e18 || IERC20(b.stock).balanceOf(creator) < amount : amount == 0 || amount > 1_000e6 || b.usdg.balanceOf(creator) < amount) revert BadAmount(amount);
         _buy(b, id, amount, 2, false, creator);
         _inspect(b, id);
     }
@@ -275,24 +274,26 @@ contract TestnetV2ReleaseJourney is Script {
         _inspect(b, vm.envUint("JOURNEY_ID"));
     }
 
+    /// @dev Pays tUSDG over the listed V3 pool, or the stock itself when `STOCK_IN` is set (no hop: what the site does).
     function _buy(Book memory b, uint256 id, uint256 amount, uint8 stage, bool allowPartial, address payer) private {
         uint256 minStock = vm.envUint("MIN_STOCK_RECEIVED");
         uint256 minTokens = vm.envUint("MIN_FINAL_OUT");
         if (minStock == 0 || minTokens == 0) revert BadAmount(0);
-        HedgeFunV2TradeRouter.Hop[] memory path = new HedgeFunV2TradeRouter.Hop[](1);
-        path[0] = HedgeFunV2TradeRouter.Hop(b.pool, b.stock);
+        bool inStock = _paysInStock();
+        HedgeFunV2TradeRouter.Hop[] memory path = new HedgeFunV2TradeRouter.Hop[](inStock ? 0 : 1);
+        if (!inStock) path[0] = HedgeFunV2TradeRouter.Hop(b.pool, b.stock);
         HedgeFunV2TradeRouter.TradeParams memory p = HedgeFunV2TradeRouter.TradeParams({
             id: id,
-            asset: address(b.usdg),
+            asset: inStock ? b.stock : address(b.usdg),
             amountIn: amount,
             minStockReceived: minStock,
             minFinalOut: minTokens,
             deadline: block.timestamp + DEADLINE_SECONDS,
             expectedStage: stage,
-            allowPartialFill: allowPartial
+            allowPartialFill: allowPartial || (inStock && stage == 0) // a stock-paid curve buy leaves rounding dust, refunded
         });
         vm.startBroadcast();
-        _approveIfNeeded(b.usdg, address(b.router), amount, payer);
+        _approveIfNeeded(inStock ? IERC20(b.stock) : b.usdg, address(b.router), amount, payer);
         b.router.buy(p, path);
         vm.stopBroadcast();
     }
@@ -316,6 +317,12 @@ contract TestnetV2ReleaseJourney is Script {
         _approveIfNeeded(IERC20(token), address(b.router), amount, payer);
         b.router.sell(p, path);
         vm.stopBroadcast();
+    }
+
+    function _paysInStock() private view returns (bool) { return vm.envOr("STOCK_IN", uint256(0)) != 0; }
+
+    function _amountIn() private view returns (uint256) {
+        return _paysInStock() ? vm.envUint("STOCK_IN") : vm.envUint("USDG_IN");
     }
 
     function _approveIfNeeded(IERC20 asset, address spender, uint256 amount, address payer) private {
@@ -377,7 +384,7 @@ contract TestnetV2ReleaseJourney is Script {
         b.pool = vm.parseJsonAddress(json, ".stocks.TSLA.pool");
         if (
             address(b.factory) != FACTORY || address(b.router) != ROUTER || address(b.registry) != REGISTRY
-                || address(b.usdg) != USDG || address(b.hook) != HOOK || b.stock != TSLA || b.pool != TSLA_POOL
+                || address(b.usdg) != USDG || address(b.hook) != HOOK || b.stock != TSLA || b.pool.code.length == 0
                 || b.factory.owner() != OWNER || b.factory.protocol() != PROTOCOL || !b.factory.publicLaunch()
                 || b.factory.usdg() != address(b.usdg) || address(b.router.factory()) != address(b.factory)
                 || address(b.factory.treasuryDeployer()) != REGISTRY || address(b.factory.curveDeployer()) != CURVES

@@ -169,7 +169,9 @@ rehearsed in full on an anvil fork of the testnet on 2026-10-06 (all phases belo
 
 The creator is the wallet that runs it: the deployer by default, another test wallet through `JOURNEY_CREATOR`.
 Amounts are raw units (tUSDG 6 decimals, TSLA and strategy tokens 18). On this testnet nobody else trades, so the
-minimum outputs may be `1`; on a shared chain they are the slippage guard and must be real quotes.
+minimum outputs may be `1`; on a shared chain they are the slippage guard and must be real quotes. A buy pays tUSDG
+over the listed V3 pool, or the stock itself when `STOCK_IN` is set instead of `USDG_IN` (no hop, as the site pays;
+use this once TSLA is on the deployer venue of section G, whose pool is a few drips deep).
 
 ```sh
 export RPC=https://rpc.testnet.chain.robinhood.com J=script/testnet/TestnetV2ReleaseJourney.s.sol
@@ -205,4 +207,44 @@ forge script $J --sig 'inspect()'        --rpc-url $RPC
 
 Strategy execution (take-profit at +5% / +10%, a 5% dip) needs the price moved by the venue owner
 `0x75Ce…e96d`, who also receives the protocol's curve and hook shares. Each later launch takes a new `JOURNEY_NONCE`.
+
+## G. A testnet venue without the venue owner
+
+The test tokens, feeds, pools, market and calendar of the testnet belong to `0x75Ce…e96d`, whose key is not at hand
+(2026-10-06). Nothing of it needs an owner to keep working: the feeds are `alwaysFresh`, the calendar follows the
+exchange on its own, the faucets are self-service. What the owner alone could do was MOVE A PRICE: `TestnetMarket`
+swaps a pool with tokens it mints, and the mint role is the owner's. Without price moves no strategy ever takes
+profit, buys a dip or stops.
+
+`script/testnet/RelistV2TestnetStocks.s.sol` re-lists a stock on a venue the deployer controls and
+`script/testnet/TestnetDeployerMarket.sol` moves its price without minting: it owns the only position in a fresh V3
+pool (the other fee tier of the same stock / tUSDG pair), and `setPrice` withdraws that position, lets a swap slide
+the empty pool to the target for nothing, rebuilds the position at the new price from what came back, and sets the
+feed. Faucet drips are its whole capital, so the pool is thin: the listing gates are 200 / 300 bps and a 200 tUSDG
+sell chunk instead of 50 / 100 / 2,000 on the thirty-million pools. The tokens, the tUSDG feed and the calendar stay
+the owner's. Rehearsed on an anvil fork on 2026-10-06: deploy, fund, relist, a launch graduated with the stock, a
+push of TSLA by 8%, ten minutes, `execute()` took profit.
+
+```sh
+export RPC=https://rpc.testnet.chain.robinhood.com V=script/testnet/RelistV2TestnetStocks.s.sol
+forge script $V --sig 'deploy()'  --rpc-url $RPC --account deployer --broadcast   # SYMBOLS=TSLA by default
+USDG_IN=0 forge script $V --sig 'fund()' --rpc-url $RPC --account deployer --broadcast   # day one: keep your own tUSDG drip
+forge script $V --sig 'relist()'  --rpc-url $RPC --account deployer --broadcast
+python3 tools/verify_testnet_release.py --venue deploy/testnet-v2-venue.candidate.json   # the book now lists the venue
+SYMBOL=TSLA PRICE_E18=386640000000000000000 forge script $V --sig 'setPrice()' --rpc-url $RPC --account deployer --broadcast
+```
+
+- `deploy()` writes `deploy/testnet-v2-venue.candidate.json`; every later phase reads it. Run it again with
+  `SYMBOLS=NVDA,AAPL` to add stocks to the same market.
+- `fund()` claims the day's drips for the deployer and for the market, moves the deployer's balances in (`USDG_IN`,
+  `STOCK_IN` cap them; `USDG_IN=0` keeps the tUSDG) and provides everything the market holds as liquidity at the
+  pool's price. One symbol per run, because it provides ALL the tUSDG. Run it daily to deepen the pool.
+- `relist()` lists the venue's oracle and pool on the release factory with the gates above and pokes the pool so
+  its 720-slot observation ring is live. Launched strategies keep the listing they were launched with; new ones take
+  the venue. Verify and commit the book, then republish the site's (`npm run publish:testnet-release-book`).
+- `setPrice()` moves pool and feed together. `health()` compares the oracle with the pool's ten-minute mean, so a
+  strategy acts about ten minutes after a move, inside market hours. `syncFeed()` follows the pool after public
+  trades. The venue's `status()` prints prices, liquidity and what the market could still provide.
+- Buying through tUSDG on a pool this thin is poor; buy the curve with the stock (the site does; `STOCK_IN` in the
+  journey). The tUSDG side matters for the treasury's own trades, which are chunked at 200 tUSDG.
 
