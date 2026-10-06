@@ -21,6 +21,7 @@ fs_permissions = [
   { access = "read-write", path = "./deploy/mainnet-v2-core.candidate.json" },
   { access = "read-write", path = "./deploy/mainnet-v2-core.dryrun.json" },
   { access = "read", path = "./deploy/testnet-v2-fees.json" },
+  { access = "read", path = "./deploy/testnet-v2-release.json" },
 ]
 src = "src"
 out = "out"

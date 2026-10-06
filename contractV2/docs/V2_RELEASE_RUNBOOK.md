@@ -157,5 +157,52 @@ B.9, the same for mainnet. What changed for the site in this release, beyond add
 - `tools/v2_launch_check.py` without `--factory` still judges at 44%; the historical plan is kept on purpose.
 - `test/V2LiveVenueFork.t.sol` (GME on a mainnet fork) has stale assertions and does not pass; the end-to-end suite
   supersedes it.
-- CI's deployed-core fork job is red until A.8.
 - The hook's `version()` stayed 3 through PR #43's follow-up; books distinguish cores by feature version.
+
+## F. End-to-end on the testnet
+
+`script/testnet/TestnetV2ReleaseJourney.s.sol` walks one TSLA launch through its whole life on the release core, one
+phase per transaction. It pins the core of `deploy/testnet-v2-release.json`, re-reads the book against the chain
+before every phase (version-3 hook, `DEFAULT_SALE_BPS` 7931, LP share 7000, the release defaults) and prints the
+balances, claims and ledgers to compare by hand. It holds no key. Without `--broadcast` every phase is a simulation;
+rehearsed in full on an anvil fork of the testnet on 2026-10-06 (all phases below, `execute()` correctly `NotDue`).
+
+The creator is the wallet that runs it: the deployer by default, another test wallet through `JOURNEY_CREATOR`.
+Amounts are raw units (tUSDG 6 decimals, TSLA and strategy tokens 18). On this testnet nobody else trades, so the
+minimum outputs may be `1`; on a shared chain they are the slippage guard and must be real quotes.
+
+```sh
+export RPC=https://rpc.testnet.chain.robinhood.com J=script/testnet/TestnetV2ReleaseJourney.s.sol
+export MIN_STOCK_RECEIVED=1 MIN_FINAL_OUT=1
+forge script $J --sig 'drip()'   --rpc-url $RPC --account deployer --broadcast   # 10,000 tUSDG + 15 TSLA, once a day
+JOURNEY_NONCE=1 forge script $J --sig 'launch()' --rpc-url $RPC --account deployer --broadcast   # prints the id
+export JOURNEY_ID=<id>
+USDG_IN=500000000  forge script $J --sig 'curveBuy()'  --rpc-url $RPC --account deployer --broadcast
+TOKEN_IN=<raw>     forge script $J --sig 'curveSell()' --rpc-url $RPC --account deployer --broadcast   # up to half
+USDG_IN=9500000000 forge script $J --sig 'graduate()'  --rpc-url $RPC --account deployer --broadcast   # excess refunded
+USDG_IN=100000000  forge script $J --sig 'v4Buy()'     --rpc-url $RPC --account deployer --broadcast
+TOKEN_IN=<raw>     forge script $J --sig 'v4Sell()'    --rpc-url $RPC --account deployer --broadcast   # up to a quarter
+forge script $J --sig 'claimCurveFees()' --rpc-url $RPC --account deployer --broadcast
+forge script $J --sig 'sweepFees()'      --rpc-url $RPC --account deployer --broadcast   # run twice: the second pays nothing
+forge script $J --sig 'collectLpFees()'  --rpc-url $RPC --account deployer --broadcast
+forge script $J --sig 'buyback()'        --rpc-url $RPC --account deployer --broadcast
+forge script $J --sig 'inspect()'        --rpc-url $RPC
+```
+
+| Phase | Sender | What to check in the readback |
+| --- | --- | --- |
+| `drip()` | creator | tUSDG and TSLA balances rose by the drip amounts |
+| `launch()` | creator | `KIND` 0/1/4/5 (default 0; 2 and 3 need an engine config: use the site or the fork suites); 0.0005 ETH fee; the id, token and curve equal the prediction; no `setCurveConfig` |
+| `curveBuy()` | creator | the three curve claims are 30% / 10% / 60% of the unpaid stock fee |
+| `curveSell()` | creator | tUSDG back, reserve down, fee claims up |
+| `graduate()` | creator | status 2; creator holds 79.31% of the supply bought on the curve so far; treasury `bookedStock` is 30% of the raise (6.875 TSLA on 22.918); excess tUSDG and TSLA refunded |
+| `v4Buy()` / `v4Sell()` | creator | `hook accrued token claims` stays 0 (the buy tax is in stock); `accrued stock claims` grows by 1% of the stock moved |
+| `claimCurveFees()` | anyone | the three claims go to 0; the creator's TSLA rises by its claim |
+| `sweepFees()` | anyone | accrued stock to 0; creator's TSLA rises by 10% of it; a second sweep moves nothing |
+| `collectLpFees()` | anyone | stock side enters `treasury buy-back budget`; token side burned |
+| `buyback()` | anyone | budget to 0; tokens burned; the caller receives the 0.1% bounty in tokens |
+| `execute()` | anyone | `NotDue()` until the venue owner moves the price; then take-profit, dip or stop |
+
+Strategy execution (take-profit at +5% / +10%, a 5% dip) needs the price moved by the venue owner
+`0x75Ce…e96d`, who also receives the protocol's curve and hook shares. Each later launch takes a new `JOURNEY_NONCE`.
+
