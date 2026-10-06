@@ -50,7 +50,7 @@ Chain 46630, RPC `https://rpc.testnet.chain.robinhood.com`, deployer `0x36437b87
 5. **Calibrate the listings**: the deployment copies the base venue's opening prices (about a $10,000 opening FDV,
    a $38,000 raise). `CalibrateV2Listings` brings each stock to the release rule. `plan()` first, read-only, with
    `V2_FACTORY OPERATOR TESTNET_MARKET=0xc1AF2f52980F8A7AA4E90A8E30D5c3FaF0375f21`; review the rows and the printed
-   `EXPECTED_PLAN_HASH`; then `run()` with that hash, `--account deployer --broadcast`; then `plan()` again and expect
+   `EXPECTED_PLAN_HASH`; then `run()` with that hash, `--account deployer --sender $S --broadcast`; then `plan()` again and expect
    every row to show nothing to change. The deployment copies the base venue's LP share (5000) as well as its
    opening prices, so the calibration moves both: opening price to the reference, `lpBps` to 7000.
 6. **Read back and record**, with `python3 tools/verify_testnet_release.py`: it checks every transaction of the six
@@ -175,19 +175,20 @@ use this once TSLA is on the deployer venue of section G, whose pool is a few dr
 
 ```sh
 export RPC=https://rpc.testnet.chain.robinhood.com J=script/testnet/TestnetV2ReleaseJourney.s.sol
+export S=0x36437b878415EdA1a24186CF79AFffBc9ecEd298   # --account signs; --sender is what the script checks
 export MIN_STOCK_RECEIVED=1 MIN_FINAL_OUT=1
-forge script $J --sig 'drip()'   --rpc-url $RPC --account deployer --broadcast   # 10,000 tUSDG + 15 TSLA, once a day
-JOURNEY_NONCE=1 forge script $J --sig 'launch()' --rpc-url $RPC --account deployer --broadcast   # prints the id
+forge script $J --sig 'drip()'   --rpc-url $RPC --account deployer --sender $S --broadcast   # 10,000 tUSDG + 15 TSLA, once a day
+JOURNEY_NONCE=1 forge script $J --sig 'launch()' --rpc-url $RPC --account deployer --sender $S --broadcast   # prints the id
 export JOURNEY_ID=<id>
-USDG_IN=500000000  forge script $J --sig 'curveBuy()'  --rpc-url $RPC --account deployer --broadcast
-TOKEN_IN=<raw>     forge script $J --sig 'curveSell()' --rpc-url $RPC --account deployer --broadcast   # up to half
-USDG_IN=9500000000 forge script $J --sig 'graduate()'  --rpc-url $RPC --account deployer --broadcast   # excess refunded
-USDG_IN=100000000  forge script $J --sig 'v4Buy()'     --rpc-url $RPC --account deployer --broadcast
-TOKEN_IN=<raw>     forge script $J --sig 'v4Sell()'    --rpc-url $RPC --account deployer --broadcast   # up to a quarter
-forge script $J --sig 'claimCurveFees()' --rpc-url $RPC --account deployer --broadcast
-forge script $J --sig 'sweepFees()'      --rpc-url $RPC --account deployer --broadcast   # run twice: the second pays nothing
-forge script $J --sig 'collectLpFees()'  --rpc-url $RPC --account deployer --broadcast
-forge script $J --sig 'buyback()'        --rpc-url $RPC --account deployer --broadcast
+USDG_IN=500000000  forge script $J --sig 'curveBuy()'  --rpc-url $RPC --account deployer --sender $S --broadcast
+TOKEN_IN=<raw>     forge script $J --sig 'curveSell()' --rpc-url $RPC --account deployer --sender $S --broadcast   # up to half
+USDG_IN=9500000000 forge script $J --sig 'graduate()'  --rpc-url $RPC --account deployer --sender $S --broadcast   # excess refunded
+USDG_IN=100000000  forge script $J --sig 'v4Buy()'     --rpc-url $RPC --account deployer --sender $S --broadcast
+TOKEN_IN=<raw>     forge script $J --sig 'v4Sell()'    --rpc-url $RPC --account deployer --sender $S --broadcast   # up to a quarter
+forge script $J --sig 'claimCurveFees()' --rpc-url $RPC --account deployer --sender $S --broadcast
+forge script $J --sig 'sweepFees()'      --rpc-url $RPC --account deployer --sender $S --broadcast   # run twice: the second pays nothing
+forge script $J --sig 'collectLpFees()'  --rpc-url $RPC --account deployer --sender $S --broadcast
+forge script $J --sig 'buyback()'        --rpc-url $RPC --account deployer --sender $S --broadcast
 forge script $J --sig 'inspect()'        --rpc-url $RPC
 ```
 
@@ -227,11 +228,12 @@ push of TSLA by 8%, ten minutes, `execute()` took profit.
 
 ```sh
 export RPC=https://rpc.testnet.chain.robinhood.com V=script/testnet/RelistV2TestnetStocks.s.sol
-forge script $V --sig 'deploy()'  --rpc-url $RPC --account deployer --broadcast   # SYMBOLS=TSLA by default
-USDG_IN=0 forge script $V --sig 'fund()' --rpc-url $RPC --account deployer --broadcast   # day one: keep your own tUSDG drip
-forge script $V --sig 'relist()'  --rpc-url $RPC --account deployer --broadcast
+export S=0x36437b878415EdA1a24186CF79AFffBc9ecEd298
+forge script $V --sig 'deploy()'  --rpc-url $RPC --account deployer --sender $S --broadcast   # SYMBOLS=TSLA by default
+USDG_IN=0 forge script $V --sig 'fund()' --rpc-url $RPC --account deployer --sender $S --broadcast   # day one: keep your own tUSDG drip
+forge script $V --sig 'relist()'  --rpc-url $RPC --account deployer --sender $S --broadcast
 python3 tools/verify_testnet_release.py --venue deploy/testnet-v2-venue.candidate.json   # the book now lists the venue
-SYMBOL=TSLA PRICE_E18=386640000000000000000 forge script $V --sig 'setPrice()' --rpc-url $RPC --account deployer --broadcast
+SYMBOL=TSLA PRICE_E18=386640000000000000000 forge script $V --sig 'setPrice()' --rpc-url $RPC --account deployer --sender $S --broadcast
 ```
 
 - `deploy()` writes `deploy/testnet-v2-venue.candidate.json`; every later phase reads it. Run it again with

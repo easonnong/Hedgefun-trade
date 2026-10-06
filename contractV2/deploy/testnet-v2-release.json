@@ -239,22 +239,23 @@
   },
   "TSLA": {
    "decimals": 18,
-   "fee": 3000,
-   "feed": "0x91B711c49Cc10098BFcCDD7d935AbA576BD4bffb",
-   "liquidity": "5405299530135571866",
+   "fee": 500,
+   "feed": "0x81e2c3b173FC478efbd7cAEf241B05aCf2D540d9",
+   "liquidity": "1799419490744521",
    "lpBps": 7000,
-   "maxDeviationBps": 50,
-   "maxSlippageBps": 100,
+   "maxDeviationBps": 200,
+   "maxSlippageBps": 300,
    "openPriceE18": "5978716480",
-   "oracle": "0x5001C9C8b278425129C36C8099520aBAA70aa4ae",
-   "pool": "0x04083643FF9E8c27f66C9dD99947743A9B777244",
+   "oracle": "0xd5c79180aEEC9752e2a4691592F33e69527Aaaf9",
+   "pool": "0x9735750450d53C5035611a45F8121389Ce29A0C9",
    "priceE18": "358000000000000000000",
-   "sellChunkUsdg": "2000000000",
-   "tickLower": 210540,
-   "tickUpper": 224460,
+   "sellChunkUsdg": "200000000",
+   "tickLower": 210550,
+   "tickUpper": 224470,
    "token": "0xcee322837F181Bd93AC2d71e4dDf334BFF565b98"
   }
  },
+ "strategyCount": 0,
  "tokenDeployer": "0x1FB918d07Ed2EB4D81FCc5dCfccD2a79420bD47B",
  "tradablePercentKind": 3,
  "tradablePercentManifests": {
@@ -269,11 +270,19 @@
  "usdg": "0x539574139BB4Ac74Fd2183ba0E38ed777E30B58d",
  "usdgFeed": "0x6beF5980dDa88F8B925f814C5033959A13ae535A",
  "v3Factory": "0x0b0a96D7EB396E7471998889C4803dD0F529Eb01",
+ "venue": {
+  "codeHash": "0xe641d9555b853c2f150d3b2b3b2ad5bd5356836e97fe6c06adfb94839ac68163",
+  "market": "0xfEb035be8B9473F8852FcDC93E1d3eB6A2E6352e",
+  "schema": "v2-testnet-deployer-venue-v1",
+  "stocks": [
+   "TSLA"
+  ]
+ },
  "venueOperator": "0x75Cee941B0eF3A83feA0397BbF903C12c1D7e96D",
  "verification": {
-  "blockHash": "0x1ec7bb1fcc5140810c8b986165b7c6414d00480ce5c01d0009bdfed0e9ee5147",
-  "blockNumber": 129518276,
-  "checks": "68 transactions of six scripts against canonical receipts (status, sender, chain, input, nonce sequence, block membership); creation code of the nine core contracts and the six kinds against the build of the recorded commit; roles, versions, both policies, the release defaults against the base venue's, and the eight listings at the reference opening price with a 7000 LP share; read at one block.",
+  "blockHash": "0x14e6d988948fc82c02ad03070471198f65dfaedd9945fef5863e9cb7556674d1",
+  "blockNumber": 129556584,
+  "checks": "68 transactions of six scripts against canonical receipts (status, sender, chain, input, nonce sequence, block membership); creation code of the nine core contracts and the six kinds against the build of the recorded commit; roles, versions, both policies, the release defaults against the base venue's, and the eight listings at the reference opening price with a 7000 LP share; TSLA re-listed on the deployer venue 0xfEb035be8B9473F8852FcDC93E1d3eB6A2E6352e; read at one block.",
   "firstNonce": 68,
   "listingParameters": {
    "graduationRaiseUsd": "about 8,205",
@@ -383,7 +392,7 @@
     ]
    }
   ],
-  "verifiedAt": "2026-10-05T23:40:35Z"
+  "verifiedAt": "2026-10-06T01:25:11Z"
  },
  "weth": "0x7943e237c7F95DA44E0301572D358911207852Fa"
 }

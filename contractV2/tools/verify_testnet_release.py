@@ -200,8 +200,9 @@ def main():
         if relisted:
             # the deployer venue's feed, oracle and pool; the price is whatever the deployer last set
             assert relisted['token'].lower() == token.lower() and relisted['decimals'] == 18
-            for k in ('feed', 'oracle', 'pool', 'fee', 'tickLower', 'tickUpper', 'maxDeviationBps', 'maxSlippageBps', 'sellChunkUsdg'):
+            for k in ('feed', 'oracle', 'pool', 'fee', 'tickLower', 'tickUpper', 'maxDeviationBps', 'maxSlippageBps'):
                 stock[k] = relisted[k]
+            stock['sellChunkUsdg'] = str(relisted['sellChunkUsdg'])   # the book keeps amounts as decimal strings
             oracle, pool = stock['oracle'], stock['pool']
             ok, price_e18, _ = read(oracle, 'lastPriceAt()')
             assert ok == 1 and price_e18 > 0, (symbol, 'venue oracle')
@@ -239,6 +240,8 @@ def main():
                                + (f"; {', '.join(sorted(venue['stocks']))} re-listed on the deployer venue {venue['market']}" if venue else '') + '; read at one block.',
                      'verifiedAt': datetime.datetime.now(datetime.timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')}})
     a.out.write_text(json.dumps(book, indent=1, sort_keys=True) + '\n')
+    if venue:
+        (ROOT / 'deploy/testnet-v2-venue.json').write_text(json.dumps(venue, indent=1, sort_keys=True) + '\n')
     print(f'verified at block {int(tag, 16)}; wrote {a.out}')
 
 
